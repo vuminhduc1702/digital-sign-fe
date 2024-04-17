@@ -1,8 +1,8 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { ErrorFallback } from '~/pages/ErrorPage'
+import { ErrorFallback } from '@/pages/ErrorPage'
 
-import { PATHS } from '~/routes/PATHS'
-import { lazyImport } from '~/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
+import { lazyImport } from '@/utils/lazyImport'
 
 const { ProjectManage } = lazyImport(
   () => import('./ProjectManage'),

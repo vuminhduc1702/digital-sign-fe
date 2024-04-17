@@ -8,19 +8,19 @@ import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 
-import '~/i18n'
-import storage from '~/utils/storage'
-import { lazyImport } from '~/utils/lazyImport'
-import { queryClient } from '~/lib/react-query'
-import { Spinner } from '~/components/Spinner'
-import { AuthLoader, logoutFn } from '~/lib/auth'
-import { AppRoutes } from '~/routes'
-import { Toaster } from '~/components/Toaster'
+import '@/i18n'
+import storage from '@/utils/storage'
+import { lazyImport } from '@/utils/lazyImport'
+import { queryClient } from '@/lib/react-query'
+import { Spinner } from '@/components/Spinner'
+import { AuthLoader, logoutFn } from '@/lib/auth'
+import { AppRoutes } from '@/routes'
+import { Toaster } from '@/components/Toaster'
 
-import '~/style/main.css'
+import '@/style/main.css'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 

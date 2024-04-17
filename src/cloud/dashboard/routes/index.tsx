@@ -1,9 +1,9 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { DashboardLayout } from '~/layout/DashboardLayout'
-import { ErrorFallback } from '~/pages/ErrorPage'
+import { DashboardLayout } from '@/layout/DashboardLayout'
+import { ErrorFallback } from '@/pages/ErrorPage'
 
-import { PATHS } from '~/routes/PATHS'
-import { lazyImport } from '~/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
+import { lazyImport } from '@/utils/lazyImport'
 
 const { DashboardManage } = lazyImport(
   () => import('./DashboardManage'),

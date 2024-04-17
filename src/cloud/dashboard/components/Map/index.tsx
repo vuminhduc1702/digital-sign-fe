@@ -7,12 +7,12 @@ import {
   type MapSeries,
   type DataSeries,
   type TimeSeries,
-  LatestData,
+  type LatestData,
 } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 import { type LatLngTuple, type Map } from 'leaflet'
-import { type Device } from '~/cloud/orgManagement'
+import { type Device } from '@/cloud/orgManagement'
 import { toast } from 'sonner'
 
 export function MapChart({
@@ -42,7 +42,7 @@ export function MapChart({
       setDragMode(true)
     }
   }, [isEditMode])
-  
+
   useEffect(() => {
     if (data?.data) {
       const dataList = data.data
@@ -54,38 +54,38 @@ export function MapChart({
   }, [data])
 
   function extractData(dataList: LatestData) {
-      const dataForMapChart = Object.entries(dataList).reduce(
-        (result: Array<LatLngTuple>, [, dataItem]) => {
-          if (Object.keys(dataItem).length === 0) {
+    const dataForMapChart = Object.entries(dataList).reduce(
+      (result: Array<LatLngTuple>, [, dataItem]) => {
+        if (Object.keys(dataItem).length === 0) {
+          const coor: LatLngTuple = [999, 0]
+          result.push(coor)
+        } else {
+          const dataLatIndex = Object.keys(dataItem).findIndex(
+            key => key === 'latitude',
+          )
+          const dataLongIndex = Object.keys(dataItem).findIndex(
+            key => key === 'longitude',
+          )
+          if (!Object.values(dataItem)[dataLatIndex]) {
             const coor: LatLngTuple = [999, 0]
             result.push(coor)
           } else {
-            const dataLatIndex = Object.keys(dataItem).findIndex(
-              key => key === 'latitude',
-            )
-            const dataLongIndex = Object.keys(dataItem).findIndex(
-              key => key === 'longitude',
-            )
-            if (!Object.values(dataItem)[dataLatIndex]) {
-              const coor: LatLngTuple = [999, 0]
+            let dataLat = Object.values(dataItem)[dataLatIndex]?.value
+            let dataLong = Object.values(dataItem)[dataLongIndex]?.value
+            if (dataLat !== null && dataLong !== null) {
+              const coor: LatLngTuple = [
+                parseFloat(dataLat),
+                parseFloat(dataLong),
+              ]
               result.push(coor)
-            } else {
-              let dataLat = Object.values(dataItem)[dataLatIndex]?.value
-              let dataLong = Object.values(dataItem)[dataLongIndex]?.value
-              if (dataLat !== null && dataLong !== null) {
-                const coor: LatLngTuple = [
-                  parseFloat(dataLat),
-                  parseFloat(dataLong),
-                ]
-                result.push(coor)
-              }
             }
           }
-          return result
-        },
-        [],
-      )    
-      return dataForMapChart
+        }
+        return result
+      },
+      [],
+    )
+    return dataForMapChart
   }
 
   const [renderedInit, setRenderedInit] = useState(false)

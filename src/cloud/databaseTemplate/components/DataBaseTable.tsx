@@ -2,26 +2,26 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { Button } from '@/components/Button'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
-import storage from '~/utils/storage'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { BaseTable } from '@/components/Table'
+import { useDisclosure } from '@/utils/hooks'
+import storage from '@/utils/storage'
 import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
-import { InputField } from '~/components/Form'
+import { InputField } from '@/components/Form'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 function DataBaseTableContextMenu({
   row,

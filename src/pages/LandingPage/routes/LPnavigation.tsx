@@ -1,22 +1,22 @@
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useLogout, useUser } from '~/lib/auth'
-import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
+import { useLogout, useUser } from '@/lib/auth'
+import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
 import { useSpinDelay } from 'spin-delay'
-import { Spinner } from '~/components/Spinner'
-import { Button } from '~/components/Button'
-import { PATHS } from '~/routes/PATHS'
-import { API_URL } from '~/config'
-import defaultUserIcon from '~/assets/icons/default-user.svg'
-import { SidebarDropDownIcon } from '~/components/SVGIcons'
-import { Link } from '~/components/Link'
-import LogoViettel from '~/assets/icons/logo_viettel.svg'
+import { Spinner } from '@/components/Spinner'
+import { Button } from '@/components/Button'
+import { PATHS } from '@/routes/PATHS'
+import { API_URL } from '@/config'
+import defaultUserIcon from '@/assets/icons/default-user.svg'
+import { SidebarDropDownIcon } from '@/components/SVGIcons'
+import { Link } from '@/components/Link'
+import LogoViettel from '@/assets/icons/logo_viettel.svg'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenu,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
 function LPnavigation({
   childToParent,
@@ -117,7 +117,7 @@ function LPnavigation({
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="data-[side=bottom]:animate-slideUpAndFade  data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+            className="z-[9999]  flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
             sideOffset={-15}
           >
             <Link
@@ -125,16 +125,16 @@ function LPnavigation({
               target="_blank"
               className="cursor-pointer"
             >
-              <DropdownMenuItem className="hover:bg-primary-300 cursor-pointer rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+              <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                 {t('user:cmp')}
               </DropdownMenuItem>
             </Link>
             <Link to={PATHS.USER_INFO} className="cursor-pointer">
-              <DropdownMenuItem className="hover:bg-primary-300 cursor-pointer rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+              <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                 {t('user:user_info')}
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+            <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
               {userDataFromStorage ? (
                 <p
                   className="cursor-pointer"
@@ -146,7 +146,7 @@ function LPnavigation({
                 </p>
               ) : null}
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+            <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
               <p className="cursor-pointer" onClick={() => logout.mutate({})}>
                 {t('user:logout')}
               </p>

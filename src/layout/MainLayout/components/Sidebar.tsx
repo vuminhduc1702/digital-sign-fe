@@ -1,7 +1,7 @@
 import SideNavigation from './SideNavigation'
-import { NavLink } from '~/components/Link'
+import { NavLink } from '@/components/Link'
 
-import logo from '~/assets/images/logo.svg'
+import logo from '@/assets/images/logo.svg'
 
 function Sidebar() {
   return (

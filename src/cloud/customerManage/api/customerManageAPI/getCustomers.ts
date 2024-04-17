@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type BasePagination, type BaseAPIRes } from '~/types'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
+import { type BasePagination, type BaseAPIRes } from '@/types'
 import { type Customer } from '../../types'
 
 export interface SearchFilter {
@@ -29,7 +29,7 @@ export const getCustomers = ({
     params: {
       project_id: projectId,
       search_field,
-      search_str
+      search_str,
     },
   })
 }
@@ -47,12 +47,7 @@ export const useGetCustomers = ({
   config,
 }: UseEntityCustomertonOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: [
-      'customers',
-      projectId,
-      search_field,
-      search_str,
-    ],
+    queryKey: ['customers', projectId, search_field, search_str],
     queryFn: () =>
       getCustomers({
         projectId,

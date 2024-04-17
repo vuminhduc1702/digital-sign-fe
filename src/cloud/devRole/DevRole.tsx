@@ -2,19 +2,19 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { SelectField } from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
+import { SelectField } from '@/components/Form'
+import TitleBar from '@/components/Head/TitleBar'
 import { RoleTable } from '../role/components/RoleTable'
 import { CreateRole } from '../role/components'
 import { useGetRoles } from '../role/api'
 import { useProjects } from '../project/api'
-import storage from '~/utils/storage'
-import { ContentLayout } from '~/layout/ContentLayout'
-import { SearchField } from '~/components/Input'
+import storage from '@/utils/storage'
+import { ContentLayout } from '@/layout/ContentLayout'
+import { SearchField } from '@/components/Input'
 
 import { type Project } from '../project/routes/ProjectManage'
 
-import narrowLeft from '~/assets/icons/narrow-left.svg'
+import narrowLeft from '@/assets/icons/narrow-left.svg'
 
 export default function DevRole() {
   const { t } = useTranslation()
@@ -23,6 +23,7 @@ export default function DevRole() {
   const [offset, setOffset] = useState(0)
   const [projectId, setProjectId] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
   const { data: projectsData } = useProjects()
 
@@ -36,7 +37,7 @@ export default function DevRole() {
     return rs
   }
 
-  const { data, isPreviousData } = useGetRoles({
+  const { data, isLoading, isPreviousData } = useGetRoles({
     projectId,
     applicable_to: 'TENANT_DEV',
     config: {
@@ -70,29 +71,33 @@ export default function DevRole() {
         defaultValue={storage.getProject()?.id}
       />
 
-      <TitleBar title={t('dev_role:list')} className="mx-32" />
-      <div className="relative mx-32 flex grow flex-col px-9 py-3 shadow-lg">
-        <div className="flex justify-end">
+      <div className="mx-32">
+        <TitleBar title={t('dev_role:list')} />
+        <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+          <div className="flex justify-end">
+            {projectId && (
+              <div className="flex w-full items-center justify-between gap-x-3">
+                <SearchField
+                  setSearchValue={setSearchQuery}
+                  setIsSearchData={setIsSearchData}
+                  closeSearch={true}
+                />
+                <CreateRole project_id={projectId} />
+              </div>
+            )}
+          </div>
           {projectId && (
-            <div className="mr-[42px] flex items-center gap-x-3">
-              <CreateRole project_id={projectId} />
-              <SearchField
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              />
-            </div>
+            <RoleTable
+              data={data?.roles ?? []}
+              offset={offset}
+              setOffset={setOffset}
+              total={data?.total ?? 0}
+              isPreviousData={isPreviousData}
+              isLoading={isLoading}
+              isSearchData={searchQuery.length > 0 && isSearchData}
+            />
           )}
         </div>
-        {projectId && (
-          <RoleTable
-            data={data?.roles ?? []}
-            project_id={projectId}
-            offset={offset}
-            setOffset={setOffset}
-            total={data?.total ?? 0}
-            isPreviousData={isPreviousData}
-          />
-        )}
       </div>
     </ContentLayout>
   )

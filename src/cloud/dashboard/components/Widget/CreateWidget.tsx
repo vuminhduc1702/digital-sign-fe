@@ -8,37 +8,37 @@ import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
 
-import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
-import { Button } from '~/components/Button'
-import { Calendar, TimePicker } from '~/components/Calendar'
-import { Dialog, DialogTitle } from '~/components/Dialog'
+import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
+import { Button } from '@/components/Button'
+import { Calendar, TimePicker } from '@/components/Calendar'
+import { Dialog, DialogTitle } from '@/components/Dialog'
 import {
   FieldWrapper,
   InputField,
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { Spinner } from '~/components/Spinner'
-import i18n from '~/i18n'
-import { useGetOrgs } from '~/layout/MainLayout/api'
-import { cn } from '~/utils/misc'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import TitleBar from '@/components/Head/TitleBar'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { Spinner } from '@/components/Spinner'
+import i18n from '@/i18n'
+import { useGetOrgs } from '@/layout/MainLayout/api'
+import { cn } from '@/utils/misc'
+import storage from '@/utils/storage'
 import { useCreateAttrChart } from '../../api'
 
 import { type SelectInstance } from 'react-select'
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { LuCalendar } from 'react-icons/lu'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
-import { ComplexTree } from '~/components/ComplexTree'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
+import { ComplexTree } from '@/components/ComplexTree'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -602,18 +602,18 @@ export function CreateWidget({
               {widgetCategory === 'LINE'
                 ? t('cloud:dashboard.config_chart.title_line')
                 : widgetCategory === 'BAR'
-                ? t('cloud:dashboard.config_chart.title_bar')
-                : widgetCategory === 'TABLE'
-                ? t('cloud:dashboard.config_chart.title_table')
-                : widgetCategory === 'PIE'
-                ? t('cloud:dashboard.config_chart.title_pie')
-                : widgetCategory === 'GAUGE'
-                ? t('cloud:dashboard.config_chart.title_gauge')
-                : widgetCategory === 'CARD'
-                ? t('cloud:dashboard.config_chart.title_card')
-                : widgetCategory === 'MAP'
-                ? t('cloud:dashboard.config_chart.title_map')
-                : null}
+                  ? t('cloud:dashboard.config_chart.title_bar')
+                  : widgetCategory === 'TABLE'
+                    ? t('cloud:dashboard.config_chart.title_table')
+                    : widgetCategory === 'PIE'
+                      ? t('cloud:dashboard.config_chart.title_pie')
+                      : widgetCategory === 'GAUGE'
+                        ? t('cloud:dashboard.config_chart.title_gauge')
+                        : widgetCategory === 'CARD'
+                          ? t('cloud:dashboard.config_chart.title_card')
+                          : widgetCategory === 'MAP'
+                            ? t('cloud:dashboard.config_chart.title_map')
+                            : null}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button

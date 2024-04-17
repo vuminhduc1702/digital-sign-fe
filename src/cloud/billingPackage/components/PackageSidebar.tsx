@@ -3,18 +3,18 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from '~/components/Button'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { Button } from '@/components/Button'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 
 import { type PlanFilter } from '../types'
 
-import listIcon from '~/assets/icons/list.svg'
-import dollarIcon from '~/assets/icons/currency-dollar1.svg'
+import listIcon from '@/assets/icons/list.svg'
+import dollarIcon from '@/assets/icons/currency-dollar1.svg'
 import { CreatePackage } from './CreatePackage'
 import { useGetPlans } from '../api'
-import { flattenData } from '~/utils/misc'
-import { SearchField } from '~/components/Input'
+import { flattenData } from '@/utils/misc'
+import { SearchField } from '@/components/Input'
 
 export function PackageSidebar() {
   const { t } = useTranslation()
@@ -34,7 +34,7 @@ export function PackageSidebar() {
 
   return (
     <>
-      <div className="bg-secondary-400 flex h-[60px] items-center gap-3 rounded-md px-4 py-3">
+      <div className="flex h-[60px] items-center gap-3 rounded-md bg-secondary-400 px-4 py-3">
         <div className="flex gap-3">
           <img
             src={listIcon}
@@ -51,7 +51,7 @@ export function PackageSidebar() {
           />
         </div>
       </div>
-      <div className="bg-secondary-400 h-[80vh] grow overflow-y-auto p-5">
+      <div className="h-[80vh] grow overflow-y-auto bg-secondary-400 p-5">
         {planFlattenData?.length > 0 ? (
           <div className="space-y-3">
             {planFlattenData?.map((plan: PlanFilter) => (

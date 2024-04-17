@@ -13,7 +13,7 @@ import {
   SheetClose,
   SheetFooter,
 } from '../Sheet'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 const sizes = {
   sm: 'max-w-md',
@@ -67,7 +67,7 @@ export const Drawer = ({
                   <SheetTitle>{title}</SheetTitle>
                   <SheetClose>
                     <button
-                      className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                      className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                       onClick={onClose}
                     >
                       <span className="sr-only">Close panel</span>

@@ -1,17 +1,17 @@
 import { useState } from 'react'
-import { NavLink } from '~/components/Link'
-import { PATHS } from '~/routes/PATHS'
-import { cn } from '~/utils/misc'
+import { NavLink } from '@/components/Link'
+import { PATHS } from '@/routes/PATHS'
+import { cn } from '@/utils/misc'
 import { TemplateDefault } from './TemplateDefault'
 import { TemplateLwM2M } from './TemplateLwM2M'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 export function TemplateSidebar() {
   const [type, setType] = useState('Default')
   const projectId = storage.getProject()?.id
   const DeviceType = ['Default', 'LwM2M']
   return (
     <>
-      <div className="bg-secondary-400 flex h-[60px] items-center gap-2 px-4 py-3">
+      <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
         <div className="w-fit rounded-2xl bg-slate-200">
           {DeviceType.map(item => (
             <NavLink
@@ -37,7 +37,7 @@ export function TemplateSidebar() {
           ))}
         </div>
       </div>
-      <div className="bg-secondary-500 h-[80vh] grow overflow-y-auto p-3">
+      <div className="h-[80vh] grow overflow-y-auto bg-secondary-500 p-3">
         {type === 'Default' ? <TemplateDefault /> : <TemplateLwM2M />}
       </div>
     </>

@@ -1,15 +1,15 @@
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { PATHS } from '~/routes/PATHS'
-import { lazyImport } from '~/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
+import { lazyImport } from '@/utils/lazyImport'
 import { InfoCustomer } from '../components/Customer/InfoCustomer'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 const { CustomerManageLayout } = lazyImport(
-  () => import('~/layout/CustomerManageLayout'),
+  () => import('@/layout/CustomerManageLayout'),
   'CustomerManageLayout',
 )
 
@@ -31,7 +31,7 @@ export const CustomerManageRoutes = [
               <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <CustomerManageTemplate />
               </ErrorBoundary>
-            )
+            ),
           },
           {
             path: ':projectId/:customerId',

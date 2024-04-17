@@ -6,25 +6,25 @@ import * as z from 'zod'
 
 import { format } from 'date-fns'
 import { LuCalendar } from 'react-icons/lu'
-import { Button } from '~/components/Button'
-import { Calendar } from '~/components/Calendar'
-import { InputField, SelectField } from '~/components/Form'
-import { FormDialog } from '~/components/FormDialog'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { PlusIcon } from '~/components/SVGIcons'
-import i18n from '~/i18n'
-import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
-import { cn } from '~/utils/misc'
+import { Button } from '@/components/Button'
+import { Calendar } from '@/components/Calendar'
+import { InputField, SelectField } from '@/components/Form'
+import { FormDialog } from '@/components/FormDialog'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { PlusIcon } from '@/components/SVGIcons'
+import i18n from '@/i18n'
+import { useAreaList } from '@/layout/MainLayout/components/UserAccount/api/getAreaList'
+import { cn } from '@/utils/misc'
 import {
   emailSchema,
   nameSchema,
   passwordSchema,
   phoneSchemaRegex,
-} from '~/utils/schemaValidation'
+} from '@/utils/schemaValidation'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import 'react-day-picker/dist/style.css'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   useCreateCustomer,
   type CreateEntityCustomerDTO,
@@ -279,12 +279,9 @@ export function CreateCustomer() {
         </form>
       }
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:tenant.button')}
+        </Button>
       }
       confirmButton={
         <Button

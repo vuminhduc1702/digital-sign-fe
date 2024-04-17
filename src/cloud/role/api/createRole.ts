@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 import { type Role, type Policies } from '../types'
-import { type RoleTypes } from '~/lib/authorization'
+import { type RoleTypes } from '@/lib/authorization'
 
 export type CreateRoleDTO = {
   data: {

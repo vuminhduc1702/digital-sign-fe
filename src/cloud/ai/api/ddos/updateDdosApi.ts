@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { type GetDdosDTO } from '../../types'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 import { toast } from 'sonner'
 
 export const updateDdosAi = (data: GetDdosDTO) => {

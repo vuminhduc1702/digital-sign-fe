@@ -3,27 +3,27 @@ import { useEffect } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { BASE_PATH, PATHS } from './PATHS'
-import { useUser } from '~/lib/auth'
-import { lazyImport } from '~/utils/lazyImport'
+import { useUser } from '@/lib/auth'
+import { lazyImport } from '@/utils/lazyImport'
 import { protectedRoutes } from './protected'
 import { publicRoutes } from './public'
-import { ErrorFallback } from '~/pages/ErrorPage'
-import { PDFViewer } from '~/pages/LandingPage/components/PdfViewer'
+import { ErrorFallback } from '@/pages/ErrorPage'
+import { PDFViewer } from '@/pages/LandingPage/components/PdfViewer'
 
 const { LandingPage } = lazyImport(
-  () => import('~/pages/LandingPage'),
+  () => import('@/pages/LandingPage'),
   'LandingPage',
 )
 const { MaintainPage } = lazyImport(
-  () => import('~/pages/MaintainPage'),
+  () => import('@/pages/MaintainPage'),
   'MaintainPage',
 )
 const { NotFoundPage } = lazyImport(
-  () => import('~/pages/NotFoundPage'),
+  () => import('@/pages/NotFoundPage'),
   'NotFoundPage',
 )
 const { VersionPage } = lazyImport(
-  () => import('~/pages/VersionPage'),
+  () => import('@/pages/VersionPage'),
   'VersionPage',
 )
 

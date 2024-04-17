@@ -1,8 +1,8 @@
 import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { InputField } from '~/components/Form'
-import { SearchIcon } from '~/components/SVGIcons'
-import { ContentLayout } from '~/layout/ContentLayout'
+import { InputField } from '@/components/Form'
+import { SearchIcon } from '@/components/SVGIcons'
+import { ContentLayout } from '@/layout/ContentLayout'
 
 export function Devkit() {
   const devkits = ['Espressif Systems', 'Simcom']
@@ -87,7 +87,7 @@ export function Devkit() {
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
                 {t('device:Espressif')}
               </div>
-              <div className="border-opacity-15 mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white bg-[#eceff1] pb-8">
+              <div className="mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white border-opacity-15 bg-[#eceff1] pb-8">
                 {devkitsDevice_Espressif.map((item, idx) => (
                   <div className="p-4" key={idx}>
                     <div className="shadow-md">
@@ -133,7 +133,7 @@ export function Devkit() {
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
                 {t('device:simcom')}
               </div>
-              <div className="border-opacity-15 mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white bg-[#eceff1] pb-8 ">
+              <div className="mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white border-opacity-15 bg-[#eceff1] pb-8 ">
                 {devkitsDevice_Simcom.map((item, idx) => (
                   <div className="p-4" key={idx}>
                     <div className="shadow-lg">

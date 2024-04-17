@@ -2,13 +2,13 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Link } from '~/components/Link'
-import { BaseTable } from '~/components/Table'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { Link } from '@/components/Link'
+import { BaseTable } from '@/components/Table'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 
 import { type ModuleConfig } from '../types'
-import { BaseTablePagination } from '~/types'
+import { BaseTablePagination } from '@/types'
 
 type LwM2MTableProps = {
   moduleConfig: ModuleConfig[]

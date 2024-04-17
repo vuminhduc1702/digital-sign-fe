@@ -3,15 +3,15 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
-import { InputField } from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
+import { Button } from '@/components/Button'
+import { InputField } from '@/components/Form'
+import { Drawer } from '@/components/Drawer'
 
 import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
 import { dashboardSchema } from '.'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 
 type UpdateDashboardProps = {
   id: string

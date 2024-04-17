@@ -1,57 +1,59 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { PATHS } from './PATHS'
-import { lazyImport } from '~/utils/lazyImport'
+import { lazyImport } from '@/utils/lazyImport'
 
-import MainLayout from '~/layout/MainLayout'
+import MainLayout from '@/layout/MainLayout'
 
-import { OrgManagementRoutes } from '~/cloud/orgManagement'
-import { FlowEngineV2Routes } from '~/cloud/flowEngineV2'
-import { FirmWareRoutes } from '~/cloud/firmware'
-import { CustomerManageRoutes } from '~/cloud/customerManage'
+import { OrgManagementRoutes } from '@/cloud/orgManagement'
+import { FlowEngineV2Routes } from '@/cloud/flowEngineV2'
+import { FirmWareRoutes } from '@/cloud/firmware'
+import { CustomerManageRoutes } from '@/cloud/customerManage'
 
-import { ErrorFallback } from '~/pages/ErrorPage'
-import { ProjectManagementRoutes } from '~/cloud/project'
-import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
-import { SubscriptionRoutes } from '~/cloud/subcription/routes'
-import { BillingRoutes } from '~/cloud/billing/routes'
+import { ErrorFallback } from '@/pages/ErrorPage'
+import { ProjectManagementRoutes } from '@/cloud/project'
+import { DashboardManagementRoutes } from '@/cloud/dashboard/routes'
+import { SubscriptionRoutes } from '@/cloud/subcription/routes'
+import { BillingRoutes } from '@/cloud/billing/routes'
 
-import { ChangePassword } from '~/features/auth/routes/ChangePassword'
-import { DeviceRoutes } from '~/device/routes'
-import { ApplicationRoutes } from '~/applicationPages'
-import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
-import { AiRoutes } from '~/cloud/ai'
-import MainTenant from '~/cloud/tenant/MainTenant'
-import DevRole from '~/cloud/devRole/DevRole'
-import { Default } from '~/cloud/deviceTemplate/routes/Default'
-import { LwM2M } from '~/cloud/deviceTemplate/routes/LwM2M'
+import { ChangePassword } from '@/features/auth/routes/ChangePassword'
+import { DeviceRoutes } from '@/device/routes'
+import { ApplicationRoutes } from '@/applicationPages'
+import SelfAccount from '@/layout/MainLayout/components/UserAccount/SelfAccount'
+import { AiRoutes } from '@/cloud/ai'
+import MainTenant from '@/cloud/tenant/MainTenant'
+import DevRole from '@/cloud/devRole/DevRole'
+import { Default } from '@/cloud/deviceTemplate/routes/Default'
+import { LwM2M } from '@/cloud/deviceTemplate/routes/LwM2M'
 import { Navigate } from 'react-router-dom'
-import storage from '~/utils/storage'
-import { Authorization } from '~/lib/authorization'
+
+import TestMap from '@/cloud/testMap/routes/TestMap'
+import storage from '@/utils/storage'
+import { Authorization } from '@/lib/authorization'
 
 const projectId = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
-  () => import('~/cloud/deviceTemplate'),
+  () => import('@/cloud/deviceTemplate'),
   'DeviceTemplateManage',
 )
 const { BillingPackageManage } = lazyImport(
-  () => import('~/cloud/billingPackage'),
+  () => import('@/cloud/billingPackage'),
   'BillingPackageManage',
 )
 const { OverViewManage } = lazyImport(
-  () => import('~/cloud/overView'),
+  () => import('@/cloud/overView'),
   'OverViewManage',
 )
-const { RoleManage } = lazyImport(() => import('~/cloud/role'), 'RoleManage')
+const { RoleManage } = lazyImport(() => import('@/cloud/role'), 'RoleManage')
 const { CustomProtocolManage } = lazyImport(
-  () => import('~/cloud/customProtocol'),
+  () => import('@/cloud/customProtocol'),
   'CustomProtocolManage',
 )
 const { DataBaseTemplateManage } = lazyImport(
-  () => import('~/cloud/databaseTemplate'),
+  () => import('@/cloud/databaseTemplate'),
   'DataBaseTemplateManage',
 )
 const { ForbiddenPage } = lazyImport(
-  () => import('~/pages/ForbiddenPage'),
+  () => import('@/pages/ForbiddenPage'),
   'ForbiddenPage',
 )
 
@@ -167,6 +169,14 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':tableName' }] }],
+      },
+      {
+        path: PATHS.TEST_MAP,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <TestMap />
+          </ErrorBoundary>
+        ),
       },
     ],
   },

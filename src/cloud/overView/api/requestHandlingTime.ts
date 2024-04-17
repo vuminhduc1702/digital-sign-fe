@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 import type * as z from 'zod'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 export type RequestHandlingTimeDTO = {
@@ -20,12 +20,12 @@ export type RequestHandlingTimeData = {
 export const RequestHandlingTime = ({
   projectId,
   method,
-  url 
+  url,
 }: RequestHandlingTimeDTO): Promise<RequestHandlingTimeData> => {
   return axios.post(`/api/overviews/latency`, {
     project_id: projectId,
     method,
-    url
+    url,
   })
 }
 

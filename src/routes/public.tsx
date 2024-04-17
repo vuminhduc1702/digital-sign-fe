@@ -1,8 +1,8 @@
-import { lazyImport } from '~/utils/lazyImport'
+import { lazyImport } from '@/utils/lazyImport'
 import { BASE_PATH } from './PATHS'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
-const { AuthRoutes } = lazyImport(() => import('~/features/auth'), 'AuthRoutes')
+const { AuthRoutes } = lazyImport(() => import('@/features/auth'), 'AuthRoutes')
 
 const userDataFromStorage = storage.getToken()
 

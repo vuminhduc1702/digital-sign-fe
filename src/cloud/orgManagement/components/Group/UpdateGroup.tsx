@@ -4,21 +4,21 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 
-import { Button } from '~/components/Button'
-import { InputField, SelectField } from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
+import { Button } from '@/components/Button'
+import { InputField, SelectField } from '@/components/Form'
+import { Drawer } from '@/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 import { entityTypeList } from './CreateGroup'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 import { type EntityType } from '../../api/attrAPI'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import storage from '~/utils/storage'
-import { ComplexTree } from '~/components/ComplexTree'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import storage from '@/utils/storage'
+import { ComplexTree } from '@/components/ComplexTree'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,

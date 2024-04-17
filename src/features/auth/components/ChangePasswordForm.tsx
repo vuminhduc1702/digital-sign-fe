@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { InputField } from '~/components/Form'
-import { Button } from '~/components/Button'
+import { InputField } from '@/components/Form'
+import { Button } from '@/components/Button'
 
 import {
   useChangePassword,
@@ -12,7 +12,7 @@ import {
   type changePasswordDTO,
 } from '../api/changepassword'
 
-import { BtnPasswordLoginIcon, EyeHide, EyeShow } from '~/components/SVGIcons'
+import { BtnPasswordLoginIcon, EyeHide, EyeShow } from '@/components/SVGIcons'
 
 type ChangePaswordFormProps = {
   onSuccess: () => void

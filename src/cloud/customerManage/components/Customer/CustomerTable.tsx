@@ -1,23 +1,23 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '~/components/Table'
+import { BaseTable, type BaseTableProps } from '@/components/Table'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
 import { EyeOpenIcon } from '@radix-ui/react-icons'
 import { useNavigate } from 'react-router-dom'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 import { type Customer } from '../../types'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
 function CustomerTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -54,23 +54,50 @@ function CustomerTableContextMenu({ id }: { id: string }) {
   )
 }
 
+type PartialBaseTableProps<T> = Omit<BaseTableProps<Customer>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+}
+
 type CustomerTableProps = {
   data?: Customer[]
   rowSelection: { [key: string]: boolean }
   setRowSelection: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
-} & BaseTablePagination
+} & PartialBaseTableProps<Customer>
 
 export function CustomerTable({ data, ...props }: CustomerTableProps) {
   const { t } = useTranslation()
+
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
 
   const columnHelper = createColumnHelper<Customer>()
   const columns = useMemo<ColumnDef<Customer, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { user_id } = info.row.original
+          return CustomerTableContextMenu({
+            id: user_id,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -106,17 +133,6 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
       columnHelper.accessor('org_name', {
         header: () => <span>{t('billing:customer_manage.table.parent')}</span>,
         cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { user_id } = info.row.original
-          return CustomerTableContextMenu({
-            id: user_id,
-          })
-        },
-        header: () => null,
         footer: info => info.column.id,
       }),
     ],

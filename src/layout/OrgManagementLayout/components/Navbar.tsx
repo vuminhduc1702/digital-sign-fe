@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import storage from '~/utils/storage'
-import { NavLink } from '~/components/Link'
-import { PATHS } from '~/routes/PATHS'
+import storage from '@/utils/storage'
+import { NavLink } from '@/components/Link'
+import { PATHS } from '@/routes/PATHS'
 
 import {
   OrgDeviceIcon,
@@ -11,7 +11,7 @@ import {
   OrgGroupIcon,
   OrgInfoIcon,
   OrgUserIcon,
-} from '~/components/SVGIcons'
+} from '@/components/SVGIcons'
 
 function OrgManageNavbar() {
   const { t } = useTranslation()

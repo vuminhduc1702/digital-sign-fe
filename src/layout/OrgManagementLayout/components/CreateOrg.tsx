@@ -4,28 +4,28 @@ import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { Button } from '~/components/Button'
-import { FormDrawer, InputField, TextAreaField } from '~/components/Form'
-import FileField from '~/components/Form/FileField'
+import { Button } from '@/components/Button'
+import { FormDrawer, InputField, TextAreaField } from '@/components/Form'
+import FileField from '@/components/Form/FileField'
 import {
   useCreateOrg,
   useUploadImage,
   type CreateOrgDTO,
   useUpdateOrg,
 } from '../api'
-import { descSchema, nameSchema } from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
+import { descSchema, nameSchema } from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
   useResetDefaultImage,
-} from '~/utils/hooks'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+} from '@/utils/hooks'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import defaultOrgImage from '~/assets/images/default-org.png'
-import { ComplexTree } from '~/components/ComplexTree'
+import { PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import defaultOrgImage from '@/assets/images/default-org.png'
+import { ComplexTree } from '@/components/ComplexTree'
 
 export const orgSchema = z.object({
   name: nameSchema,

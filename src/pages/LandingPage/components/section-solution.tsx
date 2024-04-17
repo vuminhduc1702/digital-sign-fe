@@ -1,11 +1,11 @@
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   Time1,
   World1,
   Money1,
   Review1,
   ArrowRightUpLine,
-} from '~/components/SVGIcons'
+} from '@/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
 export function SectionSolution() {
   const { t } = useTranslation()
@@ -80,7 +80,7 @@ export function SectionSolution() {
               </div>
             ))}
           </div>
-          <div className="flex justify-items-end pt-[40px] lg:justify-center  max-lg:flex max-lg:justify-center max-md:flex max-md:justify-center max-sm:flex max-sm:justify-center">
+          <div className="flex justify-items-end pt-[40px] max-lg:flex  max-lg:justify-center max-md:flex max-md:justify-center max-sm:flex max-sm:justify-center lg:justify-center">
             <div className="h-fit w-fit ">
               <a
                 href="https://cmp.innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"

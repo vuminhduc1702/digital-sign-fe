@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 
-import { flattenData } from '~/utils/misc'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import { flattenData } from '@/utils/misc'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 import {
   ComboBoxBase,
   type ComboBoxBasePassThroughProps,
   filteredComboboxData,
-} from '~/components/ComboBox'
-import storage from '~/utils/storage'
+} from '@/components/ComboBox'
+import storage from '@/utils/storage'
 
-import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
-import { type FieldWrapperPassThroughProps } from '~/components/Form'
+import { type OrgMapType } from '@/layout/OrgManagementLayout/components/OrgManageSidebar'
+import { type FieldWrapperPassThroughProps } from '@/components/Form'
 
-import { SearchIcon } from '~/components/SVGIcons'
+import { SearchIcon } from '@/components/SVGIcons'
 
 type ComboBoxSelectOrgProps = {
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<OrgMapType[]>>

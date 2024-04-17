@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type Billing } from '../../types'
-import { type BaseAPIRes } from '~/types'
+import { type BaseAPIRes } from '@/types'
 
 export type GetBillingByIdRes = {
   data: Billing
@@ -25,10 +25,7 @@ type UseBillingByIdOptions = {
   config?: QueryConfig<QueryFnType>
 }
 
-export const useBillingById = ({
-  id,
-  config,
-}: UseBillingByIdOptions) => {
+export const useBillingById = ({ id, config }: UseBillingByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['billingById', id],
     queryFn: () => getBillingById({ id }),

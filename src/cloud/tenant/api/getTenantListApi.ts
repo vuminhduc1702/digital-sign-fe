@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 
 export const getCustomerList = ({
   limit,

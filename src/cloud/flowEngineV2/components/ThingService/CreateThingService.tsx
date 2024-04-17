@@ -5,24 +5,24 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FieldWrapper,
   InputField,
   SelectField,
   TextAreaField,
-} from '~/components/Form'
-import { nameSchemaRegex } from '~/utils/schemaValidation'
+} from '@/components/Form'
+import { nameSchemaRegex } from '@/utils/schemaValidation'
 import {
   useCreateServiceThing,
   type CreateServiceThingDTO,
 } from '../../api/thingServiceAPI'
-import { cn } from '~/utils/misc'
-import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
-import { FormDialog } from '~/components/FormDialog'
-import { PlusIcon } from '~/components/SVGIcons'
-import { Switch } from '~/components/Switch'
-import storage from '~/utils/storage'
+import { cn } from '@/utils/misc'
+import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
+import { FormDialog } from '@/components/FormDialog'
+import { PlusIcon } from '@/components/SVGIcons'
+import { Switch } from '@/components/Switch'
+import storage from '@/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
 import {
@@ -30,28 +30,28 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
-import { Checkbox } from '~/components/Checkbox'
-import { outputList } from '~/cloud/customProtocol/components/CreateService'
+} from '@/components/Tooltip'
+import { Checkbox } from '@/components/Checkbox'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
-import btnAddIcon from '~/assets/icons/btn-add.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
-import btnRunCode from '~/assets/icons/btn-run-code.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnAddIcon from '@/assets/icons/btn-add.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnFullScreen from '@/assets/icons/btn-fullscreen.svg'
+import btnRunCode from '@/assets/icons/btn-run-code.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { LuChevronDown } from 'react-icons/lu'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '~/components/Resizable'
+} from '@/components/Resizable'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
 export const inputSchema = z.object({
   name: z
@@ -250,8 +250,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   item.type === 'bool' && item.value === ''
                     ? 'false'
                     : numberServiceInput.includes(item.type as string)
-                    ? parseInt(item.value)
-                    : item.value
+                      ? parseInt(item.value)
+                      : item.value
               })
               mutateExecuteService({
                 data: dataRun,
@@ -343,7 +343,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
             </div>
             <div className={cn('grid grid-cols-1 gap-x-4 md:grid-cols-4')}>
               <div className={'relative flex flex-col gap-2 md:col-span-1'}>
-                <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                   <div className="flex gap-3">
                     <p className="text-table-header">
                       {t('cloud:custom_protocol.service.input')}
@@ -454,7 +454,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           type="button"
                           size="square"
                           variant="none"
-                          className={cn('hover:bg-secondary-500 h-9', {
+                          className={cn('h-9 hover:bg-secondary-500', {
                             '!justify-center': fullScreen,
                           })}
                           onClick={() => remove(index)}
@@ -508,7 +508,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   </div>
                 </div>
                 <div className="mt-1.5 flex flex-col">
-                  <div className="bg-secondary-400 mb-1.5 flex items-center rounded-lg px-4 py-2">
+                  <div className="mb-1.5 flex items-center rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3 ">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.list_service')}
@@ -534,7 +534,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               </TooltipTrigger>
                               <TooltipContent side="right">
                                 <div>
-                                  <div className="text-table-header mb-4">
+                                  <div className="mb-4 text-table-header">
                                     {item.name}
                                   </div>
                                   <div>
@@ -596,7 +596,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
                   ref={codeEditorRef}
                 >
-                  <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
+                  <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.code')}
@@ -605,9 +605,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     <div className="flex gap-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger>
-                          <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                          <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                        <DropdownMenuContent className="z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
                           <DropdownMenuItem
                             className="py-1"
                             onClick={() => {
@@ -674,18 +674,18 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
                   ref={resultEditorRef}
                 >
-                  <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
+                  <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
-                      <p className="text-table-header truncate">
+                      <p className="truncate text-table-header">
                         {t('cloud:custom_protocol.service.output')}
                       </p>
                     </div>
                     <div className="flex gap-3">
                       <DropdownMenu>
                         <DropdownMenuTrigger>
-                          <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                          <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                        <DropdownMenuContent className="z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
                           <DropdownMenuItem
                             className="py-1"
                             onClick={() => {

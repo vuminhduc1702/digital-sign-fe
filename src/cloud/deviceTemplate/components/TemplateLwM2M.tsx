@@ -3,30 +3,30 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { useCopyId, useDisclosure } from '~/utils/hooks'
-import { PATHS } from '~/routes/PATHS'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
+import { PATHS } from '@/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
 import { ComboBoxSelectTemplateLwM2M } from './ComboBoxSelectTemplateLwM2M'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 import { type Template } from '../types'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { UpdateTemplateLwM2M } from './UpdateTemplateLwM2M'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function TemplateLwM2M() {
   const { t } = useTranslation()
@@ -75,13 +75,13 @@ export function TemplateLwM2M() {
 
   return (
     <>
-      <div className="bg-secondary-400 flex h-[60px] items-center gap-2 px-4 py-3">
+      <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
         <CreateTemplateLwM2M />
         <ComboBoxSelectTemplateLwM2M
           setFilteredComboboxData={setFilteredComboboxData}
         />
       </div>
-      <div className="bg-secondary-500 h-[70vh] grow overflow-y-auto p-3">
+      <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
         {filteredComboboxData !== null && filteredComboboxData?.length > 0 ? (
           <div className="space-y-3">
             {filteredComboboxData?.map((template: Template) => (
@@ -104,10 +104,10 @@ export function TemplateLwM2M() {
                     {template?.name}
                   </p>
                 </Button>
-                <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
+                <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
                   <DropdownMenu>
                     <DropdownMenuTrigger>
-                      <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                      <div className="flex h-10 w-6 items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                         <BtnContextMenuIcon
                           height={20}
                           width={3}

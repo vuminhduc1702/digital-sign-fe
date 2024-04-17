@@ -1,8 +1,8 @@
 import SideNavigation from './SideNavigation'
 
-import logo from '~/assets/images/logo.svg'
-import { Drawer } from '~/components/Drawer'
-import { NavLink } from '~/components/Link'
+import logo from '@/assets/images/logo.svg'
+import { Drawer } from '@/components/Drawer'
+import { NavLink } from '@/components/Link'
 
 type MobileSidebarProps = {
   sidebarOpen: boolean

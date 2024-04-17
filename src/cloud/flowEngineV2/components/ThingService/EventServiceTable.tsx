@@ -2,16 +2,16 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
+import { BaseTable } from '@/components/Table'
+import { useDisclosure } from '@/utils/hooks'
 import { useDeleteThingService } from '../../api/thingServiceAPI'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 import { type BodyEventService, type EventService } from '../../types'
 
 import { useParams } from 'react-router-dom'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { getVNDateFormat } from '~/utils/misc'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { getVNDateFormat } from '@/utils/misc'
 import { ViewInputOutput } from './ViewInputOutput'
 
 function EventServiceTableContextMenu({
@@ -35,7 +35,7 @@ function EventServiceTableContextMenu({
         width={10}
         onClick={open}
         viewBox="0 0 1 20"
-        className="text-secondary-700 hover:text-primary-400 cursor-pointer"
+        className="cursor-pointer text-secondary-700 hover:text-primary-400"
       />
       {isOpen ? (
         <ViewInputOutput

@@ -1,16 +1,16 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Navigate } from 'react-router-dom'
 
-import { lazyImport } from '~/utils/lazyImport'
-import { PATHS } from '~/routes/PATHS'
+import { lazyImport } from '@/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
 import DdosTemplate from './DdosTemplate'
 import FuelTemplate from './FuelTemplate'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
-const { AiLayout } = lazyImport(() => import('~/layout/AiLayout'), 'AiLayout')
+const { AiLayout } = lazyImport(() => import('@/layout/AiLayout'), 'AiLayout')
 
 export const AiRoutes = [
   {

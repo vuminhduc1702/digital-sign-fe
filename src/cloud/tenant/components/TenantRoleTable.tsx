@@ -1,13 +1,13 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { BaseTable } from '~/components/Table'
-import { type BaseTablePagination } from '~/types'
-import { useDisclosure } from '~/utils/hooks'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { BaseTable } from '@/components/Table'
+import { type BaseTablePagination } from '@/types'
+import { useDisclosure } from '@/utils/hooks'
 import { useDeleteCustomerRole } from '../api/deleteTenantRoleApi'
 import { type CustomerRoleEntity } from '../types'
 import { UpdateCustomerRole } from './UpdateTenantRole'
@@ -16,9 +16,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 import { type PermissionEntity, type PermissionEntityTable } from '../types'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 type CustomerRoleTableProps = {
   data: CustomerRoleEntity[]

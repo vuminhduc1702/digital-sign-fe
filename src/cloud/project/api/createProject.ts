@@ -1,15 +1,15 @@
 import type * as z from 'zod'
 import * as zs from 'zod'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
-import { type BaseAPIRes } from '~/types'
+import { type BaseAPIRes } from '@/types'
 import { ProjectSchema } from '../routes/ProjectManage'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
 type CreateProjectRes = {
   id: string

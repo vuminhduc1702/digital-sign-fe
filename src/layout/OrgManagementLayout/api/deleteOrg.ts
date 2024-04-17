@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { PATHS } from '~/routes/PATHS'
-import { useProjectById } from '~/cloud/project/api'
-import storage from '~/utils/storage'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
+import { PATHS } from '@/routes/PATHS'
+import { useProjectById } from '@/cloud/project/api'
+import storage from '@/utils/storage'
 
 import { type EntityTypeURL } from '../components/OrgManageSidebar'
 

@@ -2,15 +2,15 @@ import { useRef, useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import TitleBar from '~/components/Head/TitleBar'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import storage from '~/utils/storage'
+import TitleBar from '@/components/Head/TitleBar'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import storage from '@/utils/storage'
 import { TemplateInfo } from '../components'
 
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
-import { SearchField } from '~/components/Input'
+import { SearchField } from '@/components/Input'
 
 export function LwM2M() {
   const { t } = useTranslation()

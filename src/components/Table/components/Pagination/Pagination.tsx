@@ -1,10 +1,10 @@
 import { forwardRef, useMemo } from 'react'
 import { type Table } from '@tanstack/react-table'
 
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
 const DOTS = '...'
 

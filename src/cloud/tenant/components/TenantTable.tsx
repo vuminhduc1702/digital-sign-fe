@@ -1,15 +1,15 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { Button } from '@/components/Button'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { BaseTable } from '~/components/Table'
-import { type BaseTablePagination } from '~/types'
-import { useDisclosure } from '~/utils/hooks'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { BaseTable, type BaseTableProps } from '@/components/Table'
+import { type BaseTablePagination } from '@/types'
+import { useDisclosure } from '@/utils/hooks'
 import { useDeleteCustomer } from '../api/deleteTenantApi'
 import { type BillingCustomerEntity } from '../types'
 import { UpdateCustomer } from './UpdateTenant'
@@ -18,12 +18,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<BillingCustomerEntity>,
+  'columns'
+> & {
+  columns?: ColumnDef<T, any>[]
+}
 
 type BillingCustomerTableProps = {
   data: BillingCustomerEntity[]
-} & BaseTablePagination
+} & PartialBaseTableProps<BillingCustomerEntity>
 
 function CustomerTableContextMenu({
   id,
@@ -51,32 +59,14 @@ function CustomerTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-            {t('form:tenant.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img
-              src={btnDeleteIcon}
-              alt="Delete customer"
-              className="h-5 w-5"
-            />
-            {t('form:tenant.delete')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={open} />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+        </div>
+      </div>
       {isOpen ? (
         <UpdateCustomer
           customerId={id}
@@ -107,30 +97,17 @@ function CustomerTableContextMenu({
 export function TenantTable({ data, ...props }: BillingCustomerTableProps) {
   const { t } = useTranslation()
 
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
+
   const columnHelper = createColumnHelper<BillingCustomerEntity>()
   const columns = useMemo<ColumnDef<BillingCustomerEntity, any>[]>(
     () => [
-      columnHelper.display({
-        id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
-        header: () => <span>{t('table:no')}</span>,
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('name', {
-        header: () => <span>{t('table:tenant')}</span>,
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('phone', {
-        header: () => <span>{t('table:phone')}</span>,
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('email', {
-        header: () => <span>{t('table:email')}</span>,
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
@@ -144,6 +121,31 @@ export function TenantTable({ data, ...props }: BillingCustomerTableProps) {
           })
         },
         header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'stt',
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
+        header: () => <span>{t('table:no')}</span>,
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('name', {
+        header: () => <span>{t('cloud:tenant.table.tenant')}</span>,
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('phone', {
+        header: () => <span>{t('cloud:tenant.table.phone')}</span>,
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('email', {
+        header: () => <span>{t('cloud:tenant.table.email')}</span>,
+        cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
     ],

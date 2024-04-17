@@ -3,29 +3,29 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from '~/components/Button'
-import { PATHS } from '~/routes/PATHS'
-import { useCopyId, useDisclosure } from '~/utils/hooks'
-import storage from '~/utils/storage'
+import { Button } from '@/components/Button'
+import { PATHS } from '@/routes/PATHS'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
+import storage from '@/utils/storage'
 import { useDeleteDataBase } from '../api'
 import CreateDataBase from './CreateDataBase'
 
 import { type DataBase } from '../types'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import listIcon from '~/assets/icons/list.svg'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import listIcon from '@/assets/icons/list.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { useGetDataBases } from '../api/getDataBases'
-import { flattenData } from '~/utils/misc'
+import { flattenData } from '@/utils/misc'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { SearchField } from '~/components/Input'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { SearchField } from '@/components/Input'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function DataBaseSidebar() {
   const { t } = useTranslation()

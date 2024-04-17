@@ -6,19 +6,19 @@ import { useParams } from 'react-router-dom'
 import { z } from 'zod'
 import { type SelectInstance } from 'react-select'
 
-import { Button } from '~/components/Button'
-import { Drawer } from '~/components/Drawer'
+import { Button } from '@/components/Button'
+import { Drawer } from '@/components/Drawer'
 import {
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import storage from '@/utils/storage'
 import { useUpdateDevice, type UpdateDeviceDTO } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
 import { deviceSchema } from './CreateDevice'
-import { useGetTemplates } from '~/cloud/deviceTemplate/api'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import { useGetTemplates } from '@/cloud/deviceTemplate/api'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 import {
   type HeartBeatDTO,
   useHeartBeat,
@@ -27,10 +27,10 @@ import {
 
 import { type DeviceAdditionalInfo } from '../../types'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { ComplexTree } from '~/components/ComplexTree'
-import { useOrgById } from '~/layout/OrgManagementLayout/api'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { ComplexTree } from '@/components/ComplexTree'
+import { useOrgById } from '@/layout/OrgManagementLayout/api'
 
 type UpdateDeviceProps = {
   deviceId: string

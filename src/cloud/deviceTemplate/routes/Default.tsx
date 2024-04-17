@@ -1,25 +1,25 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   AttrTable,
   CreateAttr,
-} from '~/cloud/orgManagement/components/Attributes'
-import TitleBar from '~/components/Head/TitleBar'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import storage from '~/utils/storage'
+} from '@/cloud/orgManagement/components/Attributes'
+import TitleBar from '@/components/Head/TitleBar'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import storage from '@/utils/storage'
 import { TemplateInfo } from '../components'
 
-import { type Attribute } from '~/types'
+import { type Attribute } from '@/types'
 
-import { Button } from '~/components/Button'
-import { convertEpochToDate, convertType } from '~/utils/transformFunc'
-import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
-import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
-import { SearchField } from '~/components/Input'
-import { useDisclosure } from '~/utils/hooks'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { Button } from '@/components/Button'
+import { convertEpochToDate, convertType } from '@/utils/transformFunc'
+import { useDeleteMultipleAttrs } from '@/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
+import { useGetAttrs } from '@/cloud/orgManagement/api/attrAPI/getAttrs'
+import { SearchField } from '@/components/Input'
+import { useDisclosure } from '@/utils/hooks'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function Default() {
   const { t } = useTranslation()
@@ -104,12 +104,6 @@ export function Default() {
           />
           <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable
-                refComponent={ref}
-                rowSelection={rowSelection}
-                aoo={aoo}
-                pdfHeader={pdfHeader}
-              />
               <div className="mr-[42px] flex items-center gap-x-3">
                 {Object.keys(rowSelection).length > 0 && (
                   <div

@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import BgFooter from '~/assets/images/landingpage/bg_footer.png'
-import LogoViettel from '~/assets/images/landingpage/Logo_Viettel.png'
-import { Button } from '~/components/Button'
+import BgFooter from '@/assets/images/landingpage/bg_footer.png'
+import LogoViettel from '@/assets/images/landingpage/Logo_Viettel.png'
+import { Button } from '@/components/Button'
 import {
   MailSendFill,
   PhoneFill,
   FacebookIcon,
   InstagramIcon,
   LinkedinIcon,
-} from '~/components/SVGIcons'
+} from '@/components/SVGIcons'
 export function SectionFooter() {
   const [text, setText] = useState('')
   const maxLength = 500

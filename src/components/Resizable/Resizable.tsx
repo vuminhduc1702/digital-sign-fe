@@ -1,6 +1,6 @@
 import { LuGripVertical } from 'react-icons/lu'
 import * as ResizablePrimitive from 'react-resizable-panels'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 const ResizablePanelGroup = ({
   className,

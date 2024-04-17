@@ -1,7 +1,7 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BaseTable } from '~/components/Table'
+import { BaseTable } from '@/components/Table'
 import { type TransportConfigAttribute } from '../types'
 
 type AttrLwM2MTableProps = {

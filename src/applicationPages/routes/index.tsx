@@ -1,13 +1,13 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Navigate } from 'react-router-dom'
-import { PATHS } from '~/routes/PATHS'
-import { lazyImport } from '~/utils/lazyImport'
-import storage from '~/utils/storage'
+import { PATHS } from '@/routes/PATHS'
+import { lazyImport } from '@/utils/lazyImport'
+import storage from '@/utils/storage'
 import { AppSdk } from '../components/AppSdk/AppSdk'
 import { AppDebug } from '../components/AppDebug/AppDebug'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 

@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import type * as z from 'zod'
 
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 
 export type Profile = {
   identity_info: {

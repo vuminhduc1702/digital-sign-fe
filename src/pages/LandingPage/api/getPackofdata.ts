@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
-import { axios } from '~/lib/axios'
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 
 export const PackofDataSchema = z.object({
   name: z.string(),

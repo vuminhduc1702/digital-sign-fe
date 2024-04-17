@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as SheetPrimitive from '@radix-ui/react-dialog'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 const Sheet = SheetPrimitive.Root
 
@@ -18,7 +18,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80',
+      'fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className,
     )}
     {...props}
@@ -76,7 +76,7 @@ const SheetContentArea = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'fixed inset-0 z-40 overflow-hidden inset-y-0 flex justify-end',
+      'fixed inset-0 inset-y-0 z-40 flex justify-end overflow-hidden',
       className,
     )}
     {...props}
@@ -90,7 +90,7 @@ const SheetBody = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      'flex h-full flex-col divide-gray-200 bg-white shadow-xl overflow-y-scroll',
+      'flex h-full flex-col divide-gray-200 overflow-y-scroll bg-white shadow-xl',
       className,
     )}
     {...props}
@@ -102,13 +102,7 @@ const SheetScroll = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      'flex-1 overflow-y-scroll',
-      className,
-    )}
-    {...props}
-  />
+  <div className={cn('flex-1 overflow-y-scroll', className)} {...props} />
 )
 SheetScroll.displayName = 'SheetScroll'
 
@@ -117,10 +111,7 @@ const SheetHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(
-      'flex items-start justify-between p-6',
-      className,
-    )}
+    className={cn('flex items-start justify-between p-6', className)}
     {...props}
   />
 )
@@ -131,10 +122,7 @@ const SheetData = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn(
-      'relative flex-grow justify-center px-4 sm:px-6',
-      className,
-    )}
+    className={cn('relative flex-grow justify-center px-4 sm:px-6', className)}
     {...props}
   />
 )

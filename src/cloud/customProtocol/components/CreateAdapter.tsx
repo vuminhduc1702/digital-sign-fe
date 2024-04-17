@@ -3,35 +3,35 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useRef, useState } from 'react'
 import * as z from 'zod'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 import { type SelectInstance } from 'react-select'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FormDrawer,
   InputField,
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
+} from '@/components/Form'
 import {
   type CreateAdapterDTO,
   useCreateAdapter,
   usePingMQTT,
 } from '../api/adapter'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 import { useGetEntityThings } from '../api/entityThing'
 import { useGetServiceThings } from '../api/serviceThing'
-import TitleBar from '~/components/Head/TitleBar'
-import { cn } from '~/utils/misc'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import TitleBar from '@/components/Head/TitleBar'
+import { cn } from '@/utils/misc'
+import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
 import { CreateService } from './CreateService'
 
-import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
+import { nameSchema, nameSchemaRegex } from '@/utils/schemaValidation'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { LuChevronDown, LuChevronRight } from 'react-icons/lu'
 
 export const protocolList = [
@@ -240,12 +240,9 @@ export function CreateAdapter() {
       isDone={isSuccessAdapter}
       title={t('cloud:custom_protocol.adapter.create')}
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:custom_protocol.adapter.button')}
+        </Button>
       }
       submitButton={
         <Button

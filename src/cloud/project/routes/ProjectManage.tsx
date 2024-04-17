@@ -3,15 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useState } from 'react'
 
-import { ContentLayout } from '~/layout/ContentLayout'
-import TitleBar from '~/components/Head/TitleBar'
+import { ContentLayout } from '@/layout/ContentLayout'
+import TitleBar from '@/components/Head/TitleBar'
 import { CreateProject } from '../components/CreateProject'
 import { ComboBoxSelectProject } from '../components/ComboBoxSelectProject'
 import { ListProjectItem } from './../components/ListProjectItem'
 
-import { BasePaginationSchema, nameSchema } from '~/utils/schemaValidation'
+import { BasePaginationSchema, nameSchema } from '@/utils/schemaValidation'
 
-import projectBackgroundImage from '~/assets/images/project-background.png'
+import projectBackgroundImage from '@/assets/images/project-background.png'
 
 export const ProjectSchema = z.object({
   id: z.string(),

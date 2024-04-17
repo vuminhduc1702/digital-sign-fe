@@ -4,21 +4,21 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useGetPlans } from '~/cloud/billingPackage/api'
-import { usePlanById } from '~/cloud/billingPackage/api/getPackageById'
-import { useGetUsers } from '~/cloud/orgManagement/api/userAPI'
-import { Button } from '~/components/Button'
-import { InputField, SelectDropdown } from '~/components/Form'
-import { FormDialog } from '~/components/FormDialog'
-import { PlusIcon } from '~/components/SVGIcons'
-import i18n from '~/i18n'
-import storage from '~/utils/storage'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { useGetPlans } from '@/cloud/billingPackage/api'
+import { usePlanById } from '@/cloud/billingPackage/api/getPackageById'
+import { useGetUsers } from '@/cloud/orgManagement/api/userAPI'
+import { Button } from '@/components/Button'
+import { InputField, SelectDropdown } from '@/components/Form'
+import { FormDialog } from '@/components/FormDialog'
+import { PlusIcon } from '@/components/SVGIcons'
+import i18n from '@/i18n'
+import storage from '@/utils/storage'
 import {
   useCreateSubcription,
   type CreateSubcriptionDTO,
 } from '../../api/subcriptionAPI/createSubcription'
-import { type PlanlvList } from '~/cloud/billingPackage'
+import { type PlanlvList } from '@/cloud/billingPackage'
 
 export const entitySubcriptionSchema = z.object({
   plan_id: z
@@ -214,7 +214,7 @@ export function CreateSubcription() {
           })}
         >
           <>
-            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.customer_info')}
@@ -264,7 +264,7 @@ export function CreateSubcription() {
                 disabled
               />
             </div>
-            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.service_info')}
@@ -316,7 +316,7 @@ export function CreateSubcription() {
                 disabled
               />
             </div>
-            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.billing_info')}
@@ -339,12 +339,9 @@ export function CreateSubcription() {
         </form>
       }
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('billing:subcription.button')}
+        </Button>
       }
       confirmButton={
         <Button

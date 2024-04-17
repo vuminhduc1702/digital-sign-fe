@@ -3,23 +3,23 @@ import { useState, type ReactNode, useEffect } from 'react'
 import clsx from 'clsx'
 import { useLocation } from 'react-router-dom'
 
-import { PATHS } from '~/routes/PATHS'
-import { NavLink } from '~/components/Link'
-import storage from '~/utils/storage'
+import { PATHS } from '@/routes/PATHS'
+import { NavLink } from '@/components/Link'
+import storage from '@/utils/storage'
 import {
   Accordion,
   AccordionItem,
   AccordionContent,
   AccordionTrigger,
-} from '~/components/Accordion'
+} from '@/components/Accordion'
 
 import { LuChevronDown } from 'react-icons/lu'
-import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
-import dammayIcon from '~/assets/icons/sb-dammay.svg'
-import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
-import tichhopIcon from '~/assets/icons/sb-tichhop.svg'
-import ungdungIcon from '~/assets/icons/sb-ungdung.svg'
-import thanhtoanIcon from '~/assets/icons/sb-thanhtoan.svg'
+import tongquanIcon from '@/assets/icons/sb-tongquan.svg'
+import dammayIcon from '@/assets/icons/sb-dammay.svg'
+import thietbiIcon from '@/assets/icons/sb-thietbi.svg'
+import tichhopIcon from '@/assets/icons/sb-tichhop.svg'
+import ungdungIcon from '@/assets/icons/sb-ungdung.svg'
+import thanhtoanIcon from '@/assets/icons/sb-thanhtoan.svg'
 
 function SideNavigation() {
   const { t } = useTranslation()

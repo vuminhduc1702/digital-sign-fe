@@ -4,29 +4,29 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FormDrawer,
   InputField,
   SelectDropdown,
   SelectField,
-} from '~/components/Form'
+} from '@/components/Form'
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
 import {
   emailSchema,
   nameSchema,
   passwordSchema,
   phoneSchemaRegex,
-} from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
-import i18n from '~/i18n'
-import { useGetRoles } from '~/cloud/role/api'
-import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+} from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
+import i18n from '@/i18n'
+import { useGetRoles } from '@/cloud/role/api'
+import { useAreaList } from '@/layout/MainLayout/components/UserAccount/api/getAreaList'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 
-import { EyeHide, EyeShow, PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { ComplexTree } from '~/components/ComplexTree'
+import { EyeHide, EyeShow, PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { ComplexTree } from '@/components/ComplexTree'
 
 export const userInfoSchema = z.object({
   name: nameSchema,
@@ -115,12 +115,9 @@ export function CreateUser() {
     <FormDrawer
       isDone={isSuccess}
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:org_manage.user_manage.add_user.button')}
+        </Button>
       }
       title={t('cloud:org_manage.user_manage.add_user.title')}
       submitButton={

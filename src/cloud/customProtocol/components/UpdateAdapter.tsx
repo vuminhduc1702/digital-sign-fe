@@ -3,14 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   InputField,
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
+} from '@/components/Form'
+import { Drawer } from '@/components/Drawer'
 import {
   type UpdateAdapterDTO,
   useUpdateAdapter,
@@ -22,22 +22,22 @@ import {
   protocolList,
   contentTypeFTPList,
 } from './CreateAdapter'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 import { useGetEntityThings } from '../api/entityThing'
 import { useGetServiceThings } from '../api/serviceThing'
-import TitleBar from '~/components/Head/TitleBar'
-import { cn } from '~/utils/misc'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import TitleBar from '@/components/Head/TitleBar'
+import { cn } from '@/utils/misc'
+import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
 import { CreateService } from './CreateService'
 
 import { type AdapterTableContextMenuProps } from './AdapterTable'
 import { type FieldsType } from '../types'
 import { type SelectInstance } from 'react-select'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 import { LuChevronDown, LuChevronRight } from 'react-icons/lu'
 
 type UpdateDeviceProps = {

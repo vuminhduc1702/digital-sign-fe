@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import { Button } from '~/components/Button'
-import { FormDialog } from '~/components/FormDialog'
+import { Button } from '@/components/Button'
+import { FormDialog } from '@/components/FormDialog'
 import {
   type CreateProjectDTO,
   useCreateProject,
@@ -13,24 +13,24 @@ import {
   restoreProjectSchema,
   ACCEPTED_RESTORE_FILE,
 } from '../api/createProject'
-import { InputField, TextAreaField } from '~/components/Form'
-import { useUploadImage } from '~/layout/OrgManagementLayout/api'
-import FileField from '~/components/Form/FileField'
+import { InputField, TextAreaField } from '@/components/Form'
+import { useUploadImage } from '@/layout/OrgManagementLayout/api'
+import FileField from '@/components/Form/FileField'
 import { useUpdateProject } from '../api'
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
   useResetDefaultImage,
-} from '~/utils/hooks'
+} from '@/utils/hooks'
 import {
   type RestoreProjectDTO,
   useRestoreProject,
 } from '../api/restoreProject'
 
-import defaultProjectImage from '~/assets/images/default-project.png'
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
+import defaultProjectImage from '@/assets/images/default-project.png'
+import { PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnRemoveIcon from '@/assets/icons/btn-remove.svg'
 
 export const uploadImageResSchema = z.object({
   link: z.string(),

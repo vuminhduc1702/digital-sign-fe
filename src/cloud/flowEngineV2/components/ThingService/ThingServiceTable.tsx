@@ -2,28 +2,28 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
+import { BaseTable } from '@/components/Table'
+import { useDisclosure } from '@/utils/hooks'
 import { useDeleteThingService } from '../../api/thingServiceAPI'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 import { type ThingService } from '../../types'
 
 import { useParams } from 'react-router-dom'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { UpdateThingService } from './UpdateThingService'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 function ThingServiceTableContextMenu({
   thingId,

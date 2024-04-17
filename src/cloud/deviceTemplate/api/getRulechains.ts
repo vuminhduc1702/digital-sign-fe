@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
-import { limitPagination } from '~/utils/const'
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { limitPagination } from '@/utils/const'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type RulechainList } from '../types'
-
 
 type GetRulechains = {
   projectId: string
@@ -16,14 +15,13 @@ export const getRuleChains = ({
   page,
   pageSize,
 }: GetRulechains): Promise<RulechainList> => {
-
-  return axios.get('/api/ruleChains',{
+  return axios.get('/api/ruleChains', {
     params: {
       projectId: projectId,
       page,
       pageSize,
     },
-})
+  })
 }
 type QueryFnType = typeof getRuleChains
 

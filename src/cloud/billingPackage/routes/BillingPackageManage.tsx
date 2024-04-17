@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { ContentLayout } from '~/layout/ContentLayout'
-import storage from '~/utils/storage'
+import { ContentLayout } from '@/layout/ContentLayout'
+import storage from '@/utils/storage'
 import { PackageInfo, PackageSidebar } from '../components'
 
 export function BillingPackageManage() {

@@ -5,16 +5,16 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FieldWrapper,
   InputField,
   SelectField,
   TextAreaField,
-} from '~/components/Form'
+} from '@/components/Form'
 
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import storage from '~/utils/storage'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import storage from '@/utils/storage'
 import {
   useUpdateService,
   type CreateServiceThingDTO,
@@ -28,42 +28,42 @@ import {
   PANEL_SIZE,
 } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
-import { Spinner } from '~/components/Spinner'
-import { Switch } from '~/components/Switch'
-import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
-import btnRunCode from '~/assets/icons/btn-run-code.svg'
-import { cn } from '~/utils/misc'
+import { Spinner } from '@/components/Spinner'
+import { Switch } from '@/components/Switch'
+import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
+import btnRunCode from '@/assets/icons/btn-run-code.svg'
+import { cn } from '@/utils/misc'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
-import { Checkbox } from '~/components/Checkbox'
-import { outputList } from '~/cloud/customProtocol/components/CreateService'
+} from '@/components/Tooltip'
+import { Checkbox } from '@/components/Checkbox'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 import { type InputService, type ThingService } from '../../types'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { LuChevronDown } from 'react-icons/lu'
 import { HiOutlineXMark } from 'react-icons/hi2'
-import btnAddIcon from '~/assets/icons/btn-add.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnAddIcon from '@/assets/icons/btn-add.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnFullScreen from '@/assets/icons/btn-fullscreen.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '~/components/Resizable'
+} from '@/components/Resizable'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
 type UpdateThingProps = {
   name: string
@@ -210,7 +210,7 @@ export function UpdateThingService({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -239,8 +239,8 @@ export function UpdateThingService({
                     item.type === 'bool' && item.value === ''
                       ? 'false'
                       : numberServiceInput.includes(item.type as string)
-                      ? parseInt(item.value)
-                      : item.value
+                        ? parseInt(item.value)
+                        : item.value
                 })
                 mutateExecuteService({
                   data: dataRun,
@@ -322,7 +322,7 @@ export function UpdateThingService({
                 ) : null}
               </div>
               <Tabs defaultValue="info">
-                <TabsList className="bg-secondary-400 mt-2 flex items-center justify-between px-10">
+                <TabsList className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
                   <TabsTrigger value="info">
                     <div className="flex items-center gap-x-2">
                       <p>{t('cloud:custom_protocol.service.info')}</p>
@@ -347,7 +347,7 @@ export function UpdateThingService({
                         )}
                       >
                         <div className="relative flex flex-col gap-2 md:col-span-1">
-                          <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+                          <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                             <div className="flex gap-3">
                               <p className="text-table-header">
                                 {t('cloud:custom_protocol.service.input')}
@@ -464,7 +464,7 @@ export function UpdateThingService({
                                   type="button"
                                   size="square"
                                   variant="none"
-                                  className={cn('hover:bg-secondary-500 h-9', {
+                                  className={cn('h-9 hover:bg-secondary-500', {
                                     '!justify-center': fullScreen,
                                   })}
                                   onClick={() => remove(index)}
@@ -518,7 +518,7 @@ export function UpdateThingService({
                             </div>
                           </div>
                           <div className="mt-1.5 flex flex-col gap-y-3">
-                            <div className="bg-secondary-400 flex items-center rounded-lg px-4 py-2">
+                            <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
                               <div className="flex gap-3 ">
                                 <p className="text-table-header">
                                   {t(
@@ -547,7 +547,7 @@ export function UpdateThingService({
                                         </TooltipTrigger>
                                         <TooltipContent side="right">
                                           <div>
-                                            <div className="text-table-header mb-4">
+                                            <div className="mb-4 text-table-header">
                                               {item.name}
                                             </div>
                                             <div>
@@ -617,7 +617,7 @@ export function UpdateThingService({
                             )}
                             ref={codeEditorRef}
                           >
-                            <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
+                            <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                               <div className="flex gap-3">
                                 <p className="text-table-header">
                                   {t('cloud:custom_protocol.service.code')}
@@ -626,9 +626,9 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                                    <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                                  <DropdownMenuContent className="z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
                                     <DropdownMenuItem
                                       className="py-1"
                                       onClick={() => {
@@ -721,7 +721,7 @@ export function UpdateThingService({
                             )}
                             ref={resultEditorRef}
                           >
-                            <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
+                            <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                               <div className="flex gap-3">
                                 <p className="text-table-header">
                                   {t('cloud:custom_protocol.service.output')}
@@ -730,9 +730,9 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                                    <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                                  <DropdownMenuContent className="z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
                                     <DropdownMenuItem
                                       className="py-1"
                                       onClick={() => {
@@ -811,7 +811,7 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

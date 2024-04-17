@@ -2,17 +2,17 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import TitleBar from '~/components/Head/TitleBar'
+import TitleBar from '@/components/Head/TitleBar'
 import {
   CreateThingService,
   ThingServiceTable,
 } from '../components/ThingService'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { SearchField } from '~/components/Input'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { SearchField } from '@/components/Input'
 import { useDeleteMultipleThings } from '../api/thingAPI/deleteMultipleThings'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { useDisclosure } from '~/utils/hooks'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { useDisclosure } from '@/utils/hooks'
 
 export function ThingServices() {
   const { t } = useTranslation()

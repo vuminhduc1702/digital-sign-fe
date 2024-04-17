@@ -3,18 +3,18 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
-import { FormDrawer, InputField } from '~/components/Form'
+import { Button } from '@/components/Button'
+import { FormDrawer, InputField } from '@/components/Form'
 import {
   type CreateDashboardDTO,
   useCreateDashboard,
 } from '../../api/createDashboard'
 
 import { widgetListSchema } from '../Widget'
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 export const dashboardSchema = z.object({
   id: z.string().optional(),
@@ -55,12 +55,9 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <Button
-          className="h-9 w-9 rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:dashboard.add_dashboard.button')}
+        </Button>
       }
       title={t('cloud:dashboard.add_dashboard.title')}
       submitButton={

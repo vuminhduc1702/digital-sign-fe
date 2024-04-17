@@ -1,14 +1,14 @@
 import { useRef, useState, useEffect } from 'react'
-import Q_A from '~/assets/images/landingpage/Frame_427319126.png'
-import PlusIconGroup5412 from '~/assets/images/landingpage/Group_5412.png'
-import MinusIconGroup5411 from '~/assets/images/landingpage/Group_5411.png'
+import Q_A from '@/assets/images/landingpage/Frame_427319126.png'
+import PlusIconGroup5412 from '@/assets/images/landingpage/Group_5412.png'
+import MinusIconGroup5411 from '@/assets/images/landingpage/Group_5411.png'
 import { useTranslation } from 'react-i18next'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '~/components/Accordion'
+} from '@/components/Accordion'
 
 export function QandA() {
   const { t } = useTranslation()
@@ -20,34 +20,26 @@ export function QandA() {
   const items = [
     {
       value: 'item-1',
-      triggerText:
-      t('landingpage_text:q_a.item_1.trigger'),
-    contentText:
-      t('landingpage_text:q_a.item_1.content'),
+      triggerText: t('landingpage_text:q_a.item_1.trigger'),
+      contentText: t('landingpage_text:q_a.item_1.content'),
     },
     {
       value: 'item-2',
-      triggerText:
-        t('landingpage_text:q_a.item_2.trigger'),
-      contentText:
-        t('landingpage_text:q_a.item_2.content'),
+      triggerText: t('landingpage_text:q_a.item_2.trigger'),
+      contentText: t('landingpage_text:q_a.item_2.content'),
     },
     {
       value: 'item-3',
-      triggerText:
-      t('landingpage_text:q_a.item_3.trigger'),
-    contentText:
-      t('landingpage_text:q_a.item_3.content'),
+      triggerText: t('landingpage_text:q_a.item_3.trigger'),
+      contentText: t('landingpage_text:q_a.item_3.content'),
     },
     {
       value: 'item-4',
-      triggerText:
-      t('landingpage_text:q_a.item_4.trigger'),
-    contentText:
-      t('landingpage_text:q_a.item_4.content'),
+      triggerText: t('landingpage_text:q_a.item_4.trigger'),
+      contentText: t('landingpage_text:q_a.item_4.content'),
     },
   ]
-  
+
   useEffect(() => {
     setIsReRender(!isReRender)
   }, [isAccordionChange])

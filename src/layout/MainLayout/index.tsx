@@ -5,9 +5,9 @@ import { HiOutlineBars3 } from 'react-icons/hi2'
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
 import MobileSidebar from './components/MobileSidebar'
-import logo from '~/assets/images/logo.svg'
-import { cn } from '~/utils/misc'
-import { NavLink } from '~/components/Link'
+import logo from '@/assets/images/logo.svg'
+import { cn } from '@/utils/misc'
+import { NavLink } from '@/components/Link'
 
 function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)

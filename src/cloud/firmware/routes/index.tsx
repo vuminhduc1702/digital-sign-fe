@@ -1,14 +1,14 @@
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { lazyImport } from '~/utils/lazyImport'
-import { PATHS } from '~/routes/PATHS'
+import { lazyImport } from '@/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 const { FirmWareLayout } = lazyImport(
-  () => import('~/layout/FirmWareLayout'),
+  () => import('@/layout/FirmWareLayout'),
   'FirmWareLayout',
 )
 

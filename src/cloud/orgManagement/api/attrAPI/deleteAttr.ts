@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 import { type EntityType } from './createAttr'
@@ -27,7 +27,7 @@ export const useDeleteAttr = ({ config }: UseDeleteAttrOptions = {}) => {
   const { t } = useTranslation()
 
   return useMutation({
-    onSuccess: async () => {      
+    onSuccess: async () => {
       toast.promise(() => queryClient.invalidateQueries(['attrs']), {
         loading: t('loading:loading'),
         success: t('cloud:org_manage.org_manage.add_attr.success_delete'),

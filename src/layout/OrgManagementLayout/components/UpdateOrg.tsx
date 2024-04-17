@@ -3,9 +3,9 @@ import { useEffect, useRef } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { Button } from '~/components/Button'
-import { InputField, TextAreaField } from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
+import { Button } from '@/components/Button'
+import { InputField, TextAreaField } from '@/components/Form'
+import { Drawer } from '@/components/Drawer'
 import {
   type UpdateOrgDTO,
   useUpdateOrg,
@@ -13,23 +13,23 @@ import {
   useOrgById,
 } from '../api'
 import { orgSchema } from './CreateOrg'
-import FileField from '~/components/Form/FileField'
-import { API_URL } from '~/config'
+import FileField from '@/components/Form/FileField'
+import { API_URL } from '@/config'
 import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
   useResetDefaultImage,
-} from '~/utils/hooks'
-import { useGetOrgs } from '~/layout/MainLayout/api'
-import storage from '~/utils/storage'
-import { ComplexTree } from '~/components/ComplexTree'
+} from '@/utils/hooks'
+import { useGetOrgs } from '@/layout/MainLayout/api'
+import storage from '@/utils/storage'
+import { ComplexTree } from '@/components/ComplexTree'
 
-import { type Org } from '~/layout/MainLayout/types'
+import { type Org } from '@/layout/MainLayout/types'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import defaultOrgImage from '~/assets/images/default-org.png'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import defaultOrgImage from '@/assets/images/default-org.png'
 
 const orgUpdateSchema = orgSchema.required({ org_id: true })
 

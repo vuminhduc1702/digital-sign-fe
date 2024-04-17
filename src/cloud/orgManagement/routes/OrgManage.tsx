@@ -5,20 +5,20 @@ import { useParams } from 'react-router-dom'
 import {
   AttrTable,
   CreateAttr,
-} from '~/cloud/orgManagement/components/Attributes'
-import TitleBar from '~/components/Head/TitleBar'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { API_URL } from '~/config'
-import { useOrgById } from '~/layout/OrgManagementLayout/api'
-import { lazyImport } from '~/utils/lazyImport'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { SearchField } from '~/components/Input'
-import { useDisclosure } from '~/utils/hooks'
-import { convertEpochToDate, convertType } from '~/utils/transformFunc'
+} from '@/cloud/orgManagement/components/Attributes'
+import TitleBar from '@/components/Head/TitleBar'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import { API_URL } from '@/config'
+import { useOrgById } from '@/layout/OrgManagementLayout/api'
+import { lazyImport } from '@/utils/lazyImport'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { useDisclosure } from '@/utils/hooks'
+import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 
-import defaultOrgImage from '~/assets/images/default-org.png'
+import defaultOrgImage from '@/assets/images/default-org.png'
 
 const { OrgMap } = lazyImport(() => import('./OrgMap'), 'OrgMap')
 

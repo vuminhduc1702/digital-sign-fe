@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type PlanById } from '../types'
 
 export const getPlanById = ({
@@ -20,10 +20,7 @@ type UsePlanByIdOptions = {
   config?: QueryConfig<QueryFnType>
 }
 
-export const usePlanById = ({
-  planId,
-  config,
-}: UsePlanByIdOptions) => {
+export const usePlanById = ({ planId, config }: UsePlanByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['planById', planId],
     queryFn: () => getPlanById({ planId }),

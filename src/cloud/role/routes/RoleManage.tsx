@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { ContentLayout } from '~/layout/ContentLayout'
+import { ContentLayout } from '@/layout/ContentLayout'
 import { RoleSidebar } from '../components'
 
 export function RoleManage() {

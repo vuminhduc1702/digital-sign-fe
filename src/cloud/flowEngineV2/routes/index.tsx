@@ -1,16 +1,16 @@
 import { ErrorBoundary } from 'react-error-boundary'
 import { Navigate } from 'react-router-dom'
 
-import { lazyImport } from '~/utils/lazyImport'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { lazyImport } from '@/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 const { FlowEngineV2Layout } = lazyImport(
-  () => import('~/layout/FlowEngineV2Layout'),
+  () => import('@/layout/FlowEngineV2Layout'),
   'FlowEngineV2Layout',
 )
 

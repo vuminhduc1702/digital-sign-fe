@@ -110,6 +110,9 @@ export default {
         slideRightAndFade:
           'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
+      zIndex: {
+        '100': '100',
+      },
     },
   },
 } satisfies Config

@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 
-import { type BaseAPIRes } from '~/types'
-import { type ThingService } from '~/cloud/flowEngineV2'
-import { limitPagination } from '~/utils/const'
+import { type BaseAPIRes } from '@/types'
+import { type ThingService } from '@/cloud/flowEngineV2'
+import { limitPagination } from '@/utils/const'
 
 type GetServiceThings = {
   thingId: string
@@ -39,7 +39,7 @@ export const useGetServiceThings = ({
 }: UseServiceThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['service-things', thingId],
-    queryFn: () => getServiceThings({ thingId}),
+    queryFn: () => getServiceThings({ thingId }),
     ...config,
   })
 }

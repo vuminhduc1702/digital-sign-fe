@@ -10,7 +10,7 @@ import {
   type TreeRef,
 } from 'react-complex-tree'
 import 'react-complex-tree/lib/style-modern.css'
-import { type Org } from '~/layout/MainLayout/types'
+import { type Org } from '@/layout/MainLayout/types'
 import {
   FieldWrapper,
   type FieldWrapperPassThroughProps,
@@ -23,13 +23,13 @@ import {
   type FieldValues,
   type UseFormRegisterReturn,
 } from 'react-hook-form'
-import { cn } from '~/utils/misc'
-import { type ControllerPassThroughProps } from '~/types'
+import { cn } from '@/utils/misc'
+import { type ControllerPassThroughProps } from '@/types'
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
 import { Button } from '../Button'
-import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
-import storage from '~/utils/storage'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import btnRemoveIcon from '@/assets/icons/btn-remove.svg'
+import storage from '@/utils/storage'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 
 type ComplexTreeProps<TFormValues extends FieldValues> = {
   options?: Org[]

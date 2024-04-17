@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { ContentLayout } from '~/layout/ContentLayout'
-import storage from '~/utils/storage'
+import { ContentLayout } from '@/layout/ContentLayout'
+import storage from '@/utils/storage'
 import { LayoutOverView, OverViewSidebar } from '../components'
 
 export function OverViewManage() {

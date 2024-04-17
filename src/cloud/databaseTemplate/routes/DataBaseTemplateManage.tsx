@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import TitleBar from '~/components/Head/TitleBar'
-import { ContentLayout } from '~/layout/ContentLayout'
-import storage from '~/utils/storage'
+import TitleBar from '@/components/Head/TitleBar'
+import { ContentLayout } from '@/layout/ContentLayout'
+import storage from '@/utils/storage'
 import { DataBaseSidebar, DataBaseTable } from '../components'
 
 import { type DataSearchTable, useSelectDataBase } from '../api/selectDataBase'
@@ -15,12 +15,12 @@ import {
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import { Button } from '~/components/Button'
-import { SearchIcon } from '~/components/SVGIcons'
+} from '@/components/Form'
+import { Button } from '@/components/Button'
+import { SearchIcon } from '@/components/SVGIcons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Switch } from '~/components/Switch'
+import { Switch } from '@/components/Switch'
 import * as z from 'zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
 
