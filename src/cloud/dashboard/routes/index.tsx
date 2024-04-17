@@ -4,6 +4,9 @@ import { ErrorFallback } from '@/pages/ErrorPage'
 
 import { PATHS } from '@/routes/PATHS'
 import { lazyImport } from '@/utils/lazyImport'
+import { endProgress, startProgress } from '@/components/Progress'
+import { type RouteObject } from 'react-router-dom'
+import { AnimatedWrapper } from '@/components/Animated'
 
 const { DashboardManage } = lazyImport(
   () => import('./DashboardManage'),
@@ -17,6 +20,13 @@ const { DashboardDetail } = lazyImport(
 export const DashboardManagementRoutes = [
   {
     element: <DashboardLayout />,
+    loader: async () => {
+      startProgress()
+      await import('@/layout/DashboardLayout')
+      endProgress()
+
+      return null
+    },
     children: [
       {
         path: PATHS.DASHBOARD,
@@ -25,20 +35,38 @@ export const DashboardManagementRoutes = [
             path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <DashboardManage />
+                <AnimatedWrapper>
+                  <DashboardManage />
+                </AnimatedWrapper>
               </ErrorBoundary>
             ),
+            loader: async () => {
+              startProgress()
+              await import('./DashboardManage')
+              endProgress()
+
+              return null
+            },
           },
           {
             path: ':projectId/:dashboardId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <DashboardDetail />
+                <AnimatedWrapper>
+                  <DashboardDetail />
+                </AnimatedWrapper>
               </ErrorBoundary>
             ),
+            loader: async () => {
+              startProgress()
+              await import('./DashboardDetail')
+              endProgress()
+
+              return null
+            },
           },
         ],
       },
     ],
   },
-]
+] as const satisfies RouteObject[]
