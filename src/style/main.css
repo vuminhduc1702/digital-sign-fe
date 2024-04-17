@@ -131,7 +131,88 @@
 
 /* Popover CSS */
 .popover-content {
-  width: var(--radix-popover-trigger-width);
   max-height: 500px;
   overflow: auto;
+  width: var(--radix-popover-trigger-width);
+}
+
+/* Progress bar */
+
+/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: #ed1d2e;
+  height: 4px;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1031;
+}
+
+/* Fancy blur effect */
+#nprogress .peg {
+  box-shadow:
+    0 0 10px #ed1d2e,
+    0 0 5px #ed1d2e;
+  display: block;
+  height: 100%;
+  opacity: 1;
+  position: absolute;
+  right: 0;
+  transform: rotate(3deg) translate(0, -4px);
+  width: 100px;
+}
+
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  z-index: 1031;
+}
+
+#nprogress .spinner-icon {
+  animation: nprogress-spinner 400ms linear infinite;
+  border: solid 2px transparent;
+  border-left-color: #ed1d2e;
+  border-radius: 50%;
+  border-top-color: #ed1d2e;
+  box-sizing: border-box;
+  height: 18px;
+  width: 18px;
+}
+
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+
+.nprogress-custom-parent #nprogress .spinner,
+.nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

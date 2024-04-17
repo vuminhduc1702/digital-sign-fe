@@ -24,11 +24,13 @@ import MainTenant from '@/cloud/tenant/MainTenant'
 import DevRole from '@/cloud/devRole/DevRole'
 import { Default } from '@/cloud/deviceTemplate/routes/Default'
 import { LwM2M } from '@/cloud/deviceTemplate/routes/LwM2M'
-import { Navigate } from 'react-router-dom'
+import { Navigate, type RouteObject } from 'react-router-dom'
 
 import TestMap from '@/cloud/testMap/routes/TestMap'
 import storage from '@/utils/storage'
 import { Authorization } from '@/lib/authorization'
+import { endProgress, startProgress } from '@/components/Progress'
+import { AnimatedWrapper } from '@/components/Animated'
 
 const projectId = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
@@ -60,6 +62,13 @@ const { ForbiddenPage } = lazyImport(
 export const protectedRoutes = [
   {
     element: <MainLayout />,
+    loader: async () => {
+      startProgress()
+      await import('@/layout/MainLayout')
+      endProgress()
+
+      return null
+    },
     children: [
       ...OrgManagementRoutes,
       ...FlowEngineV2Routes,
@@ -75,9 +84,18 @@ export const protectedRoutes = [
         path: PATHS.DEVICE_TEMPLATE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <DeviceTemplateManage />
+            <AnimatedWrapper>
+              <DeviceTemplateManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/deviceTemplate')
+          endProgress()
+
+          return null
+        },
         children: [
           {
             index: true,
@@ -99,9 +117,18 @@ export const protectedRoutes = [
                 path: ':projectId',
                 element: (
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <Default />
+                    <AnimatedWrapper>
+                      <Default />
+                    </AnimatedWrapper>
                   </ErrorBoundary>
                 ),
+                loader: async () => {
+                  startProgress()
+                  await import('@/cloud/deviceTemplate/routes/Default')
+                  endProgress()
+
+                  return null
+                },
                 children: [{ path: ':templateId' }],
               },
             ],
@@ -113,9 +140,18 @@ export const protectedRoutes = [
                 path: ':projectId',
                 element: (
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <LwM2M />
+                    <AnimatedWrapper>
+                      <LwM2M />
+                    </AnimatedWrapper>
                   </ErrorBoundary>
                 ),
+                loader: async () => {
+                  startProgress()
+                  await import('@/cloud/deviceTemplate/routes/LwM2M')
+                  endProgress()
+
+                  return null
+                },
                 children: [
                   { path: ':templateId' },
                   { path: ':templateId/:id' },
@@ -129,45 +165,90 @@ export const protectedRoutes = [
         path: PATHS.ROLE_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <RoleManage />
+            <AnimatedWrapper>
+              <RoleManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/role')
+          endProgress()
+
+          return null
+        },
         children: [{ path: ':projectId', children: [{ path: ':roleId' }] }],
       },
       {
         path: PATHS.CUSTOM_PROTOCOL,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <CustomProtocolManage />
+            <AnimatedWrapper>
+              <CustomProtocolManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/customProtocol')
+          endProgress()
+
+          return null
+        },
         children: [{ path: ':projectId' }],
       },
       {
         path: PATHS.BILLING_PACKAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <BillingPackageManage />
+            <AnimatedWrapper>
+              <BillingPackageManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/billingPackage')
+          endProgress()
+
+          return null
+        },
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
       {
         path: PATHS.OVER_VIEW,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <OverViewManage />
+            <AnimatedWrapper>
+              <OverViewManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/overView')
+          endProgress()
+
+          return null
+        },
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
       {
         path: PATHS.DB_TEMPLATE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <DataBaseTemplateManage />
+            <AnimatedWrapper>
+              <DataBaseTemplateManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/databaseTemplate')
+          endProgress()
+
+          return null
+        },
         children: [{ path: ':projectId', children: [{ path: ':tableName' }] }],
       },
       {
@@ -177,6 +258,13 @@ export const protectedRoutes = [
             <TestMap />
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/testMap/routes/TestMap')
+          endProgress()
+
+          return null
+        },
       },
     ],
   },
@@ -188,17 +276,35 @@ export const protectedRoutes = [
         path: PATHS.CHANGEPASSWORD,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <ChangePassword />
+            <AnimatedWrapper>
+              <ChangePassword />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/features/auth/routes/ChangePassword')
+          endProgress()
+
+          return null
+        },
       },
       {
         path: PATHS.USER_INFO,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <SelfAccount />
+            <AnimatedWrapper>
+              <SelfAccount />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/layout/MainLayout/components/UserAccount/SelfAccount')
+          endProgress()
+
+          return null
+        },
       },
       {
         path: PATHS.TENANT_MANAGE,
@@ -208,19 +314,37 @@ export const protectedRoutes = [
               allowedRoles={['SYSTEM_ADMIN', 'TENANT']}
               forbiddenFallback={<ForbiddenPage />}
             >
-              <MainTenant />
+              <AnimatedWrapper>
+                <MainTenant />
+              </AnimatedWrapper>
             </Authorization>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/tenant/MainTenant')
+          endProgress()
+
+          return null
+        },
       },
       {
         path: PATHS.DEV_ROLE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <DevRole />
+            <AnimatedWrapper>
+              <DevRole />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('@/cloud/devRole/DevRole')
+          endProgress()
+
+          return null
+        },
       },
     ],
   },
-]
+] as const satisfies RouteObject[]

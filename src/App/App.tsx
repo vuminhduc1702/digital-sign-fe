@@ -122,9 +122,7 @@ function App() {
                 </div>
               )}
             >
-              <Router>
-                <AppRoutes />
-              </Router>
+              <AppRoutes />
             </AuthLoader>
             {import.meta.env.PROD && (
               <ReactQueryDevtools initialIsOpen={false} />

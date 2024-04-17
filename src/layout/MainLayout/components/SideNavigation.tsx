@@ -69,12 +69,12 @@ function SideNavigation() {
             <div>{t('sidebar:device.title')}</div>
             <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
-          <NavLink to={`${PATHS.DEVKIT}`}>
+          <NavLink to={`${PATHS.DEVKIT}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:device.devkit')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.MODULE}`}>
+          <NavLink to={`${PATHS.MODULE}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:device.module')}
             </AccordionContent>
@@ -148,12 +148,12 @@ function SideNavigation() {
             <div>{t('sidebar:application.title')}</div>
             <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
-          <NavLink to={`${PATHS.APPSDK}`}>
+          <NavLink to={`${PATHS.APPSDK}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:application.appsdk')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.APPDEBUG}`}>
+          <NavLink to={`${PATHS.APPDEBUG}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:application.vsmart_debug')}
             </AccordionContent>

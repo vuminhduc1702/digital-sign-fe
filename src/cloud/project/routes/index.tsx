@@ -3,6 +3,7 @@ import { ErrorFallback } from '@/pages/ErrorPage'
 
 import { PATHS } from '@/routes/PATHS'
 import { lazyImport } from '@/utils/lazyImport'
+import { AnimatedWrapper } from '@/components/Animated'
 
 const { ProjectManage } = lazyImport(
   () => import('./ProjectManage'),
@@ -14,7 +15,9 @@ export const ProjectManagementRoutes = [
     path: PATHS.PROJECT_MANAGE,
     element: (
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <ProjectManage />
+        <AnimatedWrapper>
+          <ProjectManage />
+        </AnimatedWrapper>
       </ErrorBoundary>
     ),
   },

@@ -1,10 +1,12 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { Navigate } from 'react-router-dom'
+import { Navigate, type RouteObject } from 'react-router-dom'
 import { PATHS } from '@/routes/PATHS'
 import { lazyImport } from '@/utils/lazyImport'
 import storage from '@/utils/storage'
 import { AppSdk } from '../components/AppSdk/AppSdk'
 import { AppDebug } from '../components/AppDebug/AppDebug'
+import { endProgress, startProgress } from '@/components/Progress'
+import { AnimatedWrapper } from '@/components/Animated'
 
 const { ErrorFallback } = lazyImport(
   () => import('@/pages/ErrorPage'),
@@ -25,9 +27,18 @@ export const ApplicationRoutes = [
         path: ':projectId',
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <AppSdk />
+            <AnimatedWrapper>
+              <AppSdk />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('../components/AppSdk/AppSdk')
+          endProgress()
+
+          return null
+        },
       },
     ],
   },
@@ -42,10 +53,19 @@ export const ApplicationRoutes = [
         path: ':projectId',
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <AppDebug />
+            <AnimatedWrapper>
+              <AppDebug />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('../components/AppDebug/AppDebug')
+          endProgress()
+
+          return null
+        },
       },
     ],
   },
-]
+] as const satisfies RouteObject[]
