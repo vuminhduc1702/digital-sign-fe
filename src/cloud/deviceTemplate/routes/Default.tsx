@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState, useEffect } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -7,7 +7,6 @@ import {
   CreateAttr,
 } from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { TemplateInfo } from '../components'
@@ -71,76 +70,71 @@ export function Default() {
     }
     return acc
   }, [])
-  const aoo = attrsData?.attributes.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(index.toString())) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-        [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-          curr.value_type,
-        ),
-        [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-        [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-        [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-          convertEpochToDate(curr.last_update_ts / 1000),
+  const aoo = attrsData?.attributes.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+            curr.value_type,
+          ),
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.last_update_ts / 1000),
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [] as Array<{ [key: string]: unknown }>)
+      return acc
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && attrsData ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
-          <Suspense
-            fallback={
-              <div className="flex grow items-center justify-center md:col-span-2">
-                <Spinner size="xl" />
-              </div>
+          <TemplateInfo />
+          <TitleBar
+            title={
+              t('cloud:org_manage.org_manage.attr_list') ??
+              'Device template management'
             }
-          >
-            <TemplateInfo />
-            <TitleBar
-              title={
-                t('cloud:org_manage.org_manage.attr_list') ??
-                'Device template management'
-              }
-            />
-            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-              <div className="flex justify-between">
-                <ExportTable
-                  refComponent={ref}
-                  rowSelection={rowSelection}
-                  aoo={aoo}
-                  pdfHeader={pdfHeader}
-                />
-                <div className="mr-[42px] flex items-center gap-x-3">
-                  {Object.keys(rowSelection).length > 0 && (
-                    <div
-                      onClick={open}
-                      className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-                    >
-                      <div>{t('btn:delete')}:</div>
-                      <div>{Object.keys(rowSelection).length}</div>
-                    </div>
-                  )}
-                  <CreateAttr entityId={templateId} entityType="TEMPLATE" />
-                  <SearchField
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                  />
-                </div>
-              </div>
-              <AttrTable
-                data={attrsData?.attributes ?? []}
-                entityId={templateId}
-                entityType="TEMPLATE"
+          />
+          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+            <div className="flex justify-between">
+              <ExportTable
+                refComponent={ref}
                 rowSelection={rowSelection}
-                setRowSelection={setRowSelection}
+                aoo={aoo}
+                pdfHeader={pdfHeader}
               />
+              <div className="mr-[42px] flex items-center gap-x-3">
+                {Object.keys(rowSelection).length > 0 && (
+                  <div
+                    onClick={open}
+                    className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+                  >
+                    <div>{t('btn:delete')}:</div>
+                    <div>{Object.keys(rowSelection).length}</div>
+                  </div>
+                )}
+                <CreateAttr entityId={templateId} entityType="TEMPLATE" />
+                <SearchField
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                />
+              </div>
             </div>
-          </Suspense>
+            <AttrTable
+              data={attrsData?.attributes ?? []}
+              entityId={templateId}
+              entityType="TEMPLATE"
+              rowSelection={rowSelection}
+              setRowSelection={setRowSelection}
+            />
+          </div>
         </div>
       ) : null}
       {isOpen ? (

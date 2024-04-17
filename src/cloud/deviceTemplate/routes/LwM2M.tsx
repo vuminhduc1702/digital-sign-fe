@@ -1,9 +1,8 @@
-import { Suspense, useRef, useState, useMemo, useEffect } from 'react'
+import { useRef, useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { TemplateInfo } from '../components'
@@ -105,84 +104,68 @@ export function LwM2M() {
     <div ref={ref} className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && !selectedModuleId ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
-          <Suspense
-            fallback={
-              <div className="flex grow items-center justify-center md:col-span-2">
-                <Spinner size="xl" />
-              </div>
+          <TemplateInfo />
+          <TitleBar
+            title={
+              t('cloud:device_template.info.listattr') ??
+              'Device template management'
             }
-          >
-            <TemplateInfo />
-            <TitleBar
-              title={
-                t('cloud:device_template.info.listattr') ??
-                'Device template management'
-              }
-            />
-            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-              <div className="flex justify-between">
-                <ExportTable
-                  refComponent={ref}
-                  rowSelection={rowSelection}
-                  aoo={aoo}
-                  pdfHeader={pdfHeader}
-                />
-                <div className="mr-[42px] flex items-center gap-x-3">
-                  <SearchField
-                    searchQuery={searchQueryData}
-                    setSearchQuery={setSearchQueryData}
-                  />
-                </div>
-              </div>
-              <LwM2MTable
-                moduleConfig={
-                  LwM2MDataById?.transport_config?.info?.module_config ?? []
-                }
+          />
+          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+            <div className="flex justify-between">
+              <ExportTable
+                refComponent={ref}
                 rowSelection={rowSelection}
-                setRowSelection={setRowSelection}
+                aoo={aoo}
+                pdfHeader={pdfHeader}
               />
+              <div className="mr-[42px] flex items-center gap-x-3">
+                <SearchField
+                  searchQuery={searchQueryData}
+                  setSearchQuery={setSearchQueryData}
+                />
+              </div>
             </div>
-          </Suspense>
+            <LwM2MTable
+              moduleConfig={
+                LwM2MDataById?.transport_config?.info?.module_config ?? []
+              }
+              rowSelection={rowSelection}
+              setRowSelection={setRowSelection}
+            />
+          </div>
         </div>
       ) : null}
       {projectId && templateId && selectedModuleId ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
-          <Suspense
-            fallback={
-              <div className="flex grow items-center justify-center md:col-span-2">
-                <Spinner size="xl" />
-              </div>
+          <TemplateInfo />
+          <TitleBar
+            title={
+              t('cloud:device_template.info.attr') ??
+              'Device template management'
             }
-          >
-            <TemplateInfo />
-            <TitleBar
-              title={
-                t('cloud:device_template.info.attr') ??
-                'Device template management'
-              }
-            />
-            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-              <div className="flex justify-between">
-                <ExportTable
-                  refComponent={ref}
-                  rowSelection={rowSelectionAttr}
-                  aoo={aooAttr}
-                  pdfHeader={pdfHeaderAttr}
-                />
-                <div className="mr-[42px] flex items-center gap-x-3">
-                  <SearchField
-                    searchQuery={searchQueryDataAttr}
-                    setSearchQuery={setSearchQueryDataAttr}
-                  />
-                </div>
-              </div>
-              <AttrLwM2MTable
-                attributeInfo={selectedModule?.attribute_info ?? []}
+          />
+          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+            <div className="flex justify-between">
+              <ExportTable
+                refComponent={ref}
                 rowSelection={rowSelectionAttr}
-                setRowSelection={setRowSelectionAttr}
+                aoo={aooAttr}
+                pdfHeader={pdfHeaderAttr}
               />
+              <div className="mr-[42px] flex items-center gap-x-3">
+                <SearchField
+                  searchQuery={searchQueryDataAttr}
+                  setSearchQuery={setSearchQueryDataAttr}
+                />
+              </div>
             </div>
-          </Suspense>
+            <AttrLwM2MTable
+              attributeInfo={selectedModule?.attribute_info ?? []}
+              rowSelection={rowSelectionAttr}
+              setRowSelection={setRowSelectionAttr}
+            />
+          </div>
         </div>
       ) : null}
     </div>

@@ -14,7 +14,7 @@ import i18n from '~/i18n'
 const queryConfig: DefaultOptions = {
   queries: {
     useErrorBoundary: false,
-    suspense: true,
+    suspense: false,
     refetchOnWindowFocus: false,
     keepPreviousData: true,
     retry: 5,

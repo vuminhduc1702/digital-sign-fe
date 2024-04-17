@@ -1,11 +1,9 @@
-import { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import OrgManageNavbar from './components/Navbar'
 import OrgManageSidebar from './components/OrgManageSidebar'
 import { ContentLayout } from '../ContentLayout'
-import { Spinner } from '~/components/Spinner'
 
 export function OrgManagementLayout() {
   const { t } = useTranslation()
@@ -19,15 +17,7 @@ export function OrgManagementLayout() {
 
         <div className="flex flex-col gap-2 md:col-span-2">
           <OrgManageNavbar />
-          <Suspense
-            fallback={
-              <div className="flex grow items-center justify-center md:col-span-2">
-                <Spinner size="xl" />
-              </div>
-            }
-          >
-            <Outlet />
-          </Suspense>
+          <Outlet />
         </div>
       </div>
     </ContentLayout>
