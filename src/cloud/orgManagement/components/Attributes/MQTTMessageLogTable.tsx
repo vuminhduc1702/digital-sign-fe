@@ -16,6 +16,15 @@ import {
   TooltipTrigger,
 } from '@/components/Tooltip'
 
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<MQTTMessage>,
+  'columns' | 'offset' | 'setOffset'
+> & {
+  columns?: ColumnDef<T, any>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
+}
+
 export function MQTTMessageLogTable({
   data,
   entityId,
@@ -25,7 +34,7 @@ export function MQTTMessageLogTable({
   data: MQTTMessage[]
   entityId: string
   entityType: EntityType
-} & BaseTableProps<MQTTMessage>) {
+} & PartialBaseTableProps<MQTTMessage>) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<MQTTMessage>()
@@ -95,6 +104,8 @@ export function MQTTMessageLogTable({
       data={dataSorted}
       columns={columns}
       onDataText={t('table:no_mqtt_hist')}
+      offset={0}
+      setOffset={() => {}}
       {...props}
     />
   )

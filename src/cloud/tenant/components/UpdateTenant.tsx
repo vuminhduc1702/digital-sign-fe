@@ -75,6 +75,30 @@ export function UpdateCustomer({
     }
   }, [isSuccess, close])
 
+  // const [rowSelection, setRowSelection] = useState({})
+  // const pdfHeader = useMemo(
+  //   () => [
+  //     t('table:no'),
+  //     t('cloud:tenant.table.project'),
+  //     t('cloud:tenant.table.role'),
+  //   ],
+  //   [],
+  // )
+  // const rowSelectionKey = Object.keys(rowSelection)
+  // const formatExcel = customerData?.tenant?.reduce(
+  //   (acc, curr, index) => {
+  //     if (rowSelectionKey.includes(curr.id)) {
+  //       const temp = {
+  //         [t('table:no')]: (index + 1 + offset).toString(),
+  //         [t('cloud:tenant.table.project')]: curr.tenant,
+  //         [t('cloud:tenant.table.role')]: curr.phone,
+  //       }
+  //     }
+  //     return acc
+  //   },
+  //   [] as Array<{ [key: string]: string }>,
+  // )
+
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
       <div className="inline-block h-screen w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">

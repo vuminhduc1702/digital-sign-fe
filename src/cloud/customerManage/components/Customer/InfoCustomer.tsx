@@ -25,7 +25,7 @@ export function InfoCustomer() {
 
   const customerId = params.customerId as string
 
-  const { data, isPreviousData } = useGetSubcriptons({
+  const { data, isPreviousData, isLoading } = useGetSubcriptons({
     projectId,
     searchData: {
       status: 'Active',
@@ -134,6 +134,7 @@ export function InfoCustomer() {
             setOffset={setOffset}
             total={data?.data?.total ?? 0}
             isPreviousData={isPreviousData}
+            isLoading={isLoading}
           />
         </div>
       </div>

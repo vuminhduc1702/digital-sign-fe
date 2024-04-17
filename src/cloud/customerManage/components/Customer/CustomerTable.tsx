@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/Dropdowns'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function CustomerTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -28,7 +29,16 @@ function CustomerTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
-      <DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuEye
+            className="text-lg text-gray-500"
+            onClick={() => {
+              navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
+            }}
+          />
+        </div>
+        {/* <DropdownMenu>
         <DropdownMenuTrigger>
           <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
@@ -49,7 +59,8 @@ function CustomerTableContextMenu({ id }: { id: string }) {
             {t('billing:customer_manage.info')}
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
+      </div>
     </>
   )
 }
@@ -68,14 +79,20 @@ type CustomerTableProps = {
 
 export function CustomerTable({ data, ...props }: CustomerTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const offsetPrev = useRef<number>(props.offset)
+  const projectId = storage.getProject()?.id
 
   useEffect(() => {
     if (props.isPreviousData && offsetPrev.current < props.offset) {
       offsetPrev.current = props.offset
     }
   }, [props.isPreviousData])
+
+  function moveToLink(id: string) {
+    navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
+  }
 
   const columnHelper = createColumnHelper<Customer>()
   const columns = useMemo<ColumnDef<Customer, any>[]>(
@@ -144,6 +161,7 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
       data={data ?? []}
       columns={columns}
       onDataText={t('table:no_customer')}
+      viewDetailOnClick={moveToLink}
       {...props}
     />
   )

@@ -19,12 +19,20 @@ import {
 } from '@/components/Dropdowns'
 import { type PermissionEntity, type PermissionEntityTable } from '../types'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<CustomerRoleEntity>,
+  'columns'
+> & {
+  columns?: ColumnDef<T, any>[]
+}
 
 type CustomerRoleTableProps = {
   data: CustomerRoleEntity[]
   customerId: string
   isHiddenCheckbox: boolean
-} & BaseTablePagination
+} & PartialBaseTableProps<CustomerRoleEntity>
 
 function CustomerTableContextMenu({
   project_id,
@@ -51,36 +59,44 @@ function CustomerTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="z-[9999]">
-          <DropdownMenuItem onClick={openEdit}>
-            <img
-              src={btnEditIcon}
-              alt="Edit customer role"
-              className="h-5 w-5"
-            />
-            {t('form:role.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img
-              src={btnDeleteIcon}
-              alt="Delete customer role"
-              className="h-5 w-5"
-            />
-            {t('form:tenant.delete')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={openEdit} />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+        </div>
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+              <BtnContextMenuIcon
+                height={20}
+                width={10}
+                viewBox="0 0 1 20"
+                className="text-secondary-700 hover:text-primary-400"
+              />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="z-[9999]">
+            <DropdownMenuItem onClick={openEdit}>
+              <img
+                src={btnEditIcon}
+                alt="Edit customer role"
+                className="h-5 w-5"
+              />
+              {t('form:role.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img
+                src={btnDeleteIcon}
+                alt="Delete customer role"
+                className="h-5 w-5"
+              />
+              {t('form:tenant.delete')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+      </div>
       {isOpenEdit ? (
         <UpdateCustomerRole
           project_id={project_id}
@@ -115,25 +131,6 @@ export function TenantRoleTable({ data, ...props }: CustomerRoleTableProps) {
   const columns = useMemo<ColumnDef<PermissionEntityTable, any>[]>(
     () => [
       columnHelper.display({
-        id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return <div className="text-center">{orderId}</div>
-        },
-        header: () => <span>{t('table:no')}</span>,
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('project_id', {
-        header: () => <span>{t('table:project')}</span>,
-        cell: info => <div className="text-center">{info.getValue()}</div>,
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('role_id', {
-        header: () => <span>{t('table:role')}</span>,
-        cell: info => <div className="text-center">{info.getValue()}</div>,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'contextMenu',
         cell: info => {
           const { project_id, role_id } = info.row.original
@@ -144,6 +141,25 @@ export function TenantRoleTable({ data, ...props }: CustomerRoleTableProps) {
           })
         },
         header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'stt',
+        cell: info => {
+          const orderId = parseInt(info.row.id) + 1
+          return <div>{orderId}</div>
+        },
+        header: () => <span>{t('table:no')}</span>,
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('project_id', {
+        header: () => <span>{t('cloud:tenant.table.project')}</span>,
+        cell: info => <div>{info.getValue()}</div>,
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('role_id', {
+        header: () => <span>{t('cloud:tenant.table.role')}</span>,
+        cell: info => <div>{info.getValue()}</div>,
         footer: info => info.column.id,
       }),
     ],

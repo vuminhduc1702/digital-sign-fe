@@ -22,7 +22,11 @@ export function ThingTemplate() {
   // search query for api call
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
-  const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
 
   const [offset, setOffset] = useState(0)
   const {
@@ -44,7 +48,7 @@ export function ThingTemplate() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleThings) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleThings])
 
@@ -86,15 +90,6 @@ export function ThingTemplate() {
       <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <div className="flex w-full items-center justify-between gap-x-3">
-            {Object.keys(rowSelection).length > 0 && (
-              <div
-                onClick={open}
-                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-              >
-                <div>{t('btn:delete')}:</div>
-                <div>{Object.keys(rowSelection).length}</div>
-              </div>
-            )}
             <SearchField
               setSearchValue={setSearchQuery}
               setIsSearchData={setIsSearchData}
@@ -115,15 +110,29 @@ export function ThingTemplate() {
           pdfHeader={pdfHeader}
           formatExcel={formatExcel}
           isSearchData={searchQuery.length > 0 && isSearchData}
+          utilityButton={
+            Object.keys(rowSelection).length > 0 && (
+              <div className="flex items-center">
+                <Button
+                  size="sm"
+                  onClick={openDeleteMulti}
+                  className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                >
+                  <div>{t('btn:delete')}:</div>
+                  <div>{Object.keys(rowSelection).length}</div>
+                </Button>
+              </div>
+            )
+          }
         />
       </div>
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:custom_protocol.thing.delete')}
           body={t('cloud:custom_protocol.thing.delete_multiple_thing_confirm')}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleThings(
               {
