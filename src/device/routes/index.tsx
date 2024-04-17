@@ -2,9 +2,10 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { PATHS } from '@/routes/PATHS'
 import { lazyImport } from '@/utils/lazyImport'
 import { Devkit } from '../components/Devkit/Devkit'
-import { Navigate } from 'react-router-dom'
+import { Navigate, type RouteObject } from 'react-router-dom'
 import storage from '@/utils/storage'
 import { Module } from '../components/Module/Module'
+import { endProgress, startProgress } from '@/components/Progress'
 
 const { ErrorFallback } = lazyImport(
   () => import('@/pages/ErrorPage'),
@@ -27,6 +28,13 @@ export const DeviceRoutes = [
             <Devkit />
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('../components/Devkit/Devkit')
+          endProgress()
+
+          return null
+        },
       },
     ],
   },
@@ -44,7 +52,14 @@ export const DeviceRoutes = [
             <Module />
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('../components/Module/Module')
+          endProgress()
+
+          return null
+        },
       },
     ],
   },
-]
+] as const satisfies RouteObject[]

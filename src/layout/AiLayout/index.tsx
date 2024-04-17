@@ -1,11 +1,25 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { ContentLayout } from '../ContentLayout'
 import AiNavbar from './components/AiNavbar'
+import { useEffect } from 'react'
+import storage from '@/utils/storage'
+import { PATHS } from '@/routes/PATHS'
 
 export function AiLayout() {
   const { t } = useTranslation()
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const projectId = storage.getProject()?.id
+
+  useEffect(() => {
+    if (location.pathname === PATHS.AI && projectId != null) {
+      navigate(`${PATHS.DDOS}`)
+    }
+  }, [location.pathname, projectId])
 
   return (
     <ContentLayout title={t('sidebar:integration.ai.title')}>
