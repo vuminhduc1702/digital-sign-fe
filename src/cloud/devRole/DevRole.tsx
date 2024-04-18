@@ -99,7 +99,7 @@ export default function DevRole() {
 
       <div className="mx-32">
         <TitleBar title={t('dev_role:list')} />
-        <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+        <div className="relative flex grow flex-col gap-5 px-9 py-3 shadow-lg">
           <div className="flex justify-end">
             {projectId && (
               <div className="flex w-full items-center justify-between gap-x-3">

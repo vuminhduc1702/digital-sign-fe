@@ -87,7 +87,7 @@ export function ThingTemplate() {
   return (
     <div ref={ref} className="flex grow flex-col">
       <TitleBar title={t('cloud:custom_protocol.thing.title')} />
-      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField

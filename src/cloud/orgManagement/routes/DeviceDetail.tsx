@@ -230,7 +230,7 @@ export function DeviceDetail() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="attr_list" className="mt-2 flex grow flex-col">
-          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-5 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
               <div className="flex w-full items-center justify-between gap-x-3">
                 <SearchField
@@ -270,7 +270,7 @@ export function DeviceDetail() {
           </div>
         </TabsContent>
         <TabsContent value="attr_log" className="mt-2 flex grow flex-col">
-          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-5 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
               <div className="mr-[42px] flex items-center gap-x-3">
                 <SearchField
@@ -303,7 +303,7 @@ export function DeviceDetail() {
           value="MQTT_history_info_list"
           className="mt-2 flex grow flex-col"
         >
-          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-5 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
               <div className="mr-[42px] flex items-center gap-x-3">
                 <SearchField
