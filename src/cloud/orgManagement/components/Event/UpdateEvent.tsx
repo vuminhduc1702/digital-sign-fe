@@ -3,32 +3,32 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCreateAttrChart } from '~/cloud/dashboard/api'
+import { useCreateAttrChart } from '@/cloud/dashboard/api'
 import { useSpinDelay } from 'spin-delay'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FieldWrapper,
   InputField,
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
-import { cn } from '~/utils/misc'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import TitleBar from '@/components/Head/TitleBar'
+import { cn } from '@/utils/misc'
+import storage from '@/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
-import { Drawer } from '~/components/Drawer'
+import { Drawer } from '@/components/Drawer'
 import {
   useUpdateEvent,
   type UpdateEventDTO,
 } from '../../api/eventAPI/updateEvent'
-import { Checkbox } from '~/components/Checkbox'
-import { useGetOrgs } from '~/layout/MainLayout/api'
-import { Spinner } from '~/components/Spinner'
-import { outputList } from '~/cloud/customProtocol/components/CreateService'
+import { Checkbox } from '@/components/Checkbox'
+import { useGetOrgs } from '@/layout/MainLayout/api'
+import { Spinner } from '@/components/Spinner'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
 import {
   type ActionType,
   type Action,
@@ -47,17 +47,17 @@ import {
   eventTypeSchema,
   eventConditionSchema,
 } from './CreateEvent'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { nameSchema } from '~/utils/schemaValidation'
-import { inputSchema } from '~/cloud/flowEngineV2/components/ThingService'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { nameSchema } from '@/utils/schemaValidation'
+import { inputSchema } from '@/cloud/flowEngineV2/components/ThingService'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
-import { ComplexTree } from '~/components/ComplexTree'
-import { useOrgById } from '~/layout/OrgManagementLayout/api'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
+import { ComplexTree } from '@/components/ComplexTree'
+import { useOrgById } from '@/layout/OrgManagementLayout/api'
 
 type UpdateEventProps = {
   eventId: string

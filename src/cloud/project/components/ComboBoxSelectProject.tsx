@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { type Project } from '../routes/ProjectManage'
-import { flattenData } from '~/utils/misc'
-import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
+import { flattenData } from '@/utils/misc'
+import { ComboBoxBase, filteredComboboxData } from '@/components/ComboBox'
 import { useProjects } from '../api'
-import { SearchIcon } from '~/components/SVGIcons'
+import { SearchIcon } from '@/components/SVGIcons'
 
 export function ComboBoxSelectProject({
   setFilteredComboboxData,

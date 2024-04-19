@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from '~/components/Link'
-import { ContentLayout } from '~/layout/ContentLayout'
+import { Link } from '@/components/Link'
+import { ContentLayout } from '@/layout/ContentLayout'
 
 export function AppDebug() {
   const { t } = useTranslation()
@@ -20,9 +20,7 @@ export function AppDebug() {
               <h5 className="mb-2 text-xl font-bold">
                 {t('application:debug')}
               </h5>
-              <p className="mb-4 text-base">
-                {t('document:vsmart_debug')}
-              </p>
+              <p className="mb-4 text-base">{t('document:vsmart_debug')}</p>
               <p className="mb-4 text-base">{t('application:setup')}</p>
               <div className="my-5 flex w-full items-center justify-center">
                 <div className="flex w-4/5 rounded-lg border border-solid border-[#707070] px-6 py-2">

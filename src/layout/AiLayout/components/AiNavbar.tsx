@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { NavLink } from '~/components/Link'
-import { OrgGroupIcon, OrgInfoIcon } from '~/components/SVGIcons'
-import { PATHS } from '~/routes/PATHS'
+import { NavLink } from '@/components/Link'
+import { OrgGroupIcon, OrgInfoIcon } from '@/components/SVGIcons'
+import { PATHS } from '@/routes/PATHS'
 
 export default function AiNavbar() {
   const { t } = useTranslation()

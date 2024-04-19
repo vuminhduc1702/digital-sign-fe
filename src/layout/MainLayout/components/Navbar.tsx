@@ -1,35 +1,35 @@
 import { useTranslation } from 'react-i18next'
 
 import { useSpinDelay } from 'spin-delay'
-import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
-import { useProjects } from '~/cloud/project/api'
-import { Link } from '~/components/Link'
-import { Spinner } from '~/components/Spinner'
-import { API_URL } from '~/config'
-import i18n from '~/i18n'
-import { useLogout, useUser } from '~/lib/auth'
-import { PATHS } from '~/routes/PATHS'
-import { useProjectIdStore } from '~/stores/project'
-import { useCopyId } from '~/utils/hooks'
-import storage from '~/utils/storage'
-import { useAuthorization } from '~/lib/authorization'
+import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
+import { useProjects } from '@/cloud/project/api'
+import { Link } from '@/components/Link'
+import { Spinner } from '@/components/Spinner'
+import { API_URL } from '@/config'
+import i18n from '@/i18n'
+import { useLogout, useUser } from '@/lib/auth'
+import { PATHS } from '@/routes/PATHS'
+import { useProjectIdStore } from '@/stores/project'
+import { useCopyId } from '@/utils/hooks'
+import storage from '@/utils/storage'
+import { useAuthorization } from '@/lib/authorization'
 
-import { type Project } from '~/cloud/project/routes/ProjectManage'
+import { type Project } from '@/cloud/project/routes/ProjectManage'
 
 import { LuLanguages } from 'react-icons/lu'
-import defaultUserIcon from '~/assets/icons/default-user.svg'
-import manualIcon from '~/assets/icons/nav-manual.svg'
-import qldaIcon from '~/assets/icons/nav-qlda.svg'
-import defaultProjectImage from '~/assets/images/default-project.png'
-import English from '~/assets/images/landingpage/uk-flag.png'
-import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
+import defaultUserIcon from '@/assets/icons/default-user.svg'
+import manualIcon from '@/assets/icons/nav-manual.svg'
+import qldaIcon from '@/assets/icons/nav-qlda.svg'
+import defaultProjectImage from '@/assets/images/default-project.png'
+import English from '@/assets/images/landingpage/uk-flag.png'
+import VietNam from '@/assets/images/landingpage/vietnam-flag.png'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { SidebarDropDownIcon } from '~/components/SVGIcons'
+} from '@/components/Dropdowns'
+import { SidebarDropDownIcon } from '@/components/SVGIcons'
 
 function Navbar() {
   const { t } = useTranslation()

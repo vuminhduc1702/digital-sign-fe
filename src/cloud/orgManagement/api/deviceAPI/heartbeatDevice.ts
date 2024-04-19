@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query'
 
 import { useTranslation } from 'react-i18next'
 import { type z } from 'zod'
-import { axios } from '~/lib/axios'
-import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { queryClient, type MutationConfig } from '@/lib/react-query'
 import { toast } from 'sonner'
 import { type heartBeatSchema } from '../../components/Device/UpdateDevice'
 
@@ -36,7 +36,9 @@ export const useHeartBeat = ({ config }: UseHeartBeatOptions = {}) => {
       queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      toast.success(t('cloud:org_manage.device_manage.add_device.success_heartbeat'))
+      toast.success(
+        t('cloud:org_manage.device_manage.add_device.success_heartbeat'),
+      )
     },
     ...config,
     mutationFn: heartBeat,

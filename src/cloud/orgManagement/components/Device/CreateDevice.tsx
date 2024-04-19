@@ -4,25 +4,25 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FormDrawer,
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import { nameSchema } from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { nameSchema } from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
 import { useRef, useState } from 'react'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useGetTemplates } from '~/cloud/deviceTemplate/api'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { useGetTemplates } from '@/cloud/deviceTemplate/api'
+import { PlusIcon } from '@/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 import { type SelectInstance } from 'react-select'
-import { ComplexTree } from '~/components/ComplexTree'
+import { ComplexTree } from '@/components/ComplexTree'
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -82,12 +82,9 @@ export function CreateDevice() {
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:org_manage.device_manage.add_device.button')}
+        </Button>
       }
       title={t('cloud:org_manage.device_manage.add_device.title')}
       submitButton={

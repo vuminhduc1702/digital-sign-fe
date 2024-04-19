@@ -3,16 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
-import { FormDrawer, InputField, SelectField } from '~/components/Form'
-import storage from '~/utils/storage'
+import { Button } from '@/components/Button'
+import { FormDrawer, InputField, SelectField } from '@/components/Form'
+import storage from '@/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
-import { nameSchema } from '~/utils/schemaValidation'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import { nameSchema } from '@/utils/schemaValidation'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { ComplexTree } from '~/components/ComplexTree'
+import { PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { ComplexTree } from '@/components/ComplexTree'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
@@ -57,12 +57,9 @@ export function CreateGroup() {
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:org_manage.group_manage.add_group.button')}
+        </Button>
       }
       title={t('cloud:org_manage.group_manage.add_group.title')}
       submitButton={

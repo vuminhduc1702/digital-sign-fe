@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type PlanList } from '../types'
 
 type GetPlansDTO = {

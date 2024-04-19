@@ -1,10 +1,8 @@
-import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { Spinner } from '~/components/Spinner'
-import { ContentLayout } from '~/layout/ContentLayout'
-import storage from '~/utils/storage'
+import { ContentLayout } from '@/layout/ContentLayout'
+import storage from '@/utils/storage'
 import { PackageInfo, PackageSidebar } from '../components'
 
 export function BillingPackageManage() {
@@ -22,21 +20,13 @@ export function BillingPackageManage() {
         </div>
 
         <div className="flex flex-col gap-2 overflow-y-auto px-5 pb-2 md:col-span-3">
-          <Suspense
-            fallback={
-              <div className="flex grow items-center justify-center md:col-span-4">
-                <Spinner size="xl" />
-              </div>
-            }
-          >
-            {projectId && packageId ? (
-              <PackageInfo />
-            ) : (
-              <div className="flex grow items-center justify-center md:col-span-4">
-                {t('billing:package_manage.choose_package')}
-              </div>
-            )}
-          </Suspense>
+          {projectId && packageId ? (
+            <PackageInfo />
+          ) : (
+            <div className="flex grow items-center justify-center md:col-span-4">
+              {t('billing:package_manage.choose_package')}
+            </div>
+          )}
         </div>
       </div>
     </ContentLayout>

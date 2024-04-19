@@ -9,17 +9,17 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '~/components/Accordion'
-import { Button } from '~/components/Button'
-import { Checkbox } from '~/components/Checkbox'
+} from '@/components/Accordion'
+import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/Checkbox'
 import {
   FormDrawer,
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import { nameSchema } from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { nameSchema } from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
 import { useCreateTemplate, type CreateTemplateDTO } from '../api'
 import { useGetXMLdata } from '../api/getXMLdata'
 import {
@@ -30,13 +30,13 @@ import {
 import { LWM2MData } from '../types/lwm2mXML'
 
 import { LuChevronDown } from 'react-icons/lu'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
-import { CreateService } from '~/cloud/customProtocol/components/CreateService'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from '@/cloud/customProtocol/components/CreateService'
 
 type AccordionStates = {
   [key: number]: ModuleConfig[]
@@ -510,7 +510,7 @@ export default function CreateTemplateLwM2M() {
                         <div className="ml-auto">
                           <Checkbox
                             customClassName="w-5 h-5"
-                            className="mb-1 ml-5 flex h-5 w-5"
+                            className="mb-1 ml-5 flex h-5 w-5 items-center justify-center"
                             checked={
                               selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
                             }
@@ -552,7 +552,7 @@ export default function CreateTemplateLwM2M() {
                                     }) => {
                                       return (
                                         <Checkbox
-                                          className="ml-auto mr-3 mt-2 flex h-5 w-5"
+                                          className="ml-auto mr-3 mt-2 flex h-5 w-5 items-center justify-center"
                                           {...field}
                                           checked={checkboxStates[itemId]}
                                           onCheckedChange={e => {

@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { useEffect, useState } from 'react'
-import { CodeEditor } from '~/cloud/customProtocol/components'
-import { Dialog, DialogTitle } from '~/components/Dialog'
+import { CodeEditor } from '@/cloud/customProtocol/components'
+import { Dialog, DialogTitle } from '@/components/Dialog'
 import { type BodyEventService } from '../../types'
 
 type ViewInputOutputProps = {
@@ -46,7 +46,7 @@ export function ViewInputOutput({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>

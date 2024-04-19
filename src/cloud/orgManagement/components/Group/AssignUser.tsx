@@ -5,18 +5,18 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { SelectField } from '~/components/Form'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { Button } from '@/components/Button'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import { SelectField } from '@/components/Form'
 import {
   useAssignUser,
   type AssignUserDTO,
 } from '../../api/groupAPI/assignUser'
 import { useGetUsers } from '../../api/userAPI'
 import { useSpinDelay } from 'spin-delay'
-import { Spinner } from '~/components/Spinner'
-import i18n from '~/i18n'
+import { Spinner } from '@/components/Spinner'
+import i18n from '@/i18n'
 
 type AssignUserProps = {
   isOpenAssignUser: boolean
@@ -110,8 +110,8 @@ const AssignUser = ({
                     label: item.name
                       ? item.name
                       : item.email
-                      ? item.email
-                      : item.phone,
+                        ? item.email
+                        : item.phone,
                     value: item.user_id,
                   }
                 })}

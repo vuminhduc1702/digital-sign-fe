@@ -5,8 +5,8 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import ColorPicker from 'react-pick-color'
 
-import { FormDialog } from '~/components/FormDialog'
-import { Button } from '~/components/Button'
+import { FormDialog } from '@/components/FormDialog'
+import { Button } from '@/components/Button'
 import {
   type Widget,
   type WidgetCreate,
@@ -16,29 +16,29 @@ import {
   wsInterval,
   widgetAgg,
 } from './CreateWidget'
-import { Spinner } from '~/components/Spinner'
-import TitleBar from '~/components/Head/TitleBar'
+import { Spinner } from '@/components/Spinner'
+import TitleBar from '@/components/Head/TitleBar'
 import {
   FieldWrapper,
   InputField,
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
-import { useGetOrgs } from '~/layout/MainLayout/api'
-import { cn, flattenData } from '~/utils/misc'
-import { useDefaultCombobox } from '~/utils/hooks'
-import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { useGetOrgs } from '@/layout/MainLayout/api'
+import { cn, flattenData } from '@/utils/misc'
+import { useDefaultCombobox } from '@/utils/hooks'
+import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
+import storage from '@/utils/storage'
 import { useCreateAttrChart } from '../../api'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { EditBtnIcon, PlusIcon } from '@/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
-import { Calendar, TimePicker } from '~/components/Calendar'
+import { Calendar, TimePicker } from '@/components/Calendar'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
 import {
@@ -46,10 +46,10 @@ import {
   WS_REALTIME_INTERVAL,
   WS_REALTIME_REF,
 } from './CreateWidget'
-import { nameSchema } from '~/utils/schemaValidation'
-import i18n from '~/i18n'
+import { nameSchema } from '@/utils/schemaValidation'
+import i18n from '@/i18n'
 import { widgetTypeSchema, attrWidgetSchema } from './CreateWidget'
-import { ComplexTree } from '~/components/ComplexTree'
+import { ComplexTree } from '@/components/ComplexTree'
 
 export function UpdateWidget({
   widgetInfo,

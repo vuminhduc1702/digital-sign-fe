@@ -3,16 +3,16 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { FormDrawer, InputField } from '~/components/Form'
-import storage from '~/utils/storage'
+import { Button } from '@/components/Button'
+import { FormDrawer, InputField } from '@/components/Form'
+import storage from '@/utils/storage'
 import { useAddColumn, useCreateDataBase, type AddColumnDTO } from '../api'
 
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 import { useParams } from 'react-router-dom'
 import { type AddRowsDTO, useAddRows } from '../api/addRows'
 import { useEffect, useState } from 'react'
@@ -70,7 +70,9 @@ export default function CreateRows({
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        >{t('cloud:db_template.add_db.add_row')}</Button>
+        >
+          {t('cloud:db_template.add_db.add_row')}
+        </Button>
       }
       title={t('cloud:db_template.add_db.add_row')}
       submitButton={

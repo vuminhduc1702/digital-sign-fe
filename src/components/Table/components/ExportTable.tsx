@@ -2,7 +2,7 @@ import { type MutableRefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 import * as XLSX from 'xlsx'
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   Page,
   Document,
@@ -87,7 +87,7 @@ export function ExportTable({
             {aoo?.map((item, idx) => {
               return (
                 <View style={styles.row} key={`r-${idx}`}>
-                  {(Object.values(item) as string[]).map((ele) => {
+                  {(Object.values(item) as string[]).map(ele => {
                     return (
                       <Text
                         style={[

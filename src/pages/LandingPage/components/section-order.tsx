@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom'
-import SectionOrderBG from '~/assets/images/landingpage/BG_sectionorder.png'
-import { Button } from '~/components/Button'
-import { PATHS } from '~/routes/PATHS'
-import { ArrowRightUpLine } from '~/components/SVGIcons'
+import SectionOrderBG from '@/assets/images/landingpage/BG_sectionorder.png'
+import { Button } from '@/components/Button'
+import { PATHS } from '@/routes/PATHS'
+import { ArrowRightUpLine } from '@/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
-import i18n from '~/i18n'
-import { cn } from '~/utils/misc'
+import i18n from '@/i18n'
+import { cn } from '@/utils/misc'
 
 export function SectionOrder() {
   const navigate = useNavigate()
@@ -22,15 +22,15 @@ export function SectionOrder() {
             backgroundSize: 'cover',
           }}
         >
-          <div className="xs2:w-[300px] xs2:gap-0 flex h-full max-xl:flex-col max-lg:h-auto sm:w-[540px] lg:w-[800px] lg:items-center lg:gap-5 xl:w-[992px] xl:items-center xl:gap-x-10 ">
-            <div className="xs2::w-1/2 xs:w-1/2 w-1/2 lg:w-[480px]">
+          <div className="flex h-full max-xl:flex-col max-lg:h-auto xs2:w-[300px] xs2:gap-0 sm:w-[540px] lg:w-[800px] lg:items-center lg:gap-5 xl:w-[992px] xl:items-center xl:gap-x-10 ">
+            <div className="xs2::w-1/2 w-1/2 xs:w-1/2 lg:w-[480px]">
               <iframe
                 src="https://www.youtube.com/embed/KvNhWGB5nuk?rel=1&controls=1&showinfo=0&start=1&autoplay=0&enablejsapi=1"
-                className="xs2:h-[245px] xs2:w-[300px] xs:h-[245px] xs:w-[300px] h-full rounded-lg sm:h-[345px] sm:w-[500px] xl:w-[496px]"
+                className="h-full rounded-lg xs2:h-[245px] xs2:w-[300px] xs:h-[245px] xs:w-[300px] sm:h-[345px] sm:w-[500px] xl:w-[496px]"
               ></iframe>
             </div>
-            <div className="xs2:ml-0 ml-10">
-              <div className="xs2:w-[346px] xs2:text-[20px] w-[373px] text-[35px] leading-[43px] text-white sm:my-4 sm:w-[500px] sm:text-[40px]">
+            <div className="ml-10 xs2:ml-0">
+              <div className="w-[373px] text-[35px] leading-[43px] text-white xs2:w-[346px] xs2:text-[20px] sm:my-4 sm:w-[500px] sm:text-[40px]">
                 {t('landingpage:order.manage_platform')}
               </div>
               <div className="pt-5 text-justify text-[16px] leading-[16.8px] text-white xl:w-[460px]">
@@ -74,7 +74,7 @@ export function SectionOrder() {
                 <Link to="https://innoway.gitbook.io/innoway/" target="_blank">
                   <Button
                     type="button"
-                    className="xs2:px-12 ml-7 rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:ml-0 xl:px-5"
+                    className="ml-7 rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:ml-0 xs2:px-12 xl:px-5"
                     variant="primary"
                     endIcon={
                       <ArrowRightUpLine

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 import { toast } from 'sonner'
 
 import { type SendMessage } from 'react-use-websocket/dist/lib/types'

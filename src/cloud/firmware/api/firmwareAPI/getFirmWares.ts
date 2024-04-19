@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type BasePagination, type BaseAPIRes } from '~/types'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
+import { type BasePagination, type BaseAPIRes } from '@/types'
 import { type FirmWare } from '../../types'
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
 type GetFirmWares = {
   projectId: string
@@ -14,18 +14,19 @@ type GetFirmWares = {
 
 export type GetFirmWareRes = {
   data: FirmWare[]
-} & BaseAPIRes & BasePagination
+} & BaseAPIRes &
+  BasePagination
 
 export const getFirmwares = ({
   projectId,
-  offset, 
+  offset,
   limit,
 }: GetFirmWares): Promise<GetFirmWareRes> => {
   return axios.get(`/api/ota`, {
     params: {
-      project_id: projectId, 
-      offset, 
-      limit
+      project_id: projectId,
+      offset,
+      limit,
     },
   })
 }
@@ -39,7 +40,7 @@ type UseEntityFirmWareOptions = {
 export const useGetFirmwares = ({
   projectId,
   config,
-  offset = 0, 
+  offset = 0,
   limit = limitPagination,
 }: UseEntityFirmWareOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({

@@ -1,7 +1,7 @@
 import { type FieldValues, type Control, type Path } from 'react-hook-form'
 import type * as z from 'zod'
 
-import { type BasePaginationSchema } from '~/utils/schemaValidation'
+import { type BasePaginationSchema } from '@/utils/schemaValidation'
 
 export type BaseEntity = {
   id: string
@@ -16,6 +16,7 @@ export type BaseTablePagination = {
   setOffset?: React.Dispatch<React.SetStateAction<number>>
   total: number
   isPreviousData: boolean
+  isLoading: boolean
 }
 
 export type BaseAPIRes = {

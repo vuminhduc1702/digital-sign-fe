@@ -1,13 +1,13 @@
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
 import { type UserResponse } from '../types'
-import { MutationConfig, queryClient } from '~/lib/react-query'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
-import { passwordSchema } from '~/utils/schemaValidation'
-import i18n from '~/i18n'
+import { passwordSchema } from '@/utils/schemaValidation'
+import i18n from '@/i18n'
 
 export const ChangePaswordSchema = z
   .object({

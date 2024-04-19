@@ -2,23 +2,23 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { FormDrawer, InputField, SelectDropdown } from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
-import storage from '~/utils/storage'
+import { Button } from '@/components/Button'
+import { FormDrawer, InputField, SelectDropdown } from '@/components/Form'
+import TitleBar from '@/components/Head/TitleBar'
+import storage from '@/utils/storage'
 import { useCreateRole, type CreateRoleDTO } from '../api'
-import { useGetGroups } from '~/cloud/orgManagement/api/groupAPI'
-import { cn } from '~/utils/misc'
+import { useGetGroups } from '@/cloud/orgManagement/api/groupAPI'
+import { cn } from '@/utils/misc'
 
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 import { type PolicyActions, type PolicyResources } from '../types'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export const resourcesList = [
   { value: 'users', label: i18n.t('schema:users') },
@@ -176,12 +176,9 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
       isDone={isSuccess}
       resetData={resetData}
       triggerButton={
-        <Button
-          className="h-9 w-9 rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:role_manage.add_role.button')}
+        </Button>
       }
       title={t('cloud:role_manage.add_role.title')}
       submitButton={

@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type UserInfo } from './getUserInfo'
-import { type BasePagination } from '~/types'
+import { type BasePagination } from '@/types'
 
 export type UserList = {
   users: UserInfo[]

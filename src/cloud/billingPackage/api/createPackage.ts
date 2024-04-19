@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import type * as z from 'zod'
 
-import { axios } from '~/lib/axios'
-import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { queryClient, type MutationConfig } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 import { type entityPlanSchema } from '../components'
@@ -14,9 +14,7 @@ export type CreatePlanDTO = {
   }
 }
 
-export const createPlan = ({
-  data,
-}: CreatePlanDTO) => {
+export const createPlan = ({ data }: CreatePlanDTO) => {
   return axios.post(`/api/priceplan/plan`, data)
 }
 
@@ -24,9 +22,7 @@ type UsecreatePlanOptions = {
   config?: MutationConfig<typeof createPlan>
 }
 
-export const useCreatePlan = ({
-  config,
-}: UsecreatePlanOptions = {}) => {
+export const useCreatePlan = ({ config }: UsecreatePlanOptions = {}) => {
   const { t } = useTranslation()
 
   return useMutation({

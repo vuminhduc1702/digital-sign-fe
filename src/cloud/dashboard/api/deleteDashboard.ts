@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
-import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { queryClient, type MutationConfig } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 type DeleteDashboardDTO = {
@@ -23,7 +23,7 @@ export const useDeleteDashboard = ({
   const { t } = useTranslation()
 
   return useMutation({
-    onSuccess: async () => {      
+    onSuccess: async () => {
       toast.promise(() => queryClient.invalidateQueries(['dashboards']), {
         loading: t('loading:loading'),
         success: t('cloud:dashboard.add_dashboard.success_delete'),

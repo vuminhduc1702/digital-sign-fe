@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
-import { flattenData } from '~/utils/misc'
-import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
+import { flattenData } from '@/utils/misc'
+import { ComboBoxBase, filteredComboboxData } from '@/components/ComboBox'
 import { useGetTemplates } from '../api'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 import { type Template } from '../types'
 
-import { SearchIcon } from '~/components/SVGIcons'
+import { SearchIcon } from '@/components/SVGIcons'
 
 export function ComboBoxSelectTemplate({
   setFilteredComboboxData,

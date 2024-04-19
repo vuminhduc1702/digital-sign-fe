@@ -1,16 +1,18 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { Navigate } from 'react-router-dom'
+import { Navigate, type RouteObject } from 'react-router-dom'
 
-import { lazyImport } from '~/utils/lazyImport'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { lazyImport } from '@/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
+import { endProgress, startProgress } from '@/components/Progress'
+import { AnimatedWrapper } from '@/components/Animated'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 const { FlowEngineV2Layout } = lazyImport(
-  () => import('~/layout/FlowEngineV2Layout'),
+  () => import('@/layout/FlowEngineV2Layout'),
   'FlowEngineV2Layout',
 )
 
@@ -35,6 +37,13 @@ const projectData = storage.getProject()
 export const FlowEngineV2Routes = [
   {
     element: <FlowEngineV2Layout />,
+    loader: async () => {
+      startProgress()
+      await import('@/layout/FlowEngineV2Layout')
+      endProgress()
+
+      return null
+    },
     path: `${PATHS.FLOW_ENGINE_V2}`,
     children: [
       {
@@ -57,17 +66,35 @@ export const FlowEngineV2Routes = [
             path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <ThingTemplate />
+                <AnimatedWrapper>
+                  <ThingTemplate />
+                </AnimatedWrapper>
               </ErrorBoundary>
             ),
+            loader: async () => {
+              startProgress()
+              await import('./ThingTemplate')
+              endProgress()
+
+              return null
+            },
           },
           {
             path: ':projectId/:thingId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <ThingServices />
+                <AnimatedWrapper>
+                  <ThingServices />
+                </AnimatedWrapper>
               </ErrorBoundary>
             ),
+            loader: async () => {
+              startProgress()
+              await import('./ThingService')
+              endProgress()
+
+              return null
+            },
           },
         ],
       },
@@ -101,4 +128,4 @@ export const FlowEngineV2Routes = [
       },
     ],
   },
-]
+] as const satisfies RouteObject[]

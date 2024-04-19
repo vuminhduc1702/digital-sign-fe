@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '~/components/Button'
-import { Dialog, DialogTitle } from '~/components/Dialog'
+import { Button } from '@/components/Button'
+import { Dialog, DialogTitle } from '@/components/Dialog'
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { divIcon } from 'leaflet'
 

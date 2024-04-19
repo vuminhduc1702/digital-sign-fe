@@ -6,7 +6,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket'
 import * as z from 'zod'
 
 import { toast } from 'sonner'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
 import { type JsonValue } from 'react-use-websocket/dist/lib/types'
 

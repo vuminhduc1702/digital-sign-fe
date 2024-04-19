@@ -1,23 +1,24 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '~/components/Table'
+import { BaseTable, type BaseTableProps } from '@/components/Table'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
 import { EyeOpenIcon } from '@radix-ui/react-icons'
 import { useNavigate } from 'react-router-dom'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 import { type Customer } from '../../types'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function CustomerTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -28,7 +29,16 @@ function CustomerTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
-      <DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuEye
+            className="text-lg text-gray-500"
+            onClick={() => {
+              navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
+            }}
+          />
+        </div>
+        {/* <DropdownMenu>
         <DropdownMenuTrigger>
           <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
@@ -49,9 +59,14 @@ function CustomerTableContextMenu({ id }: { id: string }) {
             {t('billing:customer_manage.info')}
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
+      </div>
     </>
   )
+}
+
+type PartialBaseTableProps<T> = Omit<BaseTableProps<Customer>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
 }
 
 type CustomerTableProps = {
@@ -60,17 +75,46 @@ type CustomerTableProps = {
   setRowSelection: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
-} & BaseTablePagination
+} & PartialBaseTableProps<Customer>
 
 export function CustomerTable({ data, ...props }: CustomerTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const offsetPrev = useRef<number>(props.offset)
+  const projectId = storage.getProject()?.id
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
+
+  function moveToLink(id: string) {
+    navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
+  }
 
   const columnHelper = createColumnHelper<Customer>()
   const columns = useMemo<ColumnDef<Customer, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { user_id } = info.row.original
+          return CustomerTableContextMenu({
+            id: user_id,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -108,17 +152,6 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { user_id } = info.row.original
-          return CustomerTableContextMenu({
-            id: user_id,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
     ],
     [props.offset],
   )
@@ -128,6 +161,7 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
       data={data ?? []}
       columns={columns}
       onDataText={t('table:no_customer')}
+      viewDetailOnClick={moveToLink}
       {...props}
     />
   )

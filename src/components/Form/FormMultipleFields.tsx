@@ -12,7 +12,7 @@ import {
 } from 'react-hook-form'
 import { type ZodType } from 'zod'
 
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 type FormMultipleFieldsProps<TFormValues extends FieldValues, Schema> = {
   onSubmit: SubmitHandler<TFormValues>

@@ -4,26 +4,26 @@ import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Link } from '~/components/Link'
-import { InputField } from '~/components/Form'
-import { Button } from '~/components/Button'
-import { PATHS } from '~/routes/PATHS'
+import { Link } from '@/components/Link'
+import { InputField } from '@/components/Form'
+import { Button } from '@/components/Button'
+import { PATHS } from '@/routes/PATHS'
 import { sentOTP } from '../api/otp'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 import { useChangePassWithEmailAndPassword } from '../api/forgetpassword'
 
 import {
   emailSchema,
   otpSchema,
   passwordSchema,
-} from '~/utils/schemaValidation'
+} from '@/utils/schemaValidation'
 
 import {
   BtnPasswordLoginIcon,
   BtnUserLoginIcon,
   EyeHide,
   EyeShow,
-} from '~/components/SVGIcons'
+} from '@/components/SVGIcons'
 
 const ForgetPasswordSchema = z
   .object({

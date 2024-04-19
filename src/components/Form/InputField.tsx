@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 import { type UseFormRegisterReturn } from 'react-hook-form'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { useTranslation } from 'react-i18next'

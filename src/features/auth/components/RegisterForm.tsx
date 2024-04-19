@@ -2,27 +2,27 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState } from 'react'
 
-import { Link } from '~/components/Link'
-import { useRegister } from '~/lib/auth'
-import { InputField } from '~/components/Form'
-import { Button } from '~/components/Button'
-import { PATHS } from '~/routes/PATHS'
+import { Link } from '@/components/Link'
+import { useRegister } from '@/lib/auth'
+import { InputField } from '@/components/Form'
+import { Button } from '@/components/Button'
+import { PATHS } from '@/routes/PATHS'
 import { sentOTP } from '../api/otp'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   emailSchema,
   otpSchema,
   passwordSchema,
-} from '~/utils/schemaValidation'
+} from '@/utils/schemaValidation'
 
 import {
   BtnPasswordLoginIcon,
   BtnUserLoginIcon,
   EyeHide,
   EyeShow,
-} from '~/components/SVGIcons'
+} from '@/components/SVGIcons'
 
 const registerSchema = z
   .object({

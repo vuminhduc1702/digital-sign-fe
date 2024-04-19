@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type RoleList } from '../types'
-import { type RoleTypes } from '~/lib/authorization'
+import { type RoleTypes } from '@/lib/authorization'
 
 type GetRoles = {
   projectId: string

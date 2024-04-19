@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import {type  GetFuelDTO } from '../../types'
+import { axios } from '@/lib/axios'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
+import { type GetFuelDTO } from '../../types'
 
 export const getFuel = (data: GetFuelDTO) => {
   return axios.post('/ai/fuel', {
-      ...data
+    ...data,
   })
 }
 
@@ -26,7 +26,7 @@ type UseFuel = {
 
 export const useFuel = ({ config, data }: UseFuel) => {
   return useQuery<ExtractFnReturnType<FuelQueryFnType>>({
-    queryKey: ['call-fuel-api', {...data}],
+    queryKey: ['call-fuel-api', { ...data }],
     queryFn: () => getFuel({ ...data }),
     ...config,
   })

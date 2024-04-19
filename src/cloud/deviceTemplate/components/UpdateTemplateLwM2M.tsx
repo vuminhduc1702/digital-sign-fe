@@ -5,26 +5,26 @@ import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
 import { type SelectInstance } from 'react-select'
 import * as z from 'zod'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '~/components/Accordion'
-import { Button } from '~/components/Button'
-import { Checkbox } from '~/components/Checkbox'
-import { Drawer } from '~/components/Drawer'
+} from '@/components/Accordion'
+import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/Checkbox'
+import { Drawer } from '@/components/Drawer'
 import {
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import { Spinner } from '~/components/Spinner'
-import { axios } from '~/lib/axios'
-import { nameSchema } from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { Spinner } from '@/components/Spinner'
+import { axios } from '@/lib/axios'
+import { nameSchema } from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
 import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
 import { useTemplateById } from '../api/getTemplateById'
 import {
@@ -35,10 +35,10 @@ import {
 } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
-import { CreateService } from '~/cloud/customProtocol/components/CreateService'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from '@/cloud/customProtocol/components/CreateService'
 
 import { LuChevronDown } from 'react-icons/lu'
 
@@ -483,8 +483,6 @@ export function UpdateTemplateLwM2M({
           className="w-full space-y-5"
           id="update-template"
           onSubmit={handleSubmit(() => {
-            data
-
             mutate({
               data,
               templateId: selectedUpdateTemplate?.id,

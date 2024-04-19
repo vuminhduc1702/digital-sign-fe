@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from '~/components/Link'
-import { DownloadSdk } from '~/components/SVGIcons'
-import { ContentLayout } from '~/layout/ContentLayout'
-import i18n from '~/i18n'
+import { Link } from '@/components/Link'
+import { DownloadSdk } from '@/components/SVGIcons'
+import { ContentLayout } from '@/layout/ContentLayout'
+import i18n from '@/i18n'
 
 export function AppSdk() {
   const Sdks = [

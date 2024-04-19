@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type Subcription } from '../../types'
-import { type BaseAPIRes } from '~/types'
+import { type BaseAPIRes } from '@/types'
 
 export type GetSubcriptonByIdRes = {
   data: Subcription

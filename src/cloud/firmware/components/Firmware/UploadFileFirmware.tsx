@@ -4,21 +4,21 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { cn } from '~/utils/misc'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import { cn } from '@/utils/misc'
 import {
   type UploadFileFirmWareDTO,
   useUploadFileFireWare,
 } from '../../api/firmwareAPI/uploadFileFirmware'
-import i18n from '~/i18n'
-import { InputField } from '~/components/Form'
+import i18n from '@/i18n'
+import { InputField } from '@/components/Form'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { UploadIcon } from '@radix-ui/react-icons'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 type UploadFileFirmWareProps = {
   firmwareId: string

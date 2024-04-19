@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Head } from '~/components/Head'
+import { Head } from '@/components/Head'
 
-import textureLogin from '~/assets/images/texture-auth-layout.svg'
-import frameAuth from '~/assets/images/frame-auth-layout.svg'
-import logo from '~/assets/images/logo.svg'
+import textureLogin from '@/assets/images/texture-auth-layout.svg'
+import frameAuth from '@/assets/images/frame-auth-layout.svg'
+import logo from '@/assets/images/logo.svg'
 
 type LayoutProps = {
   children: ReactNode

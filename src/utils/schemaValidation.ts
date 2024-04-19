@@ -1,5 +1,5 @@
 import { z, type ZodTypeAny } from 'zod'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
 export const nameSchema = z
   .string()

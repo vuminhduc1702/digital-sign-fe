@@ -3,30 +3,30 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { useCopyId, useDisclosure } from '~/utils/hooks'
-import { PATHS } from '~/routes/PATHS'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
+import { PATHS } from '@/routes/PATHS'
 import CreateTemplate from './CreateTemplate'
 import { useDeleteTemplate } from '../api'
 import { UpdateTemplate } from './UpdateTemplate'
 import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplate'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 import { type Template } from '../types'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function TemplateDefault() {
   const { t } = useTranslation()
@@ -61,6 +61,8 @@ export function TemplateDefault() {
       navigate(
         `${PATHS.TEMPLATE_DEFAULT}/${projectId}/${filteredComboboxData[0].id}`,
       )
+    } else {
+      navigate(`${PATHS.TEMPLATE_DEFAULT}/${projectId}`)
     }
     return () => clearTimeout(timer)
   }, [filteredComboboxData])

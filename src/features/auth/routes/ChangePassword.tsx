@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { ChangePaswordForm } from '../components/ChangePasswordForm'
-import { logoutFn } from '~/lib/auth'
+import { logoutFn } from '@/lib/auth'
 import { toast } from 'sonner'
-import narrowLeft from '~/assets/icons/narrow-left.svg'
-import frameAuth from '~/assets/images/frame-auth-layout.svg'
-import { ContentLayout } from '~/layout/ContentLayout'
+import narrowLeft from '@/assets/icons/narrow-left.svg'
+import frameAuth from '@/assets/images/frame-auth-layout.svg'
+import { ContentLayout } from '@/layout/ContentLayout'
 
 export const ChangePassword = () => {
   const { t } = useTranslation()

@@ -2,14 +2,14 @@ import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
 import { useRef, useState } from 'react'
 
-import bg_pack_of_data from '~/assets/images/landingpage/bg_pack_of_data.png'
+import bg_pack_of_data from '@/assets/images/landingpage/bg_pack_of_data.png'
 import { useGetPackofdata } from '../api/getPackofdata'
-import { Button } from '~/components/Button'
-import { Switch } from '~/components/Switch'
-import { Checkbox } from '~/components/Checkbox'
-import { useDisclosure } from '~/utils/hooks'
+import { Button } from '@/components/Button'
+import { Switch } from '@/components/Switch'
+import { Checkbox } from '@/components/Checkbox'
+import { useDisclosure } from '@/utils/hooks'
 import { ComparePackOfData } from './compare-packofdata'
-import { Spinner } from '~/components/Spinner'
+import { Spinner } from '@/components/Spinner'
 
 import {
   Carousel,
@@ -18,10 +18,10 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '~/components/Carousel'
+} from '@/components/Carousel'
 import Autoplay from 'embla-carousel-autoplay'
 
-import { CheckboxCircleLine } from '~/components/SVGIcons'
+import { CheckboxCircleLine } from '@/components/SVGIcons'
 
 export function SectionPackageData() {
   const { t } = useTranslation()
@@ -84,7 +84,7 @@ export function SectionPackageData() {
             {t('landingpage:pack_of_data_M2M.title')}
           </p>
           <div className="flex justify-center">
-            <h3 className="xs2:w-[360px] xs2:text-[30px] xs:w-[400px] xs:px-0 px-[50px] text-center font-semibold leading-[43px] xl:w-[588px] xl:text-[45px] ">
+            <h3 className="px-[50px] text-center font-semibold leading-[43px] xs2:w-[360px] xs2:text-[30px] xs:w-[400px] xs:px-0 xl:w-[588px] xl:text-[45px] ">
               {t('landingpage:pack_of_data_M2M.variety')}
             </h3>
           </div>
@@ -94,7 +94,7 @@ export function SectionPackageData() {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="xs2:gap-6 xs2:py-4 xs:gap-6 flex justify-center pt-5 max-lg:flex-col max-lg:items-center max-md:items-center max-md:py-8 sm:gap-6 md:gap-6 lg:gap-6">
+              <div className="flex justify-center pt-5 max-lg:flex-col max-lg:items-center max-md:items-center max-md:py-8 xs2:gap-6 xs2:py-4 xs:gap-6 sm:gap-6 md:gap-6 lg:gap-6">
                 <div className="flex items-center px-10 max-lg:px-2 ">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.plan')}
@@ -111,7 +111,7 @@ export function SectionPackageData() {
                     {t('landingpage:pack_of_data_M2M.NB_IoT')}
                   </p>
                 </div>
-                <div className="xs2:py-0 flex items-center px-10 max-lg:px-2 max-md:py-5">
+                <div className="flex items-center px-10 max-lg:px-2 max-md:py-5 xs2:py-0">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.subscription')}
                   </p>
@@ -130,7 +130,7 @@ export function SectionPackageData() {
                 <div>
                   <Button
                     type="button"
-                    className="border-primary-400 text-primary-400 xs2:mt-0 rounded-r-lg rounded-tl-lg border bg-white hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5"
+                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5 xs2:mt-0"
                     variant="primary"
                     onClick={open}
                   >
@@ -145,9 +145,9 @@ export function SectionPackageData() {
                     <button
                       key={idx}
                       onClick={() => setCategory(categories[idx])}
-                      className={`hover:text-primary-400 flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider ${
+                      className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:text-primary-400 ${
                         category === categories[idx]
-                          ? 'text-primary-400 bg-white'
+                          ? 'bg-white text-primary-400'
                           : ''
                       }`}
                     >
@@ -158,7 +158,7 @@ export function SectionPackageData() {
               </div>
 
               <div className="flex w-full justify-center">
-                <div className="xs2:w-[280px] xs:w-[300px] w-[1200px] pt-[50px] sm:w-[320px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
+                <div className="w-[1200px] pt-[50px] xs2:w-[280px] xs:w-[300px] sm:w-[320px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
                   <Carousel
                     opts={{
                       align: 'start',
@@ -184,7 +184,7 @@ export function SectionPackageData() {
                           .map(item => (
                             <CarouselItem className="basis-1/4 ">
                               <div className="w-60 rounded-lg shadow-md">
-                                <div className="bg-primary-400 flex justify-center rounded-t-lg py-2 text-center text-xl font-medium text-white">
+                                <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
                                   <Checkbox
                                     defaultChecked={
                                       PackofDataRef.current?.find(
@@ -210,7 +210,7 @@ export function SectionPackageData() {
                                         )
                                       }
                                     }}
-                                    className={`data-[state=checked]:text-primary-400 mr-4 bg-white data-[state=checked]:bg-white`}
+                                    className={`mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400`}
                                   />
                                   {item.name}
                                 </div>

@@ -1,4 +1,4 @@
-import { type RoleTypes } from '~/lib/authorization'
+import { type RoleTypes } from '@/lib/authorization'
 
 export type User = {
   expired_at: number

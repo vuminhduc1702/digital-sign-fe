@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { useParams } from 'react-router-dom'
 
-import { useCreateAttrChart } from '~/cloud/dashboard/api'
-import { Button } from '~/components/Button'
-import { Checkbox } from '~/components/Checkbox'
+import { useCreateAttrChart } from '@/cloud/dashboard/api'
+import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/Checkbox'
 import {
   FieldWrapper,
   FormDrawer,
@@ -15,29 +15,29 @@ import {
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
-import i18n from '~/i18n'
-import { useGetOrgs } from '~/layout/MainLayout/api'
-import { cn } from '~/utils/misc'
-import { nameSchema } from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import TitleBar from '@/components/Head/TitleBar'
+import i18n from '@/i18n'
+import { useGetOrgs } from '@/layout/MainLayout/api'
+import { cn } from '@/utils/misc'
+import { nameSchema } from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
 import { useGetGroups } from '../../api/groupAPI'
 import { initialTodos } from './EventTable'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 
-import { outputList } from '~/cloud/customProtocol/components/CreateService'
-import { inputListSchema } from '~/cloud/flowEngineV2/components/ThingService'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
+import { inputListSchema } from '@/cloud/flowEngineV2/components/ThingService'
 import { type SelectInstance } from 'react-select'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 import { type ActionType } from '../../types'
-import { ComplexTree } from '~/components/ComplexTree'
+import { ComplexTree } from '@/components/ComplexTree'
 
 export const logicalOperatorOption = [
   {
@@ -468,12 +468,9 @@ export function CreateEvent() {
       size="lg"
       resetData={clearData}
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:org_manage.event_manage.add_event.button')}
+        </Button>
       }
       title={t('cloud:org_manage.event_manage.add_event.title')}
       submitButton={
@@ -569,7 +566,7 @@ export function CreateEvent() {
           <div className="space-y-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.info')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               <InputField
@@ -666,7 +663,7 @@ export function CreateEvent() {
               title={t(
                 'cloud:org_manage.event_manage.add_event.test_condition_time',
               )}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               {todos.map(todo => (
@@ -729,7 +726,7 @@ export function CreateEvent() {
                 title={t(
                   'cloud:org_manage.event_manage.add_event.condition.title',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <Button
                 className="rounded-md"
@@ -860,7 +857,7 @@ export function CreateEvent() {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.action.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             {actionType !== 'report' && (
               <Button

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Layout } from '../components/Layout'
 import { RegisterForm } from '../components/RegisterForm'
 import { toast } from 'sonner'
-import { logoutFn } from '~/lib/auth'
+import { logoutFn } from '@/lib/auth'
 
 export const Register = () => {
   const { t } = useTranslation()

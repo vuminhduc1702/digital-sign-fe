@@ -6,24 +6,24 @@ import { useSpinDelay } from 'spin-delay'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
-import { Button } from '~/components/Button'
-import { InputField, SelectField } from '~/components/Form'
+import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
+import { Button } from '@/components/Button'
+import { InputField, SelectField } from '@/components/Form'
 import {
   emptyInputSchema,
   emptySelectSchema,
   phoneSchemaRegex,
-} from '~/utils/schemaValidation'
+} from '@/utils/schemaValidation'
 import { useAreaList } from './api/getAreaList'
 import {
   useMutationSelfAccountInfo,
   type UpdateSelfAccountInfoDTO,
 } from './api/updateSelfAccountInfo'
-import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
+import TitleBar from '@/components/Head/TitleBar'
+import { Spinner } from '@/components/Spinner'
 
-import narrowLeft from '~/assets/icons/narrow-left.svg'
-import { ContentLayout } from '~/layout/ContentLayout'
+import narrowLeft from '@/assets/icons/narrow-left.svg'
+import { ContentLayout } from '@/layout/ContentLayout'
 
 export const selfInfoSchema = z.object({
   name: emptyInputSchema,
@@ -105,7 +105,7 @@ const SelfAccount = () => {
       <div className="flex h-full w-2/3 flex-col self-center py-8">
         <div className="flex items-center">
           <div
-            className="border-secondary-700 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
+            className="mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
             onClick={() => navigate(-1)}
           >
             <img
@@ -115,12 +115,12 @@ const SelfAccount = () => {
             />
             <span className="ml-2">{t('form:back')}</span>
           </div>
-          <div className="text-h1 mr-auto">{t('form:title')}</div>
+          <div className="mr-auto text-h1">{t('form:title')}</div>
         </div>
 
         <TitleBar
           title={t('billing:subcription.popup.customer_info')}
-          className="bg-secondary-700 mb-4 mt-12 rounded-md pl-3"
+          className="mb-4 mt-12 rounded-md bg-secondary-700 pl-3"
         />
 
         {userInfoIsLoading || provinceListIsLoading ? (

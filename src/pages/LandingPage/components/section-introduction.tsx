@@ -1,9 +1,9 @@
 import { type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import Group45 from '~/assets/images/landingpage/Group_45.png'
-import { Button } from '~/components/Button'
-import { CheckboxCircleLine, ArrowRightUpLine } from '~/components/SVGIcons'
-import { scrollToIntro } from '~/utils/misc'
+import Group45 from '@/assets/images/landingpage/Group_45.png'
+import { Button } from '@/components/Button'
+import { CheckboxCircleLine, ArrowRightUpLine } from '@/components/SVGIcons'
+import { scrollToIntro } from '@/utils/misc'
 
 export function SectionIntro({
   solutionRef,

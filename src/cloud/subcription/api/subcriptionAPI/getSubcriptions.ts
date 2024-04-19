@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type BasePagination, type BaseAPIRes } from '~/types'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
+import { type BasePagination, type BaseAPIRes } from '@/types'
 import { type Subcription } from '../../types'
 
 export interface searchFilter {
@@ -26,14 +26,14 @@ export const getSubcriptons = ({
   projectId,
   search_field,
   search_str,
-  searchData
+  searchData,
 }: GetSubcriptons): Promise<GetSubcriptonRes> => {
   return axios.get(`/api/priceplan/subscriptions`, {
     params: {
       project_id: projectId,
       search_field,
       search_str,
-      ...searchData
+      ...searchData,
     },
   })
 }
@@ -53,7 +53,8 @@ export const useGetSubcriptons = ({
 }: UseEntitySubcriptonOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['subcriptions', projectId, search_field, search_str, searchData],
-    queryFn: () => getSubcriptons({ projectId, search_field, search_str, searchData }),
+    queryFn: () =>
+      getSubcriptons({ projectId, search_field, search_str, searchData }),
     ...config,
   })
 }

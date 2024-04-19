@@ -1,18 +1,18 @@
 import { configureAuth } from 'react-query-auth'
 
-import { type UserResponse } from '~/features/auth'
+import { type UserResponse } from '@/features/auth'
 import {
   type LoginCredentialsDTO,
   loginWithEmailAndPassword,
-} from '~/features/auth/api/login'
+} from '@/features/auth/api/login'
 import {
   type RegisterCredentialsDTO,
   registerWithEmailAndPassword,
-} from '~/features/auth/api/register'
+} from '@/features/auth/api/register'
 
-import { PATHS } from '~/routes/PATHS'
+import { PATHS } from '@/routes/PATHS'
 
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 async function handleUserResponse(data: UserResponse) {
   const user = data

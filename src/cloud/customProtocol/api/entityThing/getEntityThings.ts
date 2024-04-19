@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 
 import { type EntityThingType, type EntityThingList } from '../../types'
-import { type BaseAPIRes } from '~/types'
-import { limitPagination } from '~/utils/const'
+import { type BaseAPIRes } from '@/types'
+import { limitPagination } from '@/utils/const'
 
 type GetEntityThings = {
   projectId: string
@@ -21,7 +21,7 @@ export type GetEntityThingsRes = {
 export const getEntityThings = ({
   projectId,
   type,
-  offset, 
+  offset,
   limit,
 }: GetEntityThings): Promise<GetEntityThingsRes> => {
   return axios.get(`/api/fe/thing`, {
@@ -44,13 +44,13 @@ type UseEntityThingsOptions = {
 export const useGetEntityThings = ({
   projectId,
   type,
-  offset = 0, 
+  offset = 0,
   limit = limitPagination,
   config,
 }: UseEntityThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['entity-things', projectId, type, offset, limit],
-    queryFn: () => getEntityThings({ projectId, type, offset, limit}),
+    queryFn: () => getEntityThings({ projectId, type, offset, limit }),
     ...config,
   })
 }

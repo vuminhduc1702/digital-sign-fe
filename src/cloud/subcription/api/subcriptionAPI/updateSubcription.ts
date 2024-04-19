@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 import type * as z from 'zod'
 import { type entitySubcriptionUpdateSchema } from '../../components/Subcription/UpdateSubcription'
@@ -20,7 +20,9 @@ type UseUpdateSubcriptionOptions = {
   config?: MutationConfig<typeof updateSubcription>
 }
 
-export const useUpdateSubcription = ({ config }: UseUpdateSubcriptionOptions = {}) => {
+export const useUpdateSubcription = ({
+  config,
+}: UseUpdateSubcriptionOptions = {}) => {
   const { t } = useTranslation()
 
   return useMutation({

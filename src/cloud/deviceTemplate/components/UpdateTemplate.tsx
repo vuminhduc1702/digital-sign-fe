@@ -3,38 +3,38 @@ import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 import { type SelectInstance } from 'react-select'
-import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
+import { useGetAttrs } from '@/cloud/orgManagement/api/attrAPI'
 import {
   booleanSelectOption,
   numberInput,
   valueTypeList,
-} from '~/cloud/orgManagement/components/Attributes'
-import { Button } from '~/components/Button'
-import { Checkbox } from '~/components/Checkbox'
-import { Drawer } from '~/components/Drawer'
+} from '@/cloud/orgManagement/components/Attributes'
+import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/Checkbox'
+import { Drawer } from '@/components/Drawer'
 import {
   FieldWrapper,
   InputField,
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
-import { Spinner } from '~/components/Spinner'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { Spinner } from '@/components/Spinner'
+import storage from '@/utils/storage'
 import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
 import { useGetRulechains } from '../api/getRulechains'
 import { templateAttrSchema } from './CreateTemplate'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { CreateService } from '~/cloud/customProtocol/components/CreateService'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { CreateService } from '@/cloud/customProtocol/components/CreateService'
+import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
 
-import { type Attribute } from '~/types'
+import { type Attribute } from '@/types'
 import { type Template } from '../types'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template

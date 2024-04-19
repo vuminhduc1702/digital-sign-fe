@@ -1,18 +1,16 @@
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { Link } from '~/components/Link'
-import { PATHS } from '~/routes/PATHS'
+import { Link } from '@/components/Link'
+import { PATHS } from '@/routes/PATHS'
 import { useGroupById } from '../../api/groupAPI'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
-import { BreadcrumbIcon } from '~/components/SVGIcons'
+import { BreadcrumbIcon } from '@/components/SVGIcons'
 
 export function GroupBreadcrumbs() {
   const { t } = useTranslation()
-
   const projectId = storage.getProject()?.id
-
   const params = useParams()
   const groupId = params.groupId as string
   const { data: groupData } = useGroupById({ groupId })

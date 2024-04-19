@@ -3,22 +3,22 @@ import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { InputField, SelectField } from '~/components/Form'
-import { FormDialog } from '~/components/FormDialog'
+import { InputField, SelectField } from '@/components/Form'
+import { FormDialog } from '@/components/FormDialog'
 import { serviceThingSchema } from './CreateAdapter'
 import { CodeEditor } from './CodeEditor'
-import { Button } from '~/components/Button'
-import i18n from '~/i18n'
-import { cn } from '~/utils/misc'
+import { Button } from '@/components/Button'
+import i18n from '@/i18n'
+import { cn } from '@/utils/misc'
 import {
   type CreateServiceThingDTO,
   useCreateServiceThing,
-} from '~/cloud/flowEngineV2/api/thingServiceAPI'
+} from '@/cloud/flowEngineV2/api/thingServiceAPI'
 
 import { inputService } from '../types'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 export const outputList = [
   {

@@ -1,4 +1,4 @@
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 const sizes = {
   sm: 'h-4 w-4',

@@ -3,30 +3,30 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { useCopyId, useDisclosure } from '~/utils/hooks'
-import { PATHS } from '~/routes/PATHS'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
+import { PATHS } from '@/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
 import { ComboBoxSelectTemplateLwM2M } from './ComboBoxSelectTemplateLwM2M'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 import { type Template } from '../types'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { UpdateTemplateLwM2M } from './UpdateTemplateLwM2M'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function TemplateLwM2M() {
   const { t } = useTranslation()
@@ -61,6 +61,8 @@ export function TemplateLwM2M() {
       navigate(
         `${PATHS.TEMPLATE_LWM2M}/${projectId}/${filteredComboboxData[0].id}`,
       )
+    } else {
+      navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}`)
     }
     return () => clearTimeout(timer)
   }, [filteredComboboxData])

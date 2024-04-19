@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useNavigate, useParams } from 'react-router-dom'
@@ -8,30 +8,30 @@ import {
   filterFns,
 } from '@tanstack/react-table'
 
-import { Button } from '~/components/Button'
-import { BaseTable } from '~/components/Table'
-import { useCopyId, useDisclosure } from '~/utils/hooks'
-import { PATHS } from '~/routes/PATHS'
+import { Button } from '@/components/Button'
+import { BaseTable } from '@/components/Table'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
+import { PATHS } from '@/routes/PATHS'
 import { UpdateDevice } from './UpdateDevice'
-import { getVNDateFormat } from '~/utils/misc'
+import { getVNDateFormat } from '@/utils/misc'
 import { useDeleteDevice } from '../../api/deviceAPI'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
+} from '@/components/Tooltip'
 
 import { type DeviceAdditionalInfo, type Device } from '../../types'
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnDetailIcon from '~/assets/icons/btn-detail.svg'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnDetailIcon from '@/assets/icons/btn-detail.svg'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
@@ -41,9 +41,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { Link } from '~/components/Link'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { type BaseTableProps } from '@/components/Table'
 
 function DeviceTableContextMenu({
   id,
@@ -99,82 +100,99 @@ function DeviceTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() =>
-              navigate(
-                `${PATHS.DEVICE_MANAGE}/${projectId}/${
-                  orgId != null ? `${orgId}/${id}` : ` /${id}`
-                }`,
-              )
-            }
-          >
-            <img src={btnDetailIcon} alt="View device" className="h-5 w-5" />
-            {t('table:view_detail')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-            {t('cloud:org_manage.device_manage.add_device.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openUpdateMqtt}>
-            <img src={btnEditIcon} alt="Edit mqtt config" className="h-5 w-5" />
-            {t('cloud:org_manage.device_manage.add_device.mqttconfig')}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              let type = 'active'
-              if (status === 'online' || status === 'offline') {
-                type = 'block'
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={open} />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuFiles
+            className="text-lg text-gray-500"
+            onClick={() => handleCopyId(id)}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex cursor-pointer justify-center p-3">
+              <LuMoreVertical className="text-lg text-gray-500" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `${PATHS.DEVICE_MANAGE}/${projectId}/${
+                    orgId != null ? `${orgId}/${id}` : ` /${id}`
+                  }`,
+                )
               }
-              mutateBlockAndActive({ type, deviceId: id })
-            }}
-          >
-            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-            {status === 'online' || status === 'offline'
-              ? t('device:block')
-              : t('device:active')}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              if (status !== 'blocked') openUpdateVersion()
-            }}
-            style={{
-              color: status === 'blocked' ? 'gray' : '',
-              cursor: status === 'blocked' ? 'not-allowed' : 'pointer',
-            }}
-          >
-            <UpdateIcon className="h-5 w-5" />
-            {t('cloud:firmware.fota')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleCopyId(id)}>
-            <img
-              src={btnCopyIdIcon}
-              alt="Copy device's ID"
-              className="h-5 w-5"
-            />
-            {t('table:copy_id')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleCopyId(token, 'token')}>
-            <CopyIcon className="h-5 w-5" />
-            {t('table:copy_token')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete device" className="h-5 w-5" />
-            {t('cloud:org_manage.device_manage.table.delete_device')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            >
+              <img src={btnDetailIcon} alt="View device" className="h-5 w-5" />
+              {t('table:view_detail')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={open}>
+              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+              {t('cloud:org_manage.device_manage.add_device.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openUpdateMqtt}>
+              <img
+                src={btnEditIcon}
+                alt="Edit mqtt config"
+                className="h-5 w-5"
+              />
+              {t('cloud:org_manage.device_manage.add_device.mqttconfig')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                let type = 'active'
+                if (status === 'online' || status === 'offline') {
+                  type = 'block'
+                }
+                mutateBlockAndActive({ type, deviceId: id })
+              }}
+            >
+              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+              {status === 'online' || status === 'offline'
+                ? t('device:block')
+                : t('device:active')}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                if (status !== 'blocked') openUpdateVersion()
+              }}
+              style={{
+                color: status === 'blocked' ? 'gray' : '',
+                cursor: status === 'blocked' ? 'not-allowed' : 'pointer',
+              }}
+            >
+              <UpdateIcon className="h-5 w-5" />
+              {t('cloud:firmware.fota')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleCopyId(id)}>
+              <img
+                src={btnCopyIdIcon}
+                alt="Copy device's ID"
+                className="h-5 w-5"
+              />
+              {t('table:copy_id')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleCopyId(token, 'token')}>
+              <CopyIcon className="h-5 w-5" />
+              {t('table:copy_token')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img
+                src={btnDeleteIcon}
+                alt="Delete device"
+                className="h-5 w-5"
+              />
+              {t('cloud:org_manage.device_manage.table.delete_device')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       {isOpen ? (
         <UpdateDevice
           deviceId={id}
@@ -221,16 +239,17 @@ function DeviceTableContextMenu({
   )
 }
 
+type PartialBaseTableProps<T> = Omit<BaseTableProps<Device>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+}
+
 type DeviceTableProps = {
   data: Device[]
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-} & BaseTablePagination
+} & PartialBaseTableProps<Device>
 
 export function DeviceTable({ data, ...props }: DeviceTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const projectId = storage.getProject()?.id
 
@@ -258,11 +277,60 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
   }
   const columnHelper = createColumnHelper<Device>()
 
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
+
+  function navigateToDetail(id: string) {
+    navigate(
+      `${PATHS.DEVICE_MANAGE}/${projectId}/${
+        orgId != null ? `${orgId}/${id}` : ` /${id}`
+      }`,
+    )
+  }
+
   const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const {
+            name,
+            id,
+            key,
+            org_id,
+            group_id,
+            template_id,
+            token,
+            status,
+          } = info.row.original
+
+          return DeviceTableContextMenu({
+            name,
+            id,
+            key,
+            org_id,
+            template_id,
+            token,
+            status,
+            group_id,
+            additional_info: info.row.original.additional_info,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -531,35 +599,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
         footer: info => info.column.id,
       }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const {
-            name,
-            id,
-            key,
-            org_id,
-            group_id,
-            template_id,
-            token,
-            status,
-          } = info.row.original
-
-          return DeviceTableContextMenu({
-            name,
-            id,
-            key,
-            org_id,
-            template_id,
-            token,
-            status,
-            group_id,
-            additional_info: info.row.original.additional_info,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
     ],
     [props.offset],
   )
@@ -571,9 +610,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columns={columns}
       colsVisibility={colsVisibility}
       onDataText={t('table:no_device')}
-      path={PATHS.DEVICE_MANAGE}
-      projectId={projectId}
-      orgId={orgId}
+      viewDetailOnClick={navigateToDetail}
       {...props}
     />
   )

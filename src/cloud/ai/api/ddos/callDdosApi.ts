@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type GetDdosDTO } from '../../types'
 
-export const getDdos = ( data : GetDdosDTO) => {
+export const getDdos = (data: GetDdosDTO) => {
   return axios.post('/ai/ddos', {
     ...data,
   })

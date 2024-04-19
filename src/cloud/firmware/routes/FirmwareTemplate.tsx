@@ -1,37 +1,42 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import storage from '~/utils/storage'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import storage from '@/utils/storage'
 
 import { useTranslation } from 'react-i18next'
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import TitleBar from '~/components/Head/TitleBar'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { convertEpochToDate } from '~/utils/transformFunc'
+import TitleBar from '@/components/Head/TitleBar'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import { convertEpochToDate } from '@/utils/transformFunc'
 import { useGetFirmwares } from '../api/firmwareAPI'
 import { useDeleteMultipleFirmware } from '../api/firmwareAPI/deleteMultipleFirmwares'
 import { CreateFirmWare, FirmWareTable } from '../components/Firmware'
-import { SearchField } from '~/components/Input'
-import { useDisclosure } from '~/utils/hooks'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { useDisclosure } from '@/utils/hooks'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function FirmwareTemplate() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [offset, setOffset] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const projectId = storage.getProject()?.id
   const {
     data: firmwareData,
     isPreviousData,
-    isSuccess,
+    isLoading: isLoadingFirmware,
   } = useGetFirmwares({
     projectId,
     config: { keepPreviousData: true },
     offset,
   })
 
-  const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
 
   const {
     mutate: mutateDeleteMultipleFirmware,
@@ -41,7 +46,7 @@ export function FirmwareTemplate() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleFirmware) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleFirmware])
 
@@ -59,53 +64,40 @@ export function FirmwareTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = firmwareData?.data?.reduce(
-    (acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:firmware.table.template')]: curr.template_name,
-          [t('cloud:firmware.table.name')]: curr.name,
-          [t('cloud:firmware.table.tag')]: curr.tag,
-          [t('cloud:firmware.table.version')]: curr.version,
-          [t('cloud:firmware.table.create_time')]: convertEpochToDate(
-            curr.created_time,
-          ),
-          [t('cloud:firmware.table.created_by')]: curr.email,
+  const formatExcel: Array<{ [key: string]: unknown }> | undefined =
+    firmwareData?.data?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:firmware.table.template')]: curr.template_name,
+            [t('cloud:firmware.table.name')]: curr.name,
+            [t('cloud:firmware.table.tag')]: curr.tag,
+            [t('cloud:firmware.table.version')]: curr.version,
+            [t('cloud:firmware.table.create_time')]: convertEpochToDate(
+              curr.created_time,
+            ),
+            [t('cloud:firmware.table.created_by')]: curr.email,
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    },
-    [] as Array<{ [key: string]: unknown }>,
-  )
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
-    <>
+    <div className="flex grow flex-col">
       <TitleBar title={t('cloud:firmware.title')} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
-          <div className="mr-[42px] flex items-center gap-x-3">
-            {Object.keys(rowSelection).length > 0 && (
-              <div
-                onClick={open}
-                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-              >
-                <div>{t('btn:delete')}:</div>
-                <div>{Object.keys(rowSelection).length}</div>
-              </div>
-            )}
-            <CreateFirmWare />
+          <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
+              setSearchValue={setSearchQuery}
+              setIsSearchData={setIsSearchData}
+              closeSearch={true}
             />
+            <CreateFirmWare />
           </div>
         </div>
         <FirmWareTable
@@ -114,17 +106,35 @@ export function FirmwareTemplate() {
           setOffset={setOffset}
           total={firmwareData?.total ?? 0}
           isPreviousData={isPreviousData}
+          isLoading={isLoadingFirmware}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          isSearchData={searchQuery.length > 0 && isSearchData}
+          utilityButton={
+            Object.keys(rowSelection).length > 0 && (
+              <div className="flex items-center">
+                <Button
+                  size="sm"
+                  onClick={openDeleteMulti}
+                  className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                >
+                  <div>{t('btn:delete')}:</div>
+                  <div>{Object.keys(rowSelection).length}</div>
+                </Button>
+              </div>
+            )
+          }
         />
       </div>
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:firmware.table.delete_firmware')}
           body={t('cloud:firmware.table.delete_multiple_firmware_confirm')}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleFirmware(
               {
@@ -136,6 +146,6 @@ export function FirmwareTemplate() {
           isLoading={isLoading}
         />
       ) : null}
-    </>
+    </div>
   )
 }

@@ -7,11 +7,11 @@ import {
 } from 'react'
 import { useLocation } from 'react-router-dom'
 
-import { useDisclosure } from '~/utils/hooks'
+import { useDisclosure } from '@/utils/hooks'
 import { Drawer, type DrawerProps } from '../Drawer'
 import { Button } from '../Button'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 
 type FormDrawerProps = {
   isDone: boolean

@@ -1,37 +1,45 @@
-import { Suspense, useMemo, useRef, useState, useEffect } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   AttrTable,
   CreateAttr,
-} from '~/cloud/orgManagement/components/Attributes'
-import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import storage from '~/utils/storage'
+} from '@/cloud/orgManagement/components/Attributes'
+import TitleBar from '@/components/Head/TitleBar'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import storage from '@/utils/storage'
 import { TemplateInfo } from '../components'
 
-import { type Attribute } from '~/types'
+import { type Attribute } from '@/types'
 
-import { Button } from '~/components/Button'
-import { convertEpochToDate, convertType } from '~/utils/transformFunc'
-import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
-import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
-import { SearchField } from '~/components/Input'
-import { useDisclosure } from '~/utils/hooks'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { Button } from '@/components/Button'
+import { convertEpochToDate, convertType } from '@/utils/transformFunc'
+import { useDeleteMultipleAttrs } from '@/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
+import { useGetAttrs } from '@/cloud/orgManagement/api/attrAPI/getAttrs'
+import { SearchField } from '@/components/Input'
+import { useDisclosure } from '@/utils/hooks'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function Default() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const { close, open, isOpen } = useDisclosure()
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
 
   const { templateId } = useParams()
   const entityType = 'TEMPLATE'
 
-  const { data: attrsData } = useGetAttrs({
+  const {
+    data: attrsData,
+    isLoading: isLoadingAttrs,
+    isPreviousData: isPreviousDataAttrs,
+  } = useGetAttrs({
     entityType,
     entityId: templateId,
     config: {
@@ -48,7 +56,7 @@ export function Default() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleAttrs) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleAttrs])
 
@@ -71,7 +79,7 @@ export function Default() {
     }
     return acc
   }, [])
-  const aoo = attrsData?.attributes.reduce(
+  const formatExcel = attrsData?.attributes.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
@@ -92,71 +100,65 @@ export function Default() {
     [] as Array<{ [key: string]: unknown }>,
   )
 
-  console.log(rowSelection)
-
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && attrsData ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
-          <Suspense
-            fallback={
-              <div className="flex grow items-center justify-center md:col-span-2">
-                <Spinner size="xl" />
-              </div>
+          <TemplateInfo />
+          <TitleBar
+            title={
+              t('cloud:org_manage.org_manage.attr_list') ??
+              'Device template management'
             }
-          >
-            <TemplateInfo />
-            <TitleBar
-              title={
-                t('cloud:org_manage.org_manage.attr_list') ??
-                'Device template management'
-              }
-            />
-            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-              <div className="flex justify-between">
-                <ExportTable
-                  refComponent={ref}
-                  rowSelection={rowSelection}
-                  aoo={aoo}
-                  pdfHeader={pdfHeader}
+          />
+          <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
+            <div className="flex justify-between">
+              <div className="flex w-full items-center justify-between gap-x-3">
+                <SearchField
+                  setSearchValue={setSearchQuery}
+                  setIsSearchData={setIsSearchData}
+                  closeSearch={true}
                 />
-                <div className="mr-[42px] flex items-center gap-x-3">
-                  {Object.keys(rowSelection).length > 0 && (
-                    <div
-                      onClick={open}
-                      className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+                <CreateAttr entityId={templateId} entityType="TEMPLATE" />
+              </div>
+            </div>
+            <AttrTable
+              data={attrsData?.attributes ?? []}
+              entityId={templateId}
+              entityType="TEMPLATE"
+              rowSelection={rowSelection}
+              setRowSelection={setRowSelection}
+              isPreviousData={isPreviousDataAttrs}
+              isLoading={isLoadingAttrs}
+              pdfHeader={pdfHeader}
+              formatExcel={formatExcel}
+              utilityButton={
+                Object.keys(rowSelection).length > 0 && (
+                  <div className="flex items-center">
+                    <Button
+                      size="sm"
+                      onClick={openDeleteMulti}
+                      className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
                     >
                       <div>{t('btn:delete')}:</div>
                       <div>{Object.keys(rowSelection).length}</div>
-                    </div>
-                  )}
-                  <CreateAttr entityId={templateId} entityType="TEMPLATE" />
-                  <SearchField
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                  />
-                </div>
-              </div>
-              <AttrTable
-                data={attrsData?.attributes ?? []}
-                entityId={templateId}
-                entityType="TEMPLATE"
-                rowSelection={rowSelection}
-                setRowSelection={setRowSelection}
-              />
-            </div>
-          </Suspense>
+                    </Button>
+                  </div>
+                )
+              }
+            />
+          </div>
         </div>
       ) : null}
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
           body={t(
             'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
           )}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {

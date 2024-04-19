@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 import type * as z from 'zod'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 import { type FieldsList, type DataBase } from '../types'
@@ -21,10 +21,13 @@ export const createDataBase = ({
   const dataSendBE = {
     fields: data.fields.map(item => ({
       ...item,
-      is_pk: true
-    }))
+      is_pk: true,
+    })),
   }
-  return axios.post(`/api/fe/table/${data?.table}?project_id=${data?.project_id}`, dataSendBE)
+  return axios.post(
+    `/api/fe/table/${data?.table}?project_id=${data?.project_id}`,
+    dataSendBE,
+  )
 }
 
 type UseCreateDataBaseOptions = {

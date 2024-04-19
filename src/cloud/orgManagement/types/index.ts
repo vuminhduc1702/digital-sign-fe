@@ -1,4 +1,4 @@
-import type { Attribute, BaseEntity, BasePagination } from '~/types'
+import type { Attribute, BaseEntity, BasePagination } from '@/types'
 import { type EntityType } from '../api/attrAPI'
 
 // Device types

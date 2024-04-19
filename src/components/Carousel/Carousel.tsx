@@ -4,8 +4,8 @@ import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from 'embla-carousel-react'
 
-import { cn } from '~/utils/misc'
-import { Button } from '~/components/Button'
+import { cn } from '@/utils/misc'
+import { Button } from '@/components/Button'
 import styles from './Carousel.module.css'
 
 type CarouselApi = UseEmblaCarouselType[1]
@@ -211,7 +211,7 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        'hover:bg-primary-400 absolute h-8 w-8 rounded-full hover:text-white',
+        'absolute h-8 w-8 rounded-full hover:bg-primary-400 hover:text-white',
         orientation === 'horizontal'
           ? '-left-10 top-1/2 -translate-y-1/2'
           : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
@@ -240,10 +240,10 @@ const CarouselNext = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        'hover:bg-primary-400 absolute h-8 w-8 rounded-full hover:text-white',
+        'absolute h-8 w-8 rounded-full hover:bg-primary-400 hover:text-white',
 
         orientation === 'horizontal'
-          ? 'xs2:-right-0 xs:-right-2 top-1/2 -translate-y-1/2 md:-right-10 xl:-right-10'
+          ? 'top-1/2 -translate-y-1/2 xs2:-right-0 xs:-right-2 md:-right-10 xl:-right-10'
           : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
         className,
       )}

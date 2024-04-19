@@ -1018,7 +1018,7 @@
     "not_found": "Not found",
     "no_user": "User does not exist",
     "error_page": {
-      "title": "Please click the Refresh button to reload the web page. If not, please press F5 to refresh the page."
+      "title": "Error! Please press F5 to refresh the page."
     },
     "page_not_found": "404 - The webpage does not exist. Redirecting to the home page in 5 seconds...",
     "server_res": {

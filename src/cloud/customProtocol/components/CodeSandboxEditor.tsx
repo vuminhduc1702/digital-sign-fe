@@ -6,8 +6,8 @@ import {
   useSandpack,
 } from '@codesandbox/sandpack-react'
 import { githubLight } from '@codesandbox/sandpack-themes'
-import { CSSProperties, useEffect, useState } from 'react'
-import { cn } from '~/utils/misc'
+import { type CSSProperties, useEffect, useState } from 'react'
+import { cn } from '@/utils/misc'
 
 type CodeSandboxEditorProps = {
   label?: string
@@ -21,7 +21,7 @@ type CodeSandboxEditorProps = {
   showRunButton?: boolean
   style?: CSSProperties
   isUpdate?: boolean
-  }
+}
 
 type SimpleCodeProps = {
   onChangeSimple: (e: string) => void
@@ -48,8 +48,8 @@ export function CodeSandboxEditor({
   className,
   showRunButton,
   style,
-  isUpdate = false
-  }: CodeSandboxEditorProps) {
+  isUpdate = false,
+}: CodeSandboxEditorProps) {
   const [textDefault, setTextDefault] = useState(defaultValue)
   let files = {
     '/index.js': {
@@ -77,7 +77,7 @@ export function CodeSandboxEditor({
       <SandpackLayout className={cn('', className)}>
         <SimpleCodeViewer onChangeSimple={onChangeSimple} />
         <SandpackCodeEditor
-          className={cn('border-0 border-0 border-b border-solid border-inherit', {
+          className={cn('border-0 border-b border-solid border-inherit', {
             '!h-[600px]': !isFullScreen && !isShowLog,
             '!h-[530px]': isFullScreen && !isUpdate && isShowLog,
             '!h-[830px]': isFullScreen && !isUpdate && !isShowLog,
@@ -91,12 +91,7 @@ export function CodeSandboxEditor({
           wrapContent={true}
           style={style}
         />
-        {isShowLog && (
-          <SandpackConsole
-            standalone
-            showSyntaxError={true}
-          />
-        )}
+        {isShowLog && <SandpackConsole standalone showSyntaxError={true} />}
       </SandpackLayout>
     </SandpackProvider>
   )

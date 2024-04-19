@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { SelectField } from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
+import { SelectField } from '@/components/Form'
+import TitleBar from '@/components/Head/TitleBar'
 import { RoleTable } from '../role/components/RoleTable'
 import { CreateRole } from '../role/components'
 import { useGetRoles } from '../role/api'
 import { useProjects } from '../project/api'
-import storage from '~/utils/storage'
-import { ContentLayout } from '~/layout/ContentLayout'
-import { SearchField } from '~/components/Input'
+import storage from '@/utils/storage'
+import { ContentLayout } from '@/layout/ContentLayout'
+import { SearchField } from '@/components/Input'
 
 import { type Project } from '../project/routes/ProjectManage'
 
-import narrowLeft from '~/assets/icons/narrow-left.svg'
+import narrowLeft from '@/assets/icons/narrow-left.svg'
 
 export default function DevRole() {
   const { t } = useTranslation()
@@ -23,6 +23,7 @@ export default function DevRole() {
   const [offset, setOffset] = useState(0)
   const [projectId, setProjectId] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
   const { data: projectsData } = useProjects()
 
@@ -36,7 +37,7 @@ export default function DevRole() {
     return rs
   }
 
-  const { data, isPreviousData } = useGetRoles({
+  const { data, isLoading, isPreviousData } = useGetRoles({
     projectId,
     applicable_to: 'TENANT_DEV',
     config: {
@@ -51,6 +52,32 @@ export default function DevRole() {
       setProjectId(storage.getProject().id)
     }
   }, [])
+
+  const [rowSelection, setRowSelection] = useState({})
+  const pdfHeader = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:role_manage.add_role.name'),
+      t('cloud:role_manage.add_role.role_type'),
+      t('cloud:role_manage.add_role.actions'),
+    ],
+    [],
+  )
+  const rowSelectionKey = Object.keys(rowSelection)
+  const formatExcel = data?.roles?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1 + offset).toString(),
+          [t('cloud:role_manage.add_role.name')]: curr.name,
+          [t('cloud:role_manage.add_role.role_type')]: curr.role_type,
+          [t('cloud:role_manage.add_role.actions')]: curr.actions,
+        }
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
 
   return (
     <ContentLayout title={t('dev_role:title')}>
@@ -70,29 +97,38 @@ export default function DevRole() {
         defaultValue={storage.getProject()?.id}
       />
 
-      <TitleBar title={t('dev_role:list')} className="mx-32" />
-      <div className="relative mx-32 flex grow flex-col px-9 py-3 shadow-lg">
-        <div className="flex justify-end">
+      <div className="mx-32">
+        <TitleBar title={t('dev_role:list')} />
+        <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
+          <div className="flex justify-end">
+            {projectId && (
+              <div className="flex w-full items-center justify-between gap-x-3">
+                <SearchField
+                  setSearchValue={setSearchQuery}
+                  setIsSearchData={setIsSearchData}
+                  closeSearch={true}
+                />
+                <CreateRole project_id={projectId} />
+              </div>
+            )}
+          </div>
           {projectId && (
-            <div className="mr-[42px] flex items-center gap-x-3">
-              <CreateRole project_id={projectId} />
-              <SearchField
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              />
-            </div>
+            <RoleTable
+              data={data?.roles ?? []}
+              project_id={projectId}
+              offset={offset}
+              setOffset={setOffset}
+              total={data?.total ?? 0}
+              isPreviousData={isPreviousData}
+              isLoading={isLoading}
+              isSearchData={searchQuery.length > 0 && isSearchData}
+              pdfHeader={pdfHeader}
+              formatExcel={formatExcel}
+              rowSelection={rowSelection}
+              setRowSelection={setRowSelection}
+            />
           )}
         </div>
-        {projectId && (
-          <RoleTable
-            data={data?.roles ?? []}
-            project_id={projectId}
-            offset={offset}
-            setOffset={setOffset}
-            total={data?.total ?? 0}
-            isPreviousData={isPreviousData}
-          />
-        )}
       </div>
     </ContentLayout>
   )

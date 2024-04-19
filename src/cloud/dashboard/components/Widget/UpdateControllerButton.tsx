@@ -7,21 +7,21 @@ import { type SelectInstance } from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
 import type * as z from 'zod'
 
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
-import { Spinner } from '~/components/Spinner'
-import { Button } from '~/components/Button'
-import { Checkbox } from '~/components/Checkbox'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
+import { Spinner } from '@/components/Spinner'
+import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/Checkbox'
 import {
   FieldWrapper,
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import { FormDialog } from '~/components/FormDialog'
-import TitleBar from '~/components/Head/TitleBar'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { FormDialog } from '@/components/FormDialog'
+import TitleBar from '@/components/Head/TitleBar'
+import storage from '@/utils/storage'
 
 import {
   type ControllerBtnList,
@@ -29,9 +29,9 @@ import {
   type controllerBtnSchema,
 } from './CreateControllerButton'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { EditBtnIcon, PlusIcon } from '@/components/SVGIcons'
 
 export const controllerBtnUpdateSchema = controllerBtnCreateSchema.partial({
   input: true,
@@ -201,7 +201,7 @@ export function UpdateControllerButton({
               <>
                 <TitleBar
                   title={t('cloud:dashboard.config_chart.show')}
-                  className="bg-secondary-700 w-full rounded-md pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <div className="grid grid-cols-3 gap-x-2 px-2">
                   <InputField
@@ -247,18 +247,18 @@ export function UpdateControllerButton({
                       serviceData?.data != null
                         ? serviceSelectData
                         : serviceData?.data == null
-                        ? [
-                            {
-                              label: t('table:no_service'),
-                              value: '',
-                            },
-                          ]
-                        : [
-                            {
-                              label: t('loading:service_thing'),
-                              value: '',
-                            },
-                          ]
+                          ? [
+                              {
+                                label: t('table:no_service'),
+                                value: '',
+                              },
+                            ]
+                          : [
+                              {
+                                label: t('loading:service_thing'),
+                                value: '',
+                              },
+                            ]
                     }
                     isOptionDisabled={option =>
                       option.label === t('loading:service_thing') ||
@@ -288,7 +288,7 @@ export function UpdateControllerButton({
                     title={t(
                       'cloud:dashboard.detail_dashboard.add_widget.controller.input_list',
                     )}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <Button
                     className="rounded-md"
@@ -421,7 +421,7 @@ export function UpdateControllerButton({
       }
       triggerButton={
         <Button
-          className="hover:text-primary-400 h-5 w-5"
+          className="h-5 w-5 hover:text-primary-400"
           variant="none"
           size="square"
           startIcon={<EditBtnIcon width={20} height={17} viewBox="0 0 20 17" />}
@@ -432,7 +432,7 @@ export function UpdateControllerButton({
           form="update-controller-widget"
           type="submit"
           size="md"
-          className="bg-primary-400 rounded-md border"
+          className="rounded-md border bg-primary-400"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }

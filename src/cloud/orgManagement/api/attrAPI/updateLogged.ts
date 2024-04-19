@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { useTranslation } from 'react-i18next'
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 export type UpdateLoggedDTO = {
@@ -38,7 +38,9 @@ export const useUpdateLogged = (
     onSuccess: async () => {
       if (addNoti) {
         await queryClient.invalidateQueries(['attrs'])
-        toast.success(t('cloud:org_manage.org_manage.add_attr.success_update_logged'))
+        toast.success(
+          t('cloud:org_manage.org_manage.add_attr.success_update_logged'),
+        )
       }
     },
     ...config,

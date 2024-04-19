@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type DataBaseList } from '../types'
 
 type GetDataBases = {
@@ -18,7 +18,7 @@ export const getDataBases = ({
   return axios.get(`/api/fe/table`, {
     params: {
       project_id: projectId,
-      get_index: true
+      get_index: true,
     },
   })
 }
@@ -29,10 +29,7 @@ type UseTemplateOptions = {
   config?: QueryConfig<QueryFnType>
 } & GetDataBases
 
-export const useGetDataBases = ({
-  projectId,
-  config,
-}: UseTemplateOptions) => {
+export const useGetDataBases = ({ projectId, config }: UseTemplateOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['dataBases', projectId],
     queryFn: () => getDataBases({ projectId }),

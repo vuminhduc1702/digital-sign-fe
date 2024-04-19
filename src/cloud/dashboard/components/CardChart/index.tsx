@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 import { type z } from 'zod'
 
-import { Spinner } from '~/components/Spinner'
+import { Spinner } from '@/components/Spinner'
 
 import { type LatestData } from '../../types'
 import { type widgetSchema } from '../Widget'

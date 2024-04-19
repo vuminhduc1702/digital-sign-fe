@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type EntityType } from './createAttr'
-import { type Attribute } from '~/types'
+import { type Attribute } from '@/types'
 
 export type AttrRes = {
   entity_type: EntityType
