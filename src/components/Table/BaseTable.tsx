@@ -559,7 +559,7 @@ export function BaseTable<T extends Record<string, any>>({
                                         `${path}/${projectId}/${
                                           orgId != null
                                             ? `${orgId}/${linkId}`
-                                            : `${linkId}`
+                                            : ` /${linkId}`
                                         }`,
                                       )
                                     }
@@ -588,7 +588,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       `${path}/${projectId}/${
                                         orgId != null
                                           ? `${orgId}/${linkId}`
-                                          : `${linkId}`
+                                          : ` /${linkId}`
                                       }`,
                                     )
                                   }
