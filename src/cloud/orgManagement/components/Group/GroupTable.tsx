@@ -224,7 +224,11 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
   }, [props.isPreviousData])
 
   function navigateToDetail(id: string) {
-    navigate(`${PATHS.GROUP_MANAGE}/${projectId}/${orgId}/${id}`)
+    navigate(
+      `${PATHS.GROUP_MANAGE}/${projectId}/${
+        orgId != null ? `${orgId}/${id}` : ` /${id}`
+      }`,
+    )
   }
 
   const columnHelper = createColumnHelper<Group>()
