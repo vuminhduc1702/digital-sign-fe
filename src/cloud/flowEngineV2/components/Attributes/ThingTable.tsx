@@ -164,6 +164,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
       onDataText={t('table:no_thing')}
       path={PATHS.THING_TEMPLATE}
       projectId={projectId}
+      navigateToDetailNoOrg
       {...props}
     />
   )

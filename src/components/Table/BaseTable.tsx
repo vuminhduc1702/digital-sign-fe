@@ -93,6 +93,7 @@ export function BaseTable<T extends Record<string, any>>({
   path,
   projectId,
   orgId,
+  navigateToDetailNoOrg = false,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -118,6 +119,7 @@ export function BaseTable<T extends Record<string, any>>({
   path?: string
   projectId?: string
   orgId?: string
+  navigateToDetailNoOrg?: boolean
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -555,12 +557,9 @@ export function BaseTable<T extends Record<string, any>>({
                                       cell.column.id !== 'select'
                                     ) {
                                       const linkId = row.original.id
+                                      console.log('orgId', orgId)
                                       navigate(
-                                        `${path}/${projectId}/${
-                                          orgId != null
-                                            ? `${orgId}/${linkId}`
-                                            : ` /${linkId}`
-                                        }`,
+                                        `${navigateToDetailNoOrg ? `${path}/${projectId}/${linkId}` : `${path}/${projectId}/${orgId != null ? `${orgId}/${linkId}` : ` /${linkId}`}`}`,
                                       )
                                     }
                                   }}
@@ -584,12 +583,9 @@ export function BaseTable<T extends Record<string, any>>({
                                     cell.column.id !== 'select'
                                   ) {
                                     const linkId = row.original.id
+                                    console.log('orgId', orgId)
                                     navigate(
-                                      `${path}/${projectId}/${
-                                        orgId != null
-                                          ? `${orgId}/${linkId}`
-                                          : ` /${linkId}`
-                                      }`,
+                                      `${navigateToDetailNoOrg ? `${path}/${projectId}/${linkId}` : `${path}/${projectId}/${orgId != null ? `${orgId}/${linkId}` : ` /${linkId}`}`}`,
                                     )
                                   }
                                 }}

@@ -128,6 +128,7 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
       data={data ?? []}
       columns={columns}
       onDataText={t('table:no_customer')}
+      navigateToDetailNoOrg
       {...props}
     />
   )
