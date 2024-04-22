@@ -1256,7 +1256,7 @@ export function CreateEvent() {
                       <FormField
                         control={form.control}
                         name="cmd.handle_service"
-                        render={({ field }) => (
+                        render={({ field: { value, onChange, ...field } }) => (
                           <FormItem>
                             <FormLabel>
                               {t('cloud:custom_protocol.service.title')}
@@ -1266,6 +1266,10 @@ export function CreateEvent() {
                                 <SelectDropdown
                                   refSelect={selectDropdownServiceRef}
                                   options={serviceSelectData}
+                                  customOnChange={value => {
+                                    setValue('cmd.handle_service', value)
+                                    resetField(`cmd.input.${index}.value`)
+                                  }}
                                   isOptionDisabled={option =>
                                     option.label ===
                                       t('loading:service_thing') ||
@@ -1283,9 +1287,7 @@ export function CreateEvent() {
                                   placeholder={t(
                                     'cloud:custom_protocol.service.choose',
                                   )}
-                                  customOnChange={() =>
-                                    resetField(`cmd.input.${index}.value`)
-                                  }
+                                  {...field}
                                 />
                                 <FormMessage className={cn('absolute')} />
                               </div>
@@ -1338,7 +1340,6 @@ export function CreateEvent() {
                                   defaultValue={element.name}
                                 /> */}
                                 <FormField
-                                  disabled
                                   require={true}
                                   control={control}
                                   name={`cmd.input.${index}.name`}
