@@ -24,6 +24,21 @@ const storage = {
     window.localStorage.removeItem(`${storagePrefix}token`)
   },
 
+  getUserLogin: (): LoginCredentialsDTO => {
+    return JSON.parse(
+      window.localStorage.getItem(`${storagePrefix}user_login`) as string,
+    )
+  },
+  setUserLogin: (token: LoginCredentialsDTO) => {
+    window.localStorage.setItem(
+      `${storagePrefix}user_login`,
+      JSON.stringify(token),
+    )
+  },
+  clearUserLogin: () => {
+    window.localStorage.removeItem(`${storagePrefix}user_login`)
+  },
+
   getProject: (): Project => {
     return JSON.parse(
       window.localStorage.getItem(`${storagePrefix}project`) as string,

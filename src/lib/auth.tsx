@@ -32,6 +32,11 @@ async function userFn() {
 
 async function loginFn(data: LoginCredentialsDTO) {
   const response = await loginWithEmailAndPassword(data)
+  if (data?.checked) {
+    storage.setUserLogin(data)
+  } else {
+    storage.clearUserLogin()
+  }
   const user = await handleUserResponse(response)
   return user
 }
@@ -43,6 +48,8 @@ async function registerFn(data: RegisterCredentialsDTO) {
 }
 
 export async function logoutFn() {
+  const UserStorage = storage.getUserLogin() as LoginCredentialsDTO
+  if (!UserStorage?.checked) storage.clearUserLogin()
   storage.clearProject()
   storage.clearToken()
   window.location.assign(PATHS.LOGIN)
