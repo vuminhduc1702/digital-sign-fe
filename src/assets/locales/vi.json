@@ -367,7 +367,8 @@
               "fcm": "FCM",
               "event": "Event",
               "eventactive": "Event active",
-              "delay": "Delay"
+              "delay": "Delay",
+              "report": "Report"
             },
             "address": "Địa chỉ",
             "message": "Nội dung gửi"

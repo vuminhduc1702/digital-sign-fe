@@ -71,7 +71,7 @@ export function CustomerManageTemplate() {
   return (
     <>
       {/* <TitleBar title={t('sidebar:payment.plkh')} /> */}
-      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+      <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <form
           id="search-customer"
           className="flex justify-between"

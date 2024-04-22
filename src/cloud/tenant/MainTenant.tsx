@@ -75,7 +75,7 @@ const MainTenant = () => {
 
   return (
     <ContentLayout title="Tenant">
-      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
+      <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div
           className="mb-6 mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
           onClick={() => navigate(-1)}

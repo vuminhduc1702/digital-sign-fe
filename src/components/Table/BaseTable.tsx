@@ -285,7 +285,7 @@ export function BaseTable<T extends Record<string, any>>({
           </DropdownMenu>
         </div>
       </div>
-      <div className="mt-2 h-[76vh] overflow-x-auto">
+      <div className="mt-2 h-[64vh] overflow-x-auto">
         <ScrollArea>
           <div
             className={cn(

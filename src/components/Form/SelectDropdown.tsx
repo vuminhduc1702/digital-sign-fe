@@ -36,9 +36,9 @@ export function SelectDropdown<
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
 >({
-  name,
-  control,
-  label,
+  // name,
+  // control,
+  // label,
   error,
   classlabel,
   classchild,
@@ -56,77 +56,74 @@ export function SelectDropdown<
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
 
+  // return (
+  //   <FieldWrapper
+  //     classlabel={classlabel}
+  //     classchild={classchild}
+  //     className={cn('', classnamefieldwrapper)}
+  //     label={label}
+  //     error={error}
+  //   >
+  //     <div className="flex justify-between gap-x-2">
+  //       <Controller
+  //         control={control}
+  //         name={name}
+  //         render={({ field: { onChange, value, ...field } }) => {
   return (
-    <FieldWrapper
-      classlabel={classlabel}
-      classchild={classchild}
+    <Select
+      // {...field}
+      isMulti={isMulti}
       className={cn('', classnamefieldwrapper)}
-      label={label}
-      error={error}
-    >
-      <div className="flex justify-between gap-x-2">
-        <Controller
-          control={control}
-          name={name}
-          render={({ field: { onChange, value, ...field } }) => {
-            return (
-              <Select
-                {...field}
-                isMulti={isMulti}
-                className="w-full"
-                ref={refSelect}
-                isSearchable
-                isClearable
-                placeholder={placeholder ?? t('placeholder:select')}
-                onChange={(e, { action }) => {
-                  const option =
-                    (e as unknown as SelectOption[])?.length > 0
-                      ? (e as unknown as SelectOption[]).map(item => {
-                          return item.value
-                        })
-                      : isWrappedArray
-                        ? [(e as unknown as SelectOption)?.value]
-                        : (e as unknown as SelectOption)?.value
-                  // console.log('option', option)
-                  onChange(option)
-                  customOnChange?.(option)
-                  customSelect?.(e)
-                  if (action === 'clear') {
-                    handleClearSelectDropdown?.()
-                  }
-                  if (action === 'remove-value') {
-                    if ((e as unknown as SelectOption[])?.length === 0) {
-                      handleClearSelectDropdown?.()
-                    }
-                  }
-                  if (action === 'select-option') {
-                    handleChangeSelect?.()
-                  }
-                }}
-                styles={{
-                  control: (baseStyles, state) => {
-                    const isErr =
-                      error != null || (error != null && state.isFocused)
-                    return {
-                      ...baseStyles,
-                      borderColor: isErr ? 'red' : '',
-                      boxShadow: isErr ? 'red' : '',
-                      ':hover': {
-                        borderColor: isErr ? 'red' : '',
-                        boxShadow: isErr
-                          ? '0 0 0 1px red'
-                          : '0 0 0 1px #2684FF',
-                      },
-                    }
-                  },
-                }}
-                {...props}
-              />
-            )
-          }}
-        />
-        {icon}
-      </div>
-    </FieldWrapper>
+      ref={refSelect}
+      isSearchable
+      isClearable
+      placeholder={placeholder ?? t('placeholder:select')}
+      onChange={(e, { action }) => {
+        const option =
+          (e as unknown as SelectOption[])?.length > 0
+            ? (e as unknown as SelectOption[]).map(item => {
+                return item.value
+              })
+            : isWrappedArray
+              ? [(e as unknown as SelectOption)?.value]
+              : (e as unknown as SelectOption)?.value
+        // console.log('option', option)
+        // onChange(option)
+        customOnChange?.(option)
+        customSelect?.(e)
+        if (action === 'clear') {
+          handleClearSelectDropdown?.()
+        }
+        if (action === 'remove-value') {
+          if ((e as unknown as SelectOption[])?.length === 0) {
+            handleClearSelectDropdown?.()
+          }
+        }
+        if (action === 'select-option') {
+          handleChangeSelect?.()
+        }
+      }}
+      styles={{
+        control: (baseStyles, state) => {
+          const isErr = error != null || (error != null && state.isFocused)
+          return {
+            ...baseStyles,
+            borderColor: isErr ? 'red' : '',
+            boxShadow: isErr ? 'red' : '',
+            ':hover': {
+              borderColor: isErr ? 'red' : '',
+              boxShadow: isErr ? '0 0 0 1px red' : '0 0 0 1px #2684FF',
+            },
+          }
+        },
+      }}
+      {...props}
+    />
   )
+  //         }}
+  //       />
+  //       {icon}
+  //     </div>
+  //   </FieldWrapper>
+  // )
 }

@@ -38,6 +38,11 @@ async function loginFn(data: LoginCredentialsDTO) {
     storage.clearUserLogin()
   }
   const user = await handleUserResponse(response)
+  if (data?.checked) {
+    storage.setUserLogin(data)
+  } else {
+    storage.clearUserLogin()
+  }
   return user
 }
 

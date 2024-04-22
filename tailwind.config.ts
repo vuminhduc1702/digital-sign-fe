@@ -17,22 +17,51 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          300: withOpacity('1, 100%, 77%'), // sidebar hover bg
-          400: withOpacity('355, 85%, 52%'), // confirm btn
-        },
-        secondary: {
-          400: withOpacity('210, 10%, 96%'), // sidebar bg, tab bg
-          500: withOpacity('180, 2%, 92%'), // maporg bg, input bg
-          600: withOpacity('210, 1%, 71%'), // maporg node, cancel btn
-          700: withOpacity('210, 1%, 53%'), // card header
-          900: withOpacity('0, 1%, 34%'), // nav
-        },
         focus: {
           400: withOpacity('214, 100%, 57.5%'), // border input when validation error
         },
         transparent: 'transparent',
         current: 'currentColor',
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+          100: withOpacity('1, 100%, 95%'),
+          200: withOpacity('1, 100%, 90%'),
+          300: withOpacity('1, 100%, 77%'),
+          400: withOpacity('355, 85%, 52%'),
+        },
+        secondary: {
+          400: 'hsl(var(--secondary-400))',
+          500: 'hsl(var(--secondary-500))',
+          600: 'hsl(var(--secondary-600))',
+          700: 'hsl(var(--secondary-700))',
+          900: 'hsl(var(--secondary-900))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
       },
       fontFamily: {
         sans: ['FS PFBeauSansPro', 'Roboto', ...defaultTheme.fontFamily.sans],
@@ -98,6 +127,28 @@ export default {
           from: { opacity: '0', transform: 'translateX(2px)' },
           to: { opacity: '1', transform: 'translateX(0)' },
         },
+        'loading-bar': {
+          '0%': {
+            left: '0%',
+            right: '100%',
+            width: '0%',
+          },
+          '10%': {
+            left: '0%',
+            right: '75%',
+            width: '25%',
+          },
+          '90%': {
+            right: '0%',
+            left: '75%',
+            width: '25%',
+          },
+          '100%': {
+            left: '100%',
+            right: '0%',
+            width: '0%',
+          },
+        },
       },
       animation: {
         slideDown: 'slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1)',
@@ -109,6 +160,7 @@ export default {
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade:
           'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'loading-bar': 'loading-bar 2s linear infinite',
       },
       zIndex: {
         '100': '100',

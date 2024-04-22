@@ -1,4 +1,5 @@
 import { type Project } from '@/cloud/project/routes/ProjectManage'
+import { type LoginCredentialsDTO } from '@/features/auth'
 import { type RoleTypes } from '@/lib/authorization'
 
 const storagePrefix = 'iot_platform_'
