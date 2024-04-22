@@ -53,9 +53,6 @@ export default function MapComponent({ data, type }: MapProps) {
         {data.map((item, index) => {
           const lat = Number(item.attributes?.latitude_gw)
           const lng = Number(item.attributes?.longitude_gw)
-          console.log(item)
-          console.log(lat)
-          console.log(lng)
 
           if (lat && lng) {
             return (

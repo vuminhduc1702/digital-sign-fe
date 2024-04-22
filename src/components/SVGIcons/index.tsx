@@ -1,4 +1,7 @@
+import { cn } from '@/utils/misc'
+import { Check } from 'lucide-react'
 import { type SVGProps } from 'react'
+import { LuMinus, LuPlus, LuSquare } from 'react-icons/lu'
 
 type SVGIconProps = SVGProps<SVGSVGElement> & {
   width: number | string
@@ -1388,5 +1391,62 @@ export function BarIcon({ ...props }: SVGIconProps) {
         32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"
       />
     </SVGIcon>
+  )
+}
+
+export function IconCheckbox({
+  className,
+  classNameCheck,
+  isCheck,
+  checked,
+}: {
+  className?: string
+  classNameCheck?: string
+  isCheck?: boolean
+  checked?: string
+}) {
+  return (
+    <div
+      className={cn(
+        'peer relative !flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-sm border border-gray-500 bg-white text-gray-500 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-none',
+        { 'text-[#EE0033]': isCheck },
+        className,
+      )}
+    >
+      {isCheck && <Check className="absolute h-[16px] w-[16px]" />}
+      {checked === 'indeterminate' && (
+        <LuSquare
+          className="absolute !p-[2px]"
+          color={'#EE0033'}
+          fill="#EE0033"
+        />
+      )}
+    </div>
+  )
+}
+
+export function IconTreeBranchExpanded({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        'peer relative !flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-sm border border-gray-500 bg-white text-gray-500 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-none',
+        className,
+      )}
+    >
+      <LuMinus className="absolute text-[#6B6C70]" color={'#000'} />
+    </div>
+  )
+}
+
+export function IconTreeBranchCollapsed({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        'peer relative !flex h-[18px] w-[18px] shrink-0 cursor-pointer items-center justify-center rounded-sm border border-gray-500 bg-white text-gray-500 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-none',
+        className,
+      )}
+    >
+      <LuPlus className="absolute text-[#6B6C70]" color={'#000'} />
+    </div>
   )
 }

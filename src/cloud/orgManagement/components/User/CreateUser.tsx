@@ -26,7 +26,17 @@ import { useGetOrgs } from '@/layout/MainLayout/api'
 
 import { EyeHide, EyeShow, PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { cn, flattenOrgs } from '@/utils/misc'
 
 export const userInfoSchema = z.object({
   name: nameSchema,
@@ -61,12 +71,10 @@ export const userSchema = userInfoSchema.superRefine(
 export function CreateUser() {
   const { t } = useTranslation()
 
-  const { register, formState, handleSubmit, control, watch, reset } = useForm<
-    CreateUserDTO['data']
-  >({
+  const form = useForm<CreateUserDTO['data']>({
     resolver: userSchema && zodResolver(userSchema),
   })
-  // console.log('formState.errors', formState.errors)
+  const { register, formState, handleSubmit, control, watch, reset } = form
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateUser()
@@ -74,6 +82,7 @@ export function CreateUser() {
   const projectId = storage.getProject()?.id
 
   const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
 
   const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
     projectId,
@@ -134,153 +143,200 @@ export function CreateUser() {
       }
       resetData={() => reset()}
     >
-      <form
-        id="create-user"
-        className="w-full space-y-6"
-        onSubmit={handleSubmit(values => {
-          mutate({
-            data: {
-              project_id: projectId,
-              org_id: values.org_id !== no_org_val ? values.org_id : '',
-              name: values.name,
-              email: values.email,
-              password: values.password,
-              role_id: values.role_id,
-              phone: values.phone,
-              profile:
-                values.profile != null
-                  ? {
-                      province: values.profile.province,
-                      district: values.profile.district,
-                      ward: values.profile.ward,
-                      full_address: values.profile.full_address,
-                    }
-                  : undefined,
-            },
-          })
-        })}
-      >
-        <>
-          <InputField
-            label={t('cloud:org_manage.user_manage.add_user.name')}
-            error={formState.errors['name']}
-            registration={register('name')}
-          />
-          <InputField
-            label={t('cloud:org_manage.user_manage.add_user.phone')}
-            type="number"
-            error={formState.errors['phone']}
-            registration={register('phone')}
-          />
-          <InputField
-            label={t('cloud:org_manage.user_manage.add_user.email')}
-            error={formState.errors['email']}
-            registration={register('email')}
-          />
-          <InputField
-            label={t('cloud:org_manage.user_manage.add_user.password')}
-            error={formState.errors['password']}
-            registration={register('password')}
-            type={showPassword ? 'text' : 'password'}
-            endIcon={
-              showPassword ? (
-                <EyeShow
-                  height={30}
-                  width={30}
-                  viewBox="0 0 30 30"
-                  className="absolute bottom-0 right-2 z-20"
-                  onClick={togglePasswordVisibility}
-                />
-              ) : (
-                <EyeHide
-                  height={30}
-                  width={30}
-                  viewBox="0 0 30 30"
-                  className="absolute bottom-0 right-2 z-20"
-                  onClick={togglePasswordVisibility}
-                />
-              )
-            }
-          />
-          <InputField
-            label={t('cloud:org_manage.user_manage.add_user.confirm_password')}
-            error={formState.errors['confirmPassword']}
-            registration={register('confirmPassword')}
-            type={showRePassword ? 'text' : 'password'}
-            endIcon={
-              showRePassword ? (
-                <EyeShow
-                  height={30}
-                  width={30}
-                  viewBox="0 0 30 30"
-                  className="absolute bottom-0 right-2 z-20"
-                  onClick={toggleRePasswordVisibility}
-                />
-              ) : (
-                <EyeHide
-                  height={30}
-                  width={30}
-                  viewBox="0 0 30 30"
-                  className="absolute bottom-0 right-2 z-20"
-                  onClick={toggleRePasswordVisibility}
-                />
-              )
-            }
-          />
-          <ComplexTree
-            name="org_id"
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
-            error={formState?.errors?.org_id}
-            control={control}
-            options={orgData?.organizations}
-          />
+      <Form {...form}>
+        <form
+          id="create-user"
+          className="w-full space-y-6"
+          onSubmit={handleSubmit(values => {
+            mutate({
+              data: {
+                project_id: projectId,
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
+                name: values.name,
+                email: values.email,
+                password: values.password,
+                role_id: values.role_id,
+                phone: values.phone,
+                profile:
+                  values.profile != null
+                    ? {
+                        province: values.profile.province,
+                        district: values.profile.district,
+                        ward: values.profile.ward,
+                        full_address: values.profile.full_address,
+                      }
+                    : undefined,
+              },
+            })
+          })}
+        >
+          <>
+            <InputField
+              label={t('cloud:org_manage.user_manage.add_user.name')}
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <InputField
+              label={t('cloud:org_manage.user_manage.add_user.phone')}
+              type="number"
+              error={formState.errors['phone']}
+              registration={register('phone')}
+            />
+            <InputField
+              label={t('cloud:org_manage.user_manage.add_user.email')}
+              error={formState.errors['email']}
+              registration={register('email')}
+            />
+            <InputField
+              label={t('cloud:org_manage.user_manage.add_user.password')}
+              error={formState.errors['password']}
+              registration={register('password')}
+              type={showPassword ? 'text' : 'password'}
+              endIcon={
+                showPassword ? (
+                  <EyeShow
+                    height={30}
+                    width={30}
+                    viewBox="0 0 30 30"
+                    className="absolute bottom-0 right-2 z-20"
+                    onClick={togglePasswordVisibility}
+                  />
+                ) : (
+                  <EyeHide
+                    height={30}
+                    width={30}
+                    viewBox="0 0 30 30"
+                    className="absolute bottom-0 right-2 z-20"
+                    onClick={togglePasswordVisibility}
+                  />
+                )
+              }
+            />
+            <InputField
+              label={t(
+                'cloud:org_manage.user_manage.add_user.confirm_password',
+              )}
+              error={formState.errors['confirmPassword']}
+              registration={register('confirmPassword')}
+              type={showRePassword ? 'text' : 'password'}
+              endIcon={
+                showRePassword ? (
+                  <EyeShow
+                    height={30}
+                    width={30}
+                    viewBox="0 0 30 30"
+                    className="absolute bottom-0 right-2 z-20"
+                    onClick={toggleRePasswordVisibility}
+                  />
+                ) : (
+                  <EyeHide
+                    height={30}
+                    width={30}
+                    viewBox="0 0 30 30"
+                    className="absolute bottom-0 right-2 z-20"
+                    onClick={toggleRePasswordVisibility}
+                  />
+                )
+              }
+            />
+            <FormField
+              control={form.control}
+              name="org_id"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('cloud:org_manage.device_manage.add_device.parent')}
+                  </FormLabel>
+                  <div>
+                    <FormControl>
+                      <div>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="org_id"
+                              className={cn(
+                                'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                {
+                                  'text-gray-500': !value && value !== '',
+                                },
+                              )}
+                            >
+                              {value
+                                ? orgDataFlatten.find(item => item.id === value)
+                                    ?.name
+                                : value === ''
+                                  ? t('tree:no_selection_org')
+                                  : t('placeholder:select_org')}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <SelectSuperordinateOrgTree
+                              {...field}
+                              onChangeValue={onChange}
+                              value={value}
+                              noSelectionOption={true}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
 
-          <SelectDropdown
-            label={t('cloud:org_manage.user_manage.add_user.role')}
-            name="role_id"
-            control={control}
-            options={roleOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:role') ||
-              option.label === t('table:no_role')
-            }
-            noOptionsMessage={() => t('table:no_role')}
-            loadingMessage={() => t('loading:role')}
-            isLoading={roleIsLoading}
-            placeholder={t('cloud:role_manage.add_role.choose_role')}
-            error={formState?.errors?.role_id}
-          />
+            <SelectDropdown
+              label={t('cloud:org_manage.user_manage.add_user.role')}
+              name="role_id"
+              control={control}
+              options={roleOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:role') ||
+                option.label === t('table:no_role')
+              }
+              noOptionsMessage={() => t('table:no_role')}
+              loadingMessage={() => t('loading:role')}
+              isLoading={roleIsLoading}
+              placeholder={t('cloud:role_manage.add_role.choose_role')}
+              error={formState?.errors?.role_id}
+            />
 
-          <div className="grid grid-cols-3 gap-x-2">
-            <div className="col-start-1 col-end-4">
-              {t('cloud:org_manage.user_manage.add_user.address')}
+            <div className="grid grid-cols-3 gap-x-2">
+              <div className="col-start-1 col-end-4">
+                {t('cloud:org_manage.user_manage.add_user.address')}
+              </div>
+              <SelectField
+                error={formState?.errors?.profile?.province}
+                registration={register('profile.province')}
+                options={provinceList}
+                classchild="w-full"
+                placeholder={t(
+                  'cloud:org_manage.user_manage.add_user.province',
+                )}
+              />
+              <SelectField
+                error={formState?.errors?.profile?.district}
+                registration={register('profile.district')}
+                options={districtList}
+                placeholder={t(
+                  'cloud:org_manage.user_manage.add_user.district',
+                )}
+              />
+              <SelectField
+                error={formState?.errors?.profile?.ward}
+                registration={register('profile.ward')}
+                options={wardList}
+                placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
+              />
             </div>
-            <SelectField
-              error={formState?.errors?.profile?.province}
-              registration={register('profile.province')}
-              options={provinceList}
-              classchild="w-full"
-              placeholder={t('cloud:org_manage.user_manage.add_user.province')}
+            <InputField
+              label={t('form:enter_address')}
+              registration={register('profile.full_address')}
             />
-            <SelectField
-              error={formState?.errors?.profile?.district}
-              registration={register('profile.district')}
-              options={districtList}
-              placeholder={t('cloud:org_manage.user_manage.add_user.district')}
-            />
-            <SelectField
-              error={formState?.errors?.profile?.ward}
-              registration={register('profile.ward')}
-              options={wardList}
-              placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
-            />
-          </div>
-          <InputField
-            label={t('form:enter_address')}
-            registration={register('profile.full_address')}
-          />
-        </>
-      </form>
+          </>
+        </form>
+      </Form>
     </FormDrawer>
   )
 }

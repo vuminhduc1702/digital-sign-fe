@@ -132,7 +132,7 @@ export function BillingTemplate() {
             })}
           >
             <div className="flex items-center gap-x-3">
-              <SelectDropdown
+              Dropdown
                 isClearable={false}
                 name="key"
                 control={control}

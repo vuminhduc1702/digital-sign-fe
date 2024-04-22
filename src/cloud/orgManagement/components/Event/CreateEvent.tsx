@@ -342,17 +342,8 @@ export function CreateEvent() {
     getValues,
     reset,
     resetField,
-  } = useForm<CreateEventDTO['data']>({
-    resolver: createEventSchema && zodResolver(createEventSchema),
-    defaultValues: {
-      onClick: false,
-      status: true,
-      action: [{}],
-      condition: [],
-      retry: 0,
-    },
-  })
-  console.log('formState.errors', formState.errors)
+  } = form
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const {
     append: conditionAppend,
@@ -370,7 +361,6 @@ export function CreateEvent() {
     name: 'action',
     control,
   })
-  // console.log('formState.errors', formState.errors)
 
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
@@ -558,85 +548,137 @@ export function CreateEvent() {
             return { action_type: item.action_type }
           })
 
-          mutate({
-            data: {
-              project_id: projectId,
-              org_id: values.org_id,
-              group_id: values.group_id,
-              name: values.name,
-              onClick: values.onClick,
-              condition: values.onClick === false ? conditionArr : [],
-              action: actionArr,
-              status: values.status === true,
-              retry: values.retry,
-              schedule: scheduleValue,
-              interval,
-              type: getValues('type'),
-              cmd: {
-                thing_id: values?.cmd?.thing_id,
-                service_name: values?.cmd?.handle_service,
+            mutate({
+              data: {
                 project_id: projectId,
-                input: values?.cmd?.input?.reduce(
-                  (accumulator, currentValue) => {
-                    accumulator[currentValue.name] = currentValue.value
-                    return accumulator
-                  },
-                  {},
-                ),
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
+                group_id: values.group_id,
+                name: values.name,
+                onClick: values.onClick,
+                condition: values.onClick === false ? conditionArr : [],
+                action: actionArr,
+                status: values.status === true,
+                retry: values.retry,
+                schedule: scheduleValue,
+                interval,
+                type: getValues('type'),
+                cmd: {
+                  thing_id: values?.cmd?.thing_id,
+                  service_name: values?.cmd?.handle_service,
+                  project_id: projectId,
+                  input: values?.cmd?.input?.reduce(
+                    (accumulator, currentValue) => {
+                      accumulator[currentValue.name] = currentValue.value
+                      return accumulator
+                    },
+                    {},
+                  ),
+                },
               },
-            },
-          })
-        })}
-      >
-        <>
-          <div className="space-y-3">
-            <TitleBar
-              title={t('cloud:org_manage.event_manage.add_event.info')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
-            />
-            <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
-              <InputField
-                label={t('cloud:org_manage.event_manage.add_event.name')}
-                error={formState.errors['name']}
-                registration={register('name')}
+            })
+          })}
+        >
+          <>
+            <div className="space-y-3">
+              <TitleBar
+                title={t('cloud:org_manage.event_manage.add_event.info')}
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
-
-              <SelectDropdown
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={orgSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:org') ||
-                  option.label === t('table:no_org')
-                }
-                noOptionsMessage={() => t('table:no_org')}
-                loadingMessage={() => t('loading:org')}
-                isLoading={orgIsLoading}
-                error={formState?.errors?.org_id}
-              />
-
-              <SelectDropdown
-                label={t('cloud:org_manage.event_manage.add_event.group')}
-                name="group_id"
-                control={control}
-                options={groupSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:group') ||
-                  option.label === t('table:no_group')
-                }
-                noOptionsMessage={() => t('table:no_group')}
-                loadingMessage={() => t('loading:group')}
-                isLoading={groupIsLoading}
-                error={formState?.errors?.group_id}
-              />
-
-              <FieldWrapper
-                label={t('cloud:org_manage.event_manage.add_event.status')}
-                error={formState?.errors['status']}
-                className="w-fit"
-              >
-                <Controller
+              <div className="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.event_manage.add_event.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="org_id"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.device_manage.add_device.parent')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  id="org_id"
+                                  className={cn(
+                                    'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                    {
+                                      'text-gray-500': !value && value !== '',
+                                    },
+                                  )}
+                                >
+                                  {value
+                                    ? orgDataFlatten.find(
+                                        item => item.id === value,
+                                      )?.name
+                                    : value === ''
+                                      ? t('tree:no_selection_org')
+                                      : t('placeholder:select_org')}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <SelectSuperordinateOrgTree
+                                  {...field}
+                                  onChangeValue={onChange}
+                                  value={value}
+                                  noSelectionOption={true}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="group_id"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.event_manage.add_event.group')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <SelectDropdown
+                            classnamefieldwrapper="h-9"
+                            options={groupSelectOptions}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:group') ||
+                              option.label === t('table:no_group')
+                            }
+                            noOptionsMessage={() => t('table:no_group')}
+                            loadingMessage={() => t('loading:group')}
+                            isLoading={groupIsLoading}
+                            error={formState?.errors?.group_id}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className={cn('absolute')} />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
                   control={control}
                   name={'status'}
                   render={({ field: { onChange, value, ...field } }) => {
