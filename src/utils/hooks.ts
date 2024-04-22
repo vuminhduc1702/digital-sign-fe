@@ -173,6 +173,7 @@ export type UploadImageDTO = {
 }
 export function useResetDefaultImage(defaultImage: string) {
   const avatarRef = useRef<HTMLImageElement>(null)
+  const avatarRef1 = useRef<HTMLImageElement>(null)
   const [uploadImageErr, setUploadImageErr] = useState('')
 
   const {
@@ -192,6 +193,23 @@ export function useResetDefaultImage(defaultImage: string) {
     fetch(defaultImage)
       .then(res => res.blob())
       .then(blob => {
+        const defaultFile = new File([blob], 'default1.png', blob)
+        const formData = new FormData()
+        formData.append('file', defaultFile)
+        setValueUploadImage(
+          'file',
+          formData.get('file') as unknown as { file: File },
+        )
+      })
+  }
+  function handleResetDefaultImage1() {
+    setUploadImageErr('')
+    if (avatarRef1.current != null) {
+      avatarRef1.current.src = defaultImage
+    }
+    fetch(defaultImage)
+      .then(res => res.blob())
+      .then(blob => {
         const defaultFile = new File([blob], 'default.png', blob)
         const formData = new FormData()
         formData.append('file', defaultFile)
@@ -204,6 +222,8 @@ export function useResetDefaultImage(defaultImage: string) {
 
   return {
     handleResetDefaultImage,
+    handleResetDefaultImage1,
+    avatarRef1,
     avatarRef,
     uploadImageErr,
     setUploadImageErr,
