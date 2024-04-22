@@ -16,7 +16,6 @@ import {
   type SelectOption,
 } from '@/components/Form'
 import TitleBar from '@/components/Head/TitleBar'
-import { cn } from '@/utils/misc'
 import storage from '@/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
