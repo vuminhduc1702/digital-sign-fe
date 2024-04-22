@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { Button } from '~/components/Button'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { FieldWrapper, InputField } from '~/components/Form'
@@ -18,15 +18,18 @@ import {
   EyeHide,
   EyeShow,
 } from '~/components/SVGIcons'
+import storage from '~/utils/storage'
 
 const schema = z.object({
   identifier: emailSchema,
   password: passwordSchema,
+  checked: z.boolean().optional(),
 })
 
 type LoginValues = {
   identifier: string
   password: string
+  checked?: boolean
 }
 
 type LoginFormProps = {
@@ -35,14 +38,16 @@ type LoginFormProps = {
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { t } = useTranslation()
+  const UserStorage = storage.getUserLogin() as LoginValues
 
   const [showPassword, setShowPassword] = useState(false)
   const login = useLogin()
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
-  const { register, formState, handleSubmit } = useForm<LoginValues>({
+  const { register, formState, handleSubmit, control } = useForm<LoginValues>({
     resolver: schema && zodResolver(schema),
+    values: UserStorage,
   })
   return (
     <div>
@@ -112,7 +117,19 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             className="mt-2 flex h-8 w-fit flex-row-reverse items-center justify-end gap-x-2"
             label={t('auth:checkbox')}
           >
-            <Checkbox />
+            <Controller
+              control={control}
+              name={'checked'}
+              render={({ field: { onChange, value, ...field } }) => {
+                return (
+                  <Checkbox
+                    {...field}
+                    checked={value}
+                    onCheckedChange={onChange}
+                  />
+                )
+              }}
+            />
           </FieldWrapper>
           <div>
             <Button

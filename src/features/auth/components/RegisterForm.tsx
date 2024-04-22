@@ -102,7 +102,11 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       <form
         className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
-          await registerMutation.mutateAsync(values)
+          const data = {
+            ...values,
+            otp: values?.otp?.trim(),
+          }
+          await registerMutation.mutateAsync(data)
           onSuccess()
         })}
       >
@@ -206,7 +210,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           />
           <Button
             variant="none"
-            className="!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline"
+            className="!mt-2 ml-auto h-4 p-0 text-slate-800 underline"
             disabled={btnOtpDisable}
             onClick={() => {
               setBtnOtpDisable(true)

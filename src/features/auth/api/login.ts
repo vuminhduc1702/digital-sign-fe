@@ -5,6 +5,7 @@ import { type UserResponse } from '../types'
 export type LoginCredentialsDTO = {
   identifier: string
   password: string
+  checked?: boolean
 }
 
 export const loginWithEmailAndPassword = (
