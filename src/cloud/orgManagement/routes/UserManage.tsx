@@ -20,6 +20,7 @@ export function UserManage() {
   const params = useParams()
   const ref = useRef(null)
 
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [offset, setOffset] = useState(0)
   const {
@@ -33,12 +34,14 @@ export function UserManage() {
   const {
     data: userData,
     isPreviousData,
-    isSuccess,
+    isLoading: isLoadingUser,
   } = useGetUsers({
     projectId,
     orgId,
     offset,
     config: { keepPreviousData: true },
+    search_str: searchQuery,
+    search_field: searchField.current,
   })
 
   const {
@@ -65,7 +68,7 @@ export function UserManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
+  const formatExcel: Array<{ [key: string]: unknown }> | undefined =
     userData?.users?.reduce(
       (acc, curr, index) => {
         if (rowSelectionKey.includes(curr.user_id)) {
@@ -95,6 +98,17 @@ export function UserManage() {
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
               setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:org_manage.user_manage.table.name'),
+                },
+                {
+                  value: 'id',
+                  label: t('cloud:org_manage.user_manage.table.id'),
+                },
+              ]}
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
@@ -107,11 +121,12 @@ export function UserManage() {
           setOffset={setOffset}
           total={userData?.total ?? 0}
           isPreviousData={isPreviousData}
-          isLoading={isLoading}
+          isLoading={isLoadingUser}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
           pdfHeader={pdfHeader}
           isSearchData={searchQuery.length > 0 && isSearchData}
+          formatExcel={formatExcel}
           utilityButton={
             Object.keys(rowSelection).length > 0 && (
               <div className="flex items-center">

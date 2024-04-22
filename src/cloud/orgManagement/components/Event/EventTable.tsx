@@ -1,5 +1,5 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/Button'
@@ -203,8 +203,13 @@ function EventTableContextMenu({
   )
 }
 
-type PartialBaseTableProps<T> = Omit<BaseTableProps<EventType>, 'columns'> & {
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<EventType>,
+  'columns' | 'offset' | 'setOffset'
+> & {
   columns?: ColumnDef<T, any>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
 }
 
 type EventTableProps = {

@@ -7,16 +7,22 @@ import { type TemplateList } from '../types'
 type GetTemplates = {
   projectId: string
   protocol?: 'default' | 'Lw2m2'
+  search_field?: string
+  search_str?: string
 }
 
 export const getTemplates = ({
   projectId,
   protocol,
+  search_field,
+  search_str,
 }: GetTemplates): Promise<TemplateList> => {
   return axios.get(`/api/templates`, {
     params: {
       project_id: projectId,
       protocol,
+      search_field,
+      search_str,
     },
   })
 }
@@ -30,11 +36,14 @@ type UseTemplateOptions = {
 export const useGetTemplates = ({
   projectId,
   protocol,
+  search_field,
+  search_str,
   config,
 }: UseTemplateOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['templates', projectId, protocol],
-    queryFn: () => getTemplates({ projectId, protocol }),
+    queryKey: ['templates', projectId, protocol, search_field, search_str],
+    queryFn: () =>
+      getTemplates({ projectId, protocol, search_field, search_str }),
     ...config,
   })
 }

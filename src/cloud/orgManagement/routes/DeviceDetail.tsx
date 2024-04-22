@@ -52,6 +52,7 @@ export function DeviceDetail() {
   } = useGetAttrs({
     entityType: entityTypeAttr,
     entityId: deviceId,
+    key_search: searchQueryAttrs,
   })
 
   const [rowSelection, setRowSelection] = useState({})

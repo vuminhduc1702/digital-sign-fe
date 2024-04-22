@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/Button'
 import { InputField, SelectField } from '@/components/Form'
@@ -15,6 +15,7 @@ import { SearchField } from '@/components/Input'
 const MainTenant = () => {
   const { t } = useTranslation()
   const [offset, setOffset] = useState(0)
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const [key, setKey] = useState('name')
@@ -37,12 +38,10 @@ const MainTenant = () => {
     isPreviousData,
     isLoading,
   } = useCustomerList({
-    data: {
-      limit: limitPagination,
-      offset: offset || 0,
-      search_field: searchFilter.search_field,
-      search_str: searchFilter.search_str,
-    },
+    limit: limitPagination,
+    offset: offset || 0,
+    search_field: searchField.current,
+    search_str: searchQuery,
     config: {
       suspense: false,
     },
@@ -87,21 +86,19 @@ const MainTenant = () => {
         <div className="mb-4 flex justify-between">
           <div className="flex justify-between">
             <div className="flex w-full items-center justify-between gap-x-3">
-              <SelectField
-                options={[
-                  { label: 'Tenant', value: 'name' },
-                  {
-                    label: t('cloud:org_manage.user_manage.add_user.phone'),
-                    value: 'phone',
-                  },
-                ]}
-                onChange={e => {
-                  setKey(e.target.value)
-                }}
-                value={key}
-              />
               <SearchField
                 setSearchValue={setSearchQuery}
+                searchField={searchField}
+                fieldOptions={[
+                  {
+                    value: 'name',
+                    label: t('cloud:tenant.table.name'),
+                  },
+                  {
+                    value: 'id',
+                    label: t('cloud:tenant.table.id'),
+                  },
+                ]}
                 setIsSearchData={setIsSearchData}
                 closeSearch={true}
               />

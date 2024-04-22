@@ -25,6 +25,7 @@ export const getGroups = ({
   get_attr = false,
   offset,
   limit,
+  search_str,
   search_field,
 }: GetGroups): Promise<GroupList> => {
   return axios.get(`/api/groups`, {
@@ -35,7 +36,7 @@ export const getGroups = ({
       get_attr,
       offset,
       limit,
-      // search_str: 'delete',
+      search_str,
       search_field,
     },
   })
@@ -54,6 +55,7 @@ export const useGetGroups = ({
   get_attr = false,
   offset = 0,
   limit = limitPagination,
+  search_str,
   search_field,
   config,
 }: UseGroupOptions) => {
@@ -66,6 +68,7 @@ export const useGetGroups = ({
       limit,
       entity_type,
       get_attr,
+      search_str,
       search_field,
     ],
     queryFn: () =>
@@ -76,6 +79,7 @@ export const useGetGroups = ({
         get_attr,
         offset,
         limit,
+        search_str,
         search_field,
       }),
     ...config,

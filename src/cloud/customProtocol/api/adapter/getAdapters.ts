@@ -10,18 +10,24 @@ type GetAdapters = {
   projectId: string
   offset?: number
   limit?: number
+  search_str?: string
+  search_field?: string
 }
 
 export const getAdapters = ({
   projectId,
   offset,
   limit,
+  search_str,
+  search_field,
 }: GetAdapters): Promise<AdapterList> => {
   return axios.get(`/api/adapter`, {
     params: {
       project_id: projectId,
       offset,
       limit,
+      search_str,
+      search_field,
     },
   })
 }
@@ -36,11 +42,14 @@ export const useGetAdapters = ({
   projectId,
   offset = 0,
   limit = limitPagination,
+  search_str,
+  search_field,
   config,
 }: UseAdapterOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['adapters', projectId, offset, limit],
-    queryFn: () => getAdapters({ projectId, offset, limit }),
+    queryKey: ['adapters', projectId, offset, limit, search_str, search_field],
+    queryFn: () =>
+      getAdapters({ projectId, offset, limit, search_str, search_field }),
     ...config,
   })
 }

@@ -163,12 +163,17 @@
         "title": "Nhóm",
         "header": "Quản lý nhóm",
         "table": {
+          "id": "ID",
           "name": "Tên",
           "entity_type": "Phân loại",
           "org_name": "Tổ chức",
           "delete_group": "Xoá nhóm",
           "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?",
-          "delete_multiple_group_confirm": "Bạn có chắc chắn muốn xóa các nhóm đã chọn?"
+          "delete_multiple_group_confirm": "Bạn có chắc chắn muốn xóa các nhóm đã chọn?",
+          "ORGANIZATION": "Tổ chức",
+          "DEVICE": "Thiết bị",
+          "USER": "Người dùng",
+          "EVENT": "Sự kiện"
         },
         "add_group": {
           "button": "Tạo mới",
@@ -188,6 +193,7 @@
         "title": "Người dùng",
         "header": "Quản lý người dùng",
         "table": {
+          "id": "ID",
           "name": "Tên",
           "email": "Email",
           "role_name": "Vai trò",
@@ -227,6 +233,7 @@
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
         "table": {
+          "id": "ID",
           "payload_as_string": "Message",
           "project": "Dự án",
           "topic": "Topic",
@@ -300,6 +307,7 @@
         "title": "Sự kiện",
         "header": "Quản lý sự kiện",
         "table": {
+          "id": "ID",
           "name": "Tên",
           "group": "Nhóm",
           "onClick": "onClick",
@@ -561,7 +569,7 @@
         "success_update": "Sửa thing thành công",
         "success_delete": "Xoá thing thành công",
         "name": "Tên thing",
-        "id": "Thing",
+        "id": "ID",
         "type": "Kiểu thing",
         "thing": "Thing",
         "template": "Template",
@@ -578,6 +586,7 @@
         "delete_multiple_thing_confirm": "Bạn có chắc chắn muốn xóa các thing đã chọn?"
       },
       "adapter": {
+        "id": "ID",
         "button": "Tạo mới",
         "title": "adapter",
         "header": "Quản lý adapter",
@@ -763,6 +772,8 @@
     "tenant": {
       "button": "Tạo mới",
       "table": {
+        "id": "ID",
+        "name": "Tên",
         "tenant": "Tenant",
         "phone": "Số điện thoại",
         "email": "Email",
@@ -1396,7 +1407,9 @@
   },
   "dev_role": {
     "list": "Danh sách dev role",
-    "title": "Dev Role"
+    "title": "Dev Role",
+    "id": "ID",
+    "name": "Tên"
   },
   "schema": {
     "name_long": "Tên quá dài",
@@ -1534,6 +1547,7 @@
     },
     "loading": "Xin vui lòng chờ...",
     "view_detail": "Xem chi tiết",
+    "search_field": "Tìm kiếm theo trường",
     "copy_id": "Copy ID",
     "no_device": "Không có thiết bị.",
     "no_in_org": "Không trực thuộc tổ chức.",

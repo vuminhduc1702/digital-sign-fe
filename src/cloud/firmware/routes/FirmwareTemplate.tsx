@@ -19,6 +19,7 @@ export function FirmwareTemplate() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [offset, setOffset] = useState(0)
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const projectId = storage.getProject()?.id
@@ -30,6 +31,8 @@ export function FirmwareTemplate() {
     projectId,
     config: { keepPreviousData: true },
     offset,
+    search_field: searchField.current,
+    search_str: searchQuery,
   })
 
   const {
@@ -94,6 +97,17 @@ export function FirmwareTemplate() {
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
               setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:firmware.table.name'),
+                },
+                {
+                  value: 'id',
+                  label: t('cloud:firmware.table.id'),
+                },
+              ]}
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />

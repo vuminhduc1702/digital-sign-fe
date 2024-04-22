@@ -20,6 +20,7 @@ export function ThingServices() {
   const ref = useRef(null)
 
   const [offset, setOffset] = useState(0)
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
@@ -40,6 +41,8 @@ export function ThingServices() {
     isPreviousData: isPreviousDataThing,
   } = useGetServiceThings({
     thingId,
+    search_field: searchField.current,
+    search_str: searchQuery,
     config: { keepPreviousData: true },
   })
 
@@ -89,6 +92,13 @@ export function ThingServices() {
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
               setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:custom_protocol.thing.name'),
+                },
+              ]}
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />

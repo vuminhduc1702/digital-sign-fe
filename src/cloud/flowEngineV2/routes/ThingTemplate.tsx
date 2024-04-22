@@ -20,6 +20,7 @@ export function ThingTemplate() {
   const projectId = storage.getProject()?.id
 
   // search query for api call
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const {
@@ -38,6 +39,8 @@ export function ThingTemplate() {
     type: 'thing',
     offset,
     config: { keepPreviousData: true },
+    search_field: searchField.current,
+    search_str: searchQuery,
   })
 
   const {
@@ -92,6 +95,17 @@ export function ThingTemplate() {
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
               setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:custom_protocol.thing.name'),
+                },
+                {
+                  value: 'id',
+                  label: t('cloud:custom_protocol.thing.id'),
+                },
+              ]}
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />

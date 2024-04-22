@@ -260,11 +260,12 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.group_manage.table.entity_type')}</span>
         ),
-        cell: info =>
-          `${info.getValue().charAt(0).toUpperCase()}${info
-            .getValue()
-            .toLowerCase()
-            .slice(1)}`,
+        cell: info => {
+          return (
+            t(`cloud:org_manage.group_manage.table.${info.getValue()}`) ||
+            info.getValue()
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.display({

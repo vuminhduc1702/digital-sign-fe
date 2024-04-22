@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/Button'
 
 import { BaseTable, type BaseTableProps } from '@/components/Table'
-import { useDisclosure } from '@/utils/hooks'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { useDeleteFirmWare } from '../../api/firmwareAPI'
 
 import { type BaseTablePagination } from '@/types'
@@ -62,6 +62,7 @@ function FireWareTableContextMenu({
 
   const { mutate, isLoading, isSuccess } = useDeleteFirmWare()
 
+  const handleCopyId = useCopyId()
   return (
     <>
       <div className="flex">

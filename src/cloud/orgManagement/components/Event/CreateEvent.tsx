@@ -157,6 +157,7 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
+    device_name: z.string().optional(),
     attribute_name: z.string({
       required_error: i18n.t(
         'cloud:org_manage.org_manage.add_attr.choose_attr',
@@ -513,6 +514,7 @@ export function CreateEvent() {
             ('condition' in values &&
               values.condition.map(item => ({
                 device_id: item.device_id,
+                device_name: item.device_name,
                 attribute_name: item.attribute_name,
                 condition_type: item.condition_type,
                 operator: item.operator,
@@ -755,6 +757,15 @@ export function CreateEvent() {
                           option.label === t('loading:device') ||
                           option.label === t('table:no_device')
                         }
+                        onChange={event => {
+                          console.log(event)
+                          setValue(`condition.${index}.device_id`, event.value)
+                          setValue(
+                            `condition.${index}.device_name`,
+                            event.label,
+                          )
+                          // setValue(`condition.${index}.attribute_name`, '')
+                        }}
                         noOptionsMessage={() => t('table:no_device')}
                         loadingMessage={() => t('loading:device')}
                         isLoading={deviceIsLoading}

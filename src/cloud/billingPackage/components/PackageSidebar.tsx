@@ -25,7 +25,7 @@ export function PackageSidebar() {
   const projectId = storage.getProject()?.id
 
   const [searchQuery, setSearchQuery] = useState('')
-  const { data } = useGetPlans({ projectId })
+  const { data } = useGetPlans({ projectId, name: searchQuery })
 
   const { acc: planFlattenData, extractedPropertyKeys } = flattenData(
     data?.data,
@@ -45,10 +45,7 @@ export function PackageSidebar() {
         </div>
         <CreatePackage />
         <div className="w-full">
-          <SearchField
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-          />
+          <SearchField setSearchQuery={setSearchQuery} />
         </div>
       </div>
       <div className="h-[80vh] grow overflow-y-auto bg-secondary-400 p-5">

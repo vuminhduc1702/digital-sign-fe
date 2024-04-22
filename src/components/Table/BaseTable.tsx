@@ -334,7 +334,7 @@ export function BaseTable<T extends Record<string, any>>({
                       )
                     })}
                   </TableHeader>
-                  <TableBody>
+                  <TableBody className="max-h-[200px] overflow-y-auto">
                     {totalAttributes > 0 ? (
                       table.getRowModel().rows.map(row => {
                         const linkId = row.original.id

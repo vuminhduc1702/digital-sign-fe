@@ -20,6 +20,7 @@ export function DeviceManage() {
   const ref = useRef(null)
 
   const [offset, setOffset] = useState(0)
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const params = useParams()
   const {
@@ -40,6 +41,8 @@ export function DeviceManage() {
     projectId,
     offset,
     config: { keepPreviousData: true },
+    search_str: searchQuery,
+    search_field: searchField.current,
   })
 
   const {
@@ -97,6 +100,17 @@ export function DeviceManage() {
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
               setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:org_manage.device_manage.table.name'),
+                },
+                {
+                  value: 'id',
+                  label: t('cloud:org_manage.device_manage.table.id'),
+                },
+              ]}
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />

@@ -18,6 +18,8 @@ type GetUsers = {
   expand?: boolean
   offset?: number
   limit?: number
+  search_str?: string
+  search_field?: string
 }
 
 export const getUsers = ({
@@ -27,6 +29,8 @@ export const getUsers = ({
   expand,
   offset,
   limit,
+  search_str,
+  search_field,
 }: GetUsers): Promise<UserList> => {
   return axios.get(`/api/users`, {
     params: {
@@ -36,6 +40,8 @@ export const getUsers = ({
       expand,
       offset,
       limit,
+      search_str,
+      search_field,
     },
   })
 }
@@ -53,11 +59,33 @@ export const useGetUsers = ({
   expand,
   offset = 0,
   limit = limitPagination,
+  search_str,
+  search_field,
   config,
 }: UseGetUsersOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['users', projectId, orgId, name, expand, offset, limit],
-    queryFn: () => getUsers({ projectId, orgId, name, expand, offset, limit }),
+    queryKey: [
+      'users',
+      projectId,
+      orgId,
+      name,
+      expand,
+      offset,
+      limit,
+      search_str,
+      search_field,
+    ],
+    queryFn: () =>
+      getUsers({
+        projectId,
+        orgId,
+        name,
+        expand,
+        offset,
+        limit,
+        search_str,
+        search_field,
+      }),
     ...config,
   })
 }

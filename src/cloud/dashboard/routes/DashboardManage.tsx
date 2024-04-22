@@ -25,6 +25,7 @@ export function DashboardManage() {
   const projectId = storage.getProject()?.id
 
   const [offset, setOffset] = useState(0)
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const {
@@ -37,7 +38,12 @@ export function DashboardManage() {
     data: dashboardData,
     isPreviousData: isPreviousDataDashboard,
     isLoading: isLoadingDashboard,
-  } = useGetDashboards({ projectId, offset })
+  } = useGetDashboards({
+    projectId,
+    offset,
+    search_field: searchField.current,
+    search_str: searchQuery,
+  })
 
   const {
     mutate: mutateDeleteMultipleDashboards,
@@ -90,6 +96,17 @@ export function DashboardManage() {
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
               setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:dashboard.table.name'),
+                },
+                {
+                  value: 'id',
+                  label: t('cloud:dashboard.table.id'),
+                },
+              ]}
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
