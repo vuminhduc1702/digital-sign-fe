@@ -711,6 +711,7 @@ export function CreateEvent() {
                 <FormField
                   control={form.control}
                   name="type"
+                  disabled={watch('onClick')}
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <FormLabel>
@@ -828,6 +829,7 @@ export function CreateEvent() {
                 <FormField
                   control={control}
                   name="interval.end_time"
+                  disabled={watch('type') === 'schedule'}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
