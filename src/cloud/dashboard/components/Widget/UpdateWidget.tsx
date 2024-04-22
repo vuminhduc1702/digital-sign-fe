@@ -576,70 +576,70 @@ export function UpdateWidget({
                     ],
                   }
 
-            const widget: z.infer<typeof widgetSchema> = {
-              title: values.title,
-              description: widgetInfoMemo?.description || 'LINE',
-              type: widgetInfoMemo?.type,
-              datasource: {
-                init_message: JSON.stringify(initMessage),
-                lastest_message:
-                  widgetInfoMemo?.type === 'LASTEST'
-                    ? JSON.stringify(lastestMessage)
-                    : '',
-                realtime_message:
-                  values.widgetSetting?.dataType === 'REALTIME'
-                    ? JSON.stringify(realtimeMessage)
-                    : '',
-                history_message:
-                  values.widgetSetting?.dataType === 'HISTORY'
-                    ? JSON.stringify(historyMessage)
-                    : '',
-                org_id: JSON.stringify(values.org_id),
-              },
-              attribute_config: values.attributeConfig.map(item => ({
-                attribute_key: item.attribute_key,
-                color: item.color,
-                max: item.max,
-                min: item.min || 0,
-                label: item.label,
-                unit: item.unit,
-              })),
-              config:
-                widgetInfoMemo?.type === 'TIMESERIES'
-                  ? {
-                      aggregation: values.widgetSetting?.agg,
-                      timewindow: {
-                        interval:
-                          values.widgetSetting?.agg !== 'NONE'
-                            ? values.widgetSetting?.interval
-                            : undefined,
-                      },
-                      chartsetting: {
-                        start_date: new Date(
-                          values.widgetSetting?.dataType === 'HISTORY'
-                            ? values.widgetSetting?.startDate?.toISOString()
-                            : 0,
-                        ).getTime(),
-                        end_date: new Date(
-                          values.widgetSetting?.dataType === 'HISTORY'
-                            ? values.widgetSetting?.endDate?.toISOString()
-                            : 0,
-                        ).getTime(),
-                        data_type: values.widgetSetting?.dataType,
-                        data_point:
-                          values.widgetSetting?.agg === 'NONE'
-                            ? values.widgetSetting?.data_point
-                            : undefined,
-                        time_period:
-                          values.widgetSetting?.dataType === 'REALTIME'
-                            ? values.widgetSetting?.time_period
-                            : undefined,
-                      },
-                    }
-                  : null,
-            }
+              const widget: z.infer<typeof widgetSchema> = {
+                title: values.title,
+                description: widgetInfoMemo?.description || 'LINE',
+                type: widgetInfoMemo?.type,
+                datasource: {
+                  init_message: JSON.stringify(initMessage),
+                  lastest_message:
+                    widgetInfoMemo?.type === 'LASTEST'
+                      ? JSON.stringify(lastestMessage)
+                      : '',
+                  realtime_message:
+                    values.widgetSetting?.dataType === 'REALTIME'
+                      ? JSON.stringify(realtimeMessage)
+                      : '',
+                  history_message:
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? JSON.stringify(historyMessage)
+                      : '',
+                  org_id: JSON.stringify(values.org_id),
+                },
+                attribute_config: values.attributeConfig.map(item => ({
+                  attribute_key: item.attribute_key,
+                  color: item.color,
+                  max: item.max,
+                  min: item.min || 0,
+                  label: item.label,
+                  unit: item.unit,
+                })),
+                config:
+                  widgetInfoMemo?.type === 'TIMESERIES'
+                    ? {
+                        aggregation: values.widgetSetting?.agg,
+                        timewindow: {
+                          interval:
+                            values.widgetSetting?.agg !== 'NONE'
+                              ? values.widgetSetting?.interval
+                              : undefined,
+                        },
+                        chartsetting: {
+                          start_date: new Date(
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.startDate?.toISOString()
+                              : 0,
+                          ).getTime(),
+                          end_date: new Date(
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.endDate?.toISOString()
+                              : 0,
+                          ).getTime(),
+                          data_type: values.widgetSetting?.dataType,
+                          data_point:
+                            values.widgetSetting?.agg === 'NONE'
+                              ? values.widgetSetting?.data_point
+                              : undefined,
+                          time_period:
+                            values.widgetSetting?.dataType === 'REALTIME'
+                              ? values.widgetSetting?.time_period
+                              : undefined,
+                        },
+                      }
+                    : null,
+              }
 
-            setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
+              setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
 
             // close the dialog
             setInterval(() => {
