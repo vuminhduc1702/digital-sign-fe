@@ -18,6 +18,7 @@ import { AppRoutes } from '@/routes'
 import { Toaster } from '@/components/Toaster'
 
 import '@/style/main.css'
+import { SkeletonLoading } from '@/components/Skeleton'
 
 const { ErrorFallback } = lazyImport(
   () => import('@/pages/ErrorPage'),
@@ -101,7 +102,7 @@ function App() {
     <Suspense
       fallback={
         <div className="flex h-screen w-screen items-center justify-center">
-          <Spinner size="xl" />
+          <SkeletonLoading type="full" />
         </div>
       }
     >
@@ -118,7 +119,7 @@ function App() {
             <AuthLoader
               renderLoading={() => (
                 <div className="flex h-screen w-screen items-center justify-center">
-                  <Spinner size="xl" />
+                  <SkeletonLoading type="full" />
                 </div>
               )}
             >

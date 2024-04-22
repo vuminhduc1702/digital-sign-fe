@@ -103,7 +103,11 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
       <form
         className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
-          await forgetMutation.mutateAsync(values)
+          const data = {
+            ...values,
+            otp: values?.otp?.trim(),
+          }
+          await forgetMutation.mutateAsync(data)
           onSuccess()
         })}
       >
@@ -207,7 +211,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
           />
           <Button
             variant="none"
-            className={`!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline`}
+            className={`!mt-2 ml-auto h-4 p-0 text-slate-800 underline`}
             disabled={btnOtpDisable}
             onClick={() => {
               setBtnOtpDisable(true)

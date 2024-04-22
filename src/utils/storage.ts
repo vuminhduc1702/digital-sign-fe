@@ -1,4 +1,5 @@
 import { type Project } from '@/cloud/project/routes/ProjectManage'
+import { type LoginCredentialsDTO } from '@/features/auth'
 import { type RoleTypes } from '@/lib/authorization'
 
 const storagePrefix = 'iot_platform_'
@@ -22,6 +23,21 @@ const storage = {
   },
   clearToken: () => {
     window.localStorage.removeItem(`${storagePrefix}token`)
+  },
+
+  getUserLogin: (): LoginCredentialsDTO => {
+    return JSON.parse(
+      window.localStorage.getItem(`${storagePrefix}user_login`) as string,
+    )
+  },
+  setUserLogin: (token: LoginCredentialsDTO) => {
+    window.localStorage.setItem(
+      `${storagePrefix}user_login`,
+      JSON.stringify(token),
+    )
+  },
+  clearUserLogin: () => {
+    window.localStorage.removeItem(`${storagePrefix}user_login`)
   },
 
   getProject: (): Project => {
