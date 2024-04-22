@@ -48,7 +48,6 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
   >({
     resolver: dashboardSchema && zodResolver(dashboardSchema),
   })
-  console.log('formState.errors', formState.errors)
 
   return (
     <FormDrawer

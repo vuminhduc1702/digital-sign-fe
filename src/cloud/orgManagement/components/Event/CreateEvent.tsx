@@ -364,7 +364,6 @@ export function CreateEvent() {
     reset,
     resetField,
   } = form
-  // console.log('formState.errors', formState.errors)
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const {
@@ -383,7 +382,6 @@ export function CreateEvent() {
     name: 'action',
     control,
   })
-  // console.log('formState.errors', formState.errors)
 
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
@@ -619,17 +617,45 @@ export function CreateEvent() {
                 <FormField
                   control={form.control}
                   name="org_id"
-                  render={({ field }) => (
+                  render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <FormLabel>
                         {t('cloud:org_manage.device_manage.add_device.parent')}
                       </FormLabel>
                       <div>
-                        <ComplexTree
-                          name="org_id"
-                          control={control}
-                          options={orgData?.organizations}
-                        />
+                        <FormControl>
+                          <div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  id="org_id"
+                                  className={cn(
+                                    'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                    {
+                                      'text-gray-500': !value && value !== '',
+                                    },
+                                  )}
+                                >
+                                  {value
+                                    ? orgDataFlatten.find(
+                                        item => item.id === value,
+                                      )?.name
+                                    : value === ''
+                                      ? t('tree:no_selection_org')
+                                      : t('placeholder:select_org')}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <SelectSuperordinateOrgTree
+                                  {...field}
+                                  onChangeValue={onChange}
+                                  value={value}
+                                  noSelectionOption={true}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </FormControl>
                         <FormMessage />
                       </div>
                     </FormItem>
