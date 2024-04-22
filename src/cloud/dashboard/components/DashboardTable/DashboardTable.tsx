@@ -189,6 +189,7 @@ export function DashboardTable({
       total={total}
       path={PATHS.DASHBOARD}
       projectId={projectId}
+      navigateToDetailNoOrg
       {...props}
     />
   ) : (

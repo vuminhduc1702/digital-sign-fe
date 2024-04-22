@@ -157,6 +157,7 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
+    device_name: z.string().optional(),
     attribute_name: z.string({
       required_error: i18n.t(
         'cloud:org_manage.org_manage.add_attr.choose_attr',
@@ -516,6 +517,7 @@ export function CreateEvent() {
             ('condition' in values &&
               values.condition.map(item => ({
                 device_id: item.device_id,
+                device_name: item.device_name,
                 attribute_name: item.attribute_name,
                 condition_type: item.condition_type,
                 operator: item.operator,
@@ -569,7 +571,7 @@ export function CreateEvent() {
           <div className="space-y-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.info')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               <InputField
@@ -666,7 +668,7 @@ export function CreateEvent() {
               title={t(
                 'cloud:org_manage.event_manage.add_event.test_condition_time',
               )}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               {todos.map(todo => (
@@ -729,7 +731,7 @@ export function CreateEvent() {
                 title={t(
                   'cloud:org_manage.event_manage.add_event.condition.title',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <Button
                 className="rounded-md"
@@ -758,6 +760,15 @@ export function CreateEvent() {
                           option.label === t('loading:device') ||
                           option.label === t('table:no_device')
                         }
+                        onChange={event => {
+                          console.log(event)
+                          setValue(`condition.${index}.device_id`, event.value)
+                          setValue(
+                            `condition.${index}.device_name`,
+                            event.label,
+                          )
+                          // setValue(`condition.${index}.attribute_name`, '')
+                        }}
                         noOptionsMessage={() => t('table:no_device')}
                         loadingMessage={() => t('loading:device')}
                         isLoading={deviceIsLoading}
@@ -860,7 +871,7 @@ export function CreateEvent() {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.action.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             {actionType !== 'report' && (
               <Button
