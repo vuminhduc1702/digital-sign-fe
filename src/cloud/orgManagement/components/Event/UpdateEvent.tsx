@@ -365,10 +365,7 @@ export function UpdateEvent({
               ('condition' in values &&
                 values.condition.map(item => ({
                   device_id: item.device_id,
-<<<<<<< HEAD
                   device_name: item.device_name,
-=======
->>>>>>> 673787f3 (Fix bugs and update org tree)
                   attribute_name: item.attribute_name,
                   condition_type: item.condition_type,
                   operator: item.operator,
@@ -632,7 +629,6 @@ export function UpdateEvent({
                                 item.value ===
                                 getValues(`condition.${index}.device_id`),
                             )}
-<<<<<<< HEAD
                             onChange={event => {
                               setValue(
                                 `condition.${index}.device_id`,
@@ -643,8 +639,6 @@ export function UpdateEvent({
                                 event.label,
                               )
                             }}
-=======
->>>>>>> 673787f3 (Fix bugs and update org tree)
                             error={
                               formState?.errors?.condition?.[index]?.device_id
                             }

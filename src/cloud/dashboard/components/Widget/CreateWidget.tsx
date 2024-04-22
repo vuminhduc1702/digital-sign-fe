@@ -39,6 +39,7 @@ import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
 import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
+<<<<<<< HEAD
 import {
   Form,
   FormControl,
@@ -49,6 +50,8 @@ import {
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { cn, flattenOrgs } from '@/utils/misc'
+=======
+>>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -423,7 +426,13 @@ export function CreateWidget({
     getValues,
     setValue,
     resetField,
+<<<<<<< HEAD
   } = form
+=======
+  } = useForm<WidgetCreate>({
+    resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
+  })
+>>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -833,6 +842,197 @@ export function CreateWidget({
                                 ? Date.now() - values.widgetSetting?.time_period
                                 : undefined,
                           },
+<<<<<<< HEAD
+=======
+                          id: widgetId,
+                        },
+                      ],
+                    }
+
+              const historyCmd = {
+                keys: values.attributeConfig.map(item => item.attribute_key),
+                startTs:
+                  Date.parse(
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? values.widgetSetting?.startDate?.toISOString()
+                      : '',
+                  ) || undefined,
+                endTs:
+                  Date.parse(
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? values.widgetSetting?.endDate?.toISOString()
+                      : '',
+                  ) || undefined,
+                interval:
+                  values.widgetSetting?.agg !== 'NONE'
+                    ? values.widgetSetting?.interval
+                    : undefined,
+                limit: 5000,
+                offset: 0,
+                agg: values.widgetSetting?.agg,
+              }
+              const historyMessage =
+                values.widgetSetting?.agg === 'SMA'
+                  ? {
+                      entityDataCmds: [
+                        {
+                          historyCmd: {
+                            ...historyCmd,
+                            window: values.widgetSetting?.window,
+                          },
+                          id: widgetId,
+                        },
+                      ],
+                    }
+                  : {
+                      entityDataCmds: [
+                        {
+                          historyCmd,
+                          id: widgetId,
+                        },
+                      ],
+                    }
+
+              const widget: z.infer<typeof widgetSchema> = {
+                title: values.title,
+                description: widgetCategory,
+                type: widgetType,
+                datasource: {
+                  init_message: JSON.stringify(initMessage),
+                  lastest_message:
+                    widgetType === 'LASTEST'
+                      ? JSON.stringify(lastestMessage)
+                      : '',
+                  realtime_message:
+                    values.widgetSetting?.dataType === 'REALTIME'
+                      ? JSON.stringify(realtimeMessage)
+                      : '',
+                  history_message:
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? JSON.stringify(historyMessage)
+                      : '',
+                  org_id: JSON.stringify(values.org_id),
+                },
+                attribute_config: values.attributeConfig.map(item => ({
+                  attribute_key: item.attribute_key,
+                  color: item.color,
+                  max: item.max,
+                  label: item.label,
+                  min: item.min,
+                  unit: item.unit,
+                })),
+                config:
+                  widgetType === 'TIMESERIES'
+                    ? {
+                        aggregation: values.widgetSetting?.agg,
+                        timewindow: {
+                          interval:
+                            values.widgetSetting?.agg !== 'NONE'
+                              ? values.widgetSetting?.interval
+                              : undefined,
+                        },
+                        chartsetting: {
+                          start_date: new Date(
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.startDate?.toISOString()
+                              : 0,
+                          ).getTime(),
+                          end_date: new Date(
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.endDate?.toISOString()
+                              : 0,
+                          ).getTime(),
+                          data_type: values.widgetSetting?.dataType,
+                          data_point:
+                            values.widgetSetting?.agg === 'NONE'
+                              ? values.widgetSetting?.data_point
+                              : undefined,
+                          time_period:
+                            values.widgetSetting?.dataType === 'REALTIME'
+                              ? Date.now() - values.widgetSetting?.time_period
+                              : undefined,
+                        },
+                      }
+                    : null,
+              }
+
+              setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
+
+              close()
+            })}
+          >
+            <>
+              {orgIsLoading ? (
+                <div className="flex grow items-center justify-center">
+                  <Spinner showSpinner size="xl" />
+                </div>
+              ) : (
+                <>
+                  <TitleBar
+                    title={t('cloud:dashboard.config_chart.show')}
+                    className="w-full rounded-md bg-secondary-700 pl-3"
+                  />
+                  <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
+                    <InputField
+                      label={t('cloud:dashboard.config_chart.name')}
+                      error={formState.errors['title']}
+                      registration={register('title')}
+                    />
+                    <SelectSuperordinateOrgTree
+                      name={'org_id'}
+                      label={t(
+                        'cloud:org_manage.device_manage.add_device.parent',
+                      )}
+                      error={formState?.errors?.org_id}
+                      control={control}
+                      options={orgData?.organizations}
+                      noSelectionOption={true}
+                      customOnChange={() => {
+                        selectDropdownDeviceRef.current?.clearValue()
+                        resetField('attributeConfig', {
+                          defaultValue: [
+                            {
+                              attribute_key: '',
+                              label: '',
+                              color: '',
+                              max: 100,
+                              min: 0,
+                              unit: '',
+                            },
+                          ],
+                        })
+                      }}
+                    />
+
+                    <SelectDropdown
+                      refSelect={selectDropdownDeviceRef}
+                      label={t('cloud:dashboard.config_chart.device')}
+                      error={formState?.errors?.device?.[0]}
+                      name="device"
+                      control={control}
+                      options={deviceSelectData}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:device') ||
+                        option.label === t('table:no_device')
+                      }
+                      noOptionsMessage={() => t('table:no_device')}
+                      loadingMessage={() => t('loading:device')}
+                      isLoading={deviceIsLoading}
+                      isMulti={isMultipleDevice}
+                      closeMenuOnSelect={!isMultipleDevice}
+                      isWrappedArray
+                      customOnChange={option => {
+                        if (option != null) {
+                          attrChartMutate({
+                            data: {
+                              entity_ids: option,
+                              entity_type: 'DEVICE',
+                              version_two: true,
+                              // time_series: true,
+                            },
+                          })
+                          // removeField(option)
+>>>>>>> 6839d4d8 (Fix bugs and update org tree)
                         }
                       : null,
                 }
