@@ -1086,7 +1086,8 @@
     "select_value": "Vui lòng chọn {{VALUE}}",
     "search": "Nhập để tìm kiếm",
     "input_text": "Vui lòng nhập",
-    "input_text_value": "Vui lòng nhập {{VALUE}}"
+    "input_text_value": "Vui lòng nhập {{VALUE}}",
+    "select_org": "Chọn tổ chức"
   },
   "search": {
     "title": "Tìm kiếm",
@@ -1555,5 +1556,8 @@
     "no_event_service": "Không có sự kiện nghiệp vụ.",
     "no_role": "Không có vai trò.",
     "no_tenant_role": "Không có vai trò tenant."
+  },
+  "tree": {
+    "no_selection_org": "Không trực thuộc tổ chức"
   }
 }

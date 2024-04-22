@@ -23,13 +23,12 @@ import {
 } from '@/utils/hooks'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import storage from '@/utils/storage'
-import { ComplexTree } from '@/components/ComplexTree'
-
 import { type Org } from '@/layout/MainLayout/types'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import defaultOrgImage from '@/assets/images/default-org.png'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 const orgUpdateSchema = orgSchema.required({ org_id: true })
 
@@ -182,12 +181,13 @@ export function UpdateOrg({
             error={formState.errors['name']}
             registration={register('name')}
           />
-          <ComplexTree
+          <SelectSuperordinateOrgTree
             name="org_id"
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            noSelectionOption={true}
             selectedOrgName={orgDataById?.name}
           />
 

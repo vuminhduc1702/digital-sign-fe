@@ -38,7 +38,7 @@ import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -413,7 +413,6 @@ export function CreateWidget({
   } = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
   })
-  // console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -846,14 +845,15 @@ export function CreateWidget({
                       error={formState.errors['title']}
                       registration={register('title')}
                     />
-                    <ComplexTree
-                      name="org_id"
+                    <SelectSuperordinateOrgTree
+                      name={'org_id'}
                       label={t(
                         'cloud:org_manage.device_manage.add_device.parent',
                       )}
-                      error={formState.errors['org_id']}
+                      error={formState?.errors?.org_id}
                       control={control}
                       options={orgData?.organizations}
+                      noSelectionOption={true}
                       customOnChange={() => {
                         selectDropdownDeviceRef.current?.clearValue()
                         resetField('attributeConfig', {

@@ -37,7 +37,7 @@ import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
 import { type ActionType } from '../../types'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 export const logicalOperatorOption = [
   {
@@ -339,7 +339,6 @@ export function CreateEvent() {
       retry: 0,
     },
   })
-  // console.log('formState.errors', formState.errors)
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const {
@@ -358,7 +357,6 @@ export function CreateEvent() {
     name: 'action',
     control,
   })
-  // console.log('formState.errors', formState.errors)
 
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
@@ -490,7 +488,6 @@ export function CreateEvent() {
         id="create-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
-          // console.log('check values submit form:', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -574,12 +571,13 @@ export function CreateEvent() {
                 error={formState.errors['name']}
                 registration={register('name')}
               />
-              <ComplexTree
-                name="org_id"
+              <SelectSuperordinateOrgTree
+                name={'org_id'}
                 label={t('cloud:org_manage.device_manage.add_device.parent')}
-                error={formState?.errors?.org_id}
+                error={formState?.errors?.['org_id']}
                 control={control}
                 options={orgData?.organizations}
+                noSelectionOption={true}
               />
 
               <SelectDropdown

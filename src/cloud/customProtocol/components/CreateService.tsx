@@ -83,7 +83,6 @@ export function CreateService({
           id="create-serviceThing"
           className="flex flex-col justify-between space-y-6"
           onSubmit={handleSubmit(values => {
-            // console.log('service values', values)
             mutateService({
               data: {
                 name: values.name,

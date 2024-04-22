@@ -18,7 +18,7 @@ import { type EntityType } from '../../api/attrAPI'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import storage from '@/utils/storage'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
@@ -141,13 +141,13 @@ export function UpdateGroup({
               value: entityType.type,
             }))}
           />
-          <ComplexTree
-            name="org_id"
+          <SelectSuperordinateOrgTree
+            name={'org_id'}
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
-            selectedOrgName={org_name}
+            noSelectionOption={true}
           />
         </>
       </form>

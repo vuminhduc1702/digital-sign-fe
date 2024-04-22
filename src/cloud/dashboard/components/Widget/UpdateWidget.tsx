@@ -49,7 +49,7 @@ import {
 import { nameSchema } from '@/utils/schemaValidation'
 import i18n from '@/i18n'
 import { widgetTypeSchema, attrWidgetSchema } from './CreateWidget'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 export function UpdateWidget({
   widgetInfo,
@@ -215,7 +215,6 @@ export function UpdateWidget({
     projectId,
     level: 1,
   })
-  console.log(orgData)
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
@@ -573,14 +572,15 @@ export function UpdateWidget({
                     error={formState.errors['title']}
                     registration={register('title')}
                   />
-                  <ComplexTree
-                    name="org_id"
+                  <SelectSuperordinateOrgTree
+                    name={'org_id'}
                     label={t(
                       'cloud:org_manage.device_manage.add_device.parent',
                     )}
-                    error={formState.errors['org_id']}
+                    error={formState?.errors?.org_id}
                     control={control}
                     options={orgData?.organizations}
+                    noSelectionOption={true}
                     customOnChange={() => {
                       selectDropdownDeviceRef.current?.clearValue()
                       selectDropdownAttributeConfigRef.current?.clearValue()
@@ -1014,7 +1014,6 @@ export function UpdateWidget({
                                 render={({
                                   field: { onChange, value, ...field },
                                 }) => {
-                                  console.log(value)
                                   return (
                                     <Popover>
                                       <PopoverTrigger asChild>

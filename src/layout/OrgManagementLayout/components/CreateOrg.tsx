@@ -25,7 +25,7 @@ import { useGetOrgs } from '@/layout/MainLayout/api'
 import { PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import defaultOrgImage from '@/assets/images/default-org.png'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 export const orgSchema = z.object({
   name: nameSchema,
@@ -147,12 +147,13 @@ export function CreateOrg() {
             error={formState.errors['name']}
             registration={register('name')}
           />
-          <ComplexTree
-            name="org_id"
+          <SelectSuperordinateOrgTree
+            name={'org_id'}
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            noSelectionOption={true}
           />
 
           <TextAreaField

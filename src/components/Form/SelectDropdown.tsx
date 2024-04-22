@@ -87,7 +87,6 @@ export function SelectDropdown<
                       : isWrappedArray
                         ? [(e as unknown as SelectOption)?.value]
                         : (e as unknown as SelectOption)?.value
-                  // console.log('option', option)
                   onChange(option)
                   customOnChange?.(option)
                   customSelect?.(e)

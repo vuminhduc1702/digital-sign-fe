@@ -56,7 +56,7 @@ import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 import { useOrgById } from '@/layout/OrgManagementLayout/api'
 
 type UpdateEventProps = {
@@ -331,7 +331,6 @@ export function UpdateEvent({
         id="update-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
-          console.log('check values submit form:', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -405,13 +404,13 @@ export function UpdateEvent({
                   error={formState.errors['name']}
                   registration={register('name')}
                 />
-                <ComplexTree
-                  name="org_id"
+                <SelectSuperordinateOrgTree
+                  name={'org_id'}
                   label={t('cloud:org_manage.device_manage.add_device.parent')}
                   error={formState?.errors?.org_id}
                   control={control}
                   options={orgData?.organizations}
-                  selectedOrgName={orgDataById?.name}
+                  noSelectionOption={true}
                 />
 
                 <SelectDropdown

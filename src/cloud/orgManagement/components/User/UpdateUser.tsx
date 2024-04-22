@@ -19,7 +19,7 @@ import { userInfoSchema } from './CreateUser'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { EyeHide, EyeShow } from '@/components/SVGIcons'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 type UpdateUserProps = {
   userId: string
@@ -127,7 +127,6 @@ export function UpdateUser({
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
-  console.log('formState.isDirty', formState.isDirty)
 
   return (
     <Drawer
@@ -252,13 +251,13 @@ export function UpdateUser({
               )
             }
           />
-          <ComplexTree
-            name="org_id"
+          <SelectSuperordinateOrgTree
+            name={'org_id'}
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
-            selectedOrgName={org_name}
+            noSelectionOption={true}
           />
 
           <SelectDropdown

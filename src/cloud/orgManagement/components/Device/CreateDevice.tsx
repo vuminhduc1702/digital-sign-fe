@@ -22,7 +22,7 @@ import { PlusIcon } from '@/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import { type SelectInstance } from 'react-select'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -123,12 +123,13 @@ export function CreateDevice() {
             registration={register('name')}
           />
 
-          <ComplexTree
-            name="org_id"
+          <SelectSuperordinateOrgTree
+            name={'org_id'}
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            noSelectionOption={true}
             customOnChange={() => selectDropdownGroupId.current?.clearValue()}
           />
 

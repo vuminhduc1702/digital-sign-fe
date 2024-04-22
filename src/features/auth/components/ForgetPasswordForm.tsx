@@ -207,13 +207,14 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
           />
           <Button
             variant="none"
-            className={`!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline`}
+            className={`!mt-2 ml-auto h-4 p-0 text-slate-800 underline`}
             disabled={btnOtpDisable}
             onClick={() => {
               setBtnOtpDisable(true)
               if (getValues('email') !== '') {
                 sentOTP({
                   email: getValues('email'),
+                  forgot_password: true,
                 })
                   .then(() => {
                     setCountdown(timeCountdown)

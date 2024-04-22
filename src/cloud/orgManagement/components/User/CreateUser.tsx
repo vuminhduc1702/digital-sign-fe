@@ -26,7 +26,7 @@ import { useGetOrgs } from '@/layout/MainLayout/api'
 
 import { EyeHide, EyeShow, PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 export const userInfoSchema = z.object({
   name: nameSchema,
@@ -66,7 +66,6 @@ export function CreateUser() {
   >({
     resolver: userSchema && zodResolver(userSchema),
   })
-  // console.log('formState.errors', formState.errors)
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateUser()
@@ -227,12 +226,13 @@ export function CreateUser() {
               )
             }
           />
-          <ComplexTree
-            name="org_id"
+          <SelectSuperordinateOrgTree
+            name={'org_id'}
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            noSelectionOption={true}
           />
 
           <SelectDropdown

@@ -12,7 +12,7 @@ import { useGetOrgs } from '@/layout/MainLayout/api'
 
 import { PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
@@ -101,12 +101,13 @@ export function CreateGroup() {
             registration={register('entity_type')}
             options={entityTypeOptions}
           />
-          <ComplexTree
-            name="org_id"
+          <SelectSuperordinateOrgTree
+            name={'org_id'}
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            noSelectionOption={true}
           />
         </>
       </form>

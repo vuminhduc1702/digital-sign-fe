@@ -206,7 +206,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           />
           <Button
             variant="none"
-            className="!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline"
+            className="!mt-2 ml-auto h-4 p-0 text-slate-800 underline"
             disabled={btnOtpDisable}
             onClick={() => {
               setBtnOtpDisable(true)
@@ -220,7 +220,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     updateCountdown()
                   })
                   .catch(error => {
-                    console.log(error)
                     setBtnOtpDisable(false)
                   })
               }
