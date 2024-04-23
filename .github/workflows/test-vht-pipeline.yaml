@@ -7,7 +7,7 @@ on:
     
 env:
   image: ui
-  tags: ${{ github.sha }}
+  tags: ${GITHUB_REF#refs/tags/}
   chart-folder: /home/vht/ui
   chart-name: ui
   namespace: ui
