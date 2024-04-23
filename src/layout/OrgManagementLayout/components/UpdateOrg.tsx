@@ -54,14 +54,14 @@ export function UpdateOrg({
   const { t } = useTranslation()
 
   const {
-    handleResetDefaultImage1,
-    avatarRef1,
+    handleResetDefaultImage,
+    avatarRef,
     uploadImageErr,
     setUploadImageErr,
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
-  } = useResetDefaultImage(defaultOrgImage)
+  } = useResetDefaultImage(defaultOrgImage, 'default-org.png')
 
   const projectId = storage.getProject()?.id
 
@@ -152,7 +152,7 @@ export function UpdateOrg({
                 },
               })
             }
-            const defaultFileName = avatarRef1.current?.src.split('/')
+            const defaultFileName = avatarRef.current?.src.split('/')
             if (getValueUploadImage('file') != null) {
               const dataUploadImage = await mutateAsyncUploadImage({
                 data: {
@@ -275,11 +275,11 @@ export function UpdateOrg({
                   reader.readAsDataURL(file)
                   reader.onload = e => {
                     if (
-                      avatarRef1.current != null &&
+                      avatarRef.current != null &&
                       e.target != null &&
                       reader.readyState === 2
                     ) {
-                      avatarRef1.current.src = e.target.result as string
+                      avatarRef.current.src = e.target.result as string
                     }
                   }
                 }}
@@ -294,13 +294,13 @@ export function UpdateOrg({
               }`}
               alt="Project"
               className="mb-3 h-36 w-32"
-              ref={avatarRef1}
+              ref={avatarRef}
             />
             <Button
               className="mb-3 border-none"
               variant="secondaryLight"
               size="square"
-              onClick={handleResetDefaultImage1}
+              onClick={handleResetDefaultImage}
             >
               {t('cloud:project_manager.add_project.upload_ava_default')}
             </Button>

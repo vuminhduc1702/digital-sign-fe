@@ -51,7 +51,7 @@ export function UpdateProject({
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
-  } = useResetDefaultImage(defaultProjectImage)
+  } = useResetDefaultImage(defaultProjectImage, 'default-project.png')
 
   const cancelButtonRef = useRef(null)
 
@@ -100,7 +100,7 @@ export function UpdateProject({
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[48rem] sm:p-6 sm:align-middle">
+      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-4 flex items-center justify-between">
             <DialogTitle className="text-h1 text-secondary-900">

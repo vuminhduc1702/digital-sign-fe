@@ -45,10 +45,7 @@ export function AttrLogTable({
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const { name, id, organization, entity_type } = info.row.original
-          return GroupTableContextMenu({ name, id, organization, entity_type })
-        },
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
