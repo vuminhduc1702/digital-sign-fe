@@ -68,3 +68,15 @@ export function cn(...inputs: ClassValue[]) {
 export const scrollToIntro = (Ref: RefObject<HTMLDivElement>) => {
   Ref.current?.scrollIntoView({ behavior: 'smooth' })
 }
+
+export function flattenOrgs(input: Org[]) {
+  return input?.reduce((acc: Org[], item: Org) => {
+    item = Object.assign({}, item)
+    acc = acc.concat(item)
+    if (item.sub_orgs) {
+      acc = acc.concat(flattenOrgs(item.sub_orgs))
+      item.sub_orgs = []
+    }
+    return acc
+  }, [])
+}

@@ -218,6 +218,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
               if (getValues('email') !== '') {
                 sentOTP({
                   email: getValues('email'),
+                  forgot_password: true,
                 })
                   .then(() => {
                     setCountdown(timeCountdown)

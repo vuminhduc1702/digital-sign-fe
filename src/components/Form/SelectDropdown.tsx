@@ -56,19 +56,6 @@ export function SelectDropdown<
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
 
-  // return (
-  //   <FieldWrapper
-  //     classlabel={classlabel}
-  //     classchild={classchild}
-  //     className={cn('', classnamefieldwrapper)}
-  //     label={label}
-  //     error={error}
-  //   >
-  //     <div className="flex justify-between gap-x-2">
-  //       <Controller
-  //         control={control}
-  //         name={name}
-  //         render={({ field: { onChange, value, ...field } }) => {
   return (
     <Select
       // {...field}
@@ -87,8 +74,6 @@ export function SelectDropdown<
             : isWrappedArray
               ? [(e as unknown as SelectOption)?.value]
               : (e as unknown as SelectOption)?.value
-        // console.log('option', option)
-        // onChange(option)
         customOnChange?.(option)
         customSelect?.(e)
         if (action === 'clear') {
@@ -120,10 +105,4 @@ export function SelectDropdown<
       {...props}
     />
   )
-  //         }}
-  //       />
-  //       {icon}
-  //     </div>
-  //   </FieldWrapper>
-  // )
 }

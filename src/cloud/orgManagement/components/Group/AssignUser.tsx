@@ -61,7 +61,6 @@ const AssignUser = ({
   const { register, formState, handleSubmit } = useForm<AssignUserDTO['data']>({
     resolver: assignUserSchema && zodResolver(assignUserSchema),
   })
-  console.log('formState.errors', formState.errors)
 
   const showSpinner = useSpinDelay(isLoading, {
     delay: 150,

@@ -22,7 +22,20 @@ import { PlusIcon } from '@/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import { type SelectInstance } from 'react-select'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
+<<<<<<< HEAD
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { cn, flattenOrgs } from '@/utils/misc'
+=======
+>>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -42,14 +55,14 @@ export function CreateDevice() {
 
   const { orgId } = useParams()
 
-  const { register, formState, control, handleSubmit, watch, reset } = useForm<
-    CreateDeviceDTO['data']
-  >({
+  const form = useForm<CreateDeviceDTO['data']>({
     resolver: deviceSchema && zodResolver(deviceSchema),
   })
+  const { register, formState, control, handleSubmit, watch, reset } = form
 
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
   const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id') || orgId,
@@ -100,76 +113,130 @@ export function CreateDevice() {
         />
       }
     >
-      <form
-        className="w-full space-y-6"
-        id="create-device"
-        onSubmit={handleSubmit(values => {
-          mutate({
-            data: {
-              project_id: projectId,
-              org_id: values.org_id !== no_org_val ? values.org_id : '',
-              name: values.name,
-              key: values.key,
-              group_id: values.group_id,
-              template_id: values.template_id,
-            },
-          })
-        })}
-      >
-        <>
-          <InputField
-            label={t('cloud:org_manage.device_manage.add_device.name')}
-            error={formState.errors['name']}
-            registration={register('name')}
-          />
+      <Form {...form}>
+        <form
+          className="w-full space-y-6"
+          id="create-device"
+          onSubmit={handleSubmit(values => {
+            mutate({
+              data: {
+                project_id: projectId,
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
+                name: values.name,
+                key: values.key,
+                group_id: values.group_id,
+                template_id: values.template_id,
+              },
+            })
+          })}
+        >
+          <>
+            <InputField
+              label={t('cloud:org_manage.device_manage.add_device.name')}
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <FormField
+              control={form.control}
+              name="org_id"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('cloud:org_manage.device_manage.add_device.parent')}
+                  </FormLabel>
+                  <div>
+                    <FormControl>
+                      <div>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="org_id"
+                              className={cn(
+                                'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                {
+                                  'text-gray-500': !value && value !== '',
+                                },
+                              )}
+                            >
+                              {value
+                                ? orgDataFlatten.find(item => item.id === value)
+                                    ?.name
+                                : value === ''
+                                  ? t('tree:no_selection_org')
+                                  : t('placeholder:select_org')}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <SelectSuperordinateOrgTree
+                              {...field}
+                              onChangeValue={onChange}
+                              value={value}
+                              noSelectionOption={true}
+                              customOnChange={() =>
+                                selectDropdownGroupId.current?.clearValue()
+                              }
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
 
-          <ComplexTree
-            name="org_id"
+<<<<<<< HEAD
+            <SelectDropdown
+              refSelect={selectDropdownGroupId}
+              label={t('cloud:org_manage.device_manage.add_device.group')}
+              name="group_id"
+              control={control}
+              options={groupSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:group') ||
+                option.label === t('table:no_group')
+              }
+              noOptionsMessage={() => t('table:no_group')}
+              loadingMessage={() => t('loading:group')}
+              isLoading={groupIsLoading}
+              error={formState?.errors?.group_id}
+            />
+=======
+          <SelectSuperordinateOrgTree
+            name={'org_id'}
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            noSelectionOption={true}
             customOnChange={() => selectDropdownGroupId.current?.clearValue()}
           />
+>>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
-          <SelectDropdown
-            refSelect={selectDropdownGroupId}
-            label={t('cloud:org_manage.device_manage.add_device.group')}
-            name="group_id"
-            control={control}
-            options={groupSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:group') ||
-              option.label === t('table:no_group')
-            }
-            noOptionsMessage={() => t('table:no_group')}
-            loadingMessage={() => t('loading:group')}
-            isLoading={groupIsLoading}
-            error={formState?.errors?.group_id}
-          />
+            <SelectDropdown
+              error={formState?.errors?.template_id}
+              label={t('cloud:firmware.add_firmware.template')}
+              name="template_id"
+              control={control}
+              options={templateSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:template') ||
+                option.label === t('table:no_template')
+              }
+              noOptionsMessage={() => t('table:no_template')}
+              loadingMessage={() => t('loading:template')}
+              isLoading={templateIsLoading}
+            />
 
-          <SelectDropdown
-            error={formState?.errors?.template_id}
-            label={t('cloud:firmware.add_firmware.template')}
-            name="template_id"
-            control={control}
-            options={templateSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:template') ||
-              option.label === t('table:no_template')
-            }
-            noOptionsMessage={() => t('table:no_template')}
-            loadingMessage={() => t('loading:template')}
-            isLoading={templateIsLoading}
-          />
-
-          <InputField
-            label={t('cloud:org_manage.device_manage.add_device.key')}
-            error={formState.errors['key']}
-            registration={register('key')}
-          />
-        </>
-      </form>
+            <InputField
+              label={t('cloud:org_manage.device_manage.add_device.key')}
+              error={formState.errors['key']}
+              registration={register('key')}
+            />
+          </>
+        </form>
+      </Form>
     </FormDrawer>
   )
 }

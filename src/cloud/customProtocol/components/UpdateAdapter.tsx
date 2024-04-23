@@ -96,7 +96,6 @@ export function UpdateAdapter({
         schema: { fields: renderFields() },
       },
     })
-  console.log('zod adapter errors: ', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'configuration.topic_filters',
@@ -137,7 +136,6 @@ export function UpdateAdapter({
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
-  console.log('formState.isDirty', formState.isDirty)
 
   return (
     <Drawer
