@@ -11,6 +11,8 @@ type GetServiceThings = {
   thingId: string
   offset?: number
   limit?: number
+  search_str?: string
+  search_field?: string
 }
 
 type GetServiceThingsRes = {
@@ -19,10 +21,14 @@ type GetServiceThingsRes = {
 
 export const getServiceThings = ({
   thingId,
+  search_str,
+  search_field,
 }: GetServiceThings): Promise<GetServiceThingsRes> => {
   return axios.get(`/api/fe/thing/${thingId}/service`, {
     params: {
       share: true,
+      search_str: search_str,
+      search_field: search_field,
     },
   })
 }
@@ -35,11 +41,13 @@ type UseServiceThingsOptions = {
 
 export const useGetServiceThings = ({
   thingId,
+  search_str,
+  search_field,
   config,
 }: UseServiceThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['service-things', thingId],
-    queryFn: () => getServiceThings({ thingId }),
+    queryKey: ['service-things', thingId, search_str, search_field],
+    queryFn: () => getServiceThings({ thingId, search_str, search_field }),
     ...config,
   })
 }

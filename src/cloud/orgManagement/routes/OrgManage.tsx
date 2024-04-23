@@ -44,6 +44,7 @@ export function OrgManage() {
   } = useGetAttrs({
     entityType: 'ORGANIZATION',
     entityId: orgId,
+    key_search: searchQuery,
   })
 
   const {

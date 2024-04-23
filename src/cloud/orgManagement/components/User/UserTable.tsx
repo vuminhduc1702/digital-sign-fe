@@ -71,7 +71,7 @@ function UserTableContextMenu({
         <div className="flex cursor-pointer justify-center p-3">
           <LuFiles
             className="text-lg text-gray-500"
-            onClick={() => handleCopyId(id)}
+            onClick={() => handleCopyId(user_id)}
           />
         </div>
         <div className="flex cursor-pointer justify-center p-3">

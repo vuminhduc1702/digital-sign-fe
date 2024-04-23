@@ -10,6 +10,8 @@ type GetFirmWares = {
   projectId: string
   offset?: number
   limit?: number
+  search_field?: string
+  search_str?: string
 }
 
 export type GetFirmWareRes = {
@@ -21,12 +23,16 @@ export const getFirmwares = ({
   projectId,
   offset,
   limit,
+  search_field,
+  search_str,
 }: GetFirmWares): Promise<GetFirmWareRes> => {
   return axios.get(`/api/ota`, {
     params: {
       project_id: projectId,
       offset,
       limit,
+      search_field,
+      search_str,
     },
   })
 }
@@ -42,10 +48,13 @@ export const useGetFirmwares = ({
   config,
   offset = 0,
   limit = limitPagination,
+  search_field,
+  search_str,
 }: UseEntityFirmWareOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['firm-ware', projectId, offset, limit],
-    queryFn: () => getFirmwares({ projectId, offset, limit }),
+    queryKey: ['firm-ware', projectId, offset, limit, search_field, search_str],
+    queryFn: () =>
+      getFirmwares({ projectId, offset, limit, search_field, search_str }),
     ...config,
   })
 }

@@ -27,7 +27,15 @@ export function GroupDetail() {
 
   const entityType = 'GROUP'
 
-  const { data: attrsData } = useGetAttrs({ entityType, entityId: groupId })
+  const {
+    data: attrsData,
+    isLoading: isLoadingAttrs,
+    isPreviousData: isPreviousDataAttrs,
+  } = useGetAttrs({
+    entityType,
+    entityId: groupId,
+    key_search: searchQuery,
+  })
 
   const {
     mutate: mutateDeleteMultipleAttrs,
@@ -89,15 +97,6 @@ export function GroupDetail() {
       <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <div className="flex w-full items-center justify-between gap-x-3">
-            {Object.keys(rowSelection).length > 0 && (
-              <div
-                onClick={open}
-                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-              >
-                <div>{t('btn:delete')}:</div>
-                <div>{Object.keys(rowSelection).length}</div>
-              </div>
-            )}
             <SearchField
               setSearchValue={setSearchQuery}
               setIsSearchData={setIsSearchData}
@@ -110,6 +109,8 @@ export function GroupDetail() {
           data={attrsData?.attributes ?? []}
           entityId={groupId}
           entityType={entityType}
+          isPreviousData={isPreviousDataAttrs}
+          isLoading={isLoadingAttrs}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
           pdfHeader={pdfHeader}

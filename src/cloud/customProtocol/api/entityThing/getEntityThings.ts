@@ -12,6 +12,8 @@ type GetEntityThings = {
   type?: EntityThingType
   offset?: number
   limit?: number
+  search_str?: string
+  search_field?: string
 }
 
 export type GetEntityThingsRes = {
@@ -23,6 +25,8 @@ export const getEntityThings = ({
   type,
   offset,
   limit,
+  search_str,
+  search_field,
 }: GetEntityThings): Promise<GetEntityThingsRes> => {
   return axios.get(`/api/fe/thing`, {
     params: {
@@ -31,6 +35,8 @@ export const getEntityThings = ({
       share: true,
       offset,
       limit,
+      search_str,
+      search_field,
     },
   })
 }
@@ -46,11 +52,29 @@ export const useGetEntityThings = ({
   type,
   offset = 0,
   limit = limitPagination,
+  search_str,
+  search_field,
   config,
 }: UseEntityThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['entity-things', projectId, type, offset, limit],
-    queryFn: () => getEntityThings({ projectId, type, offset, limit }),
+    queryKey: [
+      'entity-things',
+      projectId,
+      type,
+      offset,
+      limit,
+      search_str,
+      search_field,
+    ],
+    queryFn: () =>
+      getEntityThings({
+        projectId,
+        type,
+        offset,
+        limit,
+        search_str,
+        search_field,
+      }),
     ...config,
   })
 }

@@ -42,6 +42,7 @@ export function Default() {
   } = useGetAttrs({
     entityType,
     entityId: templateId,
+    key_search: searchQuery,
     config: {
       suspense: false,
     },

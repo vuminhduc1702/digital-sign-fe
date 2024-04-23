@@ -1,24 +1,23 @@
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { Button } from '@/components/Button'
+import { Button } from '~/components/Button'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { FieldWrapper, InputField } from '@/components/Form'
-import { Link } from '@/components/Link'
-import { useLogin } from '@/lib/auth'
-import { PATHS } from '@/routes/PATHS'
-import { emailSchema, passwordSchema } from '@/utils/schemaValidation'
-import { Checkbox } from '@/components/Checkbox'
+import { FieldWrapper, InputField } from '~/components/Form'
+import { Link } from '~/components/Link'
+import { useLogin } from '~/lib/auth'
+import { PATHS } from '~/routes/PATHS'
+import { emailSchema, passwordSchema } from '~/utils/schemaValidation'
+import { Checkbox } from '~/components/Checkbox'
 
 import {
   BtnPasswordLoginIcon,
   BtnUserLoginIcon,
   EyeHide,
   EyeShow,
-} from '@/components/SVGIcons'
-import storage from '@/utils/storage'
+} from '~/components/SVGIcons'
 
 const schema = z.object({
   identifier: emailSchema,
@@ -29,7 +28,6 @@ const schema = z.object({
 export type LoginValues = {
   identifier: string
   password: string
-  checked: boolean
 }
 
 type LoginFormProps = {

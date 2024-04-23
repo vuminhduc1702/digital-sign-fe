@@ -206,7 +206,7 @@ export function BaseTable<T extends Record<string, any>>({
   })
 
   return (
-    <div className={cn('flex h-full flex-col justify-between', className)}>
+    <div className={cn('', className)}>
       <div
         ref={ref}
         className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-between"
@@ -285,96 +285,102 @@ export function BaseTable<T extends Record<string, any>>({
           </DropdownMenu>
         </div>
       </div>
-      <ScrollArea
-        className={cn(
-          'relative z-30 mt-2 flex h-[calc(100vh_-_360px)] grow flex-col justify-between',
-          className,
-        )}
-      >
-        {isPreviousData && offset == 0 ? null : (
-          <>
-            <Table
-              className={cn({
-                'h-[90%]': totalAttributes === 0,
-              })}
-              id="table-ref"
-            >
-              <Progress isLoading={showProgress} />
-              <TableHeader>
-                {table.getHeaderGroups().map(headerGroup => {
-                  return (
-                    <TableRow key={headerGroup.id} className="">
-                      {headerGroup.headers.map(header => {
+      <div className="mt-2 h-[64vh] overflow-x-auto">
+        <ScrollArea>
+          <div
+            className={cn(
+              'z-30flex relative grow flex-col justify-between overflow-hidden',
+              className,
+            )}
+          >
+            {isPreviousData && offset == 0 ? (
+              <></>
+            ) : (
+              <>
+                <Table
+                  className={cn({
+                    'h-[90%]': totalAttributes === 0,
+                  })}
+                  id="table-ref"
+                >
+                  <Progress isLoading={showProgress} />
+                  <TableHeader>
+                    {table.getHeaderGroups().map(headerGroup => {
+                      return (
+                        <TableRow key={headerGroup.id} className="">
+                          {headerGroup.headers.map(header => {
+                            return (
+                              <TableHead
+                                key={header.id}
+                                className={cn(
+                                  '',
+                                  header.id === 'select'
+                                    ? 'py-0 pl-[8px]'
+                                    : header.id === 'edit' ||
+                                        header.id === 'view' ||
+                                        header.id === 'delete'
+                                      ? '!h-9 !w-10'
+                                      : '!min-w-[80px] !overflow-hidden !truncate !overflow-ellipsis !whitespace-nowrap !break-words !bg-white px-2 !text-left !text-sm !text-black',
+                                )}
+                              >
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+                              </TableHead>
+                            )
+                          })}
+                        </TableRow>
+                      )
+                    })}
+                  </TableHeader>
+                  <TableBody className="max-h-[200px] overflow-y-auto">
+                    {totalAttributes > 0 ? (
+                      table.getRowModel().rows.map(row => {
+                        const linkId = row.original.id
                         return (
-                          <TableHead
-                            key={header.id}
-                            className={cn(
-                              '',
-                              header.id === 'select'
-                                ? 'py-0 pl-[8px]'
-                                : header.id === 'edit' ||
-                                    header.id === 'view' ||
-                                    header.id === 'delete'
-                                  ? '!h-9 !w-10'
-                                  : '!min-w-[80px] !overflow-hidden !truncate !overflow-ellipsis !whitespace-nowrap !break-words !bg-white px-2 !text-left !text-sm !text-black',
-                            )}
+                          <TableRow
+                            key={row.id}
+                            className="box-border hover:bg-red-200"
+                            onClick={
+                              viewDetailOnClick
+                                ? () => viewDetailOnClick(linkId)
+                                : undefined
+                            }
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                          </TableHead>
+                            {row.getVisibleCells().map((cell, index) => {
+                              const cellContent = flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )
+                              return (
+                                <TableCell
+                                  key={index}
+                                  className="h-[30px] max-h-[30px] !min-w-[80px] !overflow-hidden !truncate !whitespace-nowrap !break-words px-2 py-0 text-left"
+                                >
+                                  {cellContent}
+                                </TableCell>
+                              )
+                            })}
+                          </TableRow>
                         )
-                      })}
-                    </TableRow>
-                  )
-                })}
-              </TableHeader>
-              <TableBody>
-                {totalAttributes > 0 ? (
-                  table.getRowModel().rows.map(row => {
-                    const linkId = row.original.id
-                    return (
-                      <TableRow
-                        key={row.id}
-                        className="box-border hover:bg-red-200"
-                        onClick={
-                          viewDetailOnClick
-                            ? () => viewDetailOnClick(linkId)
-                            : undefined
-                        }
-                      >
-                        {row.getVisibleCells().map((cell, index) => {
-                          const cellContent = flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )
-                          return (
-                            <TableCell
-                              key={index}
-                              className="h-[30px] max-h-[30px] !min-w-[80px] !overflow-hidden !truncate !whitespace-nowrap !break-words px-2 py-0 text-left"
-                            >
-                              {cellContent}
-                            </TableCell>
-                          )
-                        })}
+                      })
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={999} className="text-center">
+                          {showProgress && t('table:loading')}
+                          {!isLoading && (onDataText || t('error:no_data'))}
+                        </TableCell>
                       </TableRow>
-                    )
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={999} className="text-center">
-                      {showProgress && t('table:loading')}
-                      {!isLoading && (onDataText || t('error:no_data'))}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </>
-        )}
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+                    )}
+                  </TableBody>
+                </Table>
+              </>
+            )}
+            <ScrollBar orientation="horizontal" />
+          </div>
+        </ScrollArea>
+      </div>
 
       {totalAttributes >= 0 && (
         <PaginationRender

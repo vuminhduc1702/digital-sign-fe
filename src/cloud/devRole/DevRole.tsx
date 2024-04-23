@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -22,6 +22,7 @@ export default function DevRole() {
 
   const [offset, setOffset] = useState(0)
   const [projectId, setProjectId] = useState('')
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
@@ -45,6 +46,8 @@ export default function DevRole() {
       suspense: false,
     },
     offset,
+    search_str: searchQuery,
+    search_field: searchField.current,
   })
 
   useEffect(() => {
@@ -105,6 +108,17 @@ export default function DevRole() {
               <div className="flex w-full items-center justify-between gap-x-3">
                 <SearchField
                   setSearchValue={setSearchQuery}
+                  searchField={searchField}
+                  fieldOptions={[
+                    {
+                      value: 'name',
+                      label: t('dev_role:name'),
+                    },
+                    {
+                      value: 'id',
+                      label: t('dev_role:id'),
+                    },
+                  ]}
                   setIsSearchData={setIsSearchData}
                   closeSearch={true}
                 />

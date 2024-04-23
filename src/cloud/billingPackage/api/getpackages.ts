@@ -10,18 +10,21 @@ type GetPlansDTO = {
   projectId: string
   offset?: number
   limit?: number
+  name?: string
 }
 
 export const GetPlans = ({
   projectId,
   offset,
   limit,
+  name,
 }: GetPlansDTO): Promise<PlanList> => {
   return axios.get(`/api/priceplan/allplans`, {
     params: {
       project_id: projectId,
       offset,
       limit,
+      name,
     },
   })
 }
@@ -36,11 +39,12 @@ export const useGetPlans = ({
   projectId,
   offset = 0,
   limit = limitPagination,
+  name,
   config,
 }: UseTemplateOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['plans', projectId, offset, limit],
-    queryFn: () => GetPlans({ projectId, offset, limit }),
+    queryKey: ['plans', projectId, offset, limit, name],
+    queryFn: () => GetPlans({ projectId, offset, limit, name }),
     ...config,
   })
 }

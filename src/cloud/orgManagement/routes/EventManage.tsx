@@ -17,6 +17,7 @@ import { ConfirmDialog } from '@/components/ConfirmDialog'
 export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const {
@@ -36,6 +37,8 @@ export function EventManage() {
     orgId,
     projectId,
     config: { keepPreviousData: true },
+    search_field: searchField.current,
+    search_str: searchQuery,
   })
 
   const {
@@ -88,6 +91,17 @@ export function EventManage() {
           <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
               setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:org_manage.event_manage.table.name'),
+                },
+                {
+                  value: 'id',
+                  label: t('cloud:org_manage.event_manage.table.id'),
+                },
+              ]}
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />

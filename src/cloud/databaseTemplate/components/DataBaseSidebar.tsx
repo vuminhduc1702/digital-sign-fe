@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -45,7 +45,11 @@ export function DataBaseSidebar() {
 
   const { mutate, isLoading, isSuccess } = useDeleteDataBase()
 
-  const { data } = useGetDataBases({ projectId })
+  const { data } = useGetDataBases({
+    projectId,
+    search_field: 'name',
+    search_str: searchQuery,
+  })
 
   const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(
     data?.data,
@@ -71,10 +75,7 @@ export function DataBaseSidebar() {
           <p>{t('cloud:db_template.sidebar.title')}</p>
         </div>
         <CreateDataBase />
-        <SearchField
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+        <SearchField setSearchValue={setSearchQuery} />
       </div>
       <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
         {templateFlattenData?.length > 0 ? (

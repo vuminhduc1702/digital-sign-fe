@@ -31,18 +31,24 @@ type GetDashboards = {
   projectId: string
   offset?: number
   limit?: number
+  search_field?: string
+  search_str?: string
 }
 
 export const getDashboards = ({
   projectId,
   offset,
   limit,
+  search_field,
+  search_str,
 }: GetDashboards): Promise<DashboardList> => {
   return axios.get(`/api/vtdashboard`, {
     params: {
       project_id: projectId,
       offset,
       limit,
+      search_field,
+      search_str,
     },
   })
 }
@@ -57,11 +63,21 @@ export const useGetDashboards = ({
   projectId,
   offset = 0,
   limit = limitPagination,
+  search_field,
+  search_str,
   config,
 }: UseDashboardOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['dashboards', projectId, offset, limit],
-    queryFn: () => getDashboards({ projectId, offset, limit }),
+    queryKey: [
+      'dashboards',
+      projectId,
+      offset,
+      limit,
+      search_field,
+      search_str,
+    ],
+    queryFn: () =>
+      getDashboards({ projectId, offset, limit, search_field, search_str }),
     ...config,
   })
 }
