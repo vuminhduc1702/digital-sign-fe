@@ -6,7 +6,7 @@ import { type TemplateList } from '../types'
 
 type GetTemplates = {
   projectId: string
-  protocol?: 'default' | 'Lw2m2'
+  protocol?: 'default' | 'lwm2m'
   search_field?: string
   search_str?: string
 }

@@ -2,7 +2,7 @@ import { PATHS } from '@/routes/PATHS'
 import { useProjectIdStore } from '@/stores/project'
 import storage from '@/utils/storage'
 import defaultProjectImage from '@/assets/images/default-project.png'
-import { type Project } from '../routes/ProjectManage'
+import { type Project, type ProjectList } from '../routes/ProjectManage'
 import {
   Tooltip,
   TooltipContent,
@@ -35,7 +35,7 @@ import { ConfirmDialog } from '@/components/ConfirmDialog'
 export function ListProjectItem({
   listProjectData,
 }: {
-  listProjectData: Project[]
+  listProjectData: ProjectList
 }) {
   const { t } = useTranslation()
   const [name, setName] = useState('')
