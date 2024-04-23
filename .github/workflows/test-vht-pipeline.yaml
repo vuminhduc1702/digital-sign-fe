@@ -3,7 +3,7 @@ name: CICD Pineline for Innoway Demo FE - VHT - Test Cluster
 on:
   push:    
     branches:
-      - main
+      - minh-dev
     
 env:
   image: ui
