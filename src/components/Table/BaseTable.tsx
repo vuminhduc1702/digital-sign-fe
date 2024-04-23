@@ -287,7 +287,7 @@ export function BaseTable<T extends Record<string, any>>({
       </div>
       <ScrollArea
         className={cn(
-          'relative z-30 mt-2 flex h-[calc(100vh_-_310px)] grow flex-col justify-between',
+          'relative z-30 mt-2 flex h-[calc(100vh_-_370px)] grow flex-col justify-between',
           className,
         )}
       >
