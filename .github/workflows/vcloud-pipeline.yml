@@ -27,21 +27,21 @@ jobs:
       run: |
         echo "Tag: ${{env.tags}}"
         cp .env.production.example .env
-        docker build -t ${{env.image}}:${{env.tags}} .
+  #       docker build -t ${{env.image}}:${{env.tags}} .
 
-  # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
-  # in which case 'username' and 'password' can be omitted.
-    - name: Push To harbor
-      id: push-to-harbor
-      env:
-        registry: ${{ secrets.REGISTRY_HOST }}
-      run: |
-        docker tag ${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
-        docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
-    - name: Clean image after push
-      run: |
-        echo "Image pushed to ${{ steps.push-to-harbor.outputs.registry-paths }}"
-        docker rmi -f  ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+  # # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+  # # in which case 'username' and 'password' can be omitted.
+  #   - name: Push To harbor
+  #     id: push-to-harbor
+  #     env:
+  #       registry: ${{ secrets.REGISTRY_HOST }}
+  #     run: |
+  #       docker tag ${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+  #       docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+  #   - name: Clean image after push
+  #     run: |
+  #       echo "Image pushed to ${{ steps.push-to-harbor.outputs.registry-paths }}"
+  #       docker rmi -f  ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
   deploy:
     name: Deploy to kubernetes
     needs: build
@@ -55,6 +55,8 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         timeout: 500s
         script: |
-          cd ${{env.chart-folder}}
-          sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
-          helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
+          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo "Tag name from github.ref_name: ${{ github.ref_name}}"
+          #cd ${{env.chart-folder}}
+          #sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
+          #helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
