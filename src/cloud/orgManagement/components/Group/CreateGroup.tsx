@@ -46,7 +46,7 @@ export function CreateGroup() {
   }))
 
   const projectId = storage.getProject()?.id
-  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+  const { data: orgData } = useGetOrgs({ projectId })
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 

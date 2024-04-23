@@ -114,7 +114,7 @@ export function UpdateDevice({
     handleSubmit: handleSubmitHeartBeat,
   } = heartbeatForm
 
-  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+  const { data: orgData } = useGetOrgs({ projectId })
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
   const { data: orgDataById } = useOrgById({ orgId: org_id ?? '' })
 
