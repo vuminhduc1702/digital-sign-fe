@@ -2,8 +2,8 @@ name: CICD Pineline for Innoway Demo FE - Vcloud
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'vcloud_[0-9]+.[0-9]+.[0-9]+'
 
 env:
   image: ui
