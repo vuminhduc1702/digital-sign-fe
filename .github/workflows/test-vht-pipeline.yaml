@@ -1,4 +1,4 @@
-name: CICD Pineline for Innoway Demo FE - Vcloud
+name: CICD Pineline for Innoway Demo FE - VHT - Test Cluster
 
 on:
   push:    
