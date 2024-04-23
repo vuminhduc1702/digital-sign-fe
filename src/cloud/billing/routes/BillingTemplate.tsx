@@ -133,6 +133,7 @@ export function BillingTemplate() {
           >
             <div className="flex items-center gap-x-3">
               <SelectDropdown
+                className="relative mt-1 h-[37px] w-[500px] justify-start rounded-md text-left font-normal"
                 isClearable={false}
                 name="key"
                 control={control}

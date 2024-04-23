@@ -17,14 +17,14 @@ import { SearchField } from '@/components/Input'
 export function CustomerManageTemplate() {
   const { t } = useTranslation()
   const [offset, setOffset] = useState(0)
-  const [searchFilter, setSearchFilter] = useState<SearchFilter>({})
   const projectId = storage.getProject()?.id
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const { data, isPreviousData, isLoading } = useGetCustomers({
     projectId,
-    search_field: searchFilter.search_field,
-    search_str: searchFilter.search_str,
+    search_field: searchField.current,
+    search_str: searchQuery,
     config: { keepPreviousData: true, staleTime: 1000 },
   })
   const ref = useRef(null)
@@ -72,37 +72,19 @@ export function CustomerManageTemplate() {
     <>
       {/* <TitleBar title={t('sidebar:payment.plkh')} /> */}
       <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
-        <form
-          id="search-customer"
-          className="flex justify-between"
-          onSubmit={handleSubmit(values => {
-            setSearchFilter({
-              search_field: values.key,
-              search_str: values.value,
-            })
-          })}
-        >
-          <div className="flex w-full items-center justify-between gap-x-3">
-            <div className="w-96">
-              <SelectDropdown
-                isClearable={false}
-                name="key"
-                control={control}
-                options={[
-                  { label: t('schema:customer_name'), value: 'name' },
-                  { label: t('schema:customer_code'), value: 'customer_code' },
-                  { label: t('schema:customer_phone'), value: 'phone' },
-                ]}
-                // error={formState?.errors?.key}
-              />
-            </div>
-            <SearchField
-              setSearchValue={setSearchQuery}
-              setIsSearchData={setIsSearchData}
-              closeSearch={true}
-            />
-          </div>
-        </form>
+        <div className="mb-5 flex justify-between">
+          <SearchField
+            searchField={searchField}
+            setSearchValue={setSearchQuery}
+            fieldOptions={[
+              { label: t('schema:customer_name'), value: 'name' },
+              { label: t('schema:customer_code'), value: 'customer_code' },
+              { label: t('schema:customer_phone'), value: 'phone' },
+            ]}
+            setIsSearchData={setIsSearchData}
+            closeSearch={true}
+          />
+        </div>
         <CustomerTable
           data={data?.users || []}
           offset={offset}

@@ -31,7 +31,10 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
     <>
       <div className="flex">
         <div className="flex cursor-pointer justify-center p-3">
-          <LuPen className="text-lg text-gray-500" onClick={open} />
+          <LuPen
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={open}
+          />
         </div>
         {/* <DropdownMenu>
         <DropdownMenuTrigger>

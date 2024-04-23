@@ -1,22 +1,21 @@
 import clsx from 'clsx'
-import { Fragment, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { useProjectById } from '@/cloud/project/api'
 import { Button } from '@/components/Button'
-import { ComboBoxSelectOrg } from '@/layout/MainLayout/components'
 import { PATHS } from '@/routes/PATHS'
 import { useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
 import { CreateOrg } from './CreateOrg'
 import { UpdateOrg } from './UpdateOrg'
 
-import { Combobox, Transition } from '@headlessui/react'
-import { HiOutlineCheck, HiOutlineXMark } from 'react-icons/hi2'
 import listIcon from '@/assets/icons/list.svg'
-import { SearchIcon } from '@/components/SVGIcons'
+import { SearchField } from '@/components/Input'
 import TreeView from './Tree'
+import { useGetOrgs, useGetOrgsWoExpand } from '@/layout/MainLayout/api'
+import { flattenData } from '@/utils/misc'
 
 export type OrgMapType = {
   id: string
@@ -45,6 +44,7 @@ function OrgManageSidebar() {
 
   const { close, open, isOpen } = useDisclosure()
 
+  const [searchQuery, setSearchQuery] = useState('')
   const projectId = storage.getProject()?.id
   const { orgId } = useParams()
   const { data: projectByIdData } = useProjectById({
@@ -64,8 +64,34 @@ function OrgManageSidebar() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
+  const { data: orgData } = useGetOrgs({
+    projectId,
+  })
+  const { data: orgDataWoExpand } = useGetOrgsWoExpand({
+    projectId,
+    search_str: searchQuery,
+    search_field: 'name',
+  })
+  const { acc: orgFlattenData, extractedPropertyKeys } = flattenData(
+    orgData?.organizations,
+    ['id', 'name', 'level', 'description', 'parent_name', 'org_id', 'image'],
+    'sub_orgs',
+  )
   const [selected, setSelected] = useState<any>({})
-  const [query, setQuery] = useState('')
+
+  useEffect(() => {
+    const listId: string[] = []
+    orgDataWoExpand?.organizations?.forEach(item => {
+      listId.push(item.id)
+    })
+    setFilteredComboboxData?.(
+      orgFlattenData.filter(item => listId.includes(item.id)),
+    )
+  }, [orgDataWoExpand])
+
+  useEffect(() => {
+    setFilteredComboboxData?.(orgFlattenData)
+  }, [orgData])
 
   const getInt = (x: string) => Number.parseInt(x)
   const convertData = (data: OrgMapType[]) => {
@@ -158,15 +184,6 @@ function OrgManageSidebar() {
     setSelectedUpdateOrg(data)
   }
 
-  const filteredPeople =
-    query === ''
-      ? filteredComboboxData
-      : filteredComboboxData.filter(person =>
-          person.name
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(query.toLowerCase().replace(/\s+/g, '')),
-        )
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
@@ -180,80 +197,11 @@ function OrgManageSidebar() {
         </div>
 
         <CreateOrg />
-        <div className="hidden">
-          <ComboBoxSelectOrg
-            setFilteredComboboxData={setFilteredComboboxData}
-          />
-        </div>
-        <Combobox value={selected} onChange={setSelected}>
-          <div className="relative w-full">
-            <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300 sm:text-body-sm">
-              <Combobox.Input
-                className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 pl-8 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm`}
-                displayValue={(person: any) => person.name}
-                onChange={event => setQuery(event.target.value)}
-              />
-              <Combobox.Button className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-2">
-                <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-              </Combobox.Button>
-              <HiOutlineXMark
-                className="absolute right-0 top-1/2 mr-1 h-5 w-5 -translate-y-1/2 transform cursor-pointer opacity-50"
-                onClick={() => setSelected('')}
-              />
-            </div>
-            <Transition
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-              afterLeave={() => setQuery('')}
-            >
-              <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-body-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {filteredPeople.length === 0 && query !== '' ? (
-                  <div className="relative cursor-default select-none px-4 py-2 text-secondary-700">
-                    {t('error:not_found')}
-                  </div>
-                ) : (
-                  filteredPeople.map(person => (
-                    <Combobox.Option
-                      key={person.id}
-                      className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
-                          active ? 'bg-primary-300 text-white' : 'text-black'
-                        }`
-                      }
-                      value={person}
-                    >
-                      {({ selected, active }) => (
-                        <>
-                          <span
-                            className={`block truncate ${
-                              selected ? 'font-medium' : 'font-normal'
-                            }`}
-                          >
-                            {person.name}
-                          </span>
-                          {selected ? (
-                            <span
-                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                active ? 'text-white' : 'text-teal-600'
-                              }`}
-                            >
-                              <HiOutlineCheck
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          ) : null}
-                        </>
-                      )}
-                    </Combobox.Option>
-                  ))
-                )}
-              </Combobox.Options>
-            </Transition>
-          </div>
-        </Combobox>
+        <SearchField
+          className="flex md:hidden 2xl:flex"
+          setSearchValue={setSearchQuery}
+          closeSearch={true}
+        />
       </div>
       <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
         <div className="space-y-3">

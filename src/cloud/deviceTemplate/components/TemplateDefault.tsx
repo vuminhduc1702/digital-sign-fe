@@ -10,7 +10,6 @@ import { PATHS } from '@/routes/PATHS'
 import CreateTemplate from './CreateTemplate'
 import { useDeleteTemplate } from '../api'
 import { UpdateTemplate } from './UpdateTemplate'
-import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplate'
 import storage from '@/utils/storage'
 
 import { type Template } from '../types'
@@ -27,6 +26,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/Dropdowns'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { useGetTemplates } from '../api'
 
 export function TemplateDefault() {
   const { t } = useTranslation()
@@ -44,28 +45,37 @@ export function TemplateDefault() {
   const { templateId } = useParams()
 
   const { id: projectId } = storage.getProject()
-
+  const [searchQuery, setSearchQuery] = useState('')
   const { mutate, isLoading, isSuccess } = useDeleteTemplate()
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const [selectedUpdateTemplate, setSelectedUpdateTemplate] =
     useState<Template>()
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Template[]>(
-    [],
-  )
+  // const [data?.templates, setFilteredComboboxData] = useState<Template[]>(
+  //   [],
+  // )
+  const { data } = useGetTemplates({
+    projectId,
+    protocol: 'default',
+    config: {
+      suspense: false,
+    },
+    search_str: searchQuery,
+    search_field: 'name',
+  })
   const handleCopyId = useCopyId()
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowNoTemplateMessage(true)
     }, 500)
-    if (filteredComboboxData?.[0]?.id) {
+    if (data?.templates?.[0]?.id) {
       navigate(
-        `${PATHS.TEMPLATE_DEFAULT}/${projectId}/${filteredComboboxData[0].id}`,
+        `${PATHS.TEMPLATE_DEFAULT}/${projectId}/${data?.templates[0].id}`,
       )
     } else {
       navigate(`${PATHS.TEMPLATE_DEFAULT}/${projectId}`)
     }
     return () => clearTimeout(timer)
-  }, [filteredComboboxData])
+  }, [data?.templates])
 
   useEffect(() => {
     if (isSuccess) {
@@ -77,14 +87,12 @@ export function TemplateDefault() {
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
         <CreateTemplate />
-        <ComboBoxSelectTemplate
-          setFilteredComboboxData={setFilteredComboboxData}
-        />
+        <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
-        {filteredComboboxData !== null && filteredComboboxData?.length > 0 ? (
+        {data?.templates !== null && data?.templates?.length > 0 ? (
           <div className="space-y-3">
-            {filteredComboboxData?.map((template: Template) => (
+            {data?.templates?.map((template: Template) => (
               <div className="flex" key={template.id}>
                 <Button
                   className={clsx('gap-y-3 rounded-l-md border-none px-4 py-0')}

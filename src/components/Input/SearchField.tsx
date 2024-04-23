@@ -22,6 +22,7 @@ type SearchFieldProps = {
   placeholder?: string
   title?: string
   closeSearch?: boolean
+  className?: string
 }
 
 export function SearchField({
@@ -32,6 +33,7 @@ export function SearchField({
   placeholder,
   title,
   closeSearch,
+  className,
 }: SearchFieldProps) {
   const { t } = useTranslation()
   const form = useForm({
@@ -44,6 +46,7 @@ export function SearchField({
   return (
     <Form {...form}>
       <form
+        className={cn(className)}
         onSubmit={e => {
           setSearchValue && setSearchValue(form.watch('searchByName'))
           setIsSearchData && setIsSearchData(true)
@@ -53,7 +56,7 @@ export function SearchField({
           e.preventDefault()
         }}
       >
-        <div className="flex h-full flex-row items-center gap-[14px] 2xl:items-center 2xl:gap-[28px]">
+        <div className="flex h-full flex-row items-center gap-[14px] 2xl:items-center">
           <div className="flex flex-col items-center gap-[14px] 2xl:flex-row">
             {title && <div className="hidden text-sm 2xl:flex">{title}</div>}
             {searchField && (
@@ -72,7 +75,6 @@ export function SearchField({
                           <SelectTrigger
                             className={cn(
                               'h-[38px] min-w-[250px] px-[12px] py-[8px] text-sm',
-                              closeSearch ? 'pr-[36px]' : 'pr-[12px]',
                             )}
                           >
                             <SelectValue

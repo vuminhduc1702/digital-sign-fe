@@ -4,7 +4,7 @@ import { axios } from '@/lib/axios'
 import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type OrgList } from '../types'
 
-type GetOrgs = {
+type GetOrgsWoExpand = {
   projectId: string
   orgId?: string
   get_attributes?: boolean
@@ -13,15 +13,15 @@ type GetOrgs = {
   search_field?: string
 }
 
-export const getOrgs = ({
+export const getOrgsWoExpand = ({
   projectId,
   orgId,
   get_attributes,
   level,
   search_str,
   search_field,
-}: GetOrgs): Promise<OrgList> => {
-  return axios.get('/api/organizations/expand', {
+}: GetOrgsWoExpand): Promise<OrgList> => {
+  return axios.get('/api/organizations', {
     params: {
       project_id: projectId,
       org_id: orgId,
@@ -33,13 +33,13 @@ export const getOrgs = ({
   })
 }
 
-type QueryFnType = typeof getOrgs
+type QueryFnType = typeof getOrgsWoExpand
 
 type UseGetOrgsOptions = {
   config?: QueryConfig<QueryFnType>
-} & GetOrgs
+} & GetOrgsWoExpand
 
-export const useGetOrgs = ({
+export const useGetOrgsWoExpand = ({
   projectId,
   orgId,
   get_attributes = true,
@@ -59,7 +59,7 @@ export const useGetOrgs = ({
       search_field,
     ],
     queryFn: () =>
-      getOrgs({
+      getOrgsWoExpand({
         projectId,
         orgId,
         get_attributes,
