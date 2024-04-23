@@ -239,11 +239,11 @@ export function CreateOrg() {
                   reader.readAsDataURL(file)
                   reader.onload = e => {
                     if (
-                      avatarRef.current != null &&
+                      avatarRef1.current != null &&
                       e.target != null &&
                       reader.readyState === 2
                     ) {
-                      avatarRef.current.src = e.target.result as string
+                      avatarRef1.current.src = e.target.result as string
                     }
                   }
                 }}
@@ -254,13 +254,13 @@ export function CreateOrg() {
               src={defaultOrgImage}
               alt="Project"
               className="mb-3 h-36 w-32"
-              ref={avatarRef}
+              ref={avatarRef1}
             />
             <Button
               className="mb-3 border-none"
               variant="secondaryLight"
               size="square"
-              onClick={handleResetDefaultImage}
+              onClick={handleResetDefaultImage1}
             >
               {t('cloud:project_manager.add_project.upload_ava_default')}
             </Button>

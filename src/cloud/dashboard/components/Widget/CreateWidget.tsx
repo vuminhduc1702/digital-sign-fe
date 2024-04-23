@@ -20,7 +20,6 @@ import {
   type SelectOption,
 } from '@/components/Form'
 import TitleBar from '@/components/Head/TitleBar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { Spinner } from '@/components/Spinner'
 import i18n from '@/i18n'
 import { useGetOrgs } from '@/layout/MainLayout/api'
@@ -47,7 +46,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
-import { cn, flattenOrgs } from '@/utils/misc'
 
 export const WS_REALTIME_PERIOD = [
   {

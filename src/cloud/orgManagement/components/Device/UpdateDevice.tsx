@@ -182,7 +182,6 @@ export function UpdateDevice({
       )}
     >
       <div className="flex-y">
-<<<<<<< HEAD
         <Form {...form}>
           <form
             id="update-device"
@@ -256,39 +255,6 @@ export function UpdateDevice({
                   </FormItem>
                 )}
               />
-=======
-        <form
-          id="update-device"
-          className="w-full space-y-6"
-          onSubmit={handleSubmit(values => {
-            mutate({
-              data: {
-                name: values.name,
-                key: values.key,
-                org_id: values.org_id,
-                group_id: values.group_id,
-                template_id: values.template_id,
-              },
-              deviceId,
-            })
-          })}
-        >
-          <>
-            <InputField
-              label={t('cloud:org_manage.device_manage.add_device.name')}
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <SelectSuperordinateOrgTree
-              name={'org_id'}
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
-              error={formState?.errors?.org_id}
-              control={control}
-              options={orgData?.organizations}
-              noSelectionOption={true}
-              customOnChange={() => selectDropdownGroupId.current?.clearValue()}
-            />
->>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
               <SelectDropdown
                 refSelect={selectDropdownGroupId}

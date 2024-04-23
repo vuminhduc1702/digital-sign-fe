@@ -23,7 +23,6 @@ import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import { type SelectInstance } from 'react-select'
 import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
-<<<<<<< HEAD
 import {
   Form,
   FormControl,
@@ -34,8 +33,6 @@ import {
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { cn, flattenOrgs } from '@/utils/misc'
-=======
->>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -186,33 +183,15 @@ export function CreateDevice() {
               )}
             />
 
-<<<<<<< HEAD
-            <SelectDropdown
-              refSelect={selectDropdownGroupId}
-              label={t('cloud:org_manage.device_manage.add_device.group')}
-              name="group_id"
+            <SelectSuperordinateOrgTree
+              name={'org_id'}
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              error={formState?.errors?.org_id}
               control={control}
-              options={groupSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:group') ||
-                option.label === t('table:no_group')
-              }
-              noOptionsMessage={() => t('table:no_group')}
-              loadingMessage={() => t('loading:group')}
-              isLoading={groupIsLoading}
-              error={formState?.errors?.group_id}
+              options={orgData?.organizations}
+              noSelectionOption={true}
+              customOnChange={() => selectDropdownGroupId.current?.clearValue()}
             />
-=======
-          <SelectSuperordinateOrgTree
-            name={'org_id'}
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
-            error={formState?.errors?.org_id}
-            control={control}
-            options={orgData?.organizations}
-            noSelectionOption={true}
-            customOnChange={() => selectDropdownGroupId.current?.clearValue()}
-          />
->>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
             <SelectDropdown
               error={formState?.errors?.template_id}

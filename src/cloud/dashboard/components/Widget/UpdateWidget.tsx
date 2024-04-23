@@ -31,7 +31,6 @@ import { useDefaultCombobox } from '@/utils/hooks'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import storage from '@/utils/storage'
 import { useCreateAttrChart } from '../../api'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { EditBtnIcon, PlusIcon } from '@/components/SVGIcons'
@@ -50,7 +49,6 @@ import { nameSchema } from '@/utils/schemaValidation'
 import i18n from '@/i18n'
 import { widgetTypeSchema, attrWidgetSchema } from './CreateWidget'
 import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
-<<<<<<< HEAD
 import {
   Form,
   FormControl,
@@ -60,9 +58,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
-import { cn, flattenOrgs } from '@/utils/misc'
-=======
->>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
 export function UpdateWidget({
   widgetInfo,
@@ -229,10 +224,7 @@ export function UpdateWidget({
     projectId,
     level: 1,
   })
-<<<<<<< HEAD
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
-=======
->>>>>>> 6839d4d8 (Fix bugs and update org tree)
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
@@ -561,136 +553,6 @@ export function UpdateWidget({
                               ? values.widgetSetting?.time_period
                               : undefined,
                         },
-<<<<<<< HEAD
-=======
-                        id: widgetId,
-                      },
-                    ],
-                  }
-                : {
-                    entityDataCmds: [
-                      {
-                        historyCmd,
-                        id: widgetId,
-                      },
-                    ],
-                  }
-
-              const widget: z.infer<typeof widgetSchema> = {
-                title: values.title,
-                description: widgetInfoMemo?.description || 'LINE',
-                type: widgetInfoMemo?.type,
-                datasource: {
-                  init_message: JSON.stringify(initMessage),
-                  lastest_message:
-                    widgetInfoMemo?.type === 'LASTEST'
-                      ? JSON.stringify(lastestMessage)
-                      : '',
-                  realtime_message:
-                    values.widgetSetting?.dataType === 'REALTIME'
-                      ? JSON.stringify(realtimeMessage)
-                      : '',
-                  history_message:
-                    values.widgetSetting?.dataType === 'HISTORY'
-                      ? JSON.stringify(historyMessage)
-                      : '',
-                  org_id: JSON.stringify(values.org_id),
-                },
-                attribute_config: values.attributeConfig.map(item => ({
-                  attribute_key: item.attribute_key,
-                  color: item.color,
-                  max: item.max,
-                  min: item.min || 0,
-                  label: item.label,
-                  unit: item.unit,
-                })),
-                config:
-                  widgetInfoMemo?.type === 'TIMESERIES'
-                    ? {
-                        aggregation: values.widgetSetting?.agg,
-                        timewindow: {
-                          interval:
-                            values.widgetSetting?.agg !== 'NONE'
-                              ? values.widgetSetting?.interval
-                              : undefined,
-                        },
-                        chartsetting: {
-                          start_date: new Date(
-                            values.widgetSetting?.dataType === 'HISTORY'
-                              ? values.widgetSetting?.startDate?.toISOString()
-                              : 0,
-                          ).getTime(),
-                          end_date: new Date(
-                            values.widgetSetting?.dataType === 'HISTORY'
-                              ? values.widgetSetting?.endDate?.toISOString()
-                              : 0,
-                          ).getTime(),
-                          data_type: values.widgetSetting?.dataType,
-                          data_point:
-                            values.widgetSetting?.agg === 'NONE'
-                              ? values.widgetSetting?.data_point
-                              : undefined,
-                          time_period:
-                            values.widgetSetting?.dataType === 'REALTIME'
-                              ? values.widgetSetting?.time_period
-                              : undefined,
-                        },
-                      }
-                    : null,
-              }
-
-              setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
-
-            // close the dialog
-            setInterval(() => {
-              setIsDone(true)
-            }, 100)
-            setIsDone(false)
-          })}
-        >
-          <>
-            {orgIsLoading ? (
-              <div className="flex grow items-center justify-center">
-                <Spinner showSpinner size="xl" />
-              </div>
-            ) : (
-              <>
-                <TitleBar
-                  title={t('cloud:dashboard.config_chart.show')}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
-                />
-                <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
-                  <InputField
-                    label={t('cloud:dashboard.config_chart.name')}
-                    error={formState.errors['title']}
-                    registration={register('title')}
-                  />
-                  <SelectSuperordinateOrgTree
-                    name={'org_id'}
-                    label={t(
-                      'cloud:org_manage.device_manage.add_device.parent',
-                    )}
-                    error={formState?.errors?.org_id}
-                    control={control}
-                    options={orgData?.organizations}
-                    noSelectionOption={true}
-                    customOnChange={() => {
-                      selectDropdownDeviceRef.current?.clearValue()
-                      selectDropdownAttributeConfigRef.current?.clearValue()
-                    }}
-                  />
-
-                  <div className="space-y-1">
-                    <SelectDropdown
-                      refSelect={selectDropdownDeviceRef}
-                      label={t('cloud:dashboard.config_chart.device')}
-                      name="device"
-                      control={control}
-                      options={deviceSelectData}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:device') ||
-                        option.label === t('table:no_device')
->>>>>>> 6839d4d8 (Fix bugs and update org tree)
                       }
                     : null,
               }
@@ -1192,7 +1054,6 @@ export function UpdateWidget({
                           />
                         ) : null}
 
-<<<<<<< HEAD
                         {watch('widgetSetting.dataType') === 'HISTORY' ? (
                           <div className="space-y-3">
                             <div className="space-y-1">
@@ -1243,37 +1104,6 @@ export function UpdateWidget({
                                         <PopoverContent
                                           className="w-auto p-0"
                                           align="start"
-=======
-                      {watch('widgetSetting.dataType') === 'HISTORY' ? (
-                        <div className="space-y-3">
-                          <div className="space-y-1">
-                            <FieldWrapper
-                              label={t(
-                                'cloud:dashboard.config_chart.startDate',
-                              )}
-                              error={
-                                // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
-                                formState?.errors?.widgetSetting?.startDate
-                              }
-                            >
-                              <Controller
-                                control={control}
-                                name="widgetSetting.startDate"
-                                render={({
-                                  field: { onChange, value, ...field },
-                                }) => {
-                                  return (
-                                    <Popover>
-                                      <PopoverTrigger asChild>
-                                        <Button
-                                          id="date"
-                                          variant="trans"
-                                          size="square"
-                                          className={cn(
-                                            'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                                            !value && 'text-secondary-700',
-                                          )}
->>>>>>> 6839d4d8 (Fix bugs and update org tree)
                                         >
                                           <Calendar
                                             {...field}
