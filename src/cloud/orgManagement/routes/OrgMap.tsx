@@ -144,7 +144,7 @@ export function OrgMap() {
     children: orgData?.organizations.map(convertOrgToTree),
   }
   return (
-    <div className="grow items-center justify-center">
+    <div className="h-full grow items-center justify-center">
       <button
         className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-700"
         onClick={handleButtonClick}

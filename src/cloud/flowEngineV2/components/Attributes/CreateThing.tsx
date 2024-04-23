@@ -76,8 +76,12 @@ export function CreateThing({
   }))
 
   useEffect(() => {
+    if (isSuccessCreateThing) {
+      setValue('name', '')
+      setValue('description', '')
+    }
     setValue('type', thingType)
-  }, [])
+  }, [isSuccessCreateThing])
 
   return (
     <FormDialog
