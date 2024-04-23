@@ -18,7 +18,6 @@ import {
 import TitleBar from '@/components/Head/TitleBar'
 import i18n from '@/i18n'
 import { useGetOrgs } from '@/layout/MainLayout/api'
-import { cn } from '@/utils/misc'
 import { nameSchema } from '@/utils/schemaValidation'
 import storage from '@/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
@@ -34,7 +33,13 @@ import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
 import { type ActionType } from '../../types'
-import { ComplexTree } from '@/components/ComplexTree'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
+import { cn, flattenOrgs } from '@/utils/misc'
 import {
   Form,
   FormControl,
@@ -51,6 +56,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+
 export const logicalOperatorOption = [
   {
     label: i18n.t(
@@ -166,6 +172,7 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
+    device_name: z.string().optional(),
     attribute_name: z.string({
       required_error: i18n.t(
         'cloud:org_manage.org_manage.add_attr.choose_attr',
@@ -363,7 +370,10 @@ export function CreateEvent() {
   // console.log('formState.errors', formState.errors)
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
-  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+
+  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
+
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id')?.toString() || orgId,
     projectId,
@@ -579,17 +589,45 @@ export function CreateEvent() {
                 <FormField
                   control={form.control}
                   name="org_id"
-                  render={({ field }) => (
+                  render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <FormLabel>
                         {t('cloud:org_manage.device_manage.add_device.parent')}
                       </FormLabel>
                       <div>
-                        <ComplexTree
-                          name="org_id"
-                          control={control}
-                          options={orgData?.organizations}
-                        />
+                        <FormControl>
+                          <div>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  id="org_id"
+                                  className={cn(
+                                    'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                    {
+                                      'text-gray-500': !value && value !== '',
+                                    },
+                                  )}
+                                >
+                                  {value
+                                    ? orgDataFlatten.find(
+                                        item => item.id === value,
+                                      )?.name
+                                    : value === ''
+                                      ? t('tree:no_selection_org')
+                                      : t('placeholder:select_org')}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent>
+                                <SelectSuperordinateOrgTree
+                                  {...field}
+                                  onChangeValue={onChange}
+                                  value={value}
+                                  noSelectionOption={true}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                        </FormControl>
                         <FormMessage />
                       </div>
                     </FormItem>
