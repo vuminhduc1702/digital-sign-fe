@@ -1,4 +1,4 @@
-name: CICD Pineline for Innoway Demo FE - Vcloud
+name: CICD Pipeline for Innoway Demo FE - Vcloud
 
 on:
   push:
@@ -30,17 +30,17 @@ jobs:
 
       # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
       # in which case 'username' and 'password' can be omitted.
-      - name: Push To harbor
-        id: push-to-harbor
-        env:
-          registry: ${{ secrets.REGISTRY_HOST }}
-        run: |
-          docker tag ${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
-          docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
-      - name: Clean image after push
-        run: |
-          echo "Image pushed to ${{ steps.push-to-harbor.outputs.registry-paths }}"
-          docker rmi -f  ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+    - name: Push To harbor
+      id: push-to-harbor
+      env:
+        registry: ${{ secrets.REGISTRY_HOST }}
+      run: |
+        docker tag ${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+        docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+    - name: Clean image after push
+      run: |
+        echo "Image pushed to ${{ steps.push-to-harbor.outputs.registry-paths }}"
+        docker rmi -f  ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
   deploy:
     name: Deploy to kubernetes
     needs: build
