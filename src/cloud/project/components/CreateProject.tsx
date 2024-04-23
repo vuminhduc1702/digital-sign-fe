@@ -48,7 +48,7 @@ export function CreateProject() {
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
-  } = useResetDefaultImage(defaultProjectImage)
+  } = useResetDefaultImage(defaultProjectImage, 'default-project.png')
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
