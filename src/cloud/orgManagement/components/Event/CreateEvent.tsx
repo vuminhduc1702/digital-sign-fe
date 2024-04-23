@@ -51,6 +51,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 export const logicalOperatorOption = [
   {
     label: i18n.t(
@@ -171,8 +172,16 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.org_manage.add_attr.choose_attr',
       ),
     }),
-    condition_type: z.enum(['normal', 'delay'] as const),
-    operator: z.enum(['<', '>', '!='] as const),
+    condition_type: z.enum(['normal', 'delay'] as const, {
+      required_error: i18n.t(
+        'cloud:org_manage.device_manage.add_device.select_require_err',
+      ),
+    }),
+    operator: z.enum(['<', '>', '!='] as const, {
+      required_error: i18n.t(
+        'cloud:org_manage.device_manage.add_device.select_require_err',
+      ),
+    }),
     threshold: z.string().min(1, {
       message: i18n
         .t('placeholder:input_text_value')
@@ -181,7 +190,11 @@ export const eventConditionSchema = z.array(
           i18n.t('cloud:org_manage.event_manage.add_event.condition.threshold'),
         ),
     }),
-    logical_operator: z.enum(['and', 'or'] as const),
+    logical_operator: z.enum(['and', 'or'] as const, {
+      required_error: i18n.t(
+        'cloud:org_manage.device_manage.add_device.select_require_err',
+      ),
+    }),
   }),
 )
 const eventIntervalSchema = z.object({
@@ -605,7 +618,7 @@ export function CreateEvent() {
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <SelectDropdown
+                          <NewSelectDropdown
                             classnamefieldwrapper="h-9"
                             options={groupSelectOptions}
                             isOptionDisabled={option =>
@@ -844,7 +857,7 @@ export function CreateEvent() {
                               </FormLabel>
                               <div>
                                 <FormControl>
-                                  <SelectDropdown
+                                  <NewSelectDropdown
                                     classnamefieldwrapper="h-9"
                                     options={deviceSelectData}
                                     customOnChange={value =>
@@ -885,7 +898,7 @@ export function CreateEvent() {
                               </FormLabel>
                               <div>
                                 <FormControl>
-                                  <SelectDropdown
+                                  <NewSelectDropdown
                                     classnamefieldwrapper="h-9"
                                     options={attrSelectData}
                                     customOnChange={value =>
@@ -1157,7 +1170,7 @@ export function CreateEvent() {
                             </FormLabel>
                             <FormControl>
                               <div>
-                                <SelectDropdown
+                                <NewSelectDropdown
                                   options={thingSelectData}
                                   customOnChange={value =>
                                     setValue('cmd.thing_id', value)
@@ -1221,7 +1234,7 @@ export function CreateEvent() {
                             </FormLabel>
                             <FormControl>
                               <div>
-                                <SelectDropdown
+                                <NewSelectDropdown
                                   refSelect={selectDropdownServiceRef}
                                   options={serviceSelectData}
                                   customOnChange={value => {
