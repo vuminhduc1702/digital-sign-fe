@@ -7,7 +7,7 @@ on:
 
 env:
   image: ui
-  tags: ${{ github.sha }}
+  tags: ${GITHUB_REF#refs/tags/}
   chart-folder: /home/vht/ui
   chart-name: ui
   namespace: ui
@@ -25,6 +25,7 @@ jobs:
     - name: Build Image
       id: build-image
       run: |
+        echo "Tag: ${{env.tags}}"
         docker build -t ${{env.image}}:${{env.tags}} .
 
   # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
