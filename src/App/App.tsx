@@ -8,19 +8,20 @@ import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 
-import '~/i18n'
-import storage from '~/utils/storage'
-import { lazyImport } from '~/utils/lazyImport'
-import { queryClient } from '~/lib/react-query'
-import { Spinner } from '~/components/Spinner'
-import { AuthLoader, logoutFn } from '~/lib/auth'
-import { AppRoutes } from '~/routes'
-import { Toaster } from '~/components/Toaster'
+import '@/i18n'
+import storage from '@/utils/storage'
+import { lazyImport } from '@/utils/lazyImport'
+import { queryClient } from '@/lib/react-query'
+import { Spinner } from '@/components/Spinner'
+import { AuthLoader, logoutFn } from '@/lib/auth'
+import { AppRoutes } from '@/routes'
+import { Toaster } from '@/components/Toaster'
 
-import '~/style/main.css'
+import '@/style/main.css'
+import { SkeletonLoading } from '@/components/Skeleton'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 
@@ -101,7 +102,7 @@ function App() {
     <Suspense
       fallback={
         <div className="flex h-screen w-screen items-center justify-center">
-          <Spinner size="xl" />
+          <SkeletonLoading type="full" />
         </div>
       }
     >
@@ -118,13 +119,11 @@ function App() {
             <AuthLoader
               renderLoading={() => (
                 <div className="flex h-screen w-screen items-center justify-center">
-                  <Spinner size="xl" />
+                  <SkeletonLoading type="full" />
                 </div>
               )}
             >
-              <Router>
-                <AppRoutes />
-              </Router>
+              <AppRoutes />
             </AuthLoader>
             {import.meta.env.PROD && (
               <ReactQueryDevtools initialIsOpen={false} />

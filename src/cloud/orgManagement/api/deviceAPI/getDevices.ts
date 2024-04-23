@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type DeviceList, type Device } from '../../types'
 
 type GetDevices = {
@@ -13,6 +13,8 @@ type GetDevices = {
   get_attributes?: boolean
   offset?: number
   limit?: number
+  search_str?: string
+  search_field?: string
 }
 
 export const getDevices = ({
@@ -21,6 +23,8 @@ export const getDevices = ({
   get_attributes,
   offset,
   limit,
+  search_str,
+  search_field,
 }: GetDevices): Promise<DeviceList> => {
   return axios.get(`/api/devices`, {
     params: {
@@ -29,6 +33,8 @@ export const getDevices = ({
       offset,
       limit,
       get_attributes,
+      search_str,
+      search_field,
     },
   })
 }
@@ -46,6 +52,8 @@ export const useGetDevices = ({
   get_attributes = false,
   offset = 0,
   limit = limitPagination,
+  search_str,
+  search_field,
   config,
 }: UseDeviceOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
@@ -57,6 +65,8 @@ export const useGetDevices = ({
       offset,
       limit,
       get_attributes,
+      search_str,
+      search_field,
     ],
     queryFn: () => {
       const res = {
@@ -83,7 +93,15 @@ export const useGetDevices = ({
         return res
       }
 
-      return getDevices({ orgId, projectId, offset, limit, get_attributes })
+      return getDevices({
+        orgId,
+        projectId,
+        offset,
+        limit,
+        get_attributes,
+        search_str,
+        search_field,
+      })
     },
     ...config,
   })

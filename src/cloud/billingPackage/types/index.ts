@@ -1,4 +1,4 @@
-import { type BaseAPIRes, type BasePagination } from '~/types'
+import { type BaseAPIRes, type BasePagination } from '@/types'
 
 export type Plan = {
   id: string
@@ -43,4 +43,3 @@ export type PlanFilter = {
   name: string
   description: string
 }
-

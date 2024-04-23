@@ -8,9 +8,9 @@ import {
   booleanSelectOption,
   numberInput,
   valueTypeList,
-} from '~/cloud/orgManagement/components/Attributes'
-import { Button } from '~/components/Button'
-import { Checkbox } from '~/components/Checkbox'
+} from '@/cloud/orgManagement/components/Attributes'
+import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/Checkbox'
 import {
   FieldWrapper,
   FormDrawer,
@@ -18,8 +18,8 @@ import {
   SelectDropdown,
   SelectField,
   type SelectOption,
-} from '~/components/Form'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import storage from '@/utils/storage'
 import {
   useCreateTemplate,
   type CreateTemplateDTO,
@@ -27,15 +27,15 @@ import {
 } from '../api'
 import { useGetRulechains } from '../api/getRulechains'
 
-import { attrSchema, nameSchema } from '~/utils/schemaValidation'
+import { attrSchema, nameSchema } from '@/utils/schemaValidation'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { CreateService } from '~/cloud/customProtocol/components/CreateService'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { CreateService } from '@/cloud/customProtocol/components/CreateService'
+import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export const templateAttrSchema = z.object({
   name: nameSchema,

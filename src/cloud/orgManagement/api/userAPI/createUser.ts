@@ -2,10 +2,10 @@ import { type z } from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 import { toast } from 'sonner'
 
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { type userSchema } from '../../components/User'
 
 type CreateUserRes = {

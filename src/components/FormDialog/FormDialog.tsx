@@ -6,13 +6,13 @@ import {
   type ReactNode,
 } from 'react'
 
-import { useDisclosure } from '~/utils/hooks'
+import { useDisclosure } from '@/utils/hooks'
 import { Dialog, DialogTitle } from '../Dialog'
 import { Button } from '../Button'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import { HiOutlineXMark } from 'react-icons/hi2'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 const formDialogSizes = {
   sm: 'max-w-[32rem]',

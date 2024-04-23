@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type Project } from '../routes/ProjectManage'
 
 export const getProjectById = ({

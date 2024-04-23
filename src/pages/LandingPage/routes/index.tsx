@@ -3,8 +3,8 @@ import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { useLogout, useUser } from '~/lib/auth'
-import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
+import { useLogout, useUser } from '@/lib/auth'
+import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
 import { SectionIntro } from '../components/section-introduction'
 import { SectionSolution } from '../components/section-solution'
 import { SectionProduct } from '../components/section-product'
@@ -14,30 +14,30 @@ import { SectionClient } from '../components/section-client'
 import { QandA } from '../components/section-Q&A'
 import { SectionFooter } from '../components/footer'
 import { SectionPackageData } from '../components/section-package-data'
-import { PATHS } from '~/routes/PATHS'
-import { Button } from '~/components/Button'
-import { API_URL } from '~/config'
-import { cn, scrollToIntro } from '~/utils/misc'
-import { ContentLayout } from '~/layout/ContentLayout'
-import { Link } from '~/components/Link'
-import { Spinner } from '~/components/Spinner'
+import { PATHS } from '@/routes/PATHS'
+import { Button } from '@/components/Button'
+import { API_URL } from '@/config'
+import { cn, scrollToIntro } from '@/utils/misc'
+import { ContentLayout } from '@/layout/ContentLayout'
+import { Link } from '@/components/Link'
+import { Spinner } from '@/components/Spinner'
 import MobileLP from './MobileLP'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
-import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
-import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
-import defaultUserIcon from '~/assets/icons/default-user.svg'
+import bannerLandingPage from '@/assets/images/landingpage/banner-landingpage.png'
+import { GroupSlideTop, SidebarDropDownIcon } from '@/components/SVGIcons'
+import defaultUserIcon from '@/assets/icons/default-user.svg'
 import { HiOutlineBars3 } from 'react-icons/hi2'
-import LogoViettel from '~/assets/icons/logo_viettel.svg'
+import LogoViettel from '@/assets/icons/logo_viettel.svg'
 import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenu,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
-import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
-import English from '~/assets/images/landingpage/uk-flag.png'
+import VietNam from '@/assets/images/landingpage/vietnam-flag.png'
+import English from '@/assets/images/landingpage/uk-flag.png'
 import { LuLanguages } from 'react-icons/lu'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
@@ -377,7 +377,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               </div>
             </div>
 
-            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[24px] xl:pt-[57px]">
+            <div className="mt-4 flex h-8 max-w-full items-center justify-center xs2:pt-[24px] xl:pt-[57px]">
               <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2 ">
                 <a
                   href="http://www.vietteliot2023.com"
@@ -393,7 +393,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                 </a>
               </div>
             </div>
-            <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
+            <div className="mt-10 flex max-w-full items-center justify-center text-white">
               <h2 className=" text-center font-bold leading-[54px] xs2:text-[35px] xs:px-[8px]  lg:px-[170px] xl:text-7xl">
                 {t('landingpage:service_transmit_data')}
               </h2>

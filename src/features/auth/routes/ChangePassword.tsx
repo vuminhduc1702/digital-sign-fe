@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { ChangePaswordForm } from '../components/ChangePasswordForm'
-import { logoutFn } from '~/lib/auth'
+import { logoutFn } from '@/lib/auth'
 import { toast } from 'sonner'
-import narrowLeft from '~/assets/icons/narrow-left.svg'
-import frameAuth from '~/assets/images/frame-auth-layout.svg'
-import { ContentLayout } from '~/layout/ContentLayout'
+import narrowLeft from '@/assets/icons/narrow-left.svg'
+import frameAuth from '@/assets/images/frame-auth-layout.svg'
+import { ContentLayout } from '@/layout/ContentLayout'
 
 export const ChangePassword = () => {
   const { t } = useTranslation()
@@ -29,8 +29,8 @@ export const ChangePassword = () => {
         </div>
         <div className="mt-28 flex sm:px-14 lg:px-60">
           <div className="flex w-2/3 shrink flex-col items-center justify-center rounded-s-lg bg-white">
-            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pb-5 lg:pt-10"></div>
-            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pt-5">
+            <div className="flex justify-center pt-16 sm:py-5 lg:pb-5 lg:pt-10"></div>
+            <div className="flex justify-center pt-16 sm:py-5 lg:pt-5">
               <img src={frameAuth} alt="" />
             </div>
           </div>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { useRoleById } from '../api/getRoleById'
-import { BaseTable } from '~/components/Table'
+import { BaseTable } from '@/components/Table'
 
 import {
   type PolicyResources,

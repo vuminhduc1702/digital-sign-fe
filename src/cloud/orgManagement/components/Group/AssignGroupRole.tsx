@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useSpinDelay } from 'spin-delay'
 import * as z from 'zod'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { SelectField } from '~/components/Form'
-import { Spinner } from '~/components/Spinner'
-import i18n from '~/i18n'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { Button } from '@/components/Button'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import { SelectField } from '@/components/Form'
+import { Spinner } from '@/components/Spinner'
+import i18n from '@/i18n'
 import { useGetUsers } from '../../api/userAPI'
 import {
   useAssignRoupRole,
@@ -66,7 +66,6 @@ const AssignGroupRole = ({
   >({
     resolver: assignGroupRoleSchema && zodResolver(assignGroupRoleSchema),
   })
-  console.log('formState.errors', formState.errors)
 
   const showSpinner = useSpinDelay(isLoading, {
     delay: 150,
@@ -115,8 +114,8 @@ const AssignGroupRole = ({
                     label: item.name
                       ? item.name
                       : item.email
-                      ? item.email
-                      : item.phone,
+                        ? item.email
+                        : item.phone,
                     value: item.role_id,
                   }
                 })}

@@ -4,25 +4,25 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { useGetTemplates } from '~/cloud/deviceTemplate/api'
-import { Button } from '~/components/Button'
+import { useGetTemplates } from '@/cloud/deviceTemplate/api'
+import { Button } from '@/components/Button'
 import {
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import { FormDialog } from '~/components/FormDialog'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { FormDialog } from '@/components/FormDialog'
+import storage from '@/utils/storage'
 import {
   useCreateFireWare,
   type CreateFirmWareDTO,
 } from '../../api/firmwareAPI/createFirmware'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
-import { nameSchema, versionSchema } from '~/utils/schemaValidation'
+import { nameSchema, versionSchema } from '@/utils/schemaValidation'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export const entityFirmWareSchema = z.object({
   name: nameSchema,
@@ -109,12 +109,9 @@ export function CreateFirmWare() {
         </form>
       }
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:firmware.add_firmware.button')}
+        </Button>
       }
       confirmButton={
         <Button

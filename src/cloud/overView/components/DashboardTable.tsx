@@ -2,14 +2,14 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '~/components/Table'
-import { Link } from '~/components/Link'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
-import { cn, getVNDateFormat } from '~/utils/misc'
+import { BaseTable } from '@/components/Table'
+import { Link } from '@/components/Link'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
+import { cn, getVNDateFormat } from '@/utils/misc'
 
-import { type BaseTablePagination } from '~/types'
-import { type DashboardRes } from '~/cloud/dashboard/api'
+import { type BaseTablePagination } from '@/types'
+import { type DashboardRes } from '@/cloud/dashboard/api'
 
 import { StarFilledIcon } from '@radix-ui/react-icons'
 

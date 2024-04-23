@@ -2,7 +2,7 @@ import { ResponsivePie } from '@nivo/pie'
 import { useEffect, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
-import { Spinner } from '~/components/Spinner'
+import { Spinner } from '@/components/Spinner'
 
 import { type DataSeries, type TimeSeries, type LatestData } from '../../types'
 import { type z } from 'zod'
@@ -69,9 +69,9 @@ export const PieChart = ({
     return parseResult
   }
 
-  function dataManipulation(parseResult : any[]) {
+  function dataManipulation(parseResult: any[]) {
     return parseResult.map((item, index) => ({
-      keyId: index, 
+      keyId: index,
       id: item.name + ' (' + item.deviceName + ')',
       label: item.name + ' (' + item.deviceName + ')',
       value: item.value,

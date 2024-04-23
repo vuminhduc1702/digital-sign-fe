@@ -144,6 +144,7 @@
           "no_org": "Không trực thuộc tổ chức"
         },
         "add_attr": {
+          "button": "Tạo mới",
           "title": "Tạo mới thuộc tính",
           "edit": "Sửa TT",
           "edit_full": "Sửa thuộc tính",
@@ -162,14 +163,20 @@
         "title": "Nhóm",
         "header": "Quản lý nhóm",
         "table": {
+          "id": "ID",
           "name": "Tên",
           "entity_type": "Phân loại",
           "org_name": "Tổ chức",
           "delete_group": "Xoá nhóm",
           "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?",
-          "delete_multiple_group_confirm": "Bạn có chắc chắn muốn xóa các nhóm đã chọn?"
+          "delete_multiple_group_confirm": "Bạn có chắc chắn muốn xóa các nhóm đã chọn?",
+          "ORGANIZATION": "Tổ chức",
+          "DEVICE": "Thiết bị",
+          "USER": "Người dùng",
+          "EVENT": "Sự kiện"
         },
         "add_group": {
+          "button": "Tạo mới",
           "title": "Tạo mới nhóm",
           "edit": "Sửa nhóm",
           "name": "Tên nhóm",
@@ -186,6 +193,7 @@
         "title": "Người dùng",
         "header": "Quản lý người dùng",
         "table": {
+          "id": "ID",
           "name": "Tên",
           "email": "Email",
           "role_name": "Vai trò",
@@ -197,6 +205,7 @@
           "delete_multiple_user_confirm": "Bạn có chắc chắn muốn xóa những người dùng đã chọn?"
         },
         "add_user": {
+          "button": "Tạo mới",
           "title": "Tạo mới người dùng",
           "edit": "Sửa người dùng",
           "name": "Tên",
@@ -224,6 +233,7 @@
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
         "table": {
+          "id": "ID",
           "payload_as_string": "Message",
           "project": "Dự án",
           "topic": "Topic",
@@ -269,6 +279,7 @@
           "will_topic": "Will topic"
         },
         "add_device": {
+          "button": "Tạo mới",
           "title": "Tạo mới thiết bị",
           "edit": "Sửa thiết bị",
           "name": "Tên thiết bị",
@@ -296,6 +307,7 @@
         "title": "Sự kiện",
         "header": "Quản lý sự kiện",
         "table": {
+          "id": "ID",
           "name": "Tên",
           "group": "Nhóm",
           "onClick": "onClick",
@@ -306,6 +318,7 @@
           "delete_multiple_event_confirm": "Bạn có chắc chắn muốn xóa các sự kiện đã chọn?"
         },
         "add_event": {
+          "button": "Tạo mới",
           "title": "Tạo mới sự kiện",
           "edit": "Sửa sự kiện",
           "name": "Tên sự kiện",
@@ -354,7 +367,8 @@
               "fcm": "FCM",
               "event": "Event",
               "eventactive": "Event active",
-              "delay": "Delay"
+              "delay": "Delay",
+              "report": "Report"
             },
             "address": "Địa chỉ",
             "message": "Nội dung gửi"
@@ -482,6 +496,7 @@
         "actions": "Hành động"
       },
       "add_role": {
+        "button": "Tạo mới",
         "title": "Tạo mới vai trò",
         "edit": "Sửa vai trò",
         "name": "Tên vai trò",
@@ -497,6 +512,7 @@
       "title": "Quản lí Adapter",
       "protocol": "Protocol",
       "service": {
+        "button": "Tạo mới",
         "service_input": {
           "name": "Nhập tên biến",
           "type": "Kiểu dữ liệu",
@@ -547,13 +563,14 @@
         "choose_inputValue": "Vui lòng nhập giá trị biến"
       },
       "thing": {
+        "button": "Tạo mới",
         "title": "Danh sách thing",
         "create": "Tạo thing",
         "success_create": "Tạo thing thành công",
         "success_update": "Sửa thing thành công",
         "success_delete": "Xoá thing thành công",
         "name": "Tên thing",
-        "id": "Thing",
+        "id": "ID",
         "type": "Kiểu thing",
         "thing": "Thing",
         "template": "Template",
@@ -570,6 +587,8 @@
         "delete_multiple_thing_confirm": "Bạn có chắc chắn muốn xóa các thing đã chọn?"
       },
       "adapter": {
+        "id": "ID",
+        "button": "Tạo mới",
         "title": "adapter",
         "header": "Quản lý adapter",
         "create": "Tạo adapter",
@@ -641,6 +660,7 @@
         "delete_multiple_dashboard_confirm": "Bạn có chắc chắn muốn xóa các bảng điều khiển đã chọn?"
       },
       "add_dashboard": {
+        "button": "Tạo mới",
         "title": "Thêm mới bảng điều khiển",
         "name": "Tên bảng điều khiển",
         "description": "Mô tả",
@@ -734,6 +754,7 @@
       },
       "update_version": "Update Version Firmware",
       "add_firmware": {
+        "button": "Tạo mới",
         "title": "Thêm mới Firmware",
         "edit_firmware": "Sửa Firmware",
         "name": "Tên Firmware",
@@ -747,6 +768,18 @@
         "success_delete": "Xoá Firmware thành công",
         "success_upload": "Upload File thành công",
         "success_update_version": "Gửi lệnh FOTA thành công"
+      }
+    },
+    "tenant": {
+      "button": "Tạo mới",
+      "table": {
+        "id": "ID",
+        "name": "Tên",
+        "tenant": "Tenant",
+        "phone": "Số điện thoại",
+        "email": "Email",
+        "project": "Dự án",
+        "role": "Vai trò"
       }
     }
   },
@@ -822,6 +855,7 @@
       }
     },
     "subcription": {
+      "button": "Tạo mới",
       "title": "Thông tin đăng ký dịch vụ",
       "create": "Đăng ký dịch vụ",
       "edit": "Sửa thông tin đăng ký dịch vụ",
@@ -1022,7 +1056,7 @@
     "not_found": "Không tìm thấy",
     "no_user": "Không tồn tại người dùng",
     "error_page": {
-      "title": "Bạn vui lòng click nút Tải lại trang để chạy lại web nhé. Nếu không được vui lòng F5 để tải lại trang."
+      "title": "Lỗi! Vui lòng ấn F5 để tải lại trang."
     },
     "page_not_found": "404 - Trang web không tồn tại. Chuyển sang trang chủ trong vòng 5s...",
     "server_res": {
@@ -1064,7 +1098,8 @@
     "select_value": "Vui lòng chọn {{VALUE}}",
     "search": "Nhập để tìm kiếm",
     "input_text": "Vui lòng nhập",
-    "input_text_value": "Vui lòng nhập {{VALUE}}"
+    "input_text_value": "Vui lòng nhập {{VALUE}}",
+    "select_org": "Chọn tổ chức"
   },
   "search": {
     "title": "Tìm kiếm",
@@ -1374,7 +1409,9 @@
   },
   "dev_role": {
     "list": "Danh sách dev role",
-    "title": "Dev Role"
+    "title": "Dev Role",
+    "id": "ID",
+    "name": "Tên"
   },
   "schema": {
     "name_long": "Tên quá dài",
@@ -1494,5 +1531,48 @@
         "content": "Hệ thống Telco của Viettel hỗ trợ các doanh nghiệp đã đăng ký sử dụng thuê bao của Viettel quản lý thông tin thuê bao một cách miễn phí. Khách hàng chỉ cần tạo tài khoản và cung cấp thông tin GPKD để thực hiện quản lý."
       }
     }
+  },
+  "table": {
+    "no": "STT",
+    "pagination": "Số dòng hiển thị",
+    "total": "TỔNG SỐ",
+    "searchCount": "KẾT QUẢ TÌM KIẾM",
+    "selectCount": "ĐÃ CHỌN",
+    "excel": "Xuất Excel",
+    "delete": "Xoá",
+    "paginationSelected": "Hiển thị {{min}}-{{max}} của {{total}} mục",
+    "print": "In",
+    "excel": "Excel",
+    "pdf": "PDF",
+    "filter": {
+      "select_all": "Tất cả"
+    },
+    "loading": "Xin vui lòng chờ...",
+    "view_detail": "Xem chi tiết",
+    "search_field": "Tìm kiếm theo trường",
+    "copy_id": "Copy ID",
+    "no_device": "Không có thiết bị.",
+    "no_in_org": "Không trực thuộc tổ chức.",
+    "no_user": "Không có người dùng.",
+    "no_event": "Không có sự kiện.",
+    "no_attr": "Không có thuộc tính.",
+    "no_log_attr": "Không có bản tin thuộc tính.",
+    "no_mqtt_hist": "Không có lịch sử MQTT.",
+    "no_thing": "Không có Thing.",
+    "no_firmware": "Không có Firmware.",
+    "no_dashboard": "Không có bảng điều khiển.",
+    "no_adapter": "Không có Adapter.",
+    "no_customer": "Không có thông tin khách hàng",
+    "no_subscription": "Không có đăng ký dịch vụ.",
+    "no_bill": "Không có hóa đơn",
+    "no_tenant": "Không có tenant.",
+    "no_template": "Không có nhóm thuộc tính.",
+    "no_service": "Không có nghiệp vụ.",
+    "no_event_service": "Không có sự kiện nghiệp vụ.",
+    "no_role": "Không có vai trò.",
+    "no_tenant_role": "Không có vai trò tenant."
+  },
+  "tree": {
+    "no_selection_org": "Không trực thuộc tổ chức"
   }
 }

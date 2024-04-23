@@ -3,30 +3,31 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { useCopyId, useDisclosure } from '~/utils/hooks'
-import { PATHS } from '~/routes/PATHS'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
+import { PATHS } from '@/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
-import { ComboBoxSelectTemplateLwM2M } from './ComboBoxSelectTemplateLwM2M'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 import { type Template } from '../types'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { UpdateTemplateLwM2M } from './UpdateTemplateLwM2M'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { useGetTemplates } from '../api'
 
 export function TemplateLwM2M() {
   const { t } = useTranslation()
@@ -44,26 +45,32 @@ export function TemplateLwM2M() {
   const { templateId } = useParams()
 
   const { id: projectId } = storage.getProject()
-
+  const [searchQuery, setSearchQuery] = useState('')
   const { mutate, isLoading, isSuccess } = useDeleteTemplate()
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const [selectedUpdateTemplate, setSelectedUpdateTemplate] =
     useState<Template>()
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Template[]>(
-    [],
-  )
+  const { data } = useGetTemplates({
+    projectId,
+    protocol: 'lwm2m',
+    config: {
+      suspense: false,
+    },
+    search_str: searchQuery,
+    search_field: 'name',
+  })
   const handleCopyId = useCopyId()
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowNoTemplateMessage(true)
     }, 500)
-    if (filteredComboboxData?.[0]?.id) {
-      navigate(
-        `${PATHS.TEMPLATE_LWM2M}/${projectId}/${filteredComboboxData[0].id}`,
-      )
+    if (data?.templates?.[0]?.id) {
+      navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}/${data?.templates[0].id}`)
+    } else {
+      navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}`)
     }
     return () => clearTimeout(timer)
-  }, [filteredComboboxData])
+  }, [data?.templates])
 
   useEffect(() => {
     if (isSuccess) {
@@ -75,14 +82,12 @@ export function TemplateLwM2M() {
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
         <CreateTemplateLwM2M />
-        <ComboBoxSelectTemplateLwM2M
-          setFilteredComboboxData={setFilteredComboboxData}
-        />
+        <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
-        {filteredComboboxData !== null && filteredComboboxData?.length > 0 ? (
+        {data?.templates !== null && data?.templates?.length > 0 ? (
           <div className="space-y-3">
-            {filteredComboboxData?.map((template: Template) => (
+            {data?.templates?.map((template: Template) => (
               <div className="flex" key={template.id}>
                 <Button
                   className={clsx('gap-y-3 rounded-l-md border-none px-4 py-0')}

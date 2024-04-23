@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
-import { InputField } from '~/components/Form'
+import { Button } from '@/components/Button'
+import { InputField } from '@/components/Form'
 import {
   useDeleteSubcription,
   useSubcriptionById,
@@ -14,13 +14,13 @@ import {
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import * as z from 'zod'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { getVNDateFormat } from '~/utils/misc'
-import storage from '~/utils/storage'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { useDisclosure } from '~/utils/hooks'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import { getVNDateFormat } from '@/utils/misc'
+import storage from '@/utils/storage'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { useDisclosure } from '@/utils/hooks'
 
 export const entitySubcriptionUpdateSchema = z.object({
   register: z.string(),
@@ -147,7 +147,7 @@ export function UpdateSubcription({
   })
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[48rem] sm:p-6 sm:align-middle">
+      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle className="mx-auto text-2xl font-semibold ">
@@ -157,7 +157,7 @@ export function UpdateSubcription({
             </DialogTitle>
             <div className="flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -308,7 +308,7 @@ export function UpdateSubcription({
                 <Button
                   onClick={() => setIsUpdate(true)}
                   size="md"
-                  className="bg-primary-400 w-[100px] rounded-md"
+                  className="w-[100px] rounded-md bg-primary-400"
                 >
                   {t('btn:update')}
                 </Button>

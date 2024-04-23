@@ -13,7 +13,7 @@ import {
   SheetClose,
   SheetFooter,
 } from '../Sheet'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 const sizes = {
   sm: 'max-w-md',
@@ -31,6 +31,11 @@ export type DrawerProps = {
   renderFooter: () => React.ReactNode
   size?: keyof typeof sizes
   resetData?: () => void
+  modal?: boolean
+  side?: 'left' | 'right' | 'top' | 'bottom'
+  classNameBody?: string
+  classNameHeader?: string
+  classNameContentArea?: string
 }
 
 export const Drawer = ({
@@ -40,19 +45,25 @@ export const Drawer = ({
   onClose,
   renderFooter,
   size = 'md',
+  modal = false,
+  side = 'right',
+  classNameBody = '',
+  classNameHeader = '',
+  classNameContentArea = '',
 }: DrawerProps) => {
   return (
-    <Sheet open={isOpen} modal={false}>
+    <Sheet open={isOpen} modal={modal}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
         }}
+        side={side}
       >
-        <SheetContentArea>
+        <SheetContentArea className={classNameContentArea}>
           <div className={cn('w-screen', sizes[size])}>
-            <SheetBody>
+            <SheetBody className={classNameBody}>
               <SheetScroll>
-                <SheetHeader>
+                <SheetHeader className={classNameHeader}>
                   <SheetTitle>{title}</SheetTitle>
                   <SheetClose>
                     <button

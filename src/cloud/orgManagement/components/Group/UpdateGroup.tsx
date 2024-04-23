@@ -1,24 +1,33 @@
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 
-import { Button } from '~/components/Button'
-import { InputField, SelectField } from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
+import { Button } from '@/components/Button'
+import { InputField, SelectField } from '@/components/Form'
+import { Drawer } from '@/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 import { entityTypeList } from './CreateGroup'
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import { useGetOrgs } from '@/layout/MainLayout/api'
 
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 import { type EntityType } from '../../api/attrAPI'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import storage from '~/utils/storage'
-import { ComplexTree } from '~/components/ComplexTree'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import storage from '@/utils/storage'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { cn, flattenOrgs } from '@/utils/misc'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
@@ -47,7 +56,8 @@ export function UpdateGroup({
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
-  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+  const { data: orgData } = useGetOrgs({ projectId })
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
@@ -59,12 +69,11 @@ export function UpdateGroup({
     }
   }, [isSuccess, close])
 
-  const { register, formState, control, getValues, handleSubmit } = useForm<
-    UpdateGroupDTO['data']
-  >({
+  const form = useForm<UpdateGroupDTO['data']>({
     resolver: groupUpdateSchema && zodResolver(groupUpdateSchema),
     defaultValues: { name: name, org_id: organization },
   })
+  const { register, formState, control, getValues, handleSubmit } = form
 
   return (
     <Drawer
@@ -96,61 +105,101 @@ export function UpdateGroup({
         </>
       )}
     >
-      <form
-        className="w-full space-y-6"
-        id="update-group"
-        onSubmit={handleSubmit(values => {
-          if (
-            getValues('org_id') !== organization &&
-            getValues('org_id') != null
-          ) {
-            mutateUpdateOrgForGroup({
+      <Form {...form}>
+        <form
+          className="w-full space-y-6"
+          id="update-group"
+          onSubmit={handleSubmit(values => {
+            if (
+              getValues('org_id') !== organization &&
+              getValues('org_id') != null
+            ) {
+              mutateUpdateOrgForGroup({
+                data: {
+                  ids: [groupId],
+                  org_id: values.org_id !== no_org_val ? values.org_id : '',
+                },
+              })
+            }
+            mutate({
               data: {
-                ids: [groupId],
+                name: values.name,
                 org_id: values.org_id !== no_org_val ? values.org_id : '',
               },
+              groupId,
             })
-          }
-          mutate({
-            data: {
-              name: values.name,
-              org_id: values.org_id !== no_org_val ? values.org_id : '',
-            },
-            groupId,
-          })
-        })}
-      >
-        <>
-          <InputField
-            label={
-              t('cloud:org_manage.group_manage.add_group.name') ??
-              "Group's name"
-            }
-            error={formState.errors['name']}
-            registration={register('name')}
-          />
-          <SelectField
-            disabled
-            label={
-              t('cloud:org_manage.group_manage.add_group.entity_type') ??
-              'Entity type'
-            }
-            value={entity_type.toString()}
-            options={entityTypeList.map(entityType => ({
-              label: entityType.name,
-              value: entityType.type,
-            }))}
-          />
-          <ComplexTree
-            name="org_id"
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
-            error={formState?.errors?.org_id}
-            control={control}
-            options={orgData?.organizations}
-            selectedOrgName={org_name}
-          />
-        </>
-      </form>
+          })}
+        >
+          <>
+            <InputField
+              label={
+                t('cloud:org_manage.group_manage.add_group.name') ??
+                "Group's name"
+              }
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <SelectField
+              disabled
+              label={
+                t('cloud:org_manage.group_manage.add_group.entity_type') ??
+                'Entity type'
+              }
+              value={entity_type.toString()}
+              options={entityTypeList.map(entityType => ({
+                label: entityType.name,
+                value: entityType.type,
+              }))}
+            />
+            <FormField
+              control={form.control}
+              name="org_id"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('cloud:org_manage.device_manage.add_device.parent')}
+                  </FormLabel>
+                  <div>
+                    <FormControl>
+                      <div>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="org_id"
+                              className={cn(
+                                'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                {
+                                  'text-gray-500': !value && value !== '',
+                                },
+                              )}
+                            >
+                              {value
+                                ? orgDataFlatten.find(item => item.id === value)
+                                    ?.name
+                                : value === ''
+                                  ? t('tree:no_selection_org')
+                                  : t('placeholder:select_org')}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <SelectSuperordinateOrgTree
+                              {...field}
+                              onChangeValue={onChange}
+                              value={value}
+                              noSelectionOption={true}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+          </>
+        </form>
+      </Form>
     </Drawer>
   )
 }

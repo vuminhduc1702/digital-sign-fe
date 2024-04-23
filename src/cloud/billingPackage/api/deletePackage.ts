@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 export const deletePlan = ({ id }: { id: string }) => {
@@ -13,9 +13,7 @@ type UseDeletePlanOptions = {
   config?: MutationConfig<typeof deletePlan>
 }
 
-export const useDeletePlan = ({
-  config,
-}: UseDeletePlanOptions = {}) => {
+export const useDeletePlan = ({ config }: UseDeletePlanOptions = {}) => {
   const { t } = useTranslation()
 
   return useMutation({

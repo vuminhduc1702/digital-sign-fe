@@ -1,42 +1,59 @@
+import { limitPagination } from './../../../utils/const'
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
+
+type CustomerList = {
+  limit?: number
+  offset?: number
+  search_field?: string
+  search_str?: string
+}
 
 export const getCustomerList = ({
   limit,
   offset,
   search_field,
   search_str,
-}: {
-  limit: number
-  offset: number
-  search_field: string
-  search_str: string
-}): Promise<any> => {
-  if (search_str) {
-    return axios.get(
-      `/api/tenant?limit=${limit}&offset=${offset}&${search_field}=${search_str}`,
-    )
-  }
-  return axios.get(`/api/tenant?limit=${limit}&offset=${offset}`)
+}: CustomerList): Promise<any> => {
+  return axios.get(`/api/tenant`, {
+    params: {
+      limit,
+      offset,
+      search_field,
+      search_str,
+    },
+  })
+  // if (search_str) {
+  //   return axios.get(
+  //     `/api/tenant?limit=${limit}&offset=${offset}&search_field=${search_field}&search_str=${search_str}`,
+  //   )
+  // }
+  // return axios.get(`/api/tenant?limit=${limit}&offset=${offset}`)
 }
 
 type CustomerListQueryFnType = typeof getCustomerList
 
 type UseCustomerList = {
-  data: {
-    limit: number
-    offset: number
-    search_field: string
-    search_str: string
-  }
   config?: QueryConfig<CustomerListQueryFnType>
-}
+} & CustomerList
 
-export const useCustomerList = ({ config, data }: UseCustomerList) => {
+export const useCustomerList = ({
+  limit = limitPagination,
+  offset = 0,
+  search_str,
+  search_field,
+  config,
+}: UseCustomerList) => {
   return useQuery<ExtractFnReturnType<CustomerListQueryFnType>>({
-    queryKey: ['call-customer-list-api', { ...data }],
-    queryFn: () => getCustomerList({ ...data }),
+    queryKey: [
+      'call-customer-list-api',
+      limit,
+      offset,
+      search_str,
+      search_field,
+    ],
+    queryFn: () => getCustomerList({ limit, offset, search_str, search_field }),
     ...config,
   })
 }

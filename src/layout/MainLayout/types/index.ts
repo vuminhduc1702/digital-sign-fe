@@ -1,4 +1,4 @@
-import { type Attribute, type BasePagination } from '~/types'
+import { type Attribute, type BasePagination } from '@/types'
 
 export type Org = {
   id: string

@@ -7,31 +7,31 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useSpinDelay } from 'spin-delay'
 import { type SelectInstance } from 'react-select'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FieldWrapper,
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import storage from '~/utils/storage'
-import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
-import i18n from '~/i18n'
-import { Checkbox } from '~/components/Checkbox'
+} from '@/components/Form'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import storage from '@/utils/storage'
+import TitleBar from '@/components/Head/TitleBar'
+import { Spinner } from '@/components/Spinner'
+import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
+import i18n from '@/i18n'
+import { Checkbox } from '@/components/Checkbox'
 
 import { widgetCategorySchema } from '../../types'
 import { type WidgetCategoryType } from './CreateWidget'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export const controllerBtnSchema = z.object({
   title: z.string(),
@@ -90,7 +90,6 @@ export function CreateControllerButton({
       resolver:
         controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
     })
-  // console.log('zod errors', formState.errors)
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,

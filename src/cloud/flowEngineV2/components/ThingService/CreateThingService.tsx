@@ -5,24 +5,24 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FieldWrapper,
   InputField,
   SelectField,
   TextAreaField,
-} from '~/components/Form'
-import { nameSchemaRegex } from '~/utils/schemaValidation'
+} from '@/components/Form'
+import { nameSchemaRegex } from '@/utils/schemaValidation'
 import {
   useCreateServiceThing,
   type CreateServiceThingDTO,
 } from '../../api/thingServiceAPI'
-import { cn } from '~/utils/misc'
-import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
-import { FormDialog } from '~/components/FormDialog'
-import { PlusIcon } from '~/components/SVGIcons'
-import { Switch } from '~/components/Switch'
-import storage from '~/utils/storage'
+import { cn } from '@/utils/misc'
+import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
+import { FormDialog } from '@/components/FormDialog'
+import { PlusIcon } from '@/components/SVGIcons'
+import { Switch } from '@/components/Switch'
+import storage from '@/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
 import {
@@ -30,28 +30,28 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
-import { Checkbox } from '~/components/Checkbox'
-import { outputList } from '~/cloud/customProtocol/components/CreateService'
+} from '@/components/Tooltip'
+import { Checkbox } from '@/components/Checkbox'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
-import btnAddIcon from '~/assets/icons/btn-add.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
-import btnRunCode from '~/assets/icons/btn-run-code.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnAddIcon from '@/assets/icons/btn-add.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnFullScreen from '@/assets/icons/btn-fullscreen.svg'
+import btnRunCode from '@/assets/icons/btn-run-code.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { LuChevronDown } from 'react-icons/lu'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '~/components/Resizable'
+} from '@/components/Resizable'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
 export const inputSchema = z.object({
   name: z
@@ -270,7 +270,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   input: dataInput,
                   code: codeInput,
                   fail_limit: values.fail_limit,
-                  lock_time: values.lock_time,
+                  lock_time: values.lock_time ? values.lock_time : '0s',
                 },
                 thingId: thingId,
               })
@@ -309,6 +309,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 type="number"
                 registration={register('fail_limit', {
                   valueAsNumber: true,
+                  onChange: e => {
+                    if (e.target.value === '0') {
+                      setValue('lock_time', undefined)
+                    }
+                  },
                 })}
                 min={0}
               />
@@ -581,14 +586,14 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
               <ResizablePanelGroup
                 direction="horizontal"
-                className={cn('flex w-[100%] md:col-span-3', {
+                className={cn('flex w-full md:col-span-3', {
                   'flex-col': fullScreen,
                 })}
               >
                 <ResizablePanel
                   defaultSize={50}
                   minSize={fullScreen ? 13 : 20.5}
-                  className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
+                  className={cn('flex w-full flex-col gap-2 md:col-span-1')}
                   ref={codeEditorRef}
                 >
                   <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
@@ -666,7 +671,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 <ResizablePanel
                   defaultSize={50}
                   minSize={fullScreen ? 10.5 : 16.5}
-                  className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
+                  className={cn('flex w-full flex-col gap-2 md:col-span-1')}
                   ref={resultEditorRef}
                 >
                   <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
@@ -731,12 +736,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
         </form>
       }
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:custom_protocol.service.button')}
+        </Button>
       }
       confirmButton={
         <Button

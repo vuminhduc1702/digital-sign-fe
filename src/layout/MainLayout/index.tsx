@@ -1,14 +1,13 @@
 import { Outlet } from 'react-router-dom'
-import { Suspense, useState } from 'react'
+import { useState } from 'react'
 import { HiOutlineBars3 } from 'react-icons/hi2'
 
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
-import { Spinner } from '~/components/Spinner'
 import MobileSidebar from './components/MobileSidebar'
-import logo from '~/assets/images/logo.svg'
-import { cn } from '~/utils/misc'
-import { NavLink } from '~/components/Link'
+import logo from '@/assets/images/logo.svg'
+import { cn } from '@/utils/misc'
+import { NavLink } from '@/components/Link'
 
 function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -40,7 +39,7 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
             <NavLink
               to="https://iot.vtscloud.vn/"
               reloadDocument
-              className="flex h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white"
+              className="flex h-20 min-w-[256px] items-center justify-center border-b-2 border-solid bg-white"
             >
               <img src={logo} alt="logo" className="h-14 cursor-pointer" />
             </NavLink>
@@ -48,21 +47,13 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
           <Navbar />
         </div>
 
-        <Suspense
-          fallback={
-            <div className="flex grow items-center justify-center">
-              <Spinner size="xl" />
-            </div>
-          }
+        <main
+          className={cn(
+            'flex w-full grow flex-col self-center overflow-y-auto p-3',
+          )}
         >
-          <main
-            className={cn(
-              'flex w-full grow flex-col self-center overflow-y-auto p-3',
-            )}
-          >
-            <Outlet />
-          </main>
-        </Suspense>
+          <Outlet />
+        </main>
       </div>
     </div>
   )

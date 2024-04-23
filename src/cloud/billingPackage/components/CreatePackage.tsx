@@ -2,34 +2,35 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { useState } from 'react'
-import btnAddIcon from '~/assets/icons/btn-add.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
+import btnAddIcon from '@/assets/icons/btn-add.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { Button } from '@/components/Button'
 import {
   FormMultipleFields,
   InputField,
   SelectField,
   TextAreaField,
-} from '~/components/Form'
-import { FormDialog } from '~/components/FormDialog'
-import { PlusIcon } from '~/components/SVGIcons'
-import { cn } from '~/utils/misc'
-import { nameSchema } from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
+} from '@/components/Form'
+import { FormDialog } from '@/components/FormDialog'
+import { PlusIcon } from '@/components/SVGIcons'
+import { cn } from '@/utils/misc'
+import { nameSchema } from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
 import { useCreatePlan, type CreatePlanDTO } from '../api'
 import { type PlanlvList } from '../types'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
-export const numericString = (schema: z.ZodTypeAny) => z.preprocess((a) => {
-  if (typeof a === 'string') {
-    return parseInt(a)
-  } else if (typeof a === 'number' && !isNaN(a)) {
-    return a;
-  } else {
-    return undefined;
-  }
-}, schema);
+export const numericString = (schema: z.ZodTypeAny) =>
+  z.preprocess(a => {
+    if (typeof a === 'string') {
+      return parseInt(a)
+    } else if (typeof a === 'number' && !isNaN(a)) {
+      return a
+    } else {
+      return undefined
+    }
+  }, schema)
 
 const planlvSchema = z.array(
   z.object({
@@ -322,8 +323,14 @@ export function CreatePackage() {
                       },
                     })}
                     options={[
-                      { label: t('billing:package_manage.input.lofficial'), value: 'official' },
-                      { label: t('billing:package_manage.input.ltrial'), value: 'trial' },
+                      {
+                        label: t('billing:package_manage.input.lofficial'),
+                        value: 'official',
+                      },
+                      {
+                        label: t('billing:package_manage.input.ltrial'),
+                        value: 'trial',
+                      },
                     ]}
                     classlabel="w-full"
                     classchild="w-full"
@@ -342,8 +349,14 @@ export function CreatePackage() {
                     <label>{t('billing:package_manage.popup.status')}</label>
                     <div className="mt-1 items-center">
                       {[
-                        { label: t('billing:package_manage.input.ldisplay'), value: 'present' },
-                        { label: t('billing:package_manage.input.lhide'), value: 'hidden' },
+                        {
+                          label: t('billing:package_manage.input.ldisplay'),
+                          value: 'present',
+                        },
+                        {
+                          label: t('billing:package_manage.input.lhide'),
+                          value: 'hidden',
+                        },
                       ].map((option, idx) => (
                         <div key={idx} className="my-2 mr-4 flex items-center">
                           <input
@@ -384,10 +397,23 @@ export function CreatePackage() {
                     })}
                     options={
                       type === 'trial'
-                        ? [{ label: t('billing:package_manage.popup.pre_pay'), value: 'PREPAY' }]
+                        ? [
+                            {
+                              label: t('billing:package_manage.popup.pre_pay'),
+                              value: 'PREPAY',
+                            },
+                          ]
                         : [
-                            { label: t('billing:package_manage.popup.pre_pay'), value: 'PREPAY' },
-                            { label: t('billing:package_manage.popup.post_paid'), value: 'POSTPAID' },
+                            {
+                              label: t('billing:package_manage.popup.pre_pay'),
+                              value: 'PREPAY',
+                            },
+                            {
+                              label: t(
+                                'billing:package_manage.popup.post_paid',
+                              ),
+                              value: 'POSTPAID',
+                            },
                           ]
                     }
                     classlabel="w-full"
@@ -432,10 +458,21 @@ export function CreatePackage() {
                     options={
                       type === 'official' && paymentType === 'PREPAY'
                         ? [
-                            { label: t('billing:package_manage.popup.periodic'), value: 'PERIODIC' },
-                            { label: t('billing:package_manage.popup.once'), value: 'ONCE' },
+                            {
+                              label: t('billing:package_manage.popup.periodic'),
+                              value: 'PERIODIC',
+                            },
+                            {
+                              label: t('billing:package_manage.popup.once'),
+                              value: 'ONCE',
+                            },
                           ]
-                        : [{ label: t('billing:package_manage.popup.periodic'), value: 'PERIODIC' }]
+                        : [
+                            {
+                              label: t('billing:package_manage.popup.periodic'),
+                              value: 'PERIODIC',
+                            },
+                          ]
                     }
                     classlabel="w-full"
                     classchild="w-full"
@@ -465,10 +502,22 @@ export function CreatePackage() {
                             error={formState.errors['cal_unit']}
                             registration={register('cal_unit')}
                             options={[
-                              { label: t('billing:package_manage.popup.day'), value: 'day' },
-                              { label: t('billing:package_manage.popup.week'), value: 'week' },
-                              { label: t('billing:package_manage.popup.month'), value: 'month' },
-                              { label: t('billing:package_manage.popup.year'), value: 'year' },
+                              {
+                                label: t('billing:package_manage.popup.day'),
+                                value: 'day',
+                              },
+                              {
+                                label: t('billing:package_manage.popup.week'),
+                                value: 'week',
+                              },
+                              {
+                                label: t('billing:package_manage.popup.month'),
+                                value: 'month',
+                              },
+                              {
+                                label: t('billing:package_manage.popup.year'),
+                                value: 'year',
+                              },
                             ]}
                             className="px-2"
                           />
@@ -501,8 +550,14 @@ export function CreatePackage() {
                     error={formState.errors['charging_unit']}
                     registration={register('charging_unit')}
                     options={[
-                      { label: t('billing:package_manage.popup.connect'), value: 'message' },
-                      { label: t('billing:package_manage.popup.device'), value: 'device' },
+                      {
+                        label: t('billing:package_manage.popup.connect'),
+                        value: 'message',
+                      },
+                      {
+                        label: t('billing:package_manage.popup.device'),
+                        value: 'device',
+                      },
                       { label: 'API', value: 'api' },
                     ]}
                     className="!mt-0"
@@ -538,15 +593,42 @@ export function CreatePackage() {
                         paymentType === 'POSTPAID' &&
                         periodType === 'PERIODIC'
                           ? [
-                              { label: t('billing:package_manage.popup.mass'), value: 'mass' },
-                              { label: t('billing:package_manage.popup.fix'), value: 'fix' },
-                              { label: t('billing:package_manage.popup.unit'), value: 'unit' },
-                              { label: t('billing:package_manage.popup.accumulate'), value: 'accumulated' },
-                              { label: t('billing:package_manage.popup.step'), value: 'step' },
+                              {
+                                label: t('billing:package_manage.popup.mass'),
+                                value: 'mass',
+                              },
+                              {
+                                label: t('billing:package_manage.popup.fix'),
+                                value: 'fix',
+                              },
+                              {
+                                label: t('billing:package_manage.popup.unit'),
+                                value: 'unit',
+                              },
+                              {
+                                label: t(
+                                  'billing:package_manage.popup.accumulate',
+                                ),
+                                value: 'accumulated',
+                              },
+                              {
+                                label: t('billing:package_manage.popup.step'),
+                                value: 'step',
+                              },
                             ]
                           : [
-                              { label: t('billing:package_manage.popup.permanent'), value: 'fix' },
-                              { label: t('billing:package_manage.popup.by_unit'), value: 'unit' },
+                              {
+                                label: t(
+                                  'billing:package_manage.popup.permanent',
+                                ),
+                                value: 'fix',
+                              },
+                              {
+                                label: t(
+                                  'billing:package_manage.popup.by_unit',
+                                ),
+                                value: 'unit',
+                              },
                             ]
                       }
                       classlabel="w-full"
@@ -754,7 +836,9 @@ export function CreatePackage() {
                           classlabel="w-1/5"
                           classchild="w-full"
                           type="number"
-                          placeholder={t('billing:package_manage.popup.quantity')}
+                          placeholder={t(
+                            'billing:package_manage.popup.quantity',
+                          )}
                         />
                       )}
                     </div>
@@ -797,7 +881,9 @@ export function CreatePackage() {
                       classlabel="w-3/5"
                       classchild="w-full"
                       classnamefieldwrapper="flex items-center gap-x-2"
-                      placeholder={t('billing:package_manage.popup.enter_quantity')}
+                      placeholder={t(
+                        'billing:package_manage.popup.enter_quantity',
+                      )}
                     />
                   )}
                   <InputField

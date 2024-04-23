@@ -2,19 +2,19 @@ import { HiOutlineXMark } from 'react-icons/hi2'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LuChevronDown } from 'react-icons/lu'
-import btnRunCode from '~/assets/icons/btn-run-code.svg'
-import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { cn } from '~/utils/misc'
+import btnRunCode from '@/assets/icons/btn-run-code.svg'
+import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import { cn } from '@/utils/misc'
 import { useFuel } from '../api/fuel/callFuelApi'
 import { useMutationFuelAi } from '../api/fuel/updateFuelApi'
-import { InfoIcon } from '~/components/SVGIcons'
+import { InfoIcon } from '@/components/SVGIcons'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
 export default function FuelTemplate() {
   const [fullScreen, setFullScreen] = useState(false)

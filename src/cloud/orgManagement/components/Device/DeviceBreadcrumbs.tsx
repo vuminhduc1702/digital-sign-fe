@@ -2,11 +2,11 @@ import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { useDeviceById } from '../../api/deviceAPI'
-import { Link } from '~/components/Link'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { Link } from '@/components/Link'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 
-import { BreadcrumbIcon } from '~/components/SVGIcons'
+import { BreadcrumbIcon } from '@/components/SVGIcons'
 
 export function DeviceBreadcrumbs() {
   const { t } = useTranslation()
@@ -22,7 +22,7 @@ export function DeviceBreadcrumbs() {
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
         <li className="inline-flex items-center">
           <Link
-            className="text-body-sm text-secondary-500 inline-flex items-center hover:text-white"
+            className="inline-flex items-center text-body-sm text-secondary-500 hover:text-white"
             to={`${PATHS.DEVICE_MANAGE}/${projectId}/${params.orgId}`}
           >
             {t('cloud:org_manage.org_manage.breadcrumb.device_list')}
@@ -36,7 +36,7 @@ export function DeviceBreadcrumbs() {
           viewBox="0 0 20 20"
         />
         <li className="inline-flex items-center">
-          <p className="text-body-sm text-secondary-500 inline-flex items-center hover:text-white ">
+          <p className="inline-flex items-center text-body-sm text-secondary-500 hover:text-white ">
             {deviceData?.name}
           </p>
         </li>

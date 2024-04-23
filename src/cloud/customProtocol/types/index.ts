@@ -1,4 +1,4 @@
-import { type BasePagination } from '~/types'
+import { type BasePagination } from '@/types'
 
 export type ProtocolType = 'mqtt' | 'tcp' | 'udp' | 'ftp'
 export type ContentType = 'json' | 'hex' | 'text'

@@ -3,21 +3,21 @@ import { useEffect, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { useGetGroups } from '~/cloud/orgManagement/api/groupAPI'
-import { Button } from '~/components/Button'
-import { Drawer } from '~/components/Drawer'
-import { InputField, SelectDropdown } from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
-import storage from '~/utils/storage'
+import { useGetGroups } from '@/cloud/orgManagement/api/groupAPI'
+import { Button } from '@/components/Button'
+import { Drawer } from '@/components/Drawer'
+import { InputField, SelectDropdown } from '@/components/Form'
+import TitleBar from '@/components/Head/TitleBar'
+import storage from '@/utils/storage'
 import { useUpdateRole, type UpdateRoleDTO } from '../api'
 import { actionsList, resourcesList, roleSchema } from './CreateRole'
 
 import { type Policies } from '../types'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 
 type UpdateRoleProps = {
   roleId: string

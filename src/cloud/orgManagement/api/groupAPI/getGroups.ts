@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { limitPagination } from '~/utils/const'
+import { limitPagination } from '@/utils/const'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type EntityType } from '../attrAPI'
 import { type GroupList } from '../../types'
 
@@ -14,6 +14,8 @@ type GetGroups = {
   get_attr?: boolean
   offset?: number
   limit?: number
+  search_str?: string
+  search_field?: string
 }
 
 export const getGroups = ({
@@ -23,6 +25,8 @@ export const getGroups = ({
   get_attr = false,
   offset,
   limit,
+  search_str,
+  search_field,
 }: GetGroups): Promise<GroupList> => {
   return axios.get(`/api/groups`, {
     params: {
@@ -32,6 +36,8 @@ export const getGroups = ({
       get_attr,
       offset,
       limit,
+      search_str,
+      search_field,
     },
   })
 }
@@ -49,6 +55,8 @@ export const useGetGroups = ({
   get_attr = false,
   offset = 0,
   limit = limitPagination,
+  search_str,
+  search_field,
   config,
 }: UseGroupOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
@@ -60,9 +68,20 @@ export const useGetGroups = ({
       limit,
       entity_type,
       get_attr,
+      search_str,
+      search_field,
     ],
     queryFn: () =>
-      getGroups({ orgId, projectId, entity_type, get_attr, offset, limit }),
+      getGroups({
+        orgId,
+        projectId,
+        entity_type,
+        get_attr,
+        offset,
+        limit,
+        search_str,
+        search_field,
+      }),
     ...config,
   })
 }

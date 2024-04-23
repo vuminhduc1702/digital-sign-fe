@@ -1,20 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { FormDrawer, InputField, SelectField } from '~/components/Form'
-import storage from '~/utils/storage'
+import { Button } from '@/components/Button'
+import { FormDrawer, InputField, SelectField } from '@/components/Form'
+import storage from '@/utils/storage'
 import { useCreateDataBase, type CreateDataBaseDTO } from '../api'
 
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { outputList } from '~/cloud/customProtocol/components/CreateService'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export const dataBaseAttrSchema = z.object({
   table: nameSchema,

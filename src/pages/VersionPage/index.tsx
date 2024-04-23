@@ -1,4 +1,4 @@
-import { APP_VERSION } from '~/config'
+import { APP_VERSION } from '@/config'
 
 export function VersionPage() {
   const version = {

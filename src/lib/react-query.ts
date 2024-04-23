@@ -9,14 +9,17 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
 const queryConfig: DefaultOptions = {
   queries: {
     useErrorBoundary: false,
+    suspense: false,
     refetchOnWindowFocus: false,
-    retry: 3,
-    suspense: true,
+    keepPreviousData: true,
+    retry: 5,
+    retryDelay: attemptIndex =>
+      Math.min(Math.pow(2, attemptIndex) * 1000, 10000),
     staleTime: 1000 * 60,
   },
 }

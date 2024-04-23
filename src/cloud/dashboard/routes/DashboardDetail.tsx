@@ -9,15 +9,15 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
-import { Button } from '~/components/Button/Button'
-import { Drawer } from '~/components/Drawer'
-import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
+} from '@/components/Tooltip'
+import { Button } from '@/components/Button/Button'
+import { Drawer } from '@/components/Drawer'
+import TitleBar from '@/components/Head/TitleBar'
+import { Spinner } from '@/components/Spinner'
 import { toast } from 'sonner'
-import { useDisclosure, useWS } from '~/utils/hooks'
-import { cn } from '~/utils/misc'
-import storage, { type UserStorage } from '~/utils/storage'
+import { useDisclosure, useWS } from '@/utils/hooks'
+import { cn } from '@/utils/misc'
+import storage, { type UserStorage } from '@/utils/storage'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import {
   BarChart,
@@ -38,9 +38,9 @@ import {
   type WidgetCategoryType,
 } from '../components/Widget'
 import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
-import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
+import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 
-import { WS_URL } from '~/config'
+import { WS_URL } from '@/config'
 import {
   type DataSeries,
   type DashboardWS,
@@ -48,12 +48,12 @@ import {
   type TimeSeries,
   type WidgetType,
 } from '../types'
-import { type Device } from '~/cloud/orgManagement'
+import { type Device } from '@/cloud/orgManagement'
 import { type EntityId } from '../types'
 
 import { StarFilledIcon } from '@radix-ui/react-icons'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   ChartCircle,
   ChartControl,
@@ -67,15 +67,15 @@ import {
   DragIcon,
   EditBtnIcon,
   PlusIcon,
-} from '~/components/SVGIcons'
-import BD_01 from '~/assets/images/landingpage/BD_01.png'
-import BD_02 from '~/assets/images/landingpage/BD_02.png'
-import DB_03 from '~/assets/images/landingpage/BD_03.png'
-import BD_04 from '~/assets/images/landingpage/BD_04.png'
-import BD_05 from '~/assets/images/landingpage/BD_05.png'
-import BD_06 from '~/assets/images/landingpage/BD_06.png'
-import BD_07 from '~/assets/images/landingpage/BD_07.png'
-import BD_08 from '~/assets/images/landingpage/BD_08.png'
+} from '@/components/SVGIcons'
+import BD_01 from '@/assets/images/landingpage/BD_01.png'
+import BD_02 from '@/assets/images/landingpage/BD_02.png'
+import DB_03 from '@/assets/images/landingpage/BD_03.png'
+import BD_04 from '@/assets/images/landingpage/BD_04.png'
+import BD_05 from '@/assets/images/landingpage/BD_05.png'
+import BD_06 from '@/assets/images/landingpage/BD_06.png'
+import BD_07 from '@/assets/images/landingpage/BD_07.png'
+import BD_08 from '@/assets/images/landingpage/BD_08.png'
 
 export type WidgetAttrDeviceType = Array<{
   id: string

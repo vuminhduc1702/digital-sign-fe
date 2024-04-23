@@ -3,24 +3,24 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { FormDrawer, InputField } from '~/components/Form'
-import storage from '~/utils/storage'
+import { Button } from '@/components/Button'
+import { FormDrawer, InputField } from '@/components/Form'
+import storage from '@/utils/storage'
 import { useAddColumn, type AddColumnDTO } from '../api'
 
 import { useParams } from 'react-router-dom'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
-import { nameSchema } from '~/utils/schemaValidation'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
+import { nameSchema } from '@/utils/schemaValidation'
 import { useEffect } from 'react'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
+} from '@/components/Tooltip'
 
 export const createColumnSchema = z.object({
   fields: z.array(

@@ -3,7 +3,7 @@ import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/mode-javascript'
 import 'ace-builds/src-noconflict/theme-solarized_light'
 
-import { FieldWrapper } from '~/components/Form'
+import { FieldWrapper } from '@/components/Form'
 
 ace.config.set(
   'basePath',

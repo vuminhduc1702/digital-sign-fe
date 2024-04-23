@@ -1,7 +1,7 @@
-import { useMutation } from "@tanstack/react-query"
-import { useTranslation } from "react-i18next"
-import { axios } from "~/lib/axios"
-import { MutationConfig, queryClient } from "~/lib/react-query"
+import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 type DeleteProject = {
@@ -9,9 +9,7 @@ type DeleteProject = {
 }
 
 export const deleteProject = ({ projectId }: DeleteProject) => {
-  return axios.delete(
-    `/api/projects/${projectId}`,
-  )
+  return axios.delete(`/api/projects/${projectId}`)
 }
 
 type UseDeleteProjectOptions = {

@@ -2,21 +2,29 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Link } from '~/components/Link'
-import { BaseTable } from '~/components/Table'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { Link } from '@/components/Link'
+import { BaseTable } from '@/components/Table'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 
 import { type ModuleConfig } from '../types'
-import { BaseTablePagination } from '~/types'
+import { BaseTablePagination } from '@/types'
+import { type BaseTableProps } from '@/components/Table'
+
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<ModuleConfig>,
+  'columns' | 'offset' | 'setOffset' | 'data'
+> & {
+  data?: ModuleConfig[]
+  columns?: ColumnDef<T, any>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
+}
 
 type LwM2MTableProps = {
   moduleConfig: ModuleConfig[]
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-}
+} & PartialBaseTableProps<ModuleConfig>
+
 export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id

@@ -1,11 +1,11 @@
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Head } from '~/components/Head'
+import { Head } from '@/components/Head'
 
-import textureLogin from '~/assets/images/texture-auth-layout.svg'
-import frameAuth from '~/assets/images/frame-auth-layout.svg'
-import logo from '~/assets/images/logo.svg'
+import textureLogin from '@/assets/images/texture-auth-layout.svg'
+import frameAuth from '@/assets/images/frame-auth-layout.svg'
+import logo from '@/assets/images/logo.svg'
 
 type LayoutProps = {
   children: ReactNode
@@ -24,10 +24,10 @@ export const Layout = ({ children, title }: LayoutProps) => {
       >
         <div className="flex h-[99.3vh] pb-20 pt-[7.5rem] sm:px-14 lg:px-60">
           <div className="flex w-2/3 shrink flex-col items-center justify-center rounded-s-lg bg-white">
-            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pb-5 lg:pt-10">
+            <div className="flex justify-center pt-16 sm:py-5 lg:pb-5 lg:pt-10">
               <img src={logo} alt="logo" />
             </div>
-            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pt-5">
+            <div className="flex justify-center pt-16 sm:py-5 lg:pt-5">
               <img src={frameAuth} alt="" />
             </div>
           </div>

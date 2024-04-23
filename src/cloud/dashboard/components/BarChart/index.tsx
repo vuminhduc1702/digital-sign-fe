@@ -13,12 +13,12 @@ import {
 import { useSpinDelay } from 'spin-delay'
 import type * as z from 'zod'
 
-import { Spinner } from '~/components/Spinner'
+import { Spinner } from '@/components/Spinner'
 import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
-import refreshIcon from '~/assets/icons/table-refresh.svg'
+import refreshIcon from '@/assets/icons/table-refresh.svg'
 import { EN_TIME, VN_TIME } from '../LineChart'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
 import * as d3 from 'd3'
 
@@ -33,7 +33,6 @@ export const BarChart = ({
   refetchData?: () => void
   refreshBtn?: boolean
 }) => {
-  // console.log(`new bar: `, data)
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
   const TIME_PERIOD =

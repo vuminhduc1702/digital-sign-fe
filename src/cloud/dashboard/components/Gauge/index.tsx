@@ -4,7 +4,7 @@ import { motion, MotionConfig, useAnimationFrame } from 'framer-motion'
 import clsx from 'clsx'
 import { useSpinDelay } from 'spin-delay'
 
-import { Spinner } from '~/components/Spinner'
+import { Spinner } from '@/components/Spinner'
 import type * as z from 'zod'
 
 import { type LatestData } from '../../types'

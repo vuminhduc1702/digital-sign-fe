@@ -1,26 +1,26 @@
-import { PATHS } from '~/routes/PATHS'
-import { useProjectIdStore } from '~/stores/project'
-import storage from '~/utils/storage'
-import defaultProjectImage from '~/assets/images/default-project.png'
-import { type Project } from '../routes/ProjectManage'
+import { PATHS } from '@/routes/PATHS'
+import { useProjectIdStore } from '@/stores/project'
+import storage from '@/utils/storage'
+import defaultProjectImage from '@/assets/images/default-project.png'
+import { type Project, type ProjectList } from '../routes/ProjectManage'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
+} from '@/components/Tooltip'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
 
-import { Button } from '~/components/Button/Button'
-import { useDisclosure } from '~/utils/hooks'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Button } from '@/components/Button/Button'
+import { useDisclosure } from '@/utils/hooks'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { useTranslation } from 'react-i18next'
 import { useDeleteProject } from '../api/deleteProject'
 import { UpdateProject } from './UpdateProject'
 import { useEffect, useState } from 'react'
-import { API_URL } from '~/config'
+import { API_URL } from '@/config'
 import { DownloadIcon } from '@radix-ui/react-icons'
 import { backupProject } from '../api/backupProject'
 import { useNavigate } from 'react-router-dom'
@@ -29,13 +29,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function ListProjectItem({
   listProjectData,
 }: {
-  listProjectData: Project[]
+  listProjectData: ProjectList
 }) {
   const { t } = useTranslation()
   const [name, setName] = useState('')

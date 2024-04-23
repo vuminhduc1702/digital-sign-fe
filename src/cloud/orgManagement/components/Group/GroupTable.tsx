@@ -1,28 +1,28 @@
-import { useMemo } from 'react'
+import React, { useMemo, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { Button } from '~/components/Button'
-import { BaseTable } from '~/components/Table'
-import { useCopyId, useDisclosure } from '~/utils/hooks'
-import { PATHS } from '~/routes/PATHS'
+import { Button } from '@/components/Button'
+import { BaseTable, type BaseTableProps } from '@/components/Table'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
+import { PATHS } from '@/routes/PATHS'
 import { useDeleteGroup } from '../../api/groupAPI'
 import { UpdateGroup } from './UpdateGroup'
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 import { type Group } from '../../types'
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
 import { type EntityType } from '../../api/attrAPI'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnDetailIcon from '~/assets/icons/btn-detail.svg'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnDetailIcon from '@/assets/icons/btn-detail.svg'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import AssignUser from './AssignUser'
 import AssignGroupRole from './AssignGroupRole'
 import {
@@ -30,9 +30,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { Link } from '~/components/Link'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 export type GroupType = {
   id: string
@@ -87,60 +87,76 @@ function GroupTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() =>
-              navigate(
-                `${PATHS.GROUP_MANAGE}/${projectId}/${
-                  orgId != null ? `${orgId}/${id}` : ` /${id}`
-                }`,
-              )
-            }
-          >
-            <img src={btnDetailIcon} alt="View group" className="h-5 w-5" />
-            {t('table:view_detail')}
-          </DropdownMenuItem>
-          {props.entity_type === 'DEVICE' && (
-            <DropdownMenuItem onClick={openAssignUser}>
-              <img src={btnEditIcon} alt="Assign user" className="h-5 w-5" />
-              {t('cloud:org_manage.user_manage.add_user.assign')}
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={open}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuFiles
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={() => handleCopyId(id)}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={openDelete}
+          />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex cursor-pointer justify-center p-3">
+              <LuMoreVertical className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate(
+                  `${PATHS.GROUP_MANAGE}/${projectId}/${
+                    orgId != null ? `${orgId}/${id}` : ` /${id}`
+                  }`,
+                )
+              }
+            >
+              <img src={btnDetailIcon} alt="View group" className="h-5 w-5" />
+              {t('table:view_detail')}
             </DropdownMenuItem>
-          )}
-          {props.entity_type === 'USER' && (
-            <DropdownMenuItem onClick={openAssignGroupRole}>
-              <img src={btnEditIcon} alt="Assign user" className="h-5 w-5" />
-              {t('cloud:org_manage.user_manage.add_user.assign_role')}
+            {props.entity_type === 'DEVICE' && (
+              <DropdownMenuItem onClick={openAssignUser}>
+                <img src={btnEditIcon} alt="Assign user" className="h-5 w-5" />
+                {t('cloud:org_manage.user_manage.add_user.assign')}
+              </DropdownMenuItem>
+            )}
+            {props.entity_type === 'USER' && (
+              <DropdownMenuItem onClick={openAssignGroupRole}>
+                <img src={btnEditIcon} alt="Assign user" className="h-5 w-5" />
+                {t('cloud:org_manage.user_manage.add_user.assign_role')}
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem onClick={open}>
+              <img src={btnEditIcon} alt="Edit group" className="h-5 w-5" />
+              {t('cloud:org_manage.group_manage.add_group.edit')}
             </DropdownMenuItem>
-          )}
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit group" className="h-5 w-5" />
-            {t('cloud:org_manage.group_manage.add_group.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleCopyId(id)}>
-            <img
-              src={btnCopyIdIcon}
-              alt="Copy group's ID"
-              className="h-5 w-5"
-            />
-            {t('table:copy_id')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete group" className="h-5 w-5" />
-            {t('cloud:org_manage.group_manage.table.delete_group')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <DropdownMenuItem onClick={() => handleCopyId(id)}>
+              <img
+                src={btnCopyIdIcon}
+                alt="Copy group's ID"
+                className="h-5 w-5"
+              />
+              {t('table:copy_id')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img src={btnDeleteIcon} alt="Delete group" className="h-5 w-5" />
+              {t('cloud:org_manage.group_manage.table.delete_group')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       {isOpen ? (
         <UpdateGroup
           groupId={id}
@@ -185,28 +201,61 @@ function GroupTableContextMenu({
   )
 }
 
+type PartialBaseTableProps<T> = Omit<BaseTableProps<Group>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+}
+
 type GroupTableProps = {
   data: Group[]
   rowSelection: { [key: string]: boolean }
   setRowSelection: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
-} & BaseTablePagination
+} & PartialBaseTableProps<Group>
 
 export function GroupTable({ data, ...props }: GroupTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const projectId = storage.getProject()?.id
 
   const { orgId } = useParams()
 
-  const columnHelper = createColumnHelper<Group>()
+  const offsetPrev = useRef<number>(props.offset)
 
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
+
+  function navigateToDetail(id: string) {
+    navigate(
+      `${PATHS.GROUP_MANAGE}/${projectId}/${
+        orgId != null ? `${orgId}/${id}` : ` /${id}`
+      }`,
+    )
+  }
+
+  const columnHelper = createColumnHelper<Group>()
   const columns = useMemo<ColumnDef<Group, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { name, id, organization, entity_type } = info.row.original
+          return GroupTableContextMenu({ name, id, organization, entity_type })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -221,11 +270,12 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.group_manage.table.entity_type')}</span>
         ),
-        cell: info =>
-          `${info.getValue().charAt(0).toUpperCase()}${info
-            .getValue()
-            .toLowerCase()
-            .slice(1)}`,
+        cell: info => {
+          return (
+            t(`cloud:org_manage.group_manage.table.${info.getValue()}`) ||
+            info.getValue()
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.display({
@@ -234,22 +284,6 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
           <span>{t('cloud:org_manage.group_manage.table.org_name')}</span>
         ),
         cell: info => info.row.original.org_name || t('table:no_in_org'),
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { name, id, organization, entity_type, org_name } =
-            info.row.original
-          return GroupTableContextMenu({
-            name,
-            id,
-            organization,
-            entity_type,
-            org_name,
-          })
-        },
-        header: () => null,
         footer: info => info.column.id,
       }),
     ],
@@ -261,10 +295,7 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
       popoverClassName="absolute right-0 top-1 block"
       data={data}
       columns={columns}
-      onDataText={t('table:no_group')}
-      path={PATHS.GROUP_MANAGE}
-      projectId={projectId}
-      orgId={orgId}
+      viewDetailOnClick={navigateToDetail}
       {...props}
     />
   )

@@ -3,26 +3,26 @@ import * as z from 'zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FieldWrapper,
   FormDrawer,
   InputField,
   SelectField,
-} from '~/components/Form'
+} from '@/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
   type EntityType,
-} from '~/cloud/orgManagement/api/attrAPI'
-import { Checkbox } from '~/components/Checkbox'
-import TitleBar from '~/components/Head/TitleBar'
+} from '@/cloud/orgManagement/api/attrAPI'
+import { Checkbox } from '@/components/Checkbox'
+import TitleBar from '@/components/Head/TitleBar'
 
-import { attrListSchema } from '~/utils/schemaValidation'
+import { attrListSchema } from '@/utils/schemaValidation'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { PlusIcon } from '@/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 
 type CreateAttrProps = {
   entityId: string
@@ -80,12 +80,9 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <Button
-          className="h-9 w-9 rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:org_manage.org_manage.add_attr.button')}
+        </Button>
       }
       title={t('cloud:org_manage.org_manage.add_attr.title')}
       submitButton={

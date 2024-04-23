@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axiosUploadFile } from '~/lib/axios'
-import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { axiosUploadFile } from '@/lib/axios'
+import { queryClient, type MutationConfig } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 export type UploadFileFirmWareDTO = {
@@ -10,7 +10,10 @@ export type UploadFileFirmWareDTO = {
   firmwareId: string
 }
 
-export const uploadFileFirmWare = ({ file, firmwareId }: UploadFileFirmWareDTO) => {
+export const uploadFileFirmWare = ({
+  file,
+  firmwareId,
+}: UploadFileFirmWareDTO) => {
   return axiosUploadFile.post(`/api/ota/${firmwareId}`, file)
 }
 

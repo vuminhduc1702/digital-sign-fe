@@ -1,36 +1,42 @@
-import { useLocation, useNavigate, useRoutes } from 'react-router-dom'
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  type RouteObject,
+  RouterProvider,
+  useLocation,
+  useRoutes,
+} from 'react-router-dom'
 import { useEffect } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
 import { BASE_PATH, PATHS } from './PATHS'
-import { useUser } from '~/lib/auth'
-import { lazyImport } from '~/utils/lazyImport'
+import { useUser } from '@/lib/auth'
+import { lazyImport } from '@/utils/lazyImport'
 import { protectedRoutes } from './protected'
 import { publicRoutes } from './public'
-import { ErrorFallback } from '~/pages/ErrorPage'
-import { PDFViewer } from '~/pages/LandingPage/components/PdfViewer'
+import { ErrorFallback } from '@/pages/ErrorPage'
+import { PDFViewer } from '@/pages/LandingPage/components/PdfViewer'
+import { endProgress, startProgress } from '@/components/Progress'
 
 const { LandingPage } = lazyImport(
-  () => import('~/pages/LandingPage'),
+  () => import('@/pages/LandingPage'),
   'LandingPage',
 )
 const { MaintainPage } = lazyImport(
-  () => import('~/pages/MaintainPage'),
+  () => import('@/pages/MaintainPage'),
   'MaintainPage',
 )
 const { NotFoundPage } = lazyImport(
-  () => import('~/pages/NotFoundPage'),
+  () => import('@/pages/NotFoundPage'),
   'NotFoundPage',
 )
 const { VersionPage } = lazyImport(
-  () => import('~/pages/VersionPage'),
+  () => import('@/pages/VersionPage'),
   'VersionPage',
 )
 
 export const AppRoutes = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-
   const { data: userDataFromStorage } = useUser()
 
   const commonRoutes = [
@@ -38,14 +44,35 @@ export const AppRoutes = () => {
     {
       path: PATHS.MAINTAIN,
       element: <MaintainPage />,
+      loader: async () => {
+        startProgress()
+        await import('@/pages/MaintainPage')
+        endProgress()
+
+        return null
+      },
     },
     {
       path: PATHS.NOTFOUND,
       element: <NotFoundPage />,
+      loader: async () => {
+        startProgress()
+        await import('@/pages/NotFoundPage')
+        endProgress()
+
+        return null
+      },
     },
     {
       path: PATHS.VERSION,
       element: <VersionPage />,
+      loader: async () => {
+        startProgress()
+        await import('@/pages/VersionPage')
+        endProgress()
+
+        return null
+      },
     },
     {
       path: PATHS.PDF_VIEWER,
@@ -54,35 +81,60 @@ export const AppRoutes = () => {
           <PDFViewer />
         </ErrorBoundary>
       ),
+      loader: async () => {
+        startProgress()
+        await import('@/pages/LandingPage/components/PdfViewer')
+        endProgress()
+
+        return null
+      },
     },
-  ]
+  ] as const satisfies RouteObject[]
 
   const isNotAuthRoutes =
-    location.pathname !== PATHS.FORGETPASSWORD &&
-    location.pathname !== PATHS.REGISTER &&
-    location.pathname !== PATHS.LOGIN
+    window.location.pathname !== PATHS.FORGETPASSWORD &&
+    window.location.pathname !== PATHS.REGISTER &&
+    window.location.pathname !== PATHS.LOGIN
   const isAuthRoutes =
-    location.pathname === PATHS.FORGETPASSWORD ||
-    location.pathname === PATHS.REGISTER ||
-    location.pathname === PATHS.LOGIN
+    window.location.pathname === PATHS.FORGETPASSWORD ||
+    window.location.pathname === PATHS.REGISTER ||
+    window.location.pathname === PATHS.LOGIN
 
   useEffect(() => {
     if (
       userDataFromStorage == null &&
       isNotAuthRoutes &&
-      !commonRoutes.some(item => item.path === location.pathname)
+      !commonRoutes.some(item => item.path === window.location.pathname)
     ) {
-      navigate(PATHS.LOGIN, { state: { from: location }, replace: true })
+      window.location.href = PATHS.LOGIN
     }
 
     if (userDataFromStorage != null && isAuthRoutes) {
-      navigate(PATHS.PROJECT_MANAGE)
+      window.location.href = PATHS.PROJECT_MANAGE
     }
-  }, [location.pathname, userDataFromStorage, isAuthRoutes])
+  }, [window.location.pathname, userDataFromStorage, isAuthRoutes])
 
   const routes = userDataFromStorage ? protectedRoutes : publicRoutes
 
-  const element = useRoutes([...routes, ...commonRoutes])
+  const mapRoutes = (routes: Readonly<RouteObject[]>) => {
+    return routes.map(route => (
+      <Route
+        key={route.path}
+        path={route.path}
+        element={route.element}
+        loader={route.loader}
+      >
+        {route.children && mapRoutes(route.children)}
+      </Route>
+    ))
+  }
 
-  return <>{element}</>
+  return (
+    <RouterProvider
+      // router={createBrowserRouter([...ROUTES, ...COMMON_ROUTES])}
+      router={createBrowserRouter(
+        createRoutesFromElements(mapRoutes([...routes, ...commonRoutes])),
+      )}
+    />
+  )
 }

@@ -1,17 +1,20 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
-import { CreateServiceThingDTO } from './createThingService'
+import { type CreateServiceThingDTO } from './createThingService'
 
-export const updateThingService = ({ data, thingId, name }: CreateServiceThingDTO) => {
+export const updateThingService = ({
+  data,
+  thingId,
+  name,
+}: CreateServiceThingDTO) => {
   return axios.put(`/api/fe/thing/${thingId}/service/${name}`, data)
 }
 
 type UseUpdateServiceOptions = {
-  
   config?: MutationConfig<typeof updateThingService>
 }
 

@@ -1,10 +1,7 @@
-import { Suspense } from 'react'
 import { Outlet, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { ContentLayout } from '../ContentLayout'
-import { Spinner } from '~/components/Spinner'
-import TitleBar from '~/components/Head/TitleBar'
 
 export function DashboardLayout() {
   const { t } = useTranslation()
@@ -15,15 +12,7 @@ export function DashboardLayout() {
       {projectId ? (
         <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
           <div className="flex flex-col gap-2 md:col-span-2">
-            <Suspense
-              fallback={
-                <div className="flex grow items-center justify-center md:col-span-2">
-                  <Spinner size="xl" />
-                </div>
-              }
-            >
-              <Outlet />
-            </Suspense>
+            <Outlet />
           </div>
         </div>
       ) : null}

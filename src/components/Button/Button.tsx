@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { useSpinDelay } from 'spin-delay'
 
-import { Spinner } from '~/components/Spinner'
-import { cn } from '~/utils/misc'
+import { Spinner } from '@/components/Spinner'
+import { cn } from '@/utils/misc'
 
 const variants = {
   primary: 'bg-primary-400 text-white',
@@ -64,11 +64,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {showSpinner && (
-          <Spinner
-            size="sm"
-            variant="light"
-            className="text-current"
-          />
+          <Spinner size="sm" variant="light" className="text-current" />
         )}
         <span className="flex justify-between gap-x-2">
           {!showSpinner && startIcon}

@@ -1,30 +1,30 @@
 import { useEffect, useState } from 'react'
 import { type EntityTypeURL, type OrgMapType } from './OrgManageSidebar'
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import { useTranslation } from 'react-i18next'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnOpenToggle from '~/assets/icons/btn-open-toggle.svg'
-import btnCloseToggle from '~/assets/icons/btn-close-toggle.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnOpenToggle from '@/assets/icons/btn-open-toggle.svg'
+import btnCloseToggle from '@/assets/icons/btn-close-toggle.svg'
 import { useNavigate, useParams } from 'react-router-dom'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
 import { useDeleteOrg } from '../api/deleteOrg'
-import { useCopyId, useDisclosure } from '~/utils/hooks'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
 import clsx from 'clsx'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 interface TreeViewProps {
   data: OrgMapType[]

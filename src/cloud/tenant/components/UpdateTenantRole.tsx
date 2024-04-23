@@ -4,19 +4,19 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-import { useProjects } from '~/cloud/project/api'
-import { useGetRoles } from '~/cloud/role/api'
-import { Button } from '~/components/Button'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { InputField, SelectDropdown, SelectField } from '~/components/Form'
+import { useProjects } from '@/cloud/project/api'
+import { useGetRoles } from '@/cloud/role/api'
+import { Button } from '@/components/Button'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import { InputField, SelectDropdown, SelectField } from '@/components/Form'
 import {
   useUpdateCustomerRole,
   type UpdateEntityCustomerRoleDTO,
 } from '../api/updateTenantRole'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { HiOutlineXMark } from 'react-icons/hi2'
 
 type UpdateCustomerRoleProps = {
@@ -59,7 +59,6 @@ export function UpdateCustomerRole({
         role_id: roleIdProps,
       },
     })
-  console.log('formState.errors', formState.errors)
 
   const { data: projectData, isLoading: projectIsLoading } = useProjects({})
   const projectOptions = projectData?.projects?.map(item => ({
@@ -100,7 +99,7 @@ export function UpdateCustomerRole({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={closeRole}
               >
                 <span className="sr-only">Close panel</span>
@@ -172,7 +171,7 @@ export function UpdateCustomerRole({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={closeRole}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

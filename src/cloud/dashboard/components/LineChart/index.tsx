@@ -13,13 +13,13 @@ import {
 } from 'recharts'
 import type * as z from 'zod'
 
-import { Spinner } from '~/components/Spinner'
+import { Spinner } from '@/components/Spinner'
 import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
-import refreshIcon from '~/assets/icons/table-refresh.svg'
+import refreshIcon from '@/assets/icons/table-refresh.svg'
 
 import * as d3 from 'd3'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
 export const VN_TIME = {
   dateTime: '%d %B %Y',
@@ -493,8 +493,8 @@ export function LineChart({
                         attributeKey.includes('FFT')
                           ? '#2c2c2c'
                           : colorKey && colorKey !== ''
-                          ? colorKey
-                          : '#e8c1a0'
+                            ? colorKey
+                            : '#e8c1a0'
                       }
                     />
                   )
@@ -549,8 +549,8 @@ export function LineChart({
                       attributeKey.includes('FFT')
                         ? '#2c2c2c'
                         : colorKey && colorKey !== ''
-                        ? colorKey
-                        : '#e8c1a0'
+                          ? colorKey
+                          : '#e8c1a0'
                     }
                   />
                 )
@@ -596,8 +596,8 @@ export function LineChart({
                       attributeKey.includes('FFT')
                         ? '#2c2c2c'
                         : colorKey && colorKey !== ''
-                        ? colorKey
-                        : '#e8c1a0'
+                          ? colorKey
+                          : '#e8c1a0'
                     }
                   />
                 )
