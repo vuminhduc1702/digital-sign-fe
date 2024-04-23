@@ -59,7 +59,6 @@ export function UpdateCustomerRole({
         role_id: roleIdProps,
       },
     })
-  console.log('formState.errors', formState.errors)
 
   const { data: projectData, isLoading: projectIsLoading } = useProjects({})
   const projectOptions = projectData?.projects?.map(item => ({

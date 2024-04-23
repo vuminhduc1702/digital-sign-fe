@@ -300,7 +300,9 @@ export function BaseTable<T extends Record<string, any>>({
               id="table-ref"
             >
               <Progress isLoading={showProgress} />
-              <TableHeader>
+              <TableHeader
+              // className="sticky top-0 z-50"
+              >
                 {table.getHeaderGroups().map(headerGroup => {
                   return (
                     <TableRow key={headerGroup.id}>
@@ -311,7 +313,7 @@ export function BaseTable<T extends Record<string, any>>({
                             className={cn(
                               '',
                               header.id === 'select'
-                                ? 'py-0 pl-[8px]'
+                                ? 'bg-white py-0 pl-[8px]'
                                 : header.id === 'edit' ||
                                     header.id === 'view' ||
                                     header.id === 'delete'

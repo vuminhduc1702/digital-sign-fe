@@ -15,7 +15,6 @@ export function CardChart({
   data: LatestData
   widgetInfo: z.infer<typeof widgetSchema>
 }) {
-  // console.log('new card: ', data)
   const { t } = useTranslation()
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
     key: '',

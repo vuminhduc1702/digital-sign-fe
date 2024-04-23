@@ -224,7 +224,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     updateCountdown()
                   })
                   .catch(error => {
-                    console.log(error)
                     setBtnOtpDisable(false)
                   })
               }

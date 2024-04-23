@@ -111,7 +111,7 @@ export function DeviceDetail() {
   }, [isSuccessDeleteMultipleAttrs])
 
   // Attr Log
-  const [attrLogOffset, setDeviceAttrOffset] = useState(0)
+  const [attrLogOffset, setAttrLogOffset] = useState(0)
   const {
     data: attrLogData,
     isLoading: isLoadingDeviceAttr,
@@ -284,7 +284,7 @@ export function DeviceDetail() {
             <AttrLogTable
               data={attrLogData?.logs ?? []}
               offset={attrLogOffset}
-              setOffset={setDeviceAttrOffset}
+              setOffset={setAttrLogOffset}
               total={attrLogData?.total ?? 0}
               isPreviousData={isPreviousDataDeviceAttr}
               isLoading={isLoadingDeviceAttr}

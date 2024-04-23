@@ -92,7 +92,6 @@ export function CreateThing({
           id="create-entityThing"
           className="flex w-full flex-col justify-between space-y-6"
           onSubmit={handleSubmit(values => {
-            // console.log('thing values', values)
             if (values.type === 'thing') {
               mutateThing({
                 data: {

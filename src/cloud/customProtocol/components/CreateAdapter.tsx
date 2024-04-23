@@ -188,7 +188,6 @@ export function CreateAdapter() {
   } = useForm<CreateAdapterDTO['data']>({
     resolver: adapterSchema && zodResolver(adapterSchema),
   })
-  console.log('zod adapter errors: ', formState.errors)
 
   const { fields, append, remove, replace } = useFieldArray({
     name: 'configuration.topic_filters',
@@ -262,7 +261,6 @@ export function CreateAdapter() {
         id="create-adapter"
         className="flex w-full flex-col justify-between"
         onSubmit={handleSubmit(values => {
-          // console.log('adapter values', values)
           if (values.protocol === 'mqtt') {
             const data = {
               project_id: projectId,

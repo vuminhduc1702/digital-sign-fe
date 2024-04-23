@@ -83,7 +83,6 @@ export function ComplexTree<TFormValues extends FieldValues>({
       selectedItems.length > 0 && selectedItems.toString() !== no_org
         ? selectedItems.toString()
         : '',
-    level: 1,
     config: {
       suspense: false,
     },
