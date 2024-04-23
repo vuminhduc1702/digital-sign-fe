@@ -54,14 +54,14 @@ export function CreateOrg() {
   const { t } = useTranslation()
 
   const {
-    handleResetDefaultImage1,
-    avatarRef1,
+    handleResetDefaultImage,
+    avatarRef,
     uploadImageErr,
     setUploadImageErr,
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
-  } = useResetDefaultImage(defaultOrgImage)
+  } = useResetDefaultImage(defaultOrgImage, 'default-org.png')
 
   const projectId = storage.getProject()?.id
 
@@ -90,7 +90,7 @@ export function CreateOrg() {
 
   const clearData = () => {
     setUploadImageErr('')
-    handleResetDefaultImage1()
+    handleResetDefaultImage()
     reset()
   }
 
@@ -239,11 +239,11 @@ export function CreateOrg() {
                   reader.readAsDataURL(file)
                   reader.onload = e => {
                     if (
-                      avatarRef1.current != null &&
+                      avatarRef.current != null &&
                       e.target != null &&
                       reader.readyState === 2
                     ) {
-                      avatarRef1.current.src = e.target.result as string
+                      avatarRef.current.src = e.target.result as string
                     }
                   }
                 }}
@@ -254,13 +254,13 @@ export function CreateOrg() {
               src={defaultOrgImage}
               alt="Project"
               className="mb-3 h-36 w-32"
-              ref={avatarRef1}
+              ref={avatarRef}
             />
             <Button
               className="mb-3 border-none"
               variant="secondaryLight"
               size="square"
-              onClick={handleResetDefaultImage1}
+              onClick={handleResetDefaultImage}
             >
               {t('cloud:project_manager.add_project.upload_ava_default')}
             </Button>
