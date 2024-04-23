@@ -295,7 +295,8 @@
           "success_create": "Tạo thiết bị thành công",
           "success_update": "Sửa thiết bị thành công",
           "success_delete": "Xoá thiết bị thành công",
-          "choose_device": "Vui lòng chọn thiết bị"
+          "choose_device": "Vui lòng chọn thiết bị",
+          "select_require_err": "Vui lòng chọn"
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
