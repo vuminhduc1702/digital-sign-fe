@@ -1,19 +1,19 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import TitleBar from '~/components/Head/TitleBar'
-import storage from '~/utils/storage'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import TitleBar from '@/components/Head/TitleBar'
+import storage from '@/utils/storage'
 import { useGetRoles } from '../api'
 import { CreateRole } from './CreateRole'
 import { RoleTable } from './RoleTable'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { ExportTable } from '~/components/Table/components/ExportTable'
+import { ExportTable } from '@/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
-import { SearchField } from '~/components/Input'
-import { useDisclosure } from '~/utils/hooks'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { useDisclosure } from '@/utils/hooks'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export const convertActionsENtoVN = (enArr: string[]) => {
   return enArr?.map(item => {
@@ -34,11 +34,20 @@ export function RoleSidebar() {
 
   const [offset, setOffset] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
   const projectId = storage.getProject()?.id
 
-  const { data, isPreviousData } = useGetRoles({ projectId, offset })
-  const { close, open, isOpen } = useDisclosure()
+  const {
+    data,
+    isLoading: isLoadingRoles,
+    isPreviousData,
+  } = useGetRoles({ projectId, offset })
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
 
   const ref = useRef(null)
   const {
@@ -49,7 +58,7 @@ export function RoleSidebar() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleRoles) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleRoles])
 
@@ -64,52 +73,39 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = data?.roles?.reduce(
-    (acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:role_manage.add_role.name')]: curr.name,
-          [t('cloud:role_manage.add_role.role_type')]: curr.role_type
-            ? curr.role_type
-            : 'Generic',
-          [t('cloud:role_manage.add_role.actions')]: convertActionsENtoVN(
-            curr.policies[0].actions,
-          ).toString(),
+  const formatExcel: Array<{ [key: string]: unknown }> | undefined =
+    data?.roles?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:role_manage.add_role.name')]: curr.name,
+            [t('cloud:role_manage.add_role.role_type')]: curr.role_type
+              ? curr.role_type
+              : 'Generic',
+            [t('cloud:role_manage.add_role.actions')]: convertActionsENtoVN(
+              curr.policies[0].actions,
+            ).toString(),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    },
-    [] as Array<{ [key: string]: unknown }>,
-  )
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
-    <>
+    <div className="flex grow flex-col">
       <TitleBar title={t('cloud:role_manage.sidebar.title')} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
-          <div className="mr-[42px] flex items-center gap-x-3">
-            {Object.keys(rowSelection).length > 0 && (
-              <div
-                onClick={open}
-                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-              >
-                <div>{t('btn:delete')}:</div>
-                <div>{Object.keys(rowSelection).length}</div>
-              </div>
-            )}
-            <CreateRole />
+          <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
+              setSearchValue={setSearchQuery}
+              setIsSearchData={setIsSearchData}
+              closeSearch={true}
             />
+            <CreateRole />
           </div>
         </div>
         <RoleTable
@@ -119,17 +115,35 @@ export function RoleSidebar() {
           setOffset={setOffset}
           total={data?.total || 0}
           isPreviousData={isPreviousData}
+          isLoading={isLoadingRoles}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          isSearchData={searchQuery.length > 0 && isSearchData}
+          utilityButton={
+            Object.keys(rowSelection).length > 0 && (
+              <div className="flex items-center">
+                <Button
+                  size="sm"
+                  onClick={openDeleteMulti}
+                  className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                >
+                  <div>{t('btn:delete')}:</div>
+                  <div>{Object.keys(rowSelection).length}</div>
+                </Button>
+              </div>
+            )
+          }
         />
       </div>
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:role_manage.sidebar.delete_role')}
           body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleRoles(
               {
@@ -141,6 +155,6 @@ export function RoleSidebar() {
           isLoading={isLoading}
         />
       ) : null}
-    </>
+    </div>
   )
 }

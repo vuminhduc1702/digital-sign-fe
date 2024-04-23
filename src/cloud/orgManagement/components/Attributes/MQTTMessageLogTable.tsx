@@ -1,19 +1,29 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getVNDateFormat } from '~/utils/misc'
-import { BaseTable } from '~/components/Table'
+import { getVNDateFormat } from '@/utils/misc'
+import { BaseTable } from '@/components/Table'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type EntityType } from '../../api/attrAPI'
 import { type MQTTMessage } from '../../api/attrAPI/getMQTTLog'
+import { type BaseTableProps } from '@/components/Table'
 
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
+} from '@/components/Tooltip'
+
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<MQTTMessage>,
+  'columns' | 'offset' | 'setOffset'
+> & {
+  columns?: ColumnDef<T, any>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
+}
 
 export function MQTTMessageLogTable({
   data,
@@ -24,7 +34,7 @@ export function MQTTMessageLogTable({
   data: MQTTMessage[]
   entityId: string
   entityType: EntityType
-}) {
+} & PartialBaseTableProps<MQTTMessage>) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<MQTTMessage>()
@@ -94,6 +104,8 @@ export function MQTTMessageLogTable({
       data={dataSorted}
       columns={columns}
       onDataText={t('table:no_mqtt_hist')}
+      offset={0}
+      setOffset={() => {}}
       {...props}
     />
   )

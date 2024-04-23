@@ -1,4 +1,4 @@
-import type { BasePagination } from '~/types'
+import type { BasePagination } from '@/types'
 
 export type Billing = {
   stt: number

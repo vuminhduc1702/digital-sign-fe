@@ -4,11 +4,11 @@ import Axios, {
   type InternalAxiosRequestConfig,
 } from 'axios'
 
-import { API_URL } from '~/config'
-import storage from '~/utils/storage'
+import { API_URL } from '@/config'
+import storage from '@/utils/storage'
 import { logoutFn } from './auth'
-import { PATHS } from '~/routes/PATHS'
-import i18n from '~/i18n'
+import { PATHS } from '@/routes/PATHS'
+import i18n from '@/i18n'
 import { toast } from 'sonner'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {

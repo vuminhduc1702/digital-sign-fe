@@ -1,19 +1,19 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
-import { BaseTable } from '~/components/Table'
-import { useCopyId, useDisclosure } from '~/utils/hooks'
+import { BaseTable } from '@/components/Table'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { useDeleteRole } from '../api'
 import { type Role } from '../types'
 import { convertActionsENtoVN } from './RoleSidebar'
@@ -23,8 +23,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
+} from '@/components/Dropdowns'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { type BaseTableProps } from '@/components/Table'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function RoleTableContextMenu({
   id,
@@ -52,37 +54,61 @@ function RoleTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
             onClick={() => {
               open()
               setSelectedUpdateRole(role)
             }}
-          >
-            <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
-            {t('cloud:role_manage.sidebar.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleCopyId(id)}>
-            <img src={btnCopyIdIcon} alt="Copy role's ID" className="h-5 w-5" />
-            {t('table:copy_id')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete role" className="h-5 w-5" />
-            {t('cloud:role_manage.sidebar.delete_role')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuFiles
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={() => handleCopyId(id)}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={openDelete}
+          />
+        </div>
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex cursor-pointer justify-center p-3">
+              <LuMoreVertical 
+            className="text-lg text-gray-500 hover:text-black hover:scale-125 transition-all duration-200 ease-in-out"
+             />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() => {
+                open()
+                setSelectedUpdateRole(role)
+              }}
+            >
+              <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
+              {t('cloud:role_manage.sidebar.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleCopyId(id)}>
+              <img
+                src={btnCopyIdIcon}
+                alt="Copy role's ID"
+                className="h-5 w-5"
+              />
+              {t('table:copy_id')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img src={btnDeleteIcon} alt="Delete role" className="h-5 w-5" />
+              {t('cloud:role_manage.sidebar.delete_role')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+      </div>
       {selectedUpdateRole != null && isOpen ? (
         <UpdateRole
           project_id={project_id}
@@ -113,24 +139,51 @@ function RoleTableContextMenu({
   )
 }
 
+type PartialBaseTableProps<T> = Omit<BaseTableProps<Role>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+}
+
 type RoleTableProps = {
   data: Role[]
   project_id: string
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-} & BaseTablePagination
+} & PartialBaseTableProps<Role>
 
 export function RoleTable({ data, ...props }: RoleTableProps) {
   const { t } = useTranslation()
+
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
 
   const columnHelper = createColumnHelper<Role>()
   const columns = useMemo<ColumnDef<Role, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const role = info.row.original
+          const { name, id } = info.row.original
+          return RoleTableContextMenu({
+            id,
+            name,
+            role,
+            project_id: props.project_id,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -155,21 +208,6 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
           )?.toString()
           return actions
         },
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const role = info.row.original
-          const { name, id } = info.row.original
-          return RoleTableContextMenu({
-            id,
-            name,
-            role,
-            project_id: props.project_id,
-          })
-        },
-        header: () => null,
         footer: info => info.column.id,
       }),
     ],

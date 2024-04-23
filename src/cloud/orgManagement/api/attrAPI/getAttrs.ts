@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
+import { axios } from '@/lib/axios'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type EntityType } from './createAttr'
-import { type Attribute } from '~/types'
+import { type Attribute } from '@/types'
 
 export type AttrRes = {
   entity_type: EntityType
@@ -18,13 +18,15 @@ export const getAttrs = ({
   entityType,
   entityId,
   key,
+  key_search,
 }: {
   entityType: EntityType
   entityId: string
   key?: string
+  key_search?: string
 }): Promise<AttrsRes> => {
   return axios.get(`/api/attributes/${entityType}/${entityId}/values`, {
-    params: { key },
+    params: { key, key_search },
   })
 }
 
@@ -34,6 +36,7 @@ type UseAttrsOptions = {
   entityType: EntityType
   entityId: string
   key?: string
+  key_search?: string
   config?: QueryConfig<QueryFnType>
 }
 
@@ -41,11 +44,12 @@ export const useGetAttrs = ({
   entityType,
   entityId,
   key,
+  key_search,
   config,
 }: UseAttrsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['attrs', entityType, entityId, key],
-    queryFn: () => getAttrs({ entityType, entityId, key }),
+    queryKey: ['attrs', entityType, entityId, key, key_search],
+    queryFn: () => getAttrs({ entityType, entityId, key, key_search }),
     enabled: !!entityId,
     ...config,
   })

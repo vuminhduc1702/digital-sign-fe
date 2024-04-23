@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Controller, type FieldValues } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 import { type SelectOption } from './SelectField'
-import { type ControllerPassThroughProps } from '~/types'
+import { type ControllerPassThroughProps } from '@/types'
 
 type SelectProps<
   TFormValues extends FieldValues,
@@ -85,8 +85,8 @@ export function SelectDropdown<
                           return item.value
                         })
                       : isWrappedArray
-                      ? [(e as unknown as SelectOption)?.value]
-                      : (e as unknown as SelectOption)?.value
+                        ? [(e as unknown as SelectOption)?.value]
+                        : (e as unknown as SelectOption)?.value
                   // console.log('option', option)
                   onChange(option)
                   customOnChange?.(option)

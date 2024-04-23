@@ -4,22 +4,22 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { InputField } from '~/components/Form'
+import { Button } from '@/components/Button'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import { InputField } from '@/components/Form'
 import { useUpdateCustomer, type UpdateCustomerDTO } from '../api/updateTenant'
 import * as z from 'zod'
 import {
   emailSchema,
   nameSchema,
   phoneSchemaRegex,
-} from '~/utils/schemaValidation'
+} from '@/utils/schemaValidation'
 import { UpdateCustomerRole } from './UpdateTenantRole'
 import { TenantRoleTable } from './TenantRoleTable'
-import { useDisclosure } from '~/utils/hooks'
+import { useDisclosure } from '@/utils/hooks'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 export const updateCustomerSchema = z.object({
   name: nameSchema,
@@ -75,6 +75,30 @@ export function UpdateCustomer({
     }
   }, [isSuccess, close])
 
+  // const [rowSelection, setRowSelection] = useState({})
+  // const pdfHeader = useMemo(
+  //   () => [
+  //     t('table:no'),
+  //     t('cloud:tenant.table.project'),
+  //     t('cloud:tenant.table.role'),
+  //   ],
+  //   [],
+  // )
+  // const rowSelectionKey = Object.keys(rowSelection)
+  // const formatExcel = customerData?.tenant?.reduce(
+  //   (acc, curr, index) => {
+  //     if (rowSelectionKey.includes(curr.id)) {
+  //       const temp = {
+  //         [t('table:no')]: (index + 1 + offset).toString(),
+  //         [t('cloud:tenant.table.project')]: curr.tenant,
+  //         [t('cloud:tenant.table.role')]: curr.phone,
+  //       }
+  //     }
+  //     return acc
+  //   },
+  //   [] as Array<{ [key: string]: string }>,
+  // )
+
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
       <div className="inline-block h-screen w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">
@@ -85,7 +109,7 @@ export function UpdateCustomer({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -145,7 +169,7 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="muted"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={openRole}
           >
             {t('form:role.add')}
@@ -153,7 +177,7 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

@@ -1,11 +1,11 @@
 import type * as z from 'zod'
 import { useMutation } from '@tanstack/react-query'
 
-import { axiosUploadFile } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axiosUploadFile } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 
 import { type uploadImageResSchema } from '../components/CreateOrg'
-import { type UploadImageDTO } from '~/utils/hooks'
+import { type UploadImageDTO } from '@/utils/hooks'
 
 type UploadImageRes = z.infer<typeof uploadImageResSchema>
 

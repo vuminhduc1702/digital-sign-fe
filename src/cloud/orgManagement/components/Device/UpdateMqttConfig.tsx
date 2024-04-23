@@ -1,10 +1,10 @@
 import { t } from 'i18next'
 import { useEffect } from 'react'
-import { Button } from '~/components/Button'
-import { Drawer } from '~/components/Drawer'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { FieldWrapper, InputField } from '~/components/Form'
+import { Button } from '@/components/Button'
+import { Drawer } from '@/components/Drawer'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { FieldWrapper, InputField } from '@/components/Form'
 import { z } from 'zod'
 import {
   type MqttConfigDTO,
@@ -12,7 +12,7 @@ import {
 } from '../../api/deviceAPI/updateMqttConfig'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Checkbox } from '~/components/Checkbox'
+import { Checkbox } from '@/components/Checkbox'
 
 import { type DeviceAdditionalInfo } from '../../types'
 

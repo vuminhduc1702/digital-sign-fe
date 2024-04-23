@@ -1,8 +1,8 @@
 import * as z from 'zod'
 
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
-import { type BaseWSRes } from '~/types'
+import { type BaseWSRes } from '@/types'
 
 export type WSWidgetData = { ts: number; value: string }
 

@@ -8,19 +8,19 @@ import {
   useCreateEntityThing,
   type CreateEntityThingDTO,
   useGetEntityThings,
-} from '~/cloud/customProtocol/api/entityThing'
-import { thingTypeList } from '~/cloud/customProtocol/components'
-import { Button } from '~/components/Button'
-import { InputField, SelectDropdown, SelectField } from '~/components/Form'
-import { FormDialog } from '~/components/FormDialog'
-import storage from '~/utils/storage'
-import { cn } from '~/utils/misc'
+} from '@/cloud/customProtocol/api/entityThing'
+import { thingTypeList } from '@/cloud/customProtocol/components'
+import { Button } from '@/components/Button'
+import { InputField, SelectDropdown, SelectField } from '@/components/Form'
+import { FormDialog } from '@/components/FormDialog'
+import storage from '@/utils/storage'
+import { cn } from '@/utils/misc'
 
-import { type EntityThingType } from '~/cloud/customProtocol'
-import { nameSchema } from '~/utils/schemaValidation'
+import { type EntityThingType } from '@/cloud/customProtocol'
+import { nameSchema } from '@/utils/schemaValidation'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export const entityThingSchema = z
   .object({
@@ -76,8 +76,12 @@ export function CreateThing({
   }))
 
   useEffect(() => {
+    if (isSuccessCreateThing) {
+      setValue('name', '')
+      setValue('description', '')
+    }
     setValue('type', thingType)
-  }, [])
+  }, [isSuccessCreateThing])
 
   return (
     <FormDialog
@@ -88,7 +92,6 @@ export function CreateThing({
           id="create-entityThing"
           className="flex w-full flex-col justify-between space-y-6"
           onSubmit={handleSubmit(values => {
-            // console.log('thing values', values)
             if (values.type === 'thing') {
               mutateThing({
                 data: {
@@ -172,12 +175,9 @@ export function CreateThing({
         </form>
       }
       triggerButton={
-        <Button
-          variant="trans"
-          className={cn('rounded-md', classNameTriggerBtn)}
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:custom_protocol.thing.button')}
+        </Button>
       }
       confirmButton={
         <Button

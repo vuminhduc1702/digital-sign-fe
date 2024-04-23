@@ -3,23 +3,23 @@ import { useState, type ReactNode, useEffect } from 'react'
 import clsx from 'clsx'
 import { useLocation } from 'react-router-dom'
 
-import { PATHS } from '~/routes/PATHS'
-import { NavLink } from '~/components/Link'
-import storage from '~/utils/storage'
+import { PATHS } from '@/routes/PATHS'
+import { NavLink } from '@/components/Link'
+import storage from '@/utils/storage'
 import {
   Accordion,
   AccordionItem,
   AccordionContent,
   AccordionTrigger,
-} from '~/components/Accordion'
+} from '@/components/Accordion'
 
 import { LuChevronDown } from 'react-icons/lu'
-import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
-import dammayIcon from '~/assets/icons/sb-dammay.svg'
-import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
-import tichhopIcon from '~/assets/icons/sb-tichhop.svg'
-import ungdungIcon from '~/assets/icons/sb-ungdung.svg'
-import thanhtoanIcon from '~/assets/icons/sb-thanhtoan.svg'
+import tongquanIcon from '@/assets/icons/sb-tongquan.svg'
+import dammayIcon from '@/assets/icons/sb-dammay.svg'
+import thietbiIcon from '@/assets/icons/sb-thietbi.svg'
+import tichhopIcon from '@/assets/icons/sb-tichhop.svg'
+import ungdungIcon from '@/assets/icons/sb-ungdung.svg'
+import thanhtoanIcon from '@/assets/icons/sb-thanhtoan.svg'
 
 function SideNavigation() {
   const { t } = useTranslation()
@@ -69,12 +69,12 @@ function SideNavigation() {
             <div>{t('sidebar:device.title')}</div>
             <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
-          <NavLink to={`${PATHS.DEVKIT}`}>
+          <NavLink to={`${PATHS.DEVKIT}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:device.devkit')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.MODULE}`}>
+          <NavLink to={`${PATHS.MODULE}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:device.module')}
             </AccordionContent>
@@ -148,12 +148,12 @@ function SideNavigation() {
             <div>{t('sidebar:application.title')}</div>
             <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
-          <NavLink to={`${PATHS.APPSDK}`}>
+          <NavLink to={`${PATHS.APPSDK}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:application.appsdk')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.APPDEBUG}`}>
+          <NavLink to={`${PATHS.APPDEBUG}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:application.vsmart_debug')}
             </AccordionContent>

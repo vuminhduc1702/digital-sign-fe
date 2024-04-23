@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Layout } from '../components/Layout'
 import { LoginForm } from '../components/LoginForm'
-import { PATHS } from '~/routes/PATHS'
+import { PATHS } from '@/routes/PATHS'
 
 export const Login = () => {
   const { t } = useTranslation()

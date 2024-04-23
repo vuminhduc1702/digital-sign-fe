@@ -9,11 +9,11 @@ import {
 } from '@react-pdf/renderer'
 import robotoLight from '/fonts/FontRoboto/Roboto-Light.ttf'
 import robotoLightItalic from '/fonts/FontRoboto/Roboto-LightItalic.ttf'
-import LogoViettel from '~/assets/images/landingpage/Logo_Viettel.png'
+import LogoViettel from '@/assets/images/landingpage/Logo_Viettel.png'
 
 import { t } from 'i18next'
 import robotoBold from '/fonts/FontRoboto/Roboto-Bold.ttf'
-import { getVNDateFormat } from '~/utils/misc'
+import { getVNDateFormat } from '@/utils/misc'
 import { type Billing } from '../../types'
 
 export function BillingPDF({ dataPdf }: { dataPdf?: Billing }) {

@@ -1,4 +1,4 @@
-import type { BasePagination } from '~/types'
+import type { BasePagination } from '@/types'
 
 export type Subcription = {
   c_customer_code: string

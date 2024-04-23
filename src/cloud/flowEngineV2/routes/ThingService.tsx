@@ -2,38 +2,47 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import TitleBar from '~/components/Head/TitleBar'
+import TitleBar from '@/components/Head/TitleBar'
 import {
   CreateThingService,
   ThingServiceTable,
 } from '../components/ThingService'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { SearchField } from '~/components/Input'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
+import { SearchField } from '@/components/Input'
 import { useDeleteMultipleThings } from '../api/thingAPI/deleteMultipleThings'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { useDisclosure } from '~/utils/hooks'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { useDisclosure } from '@/utils/hooks'
+import { Button } from '@/components/Button'
 
 export function ThingServices() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
   const [offset, setOffset] = useState(0)
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
   const params = useParams()
 
   const thingId = params.thingId as string
 
-  const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
 
   // no offset call
   const {
     data: thingData,
-    isPreviousData,
-    isSuccess,
+    isLoading: isLoadingThing,
+    isPreviousData: isPreviousDataThing,
   } = useGetServiceThings({
     thingId,
+    search_field: searchField.current,
+    search_str: searchQuery,
     config: { keepPreviousData: true },
   })
 
@@ -45,7 +54,7 @@ export function ThingServices() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleThingServices) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleThingServices])
 
@@ -59,9 +68,8 @@ export function ThingServices() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = thingData?.data?.reduce(
+  const formatExcel = thingData?.data?.reduce(
     (acc, curr, index) => {
-      console.log(curr)
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),
@@ -79,50 +87,61 @@ export function ThingServices() {
       <TitleBar
         title={t('cloud:custom_protocol.service.title_thing_service')}
       />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
-          <div className="mr-[42px] flex items-center gap-x-3">
-            {Object.keys(rowSelection).length > 0 && (
-              <div
-                onClick={open}
-                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-              >
-                <div>{t('btn:delete')}:</div>
-                <div>{Object.keys(rowSelection).length}</div>
-              </div>
-            )}
-            <CreateThingService thingServiceData={thingData?.data} />
+          <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
+              setSearchValue={setSearchQuery}
+              searchField={searchField}
+              fieldOptions={[
+                {
+                  value: 'name',
+                  label: t('cloud:custom_protocol.thing.name'),
+                },
+              ]}
+              setIsSearchData={setIsSearchData}
+              closeSearch={true}
             />
+            <CreateThingService thingServiceData={thingData?.data} />
           </div>
         </div>
         <ThingServiceTable
           data={thingData?.data ?? []}
           offset={offset}
-          // setOffset={setOffset}
+          setOffset={setOffset}
           total={0}
-          isPreviousData={isPreviousData}
+          isPreviousData={isPreviousDataThing}
+          isLoading={isLoadingThing}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          isSearchData={searchQuery.length > 0 && isSearchData}
+          utilityButton={
+            Object.keys(rowSelection).length > 0 && (
+              <div className="flex items-center">
+                <Button
+                  size="sm"
+                  onClick={openDeleteMulti}
+                  className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                >
+                  <div>{t('btn:delete')}:</div>
+                  <div>{Object.keys(rowSelection).length}</div>
+                </Button>
+              </div>
+            )
+          }
         />
       </div>
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.device_manage.table.delete_device_full')}
           body={t(
             'cloud:org_manage.device_manage.table.delete_multiple_device_confirm',
           )}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleThingServices(
               {

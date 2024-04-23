@@ -1,6 +1,5 @@
-import { type BasePagination } from '~/types'
-import { type AttrList } from '~/utils/schemaValidation'
-
+import { type BasePagination } from '@/types'
+import { type AttrList } from '@/utils/schemaValidation'
 
 export type TransportConfigAttribute = {
   action: string
@@ -92,7 +91,7 @@ export type ResourceItem = {
   Name: string
   Operations: string
   MultipleInstances: string
-  Mandatory: string 
+  Mandatory: string
   Type: string
   RangeEnumeration?: string | null
   Units?: string | null

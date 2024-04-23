@@ -1,4 +1,4 @@
-import type { BaseAPIRes, BasePagination } from '~/types'
+import type { BaseAPIRes, BasePagination } from '@/types'
 
 export type ThingService = {
   id: string

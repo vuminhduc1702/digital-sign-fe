@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 import { forwardRef } from 'react'
 
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   ({ children, className, ...props }, forwardedRef) => {

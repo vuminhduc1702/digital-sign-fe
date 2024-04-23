@@ -13,7 +13,7 @@ import {
   type DateSegment as IDateSegment,
   type TimeFieldStateOptions,
 } from 'react-stately'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 type DateSegmentProps = {
   segment: IDateSegment

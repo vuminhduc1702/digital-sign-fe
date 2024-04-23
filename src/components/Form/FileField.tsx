@@ -3,10 +3,10 @@ import { type PropsValue } from 'react-select'
 import { Controller, type FieldValues } from 'react-hook-form'
 
 import { InputField } from './InputField'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 import { type FieldWrapperPassThroughProps } from './FieldWrapper'
-import { type ControllerPassThroughProps } from '~/types'
+import { type ControllerPassThroughProps } from '@/types'
 
 type FileFieldProps<TFormValues extends FieldValues> = {
   onChange?: (e: any) => void

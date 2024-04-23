@@ -3,25 +3,25 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   InputField,
   SelectDropdown,
   type SelectOption,
-} from '~/components/Form'
+} from '@/components/Form'
 import {
   useUpdateFirmware,
   type UpdateFirmwareDTO,
 } from '../../api/firmwareAPI'
 
-import { useGetTemplates } from '~/cloud/deviceTemplate/api'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import storage from '~/utils/storage'
+import { useGetTemplates } from '@/cloud/deviceTemplate/api'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import storage from '@/utils/storage'
 import { entityFirmWareSchema } from './CreateFirmware'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 type UpdateFirmWareProps = {
   firmwareId: string

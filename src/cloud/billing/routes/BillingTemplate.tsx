@@ -1,25 +1,24 @@
 import { useMemo, useRef, useState } from 'react'
 
-import storage from '~/utils/storage'
-
+import storage from '@/utils/storage'
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { LuCalendar } from 'react-icons/lu'
+import { Calendar as CalendarIcon } from 'lucide-react'
 import { type DateRange } from 'react-day-picker'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { searchSubcriptionSchema } from '~/cloud/subcription/routes/SubcriptionTemplate'
-import { Button } from '~/components/Button'
-import { Calendar } from '~/components/Calendar'
-import { InputField, SelectDropdown } from '~/components/Form'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { SearchIcon } from '~/components/SVGIcons'
-import { cn } from '~/utils/misc'
+import { searchSubcriptionSchema } from '@/cloud/subcription/routes/SubcriptionTemplate'
+import { Button } from '@/components/Button'
+import { Calendar } from '@/components/Calendar'
+import { InputField, SelectDropdown } from '@/components/Form'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { SearchIcon } from '@/components/SVGIcons'
+import { cn } from '@/utils/misc'
 import { useGetBillings, type SearchFilter } from '../api/billingAPI'
 import { BillingTable } from '../components/Billing'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { convertEpochToDate } from '~/utils/transformFunc'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import { convertEpochToDate } from '@/utils/transformFunc'
 
 const transformStatus = stt => {
   switch (stt) {
@@ -38,7 +37,7 @@ const transformStatus = stt => {
 
 export function BillingTemplate() {
   const { t } = useTranslation()
-  const [offset, setOffset] = useState(0)
+  const [offset, setOffset] = useState<number>(0)
   const [searchFilter, setSearchFilter] = useState<SearchFilter>({})
   const [searchData, setsearchData] = useState<SearchFilter>({})
   const [startTime, setStartTime] = useState<number | undefined>()
@@ -48,7 +47,7 @@ export function BillingTemplate() {
     to: undefined,
   })
   const projectId = storage.getProject()?.id
-  const { data, isPreviousData } = useGetBillings({
+  const { data, isPreviousData, isLoading } = useGetBillings({
     projectId,
     searchFilter: searchFilter,
     start_time: startTime,
@@ -84,32 +83,35 @@ export function BillingTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = data?.data?.data?.reduce(
-    (acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('billing:manage_bill.table.id')]: curr.id,
-          [t('billing:manage_bill.table.c_name')]: curr.c_name,
-          [t('billing:manage_bill.table.plan_name')]: curr.plan_name,
-          [t('billing:manage_bill.table.cost')]: curr.cost,
-          [t('billing:manage_bill.table.date_request')]: convertEpochToDate(
-            curr.date_request,
-          ),
-          [t('billing:manage_bill.table.date_expiry')]: convertEpochToDate(
-            curr.date_expiry,
-          ),
-          [t('billing:manage_bill.table.date_payment')]: convertEpochToDate(
-            curr.date_payment,
-          ),
-          [t('billing:manage_bill.table.status')]: transformStatus(curr.status),
+  const excelFormat: Array<{ [key: string]: unknown }> | undefined =
+    data?.data?.data?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('billing:manage_bill.table.id')]: curr.id,
+            [t('billing:manage_bill.table.c_name')]: curr.c_name,
+            [t('billing:manage_bill.table.plan_name')]: curr.plan_name,
+            [t('billing:manage_bill.table.cost')]: curr.cost,
+            [t('billing:manage_bill.table.date_request')]: convertEpochToDate(
+              curr.date_request,
+            ),
+            [t('billing:manage_bill.table.date_expiry')]: convertEpochToDate(
+              curr.date_expiry,
+            ),
+            [t('billing:manage_bill.table.date_payment')]: convertEpochToDate(
+              curr.date_payment,
+            ),
+            [t('billing:manage_bill.table.status')]: transformStatus(
+              curr.status,
+            ),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    },
-    [] as Array<{ [key: string]: unknown }>,
-  )
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <>
@@ -129,14 +131,9 @@ export function BillingTemplate() {
               setSearchFilter(newObj)
             })}
           >
-            <ExportTable
-              refComponent={ref}
-              rowSelection={rowSelection}
-              aoo={aoo}
-              pdfHeader={pdfHeader}
-            />
             <div className="flex items-center gap-x-3">
               <SelectDropdown
+                className="relative mt-1 h-[37px] w-[500px] justify-start rounded-md text-left font-normal"
                 isClearable={false}
                 name="key"
                 control={control}
@@ -162,7 +159,7 @@ export function BillingTemplate() {
                         !date && 'text-muted-foreground',
                       )}
                     >
-                      <LuCalendar className="mr-2 h-4 w-4" />
+                      <CalendarIcon className="mr-2 h-4 w-4" />
                       {date?.from ? (
                         date.to ? (
                           <>
@@ -216,14 +213,17 @@ export function BillingTemplate() {
           </form>
         </div>
         <BillingTable
-          data={data?.data?.data}
+          data={data?.data?.data || []}
           offset={offset}
           setOffset={setOffset}
           handleField={handleField}
           total={data?.data?.total ?? 0}
           isPreviousData={isPreviousData}
+          isLoading={isLoading}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          excelFormat={excelFormat}
         />
       </div>
     </>

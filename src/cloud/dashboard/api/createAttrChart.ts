@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
-import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { queryClient, type MutationConfig } from '@/lib/react-query'
 
-import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
+import { type EntityType } from '@/cloud/orgManagement/api/attrAPI'
 
-import { Attribute } from '~/types'
+import { type Attribute } from '@/types'
 
 export type CreateAttrDTO = {
   data: {

@@ -1,7 +1,7 @@
 import { type z } from 'zod'
 import { type mqttConfigSchema } from '../../components/Device/UpdateMqttConfig'
-import { axios } from '~/lib/axios'
-import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { queryClient, type MutationConfig } from '@/lib/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
@@ -32,7 +32,9 @@ export const useUpdateMqttConfig = ({
       await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      toast.success(t('cloud:org_manage.device_manage.mqtt_config.update_success'))
+      toast.success(
+        t('cloud:org_manage.device_manage.mqtt_config.update_success'),
+      )
     },
     ...config,
     mutationFn: updateMqttConfig,

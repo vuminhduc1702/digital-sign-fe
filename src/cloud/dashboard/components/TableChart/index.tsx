@@ -2,10 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
-import { BaseTable } from '~/components/Table'
+import { defaultDateConfig, getVNDateFormat } from '@/utils/misc'
+import { BaseTable } from '@/components/Table'
 
-import { type DeviceAttrLog } from '~/cloud/orgManagement/api/attrAPI'
+import { type DeviceAttrLog } from '@/cloud/orgManagement/api/attrAPI'
 import { type TimeSeries } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
@@ -28,7 +28,6 @@ export function TableChart({
   refreshBtn?: boolean
   className?: string
 }) {
-  // console.log(data)
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<TableChartDataType>()

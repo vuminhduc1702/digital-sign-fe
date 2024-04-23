@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 
-import storage from '~/utils/storage'
+import storage from '@/utils/storage'
 
 export const ROLES = {
   SYSTEM_ADMIN: 'SYSTEM_ADMIN',

@@ -1,6 +1,6 @@
-import { type UserResponse } from '~/features/auth'
+import { type UserResponse } from '@/features/auth'
 import { ROLES } from './authorization'
-import { type Device } from '~/cloud/orgManagement'
+import { type Device } from '@/cloud/orgManagement'
 
 export const POLICIES = {
   'device:create': (user: UserResponse) => {

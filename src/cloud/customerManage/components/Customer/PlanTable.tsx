@@ -6,14 +6,14 @@ import {
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '~/components/Table'
+import { BaseTable } from '@/components/Table'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
 import { LuChevronDown, LuChevronRight } from 'react-icons/lu'
-import { type Subcription } from '~/cloud/subcription'
-import { InputField } from '~/components/Form'
-import { getVNDateFormat } from '~/utils/misc'
+import { type Subcription } from '@/cloud/subcription'
+import { InputField } from '@/components/Form'
+import { getVNDateFormat } from '@/utils/misc'
 
 type CustomerTableProps = {
   data?: Subcription[]

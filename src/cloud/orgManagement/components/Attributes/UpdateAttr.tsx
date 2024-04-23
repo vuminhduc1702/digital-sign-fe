@@ -5,19 +5,19 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { FieldWrapper, InputField, SelectField } from '~/components/Form'
+import { Button } from '@/components/Button'
+import { FieldWrapper, InputField, SelectField } from '@/components/Form'
 import { booleanSelectOption, numberInput, valueTypeList } from './CreateAttr'
-import { Drawer } from '~/components/Drawer'
+import { Drawer } from '@/components/Drawer'
 import { type EntityType, useUpdateAttr } from '../../api/attrAPI'
-import { Checkbox } from '~/components/Checkbox'
+import { Checkbox } from '@/components/Checkbox'
 import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
-import { type Attribute } from '~/types'
-import { attrSchema } from '~/utils/schemaValidation'
+import { type Attribute } from '@/types'
+import { attrSchema } from '@/utils/schemaValidation'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 
 type UpdateAttrProps = {
   entityId: string
@@ -44,7 +44,6 @@ export function UpdateAttr({
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-  console.log('value', value)
 
   const { register, formState, control, handleSubmit, watch, reset } = useForm<
     z.infer<typeof attrSchema>

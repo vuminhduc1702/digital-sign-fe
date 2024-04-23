@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router-dom'
-import { ContentLayout } from '~/layout/ContentLayout'
+import { ContentLayout } from '@/layout/ContentLayout'
 import { TemplateSidebar } from '../components'
 
 export function DeviceTemplateManage() {

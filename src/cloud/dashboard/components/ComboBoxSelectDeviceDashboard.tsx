@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 
-import { flattenData } from '~/utils/misc'
-import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
+import { flattenData } from '@/utils/misc'
+import { ComboBoxBase, filteredComboboxData } from '@/components/ComboBox'
 
-import { type FieldWrapperPassThroughProps } from '~/components/Form'
-import { type Device, type DeviceList } from '~/cloud/orgManagement'
+import { type FieldWrapperPassThroughProps } from '@/components/Form'
+import { type Device, type DeviceList } from '@/cloud/orgManagement'
 
-import { SearchIcon } from '~/components/SVGIcons'
+import { SearchIcon } from '@/components/SVGIcons'
 
 type ComboBoxSelectDeviceDashboardProps = {
   data: DeviceList

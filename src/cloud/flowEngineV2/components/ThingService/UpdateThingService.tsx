@@ -5,16 +5,16 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   FieldWrapper,
   InputField,
   SelectField,
   TextAreaField,
-} from '~/components/Form'
+} from '@/components/Form'
 
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import storage from '~/utils/storage'
+import { Dialog, DialogTitle } from '@/components/Dialog'
+import storage from '@/utils/storage'
 import {
   useUpdateService,
   type CreateServiceThingDTO,
@@ -28,42 +28,42 @@ import {
   PANEL_SIZE,
 } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
-import { Spinner } from '~/components/Spinner'
-import { Switch } from '~/components/Switch'
-import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
-import btnRunCode from '~/assets/icons/btn-run-code.svg'
-import { cn } from '~/utils/misc'
+import { Spinner } from '@/components/Spinner'
+import { Switch } from '@/components/Switch'
+import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
+import btnRunCode from '@/assets/icons/btn-run-code.svg'
+import { cn } from '@/utils/misc'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/Tooltip'
-import { Checkbox } from '~/components/Checkbox'
-import { outputList } from '~/cloud/customProtocol/components/CreateService'
+} from '@/components/Tooltip'
+import { Checkbox } from '@/components/Checkbox'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 import { type InputService, type ThingService } from '../../types'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { LuChevronDown } from 'react-icons/lu'
 import { HiOutlineXMark } from 'react-icons/hi2'
-import btnAddIcon from '~/assets/icons/btn-add.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnAddIcon from '@/assets/icons/btn-add.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnFullScreen from '@/assets/icons/btn-fullscreen.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '~/components/Resizable'
+} from '@/components/Resizable'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
 
 type UpdateThingProps = {
   name: string
@@ -259,7 +259,7 @@ export function UpdateThingService({
                     input: dataInput,
                     code: codeInput,
                     fail_limit: values.fail_limit,
-                    lock_time: values.lock_time,
+                    lock_time: values.lock_time ? values.lock_time : '0s',
                   },
                   thingId: thingId,
                   name: values.name,
@@ -289,6 +289,11 @@ export function UpdateThingService({
                   type="number"
                   registration={register('fail_limit', {
                     valueAsNumber: true,
+                    onChange: e => {
+                      if (e.target.value === '0') {
+                        setValue('lock_time', undefined)
+                      }
+                    },
                   })}
                   min={0}
                 />

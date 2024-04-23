@@ -1,5 +1,5 @@
-import { type Profile } from '~/cloud/orgManagement/api/userAPI'
-import {type BasePagination } from '~/types'
+import { type Profile } from '@/cloud/orgManagement/api/userAPI'
+import { type BasePagination } from '@/types'
 
 export type Customer = {
   email: string

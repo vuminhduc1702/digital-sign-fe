@@ -1,19 +1,19 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
+import { BaseTable } from '@/components/Table'
+import { useDisclosure } from '@/utils/hooks'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
 import { DownloadIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import { PDFDownloadLink } from '@react-pdf/renderer'
-import btnFilterIcon from '~/assets/icons/btn-filter.svg'
-import { Button } from '~/components/Button'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { cn, getVNDateFormat } from '~/utils/misc'
+import btnFilterIcon from '@/assets/icons/btn-filter.svg'
+import { Button } from '@/components/Button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { cn, getVNDateFormat } from '@/utils/misc'
 import { useBillingById } from '../../api/billingAPI'
 import { type Billing } from '../../types'
 import { BillingPDF } from './BillingPDF'
@@ -23,7 +23,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '~/components/Dropdowns'
+} from '@/components/Dropdowns'
+import { type BaseTableProps } from '@/components/Table'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -72,6 +73,10 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
   )
 }
 
+type PartialBaseTableProps<T> = Omit<BaseTableProps<Billing>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+}
+
 type BillingTableProps = {
   data?: Billing[]
   handleField?: (field: string, value: any) => void
@@ -79,7 +84,7 @@ type BillingTableProps = {
   setRowSelection: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
-} & BaseTablePagination
+} & PartialBaseTableProps<Billing>
 
 export function BillingTable({
   data,
@@ -120,12 +125,35 @@ export function BillingTable({
     }
   }
 
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
+
   const columnHelper = createColumnHelper<Billing>()
   const columns = useMemo<ColumnDef<Billing, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { id } = info.row.original
+          return SubcriptionTableContextMenu({
+            id: id,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -140,46 +168,7 @@ export function BillingTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('plan_name', {
-        header: () => (
-          <>
-            <span>{t('billing:manage_bill.table.plan_name')}</span>
-            <Popover>
-              <PopoverTrigger onClick={e => e.stopPropagation()} asChild>
-                <Button
-                  className="border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
-                  }
-                />
-              </PopoverTrigger>
-              <PopoverContent className="w-40" align="start">
-                <div
-                  className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                    handleSearch(e, 'plan_id', '', '')
-                  }
-                >
-                  All
-                </div>
-                {planArr?.map(item => {
-                  return (
-                    <div
-                      key={item.id}
-                      className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                        handleSearch(e, 'plan_id', item.plan_id, item.id)
-                      }
-                    >
-                      {item.plan_name}
-                    </div>
-                  )
-                })}
-              </PopoverContent>
-            </Popover>
-          </>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.plan_name')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
@@ -217,68 +206,7 @@ export function BillingTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('status', {
-        header: () => (
-          <>
-            <span>{t('billing:manage_bill.table.status')}</span>
-            <Popover>
-              <PopoverTrigger onClick={e => e.stopPropagation()} asChild>
-                <Button
-                  className="border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
-                  }
-                />
-              </PopoverTrigger>
-              <PopoverContent className="w-40" align="start">
-                <div
-                  className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                    handleSearch(e, 'status', '', '')
-                  }
-                >
-                  All
-                </div>
-                {statusArr?.map(item => {
-                  const valueStatus = () => {
-                    let result = ''
-                    if (item.status) {
-                      switch (item.status) {
-                        case 'Wait':
-                          result = 'Đang chờ thanh toán'
-                          break
-                        case 'Paid':
-                          result = 'Đã thanh toán'
-                          break
-                        case 'Expired':
-                          result = 'Hết hạn thanh toán'
-                          break
-                        case 'Init':
-                          result = 'Khởi tạo'
-                          break
-                        default:
-                          break
-                      }
-                    }
-                    return result
-                  }
-                  return (
-                    <div
-                      key={item.id}
-                      className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                        handleSearch(e, 'status', item.status, item.id)
-                      }
-                    >
-                      {valueStatus()}
-                    </div>
-                  )
-                })}
-              </PopoverContent>
-            </Popover>
-          </>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.status')}</span>,
         cell: info => {
           const { status } = info.row.original
           const valueStatus = () => {
@@ -305,17 +233,6 @@ export function BillingTable({
           }
           return valueStatus()
         },
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { id } = info.row.original
-          return SubcriptionTableContextMenu({
-            id: id,
-          })
-        },
-        header: () => null,
         footer: info => info.column.id,
       }),
     ],

@@ -4,16 +4,16 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { InputField } from '~/components/Form'
+import { Button } from '@/components/Button'
+import { InputField } from '@/components/Form'
 import { useUpdateThing, type UpdateThingDTO } from '../../api/thingAPI'
-import { Dialog, DialogTitle } from '~/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/Dialog'
 
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '@/utils/schemaValidation'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -111,7 +111,7 @@ export function UpdateThing({
           <Button
             isLoading={isLoading}
             disabled={!formState.isDirty || isLoading}
-            form="update-entityThing"
+            form="create-entityThing"
             type="submit"
             size="md"
             className="bg-primary-400"

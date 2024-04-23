@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Layout } from '../components/Layout'
 import { ForgetPasswordForm } from '../components/ForgetPasswordForm'
-import { logoutFn } from '~/lib/auth'
+import { logoutFn } from '@/lib/auth'
 import { toast } from 'sonner'
 
 export const ForgetPassword = () => {

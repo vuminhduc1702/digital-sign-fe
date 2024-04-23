@@ -2,7 +2,7 @@ import { type ComponentProps } from 'react'
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi2'
 import { DayPicker } from 'react-day-picker'
 
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 export type CalendarProps = ComponentProps<typeof DayPicker>
 

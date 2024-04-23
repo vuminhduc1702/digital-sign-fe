@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { SelectField } from '~/components/Form'
+import { SelectField } from '@/components/Form'
 import { useEventService } from '../../api/thingServiceAPI'
 import { EventServiceTable } from './EventServiceTable'
 

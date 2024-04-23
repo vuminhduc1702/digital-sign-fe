@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 export type UpdateDeviceDTO = {
@@ -32,7 +32,9 @@ export const useUpdateDevice = ({ config }: UseUpdateDeviceOptions = {}) => {
       await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      toast.success(t('cloud:org_manage.device_manage.add_device.success_update'))  
+      toast.success(
+        t('cloud:org_manage.device_manage.add_device.success_update'),
+      )
     },
     ...config,
     mutationFn: updateDevice,

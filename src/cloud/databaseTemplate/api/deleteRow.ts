@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 export const deleteRow = ({
@@ -18,7 +18,10 @@ export const deleteRow = ({
     }
   }
 }) => {
-  return axios.delete(`/api/fe/table/${table}/delete?project_id=${project_id}`, {data})
+  return axios.delete(
+    `/api/fe/table/${table}/delete?project_id=${project_id}`,
+    { data },
+  )
 }
 
 type UseDeleteRowOptions = {

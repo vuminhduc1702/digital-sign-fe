@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 import {
   Carousel,
   CarouselContent,
@@ -7,14 +7,14 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '~/components/Carousel'
-import Pic1 from '~/assets/images/landingpage/Pict_9s.png'
-import Pic2 from '~/assets/images/landingpage/Pict_7s.png'
-import Pic3 from '~/assets/images/landingpage/Pict_8s.png'
-import Pic4 from '~/assets/images/landingpage/Pict_13s.png'
-import Pic5 from '~/assets/images/landingpage/Pict_15s.png'
-import Pic6 from '~/assets/images/landingpage/Pict_11s.png'
-import Pic7 from '~/assets/images/landingpage/Pict_6s.png'
+} from '@/components/Carousel'
+import Pic1 from '@/assets/images/landingpage/Pict_9s.png'
+import Pic2 from '@/assets/images/landingpage/Pict_7s.png'
+import Pic3 from '@/assets/images/landingpage/Pict_8s.png'
+import Pic4 from '@/assets/images/landingpage/Pict_13s.png'
+import Pic5 from '@/assets/images/landingpage/Pict_15s.png'
+import Pic6 from '@/assets/images/landingpage/Pict_11s.png'
+import Pic7 from '@/assets/images/landingpage/Pict_6s.png'
 import Autoplay from 'embla-carousel-autoplay'
 
 export function SectionProduct() {
@@ -87,13 +87,13 @@ export function SectionProduct() {
             {t('landingpage:section_product.iot')}
           </p>
           <div className="flex justify-center">
-            <h3 className="xs2:w-[360px] xs2:text-[28px] xs:w-[400px] px-[50px] text-center font-semibold leading-[43px] xl:w-[588px] xl:text-[35px]">
+            <h3 className="px-[50px] text-center font-semibold leading-[43px] xs2:w-[360px] xs2:text-[28px] xs:w-[400px] xl:w-[588px] xl:text-[35px]">
               {t('landingpage:section_product.variety')}
             </h3>
           </div>
         </div>
         <div className="flex w-full justify-center ">
-          <div className="xs2:w-[270px] xs:w-[267px] pt-[50px] sm:w-[270px] md:w-[570px] lg:w-[870px] xl:w-[1200px]">
+          <div className="pt-[50px] xs2:w-[270px] xs:w-[267px] sm:w-[270px] md:w-[570px] lg:w-[870px] xl:w-[1200px]">
             <Carousel
               opts={{
                 align: 'start',

@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { Button } from '~/components/Button'
+import { Button } from '@/components/Button'
 
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import narrowLeft from '~/assets/icons/narrow-left.svg'
-import { useGetSubcriptons } from '~/cloud/subcription/api/subcriptionAPI'
-import { InputField } from '~/components/Form'
-import { useDisclosure } from '~/utils/hooks'
-import storage from '~/utils/storage'
+import narrowLeft from '@/assets/icons/narrow-left.svg'
+import { useGetSubcriptons } from '@/cloud/subcription/api/subcriptionAPI'
+import { InputField } from '@/components/Form'
+import { useDisclosure } from '@/utils/hooks'
+import storage from '@/utils/storage'
 import { useGetCustomers } from '../../api/customerManageAPI'
 import { type Customer } from '../../types'
 import { PlanTable } from './PlanTable'
@@ -25,7 +25,7 @@ export function InfoCustomer() {
 
   const customerId = params.customerId as string
 
-  const { data, isPreviousData } = useGetSubcriptons({
+  const { data, isPreviousData, isLoading } = useGetSubcriptons({
     projectId,
     searchData: {
       status: 'Active',
@@ -134,6 +134,7 @@ export function InfoCustomer() {
             setOffset={setOffset}
             total={data?.data?.total ?? 0}
             isPreviousData={isPreviousData}
+            isLoading={isLoading}
           />
         </div>
       </div>

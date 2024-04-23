@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 import type * as z from 'zod'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { type TransportConfig } from '../types'
-import { type AttrList} from '~/utils/schemaValidation'
+import { type AttrList } from '@/utils/schemaValidation'
 import { toast } from 'sonner'
 
 export type UpdateTemplateDTO = {
@@ -40,7 +40,7 @@ export const useUpdateTemplate = ({
       await queryClient.invalidateQueries({ queryKey: ['templates'] })
       await queryClient.invalidateQueries({ queryKey: ['attrs'] })
       !isOnCreateTemplate &&
-      toast.success(t('cloud:device_template.add_template.success_update'))
+        toast.success(t('cloud:device_template.add_template.success_update'))
     },
     ...config,
     mutationFn: updateTemplate,

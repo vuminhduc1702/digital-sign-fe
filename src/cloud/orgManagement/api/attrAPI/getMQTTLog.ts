@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
-import { limitPagination } from '~/utils/const'
+import { axios } from '@/lib/axios'
+import { limitPagination } from '@/utils/const'
 
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 
 type GetMQTTLog = {
   project_id: string

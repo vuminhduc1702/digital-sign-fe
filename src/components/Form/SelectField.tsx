@@ -1,7 +1,7 @@
 import { type UseFormRegisterReturn } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 import { useTranslation } from 'react-i18next'
 

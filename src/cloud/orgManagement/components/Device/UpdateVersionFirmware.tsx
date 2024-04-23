@@ -4,20 +4,20 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { SelectDropdown, type SelectOption } from '~/components/Form'
+import { Button } from '@/components/Button'
+import { SelectDropdown, type SelectOption } from '@/components/Form'
 
-import { useGetFirmwares } from '~/cloud/firmware/api/firmwareAPI'
+import { useGetFirmwares } from '@/cloud/firmware/api/firmwareAPI'
 import {
   type UpdateVersionFirmwareDTO,
   useUpdateVersionFirmware,
-} from '~/cloud/firmware/api/firmwareAPI/updateVersionFirmware'
-import { Drawer } from '~/components/Drawer'
-import storage from '~/utils/storage'
-import i18n from '~/i18n'
+} from '@/cloud/firmware/api/firmwareAPI/updateVersionFirmware'
+import { Drawer } from '@/components/Drawer'
+import storage from '@/utils/storage'
+import i18n from '@/i18n'
 
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
 type UploadFileFirmWareProps = {
   deviceId: string

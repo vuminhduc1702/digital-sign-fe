@@ -1,8 +1,8 @@
-import { useMutation } from "@tanstack/react-query"
-import { useTranslation } from "react-i18next"
-import { uploadImage } from "~/layout/OrgManagementLayout/api"
-import { axios } from "~/lib/axios"
-import { type MutationConfig, queryClient } from "~/lib/react-query"
+import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { uploadImage } from '@/layout/OrgManagementLayout/api'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 
 export type RestoreProjectRes = {
@@ -26,7 +26,10 @@ type UseUploadImageOptions = {
   config?: MutationConfig<typeof restoreProject>
 }
 
-export const useRestoreProject = ({ type, config }: UseUploadImageOptions = {}) => {
+export const useRestoreProject = ({
+  type,
+  config,
+}: UseUploadImageOptions = {}) => {
   const { t } = useTranslation()
 
   return useMutation({

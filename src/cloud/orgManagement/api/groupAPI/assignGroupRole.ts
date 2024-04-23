@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { axios } from '@/lib/axios'
+import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
 import { type z } from 'zod'
 import { type assignGroupRoleSchema } from '../../components/Group/AssignGroupRole'
@@ -28,7 +28,9 @@ export const useAssignRoupRole = ({
       await queryClient.invalidateQueries({
         queryKey: ['users'],
       })
-      toast.success(t('cloud:org_manage.user_manage.add_user.success_assign_role'))
+      toast.success(
+        t('cloud:org_manage.user_manage.add_user.success_assign_role'),
+      )
     },
     ...config,
     mutationFn: assignGroupRole,

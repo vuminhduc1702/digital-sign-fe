@@ -1,6 +1,6 @@
 import Pagination from './Pagination'
 import { Button } from '../../../Button'
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 import { useTranslation } from 'react-i18next'
 
 import { useEffect, useState } from 'react'
@@ -51,7 +51,7 @@ export default function PaginationRender({
         })}
       >
         <div>
-          <span className="text-body-light flex items-center gap-1">
+          <span className="flex items-center gap-1 text-body-light">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',

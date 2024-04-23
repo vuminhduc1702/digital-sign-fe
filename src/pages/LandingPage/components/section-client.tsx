@@ -6,19 +6,19 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '~/components/Carousel'
-import Partner1 from '~/assets/images/landingpage/partner_1.svg'
-import Parther2 from '~/assets/images/landingpage/partner_11.svg'
-import Parther3 from '~/assets/images/landingpage/partner_12.svg'
-import Parther4 from '~/assets/images/landingpage/partner_13.svg'
-import Parther5 from '~/assets/images/landingpage/partner_3.svg'
-import Parther6 from '~/assets/images/landingpage/partner_6.svg'
-import Parther7 from '~/assets/images/landingpage/partner_7.svg'
-import Parther8 from '~/assets/images/landingpage/partner_8.svg'
-import Parther9 from '~/assets/images/landingpage/partner_9.svg'
+} from '@/components/Carousel'
+import Partner1 from '@/assets/images/landingpage/partner_1.svg'
+import Parther2 from '@/assets/images/landingpage/partner_11.svg'
+import Parther3 from '@/assets/images/landingpage/partner_12.svg'
+import Parther4 from '@/assets/images/landingpage/partner_13.svg'
+import Parther5 from '@/assets/images/landingpage/partner_3.svg'
+import Parther6 from '@/assets/images/landingpage/partner_6.svg'
+import Parther7 from '@/assets/images/landingpage/partner_7.svg'
+import Parther8 from '@/assets/images/landingpage/partner_8.svg'
+import Parther9 from '@/assets/images/landingpage/partner_9.svg'
 import Autoplay from 'embla-carousel-autoplay'
-import i18n from '~/i18n'
-import { cn } from '~/utils/misc'
+import i18n from '@/i18n'
+import { cn } from '@/utils/misc'
 
 export function SectionClient() {
   const slides = [

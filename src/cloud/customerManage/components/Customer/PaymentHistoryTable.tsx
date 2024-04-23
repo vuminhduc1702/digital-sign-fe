@@ -2,12 +2,12 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '~/components/Table'
+import { BaseTable } from '@/components/Table'
 
-import { type BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '@/types'
 
-import { type Billing } from '~/cloud/billing'
-import { getVNDateFormat } from '~/utils/misc'
+import { type Billing } from '@/cloud/billing'
+import { getVNDateFormat } from '@/utils/misc'
 
 type PaymentHistoryTableProps = {
   data?: Billing[]

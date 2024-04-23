@@ -1,16 +1,23 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BaseTable } from '~/components/Table'
+import { BaseTable } from '@/components/Table'
 import { type TransportConfigAttribute } from '../types'
+import { type BaseTableProps } from '@/components/Table'
+
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<TransportConfigAttribute>,
+  'columns' | 'offset' | 'setOffset' | 'data'
+> & {
+  data?: TransportConfigAttribute[]
+  columns?: ColumnDef<T, any>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
+}
 
 type AttrLwM2MTableProps = {
   attributeInfo: TransportConfigAttribute[]
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-}
+} & PartialBaseTableProps<TransportConfigAttribute>
 
 export function AttrLwM2MTable({
   attributeInfo,

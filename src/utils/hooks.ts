@@ -6,7 +6,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket'
 import * as z from 'zod'
 
 import { toast } from 'sonner'
-import i18n from '~/i18n'
+import i18n from '@/i18n'
 
 import { type JsonValue } from 'react-use-websocket/dist/lib/types'
 
@@ -171,7 +171,10 @@ type UploadImage = {
 export type UploadImageDTO = {
   data: UploadImage
 }
-export function useResetDefaultImage(defaultImage: string) {
+export function useResetDefaultImage(
+  defaultImage: string,
+  defaultFileName: string,
+) {
   const avatarRef = useRef<HTMLImageElement>(null)
   const [uploadImageErr, setUploadImageErr] = useState('')
 
@@ -192,7 +195,7 @@ export function useResetDefaultImage(defaultImage: string) {
     fetch(defaultImage)
       .then(res => res.blob())
       .then(blob => {
-        const defaultFile = new File([blob], 'default.png', blob)
+        const defaultFile = new File([blob], defaultFileName, blob)
         const formData = new FormData()
         formData.append('file', defaultFile)
         setValueUploadImage(

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Command as CommandPrimitive } from 'cmdk'
 
-import { cn } from '~/utils/misc'
+import { cn } from '@/utils/misc'
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,

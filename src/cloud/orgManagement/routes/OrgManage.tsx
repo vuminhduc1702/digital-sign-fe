@@ -5,20 +5,21 @@ import { useParams } from 'react-router-dom'
 import {
   AttrTable,
   CreateAttr,
-} from '~/cloud/orgManagement/components/Attributes'
-import TitleBar from '~/components/Head/TitleBar'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { API_URL } from '~/config'
-import { useOrgById } from '~/layout/OrgManagementLayout/api'
-import { lazyImport } from '~/utils/lazyImport'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { SearchField } from '~/components/Input'
-import { useDisclosure } from '~/utils/hooks'
-import { convertEpochToDate, convertType } from '~/utils/transformFunc'
+} from '@/cloud/orgManagement/components/Attributes'
+import TitleBar from '@/components/Head/TitleBar'
+import { ExportTable } from '@/components/Table/components/ExportTable'
+import { API_URL } from '@/config'
+import { useOrgById } from '@/layout/OrgManagementLayout/api'
+import { lazyImport } from '@/utils/lazyImport'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { useDisclosure } from '@/utils/hooks'
+import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
+import { Button } from '@/components/Button'
 
-import defaultOrgImage from '~/assets/images/default-org.png'
+import defaultOrgImage from '@/assets/images/default-org.png'
 
 const { OrgMap } = lazyImport(() => import('./OrgMap'), 'OrgMap')
 
@@ -30,11 +31,20 @@ export function OrgManage() {
   const orgId = params.orgId as string
 
   const [searchQuery, setSearchQuery] = useState('')
-  const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
   const { data: orgByIdData } = useOrgById({ orgId })
-  const { data: attrsData } = useGetAttrs({
+  const {
+    data: attrsData,
+    isLoading: isLoadingAttrs,
+    isPreviousData: isPreviousDataAttrs,
+  } = useGetAttrs({
     entityType: 'ORGANIZATION',
     entityId: orgId,
+    key_search: searchQuery,
   })
 
   const {
@@ -42,10 +52,11 @@ export function OrgManage() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleAttrs,
   } = useDeleteMultipleAttrs()
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
   useEffect(() => {
     if (isSuccessDeleteMultipleAttrs) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleAttrs])
 
@@ -68,7 +79,7 @@ export function OrgManage() {
     }
     return acc
   }, [])
-  const aoo = attrsData?.attributes?.reduce(
+  const formatExcel = attrsData?.attributes?.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
@@ -124,29 +135,15 @@ export function OrgManage() {
           </div>
           <div className="flex grow flex-col">
             <TitleBar title={t('cloud:org_manage.org_manage.attr_list')} />
-            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+            <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable
-                  refComponent={ref}
-                  rowSelection={rowSelection}
-                  aoo={aoo}
-                  pdfHeader={pdfHeader}
-                />
-                <div className="mr-[42px] flex items-center gap-x-3">
-                  {Object.keys(rowSelection).length > 0 && (
-                    <div
-                      onClick={open}
-                      className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-                    >
-                      <div>{t('btn:delete')}:</div>
-                      <div>{Object.keys(rowSelection).length}</div>
-                    </div>
-                  )}
-                  <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
+                <div className="flex w-full items-center justify-between gap-x-3">
                   <SearchField
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
+                    setSearchValue={setSearchQuery}
+                    setIsSearchData={setIsSearchData}
+                    closeSearch={true}
                   />
+                  <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
                 </div>
               </div>
               <AttrTable
@@ -155,6 +152,25 @@ export function OrgManage() {
                 entityType="ORGANIZATION"
                 rowSelection={rowSelection}
                 setRowSelection={setRowSelection}
+                isPreviousData={isPreviousDataAttrs}
+                isLoading={isLoadingAttrs}
+                pdfHeader={pdfHeader}
+                formatExcel={formatExcel}
+                isSearchData={searchQuery.length > 0 && isSearchData}
+                utilityButton={
+                  Object.keys(rowSelection).length > 0 && (
+                    <div className="flex items-center">
+                      <Button
+                        size="sm"
+                        onClick={openDeleteMulti}
+                        className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                      >
+                        <div>{t('btn:delete')}:</div>
+                        <div>{Object.keys(rowSelection).length}</div>
+                      </Button>
+                    </div>
+                  )
+                }
               />
             </div>
           </div>
@@ -162,15 +178,15 @@ export function OrgManage() {
       ) : (
         <OrgMap />
       )}
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
           body={t(
             'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
           )}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {

@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import storage from '~/utils/storage'
-import { NavLink } from '~/components/Link'
-import { PATHS } from '~/routes/PATHS'
+import storage from '@/utils/storage'
+import { NavLink } from '@/components/Link'
+import { PATHS } from '@/routes/PATHS'
 
 import {
   OrgDeviceIcon,
@@ -11,7 +11,7 @@ import {
   OrgGroupIcon,
   OrgInfoIcon,
   OrgUserIcon,
-} from '~/components/SVGIcons'
+} from '@/components/SVGIcons'
 
 function OrgManageNavbar() {
   const { t } = useTranslation()
@@ -19,12 +19,13 @@ function OrgManageNavbar() {
   const projectId = storage.getProject()?.id
   const params = useParams()
   const orgId = params.orgId || ''
+  console.log('orgId', orgId, orgId === ' ')
 
   return (
     <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">
       <NavLink
         to={`${PATHS.ORG_MANAGE}/${projectId}${
-          orgId === '' ? '' : `/${orgId}`
+          orgId === ' ' ? '/' : `/${orgId}`
         }`}
         className="flex cursor-pointer gap-2"
       >
@@ -40,7 +41,7 @@ function OrgManageNavbar() {
       </NavLink>
       <NavLink
         to={`${PATHS.GROUP_MANAGE}/${projectId}${
-          orgId === '' ? '' : `/${orgId}`
+          orgId === ' ' ? '/' : `/${orgId}`
         }`}
         className="flex cursor-pointer gap-2"
       >
@@ -56,7 +57,7 @@ function OrgManageNavbar() {
       </NavLink>
       <NavLink
         to={`${PATHS.USER_MANAGE}/${projectId}${
-          orgId === '' ? '' : `/${orgId}`
+          orgId === ' ' ? '/' : `/${orgId}`
         }`}
         className="flex cursor-pointer gap-2"
       >
@@ -72,7 +73,7 @@ function OrgManageNavbar() {
       </NavLink>
       <NavLink
         to={`${PATHS.DEVICE_MANAGE}/${projectId}${
-          orgId === '' ? '' : `/${orgId}`
+          orgId === ' ' ? '/' : `/${orgId}`
         }`}
         className="flex cursor-pointer gap-2"
       >
@@ -88,7 +89,7 @@ function OrgManageNavbar() {
       </NavLink>
       <NavLink
         to={`${PATHS.EVENT_MANAGE}/${projectId}${
-          orgId === '' ? '' : `/${orgId}`
+          orgId === ' ' ? '/' : `/${orgId}`
         }`}
         className="flex cursor-pointer gap-2"
       >

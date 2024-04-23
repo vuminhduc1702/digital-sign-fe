@@ -1,16 +1,18 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { Navigate } from 'react-router-dom'
+import { Navigate, type RouteObject } from 'react-router-dom'
 
-import { lazyImport } from '~/utils/lazyImport'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import { lazyImport } from '@/utils/lazyImport'
+import { PATHS } from '@/routes/PATHS'
+import storage from '@/utils/storage'
+import { endProgress, startProgress } from '@/components/Progress'
+import { AnimatedWrapper } from '@/components/Animated'
 
 const { ErrorFallback } = lazyImport(
-  () => import('~/pages/ErrorPage'),
+  () => import('@/pages/ErrorPage'),
   'ErrorFallback',
 )
 const { OrgManagementLayout } = lazyImport(
-  () => import('~/layout/OrgManagementLayout'),
+  () => import('@/layout/OrgManagementLayout'),
   'OrgManagementLayout',
 )
 const { ManageLayout } = lazyImport(() => import('../layout'), 'ManageLayout')
@@ -35,20 +37,14 @@ export const OrgManagementRoutes = [
   {
     element: <OrgManagementLayout />,
     path: PATHS.ORG,
+    loader: async () => {
+      startProgress()
+      await import('@/layout/OrgManagementLayout')
+      endProgress()
+
+      return null
+    },
     children: [
-      {
-        index: true,
-        element: (
-          <Navigate
-            to={`${
-              projectData != null
-                ? PATHS.ORG_MANAGE + '/' + projectData?.id
-                : PATHS.ORG_MANAGE
-            }`}
-            replace
-          />
-        ),
-      },
       {
         path: PATHS.ORG_MANAGE,
         children: [
@@ -56,9 +52,18 @@ export const OrgManagementRoutes = [
             path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <OrgManage />
+                <AnimatedWrapper>
+                  <OrgManage />
+                </AnimatedWrapper>
               </ErrorBoundary>
             ),
+            loader: async () => {
+              startProgress()
+              await import('./OrgManage')
+              endProgress()
+
+              return null
+            },
             children: [{ path: ':orgId' }],
           },
         ],
@@ -67,17 +72,35 @@ export const OrgManagementRoutes = [
         path: PATHS.GROUP_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <ManageLayout />
+            <AnimatedWrapper>
+              <ManageLayout />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('../layout')
+          endProgress()
+
+          return null
+        },
         children: [
           {
             path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <GroupManage />
+                <AnimatedWrapper>
+                  <GroupManage />
+                </AnimatedWrapper>
               </ErrorBoundary>
             ),
+            loader: async () => {
+              startProgress()
+              await import('./GroupManage')
+              endProgress()
+
+              return null
+            },
             children: [{ path: ':orgId' }],
           },
           {
@@ -87,9 +110,18 @@ export const OrgManagementRoutes = [
                 path: ':groupId',
                 element: (
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <GroupDetail />
+                    <AnimatedWrapper>
+                      <GroupDetail />
+                    </AnimatedWrapper>
                   </ErrorBoundary>
                 ),
+                loader: async () => {
+                  startProgress()
+                  await import('./GroupDetail')
+                  endProgress()
+
+                  return null
+                },
               },
             ],
           },
@@ -99,22 +131,47 @@ export const OrgManagementRoutes = [
         path: PATHS.USER_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <UserManage />
+            <AnimatedWrapper>
+              <UserManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('./UserManage')
+          endProgress()
+
+          return null
+        },
         children: [{ path: ':projectId', children: [{ path: ':orgId' }] }],
       },
       {
         path: PATHS.DEVICE_MANAGE,
         element: <ManageLayout />,
+        loader: async () => {
+          startProgress()
+          await import('../layout')
+          endProgress()
+
+          return null
+        },
         children: [
           {
             path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <DeviceManage />
+                <AnimatedWrapper>
+                  <DeviceManage />
+                </AnimatedWrapper>
               </ErrorBoundary>
             ),
+            loader: async () => {
+              startProgress()
+              await import('./DeviceManage')
+              endProgress()
+
+              return null
+            },
             children: [{ path: ':orgId' }],
           },
           {
@@ -124,9 +181,18 @@ export const OrgManagementRoutes = [
                 path: ':deviceId',
                 element: (
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <DeviceDetail />
+                    <AnimatedWrapper>
+                      <DeviceDetail />
+                    </AnimatedWrapper>
                   </ErrorBoundary>
                 ),
+                loader: async () => {
+                  startProgress()
+                  await import('./DeviceDetail')
+                  endProgress()
+
+                  return null
+                },
               },
             ],
           },
@@ -136,11 +202,20 @@ export const OrgManagementRoutes = [
         path: PATHS.EVENT_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <EventManage />
+            <AnimatedWrapper>
+              <EventManage />
+            </AnimatedWrapper>
           </ErrorBoundary>
         ),
+        loader: async () => {
+          startProgress()
+          await import('./EventManage')
+          endProgress()
+
+          return null
+        },
         children: [{ path: ':projectId', children: [{ path: ':orgId' }] }],
       },
     ],
   },
-]
+] as const satisfies RouteObject[]
