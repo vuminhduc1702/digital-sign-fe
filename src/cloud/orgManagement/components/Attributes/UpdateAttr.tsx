@@ -44,7 +44,6 @@ export function UpdateAttr({
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-  console.log('value', value)
 
   const { register, formState, control, handleSubmit, watch, reset } = useForm<
     z.infer<typeof attrSchema>

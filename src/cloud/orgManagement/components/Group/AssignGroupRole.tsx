@@ -66,7 +66,6 @@ const AssignGroupRole = ({
   >({
     resolver: assignGroupRoleSchema && zodResolver(assignGroupRoleSchema),
   })
-  console.log('formState.errors', formState.errors)
 
   const showSpinner = useSpinDelay(isLoading, {
     delay: 150,

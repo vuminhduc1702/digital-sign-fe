@@ -90,7 +90,6 @@ export function CreateControllerButton({
       resolver:
         controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
     })
-  // console.log('zod errors', formState.errors)
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,

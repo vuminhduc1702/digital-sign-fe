@@ -389,7 +389,6 @@ export function UpdateTemplateLwM2M({
     config: { suspense: false },
   })
   const transport_Config = selectedUpdateTemplate?.transport_config
-  console.log('transport_config', transport_Config)
   const transportConfigdata = JSON.parse(transport_Config)
   const idArray = transportConfigdata?.info?.module_config?.map(
     (attribute_info: []) => attribute_info.id,

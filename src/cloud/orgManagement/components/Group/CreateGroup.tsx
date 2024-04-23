@@ -12,7 +12,17 @@ import { useGetOrgs } from '@/layout/MainLayout/api'
 
 import { PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { ComplexTree } from '@/components/ComplexTree'
+import { SelectSuperordinateOrgTree } from '@/components/SelectSuperordinateOrgTree'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { cn, flattenOrgs } from '@/utils/misc'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
@@ -36,10 +46,14 @@ export function CreateGroup() {
   }))
 
   const projectId = storage.getProject()?.id
-  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+  const { data: orgData } = useGetOrgs({ projectId })
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateGroup()
+  const form = useForm<CreateGroupDTO['data']>({
+    resolver: groupCreateSchema && zodResolver(groupCreateSchema),
+  })
   const {
     register,
     formState,
@@ -48,9 +62,7 @@ export function CreateGroup() {
     reset,
     getValues,
     setValue,
-  } = useForm<CreateGroupDTO['data']>({
-    resolver: groupCreateSchema && zodResolver(groupCreateSchema),
-  })
+  } = form
 
   return (
     <FormDrawer
@@ -75,41 +87,82 @@ export function CreateGroup() {
         />
       }
     >
-      <form
-        id="create-group"
-        className="w-full space-y-6"
-        onSubmit={handleSubmit(values => {
-          mutate({
-            data: {
-              name: values.name,
-              entity_type: values.entity_type,
-              project_id: projectId,
-              org_id: values.org_id !== no_org_val ? values.org_id : '',
-            },
-          })
-        })}
-      >
-        <>
-          <InputField
-            label={t('cloud:org_manage.group_manage.add_group.name')}
-            error={formState.errors['name']}
-            registration={register('name')}
-          />
-          <SelectField
-            label={t('cloud:org_manage.group_manage.add_group.entity_type')}
-            error={formState.errors['entity_type']}
-            registration={register('entity_type')}
-            options={entityTypeOptions}
-          />
-          <ComplexTree
-            name="org_id"
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
-            error={formState?.errors?.org_id}
-            control={control}
-            options={orgData?.organizations}
-          />
-        </>
-      </form>
+      <Form {...form}>
+        <form
+          id="create-group"
+          className="w-full space-y-6"
+          onSubmit={handleSubmit(values => {
+            mutate({
+              data: {
+                name: values.name,
+                entity_type: values.entity_type,
+                project_id: projectId,
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
+              },
+            })
+          })}
+        >
+          <>
+            <InputField
+              label={t('cloud:org_manage.group_manage.add_group.name')}
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <SelectField
+              label={t('cloud:org_manage.group_manage.add_group.entity_type')}
+              error={formState.errors['entity_type']}
+              registration={register('entity_type')}
+              options={entityTypeOptions}
+            />
+            <FormField
+              control={form.control}
+              name="org_id"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t('cloud:org_manage.device_manage.add_device.parent')}
+                  </FormLabel>
+                  <div>
+                    <FormControl>
+                      <div>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="org_id"
+                              className={cn(
+                                'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                {
+                                  'text-gray-500': !value && value !== '',
+                                },
+                              )}
+                            >
+                              {value
+                                ? orgDataFlatten.find(item => item.id === value)
+                                    ?.name
+                                : value === ''
+                                  ? t('tree:no_selection_org')
+                                  : t('placeholder:select_org')}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <SelectSuperordinateOrgTree
+                              {...field}
+                              onChangeValue={onChange}
+                              value={value}
+                              noSelectionOption={true}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+          </>
+        </form>
+      </Form>
     </FormDrawer>
   )
 }

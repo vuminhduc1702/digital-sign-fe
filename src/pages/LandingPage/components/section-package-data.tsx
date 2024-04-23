@@ -43,7 +43,6 @@ export function SectionPackageData() {
     delay: 150,
     minDuration: 300,
   })
-  console.log('PackofData', PackofData)
 
   const categories = [
     t('landingpage:pack_of_data_M2M.categories.categories_1'),

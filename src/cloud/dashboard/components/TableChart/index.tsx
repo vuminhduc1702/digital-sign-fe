@@ -28,7 +28,6 @@ export function TableChart({
   refreshBtn?: boolean
   className?: string
 }) {
-  // console.log(data)
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<TableChartDataType>()
