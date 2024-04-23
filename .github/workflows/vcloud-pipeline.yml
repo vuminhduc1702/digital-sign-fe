@@ -26,6 +26,7 @@ jobs:
       id: build-image
       run: |
         echo "Tag: ${{env.tags}}"
+        cp .env.production.example .env
         docker build -t ${{env.image}}:${{env.tags}} .
 
   # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
