@@ -222,9 +222,7 @@ export function UpdateWidget({
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
-    level: 1,
   })
-  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,

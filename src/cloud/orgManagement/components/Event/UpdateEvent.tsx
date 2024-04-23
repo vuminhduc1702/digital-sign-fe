@@ -200,7 +200,6 @@ export function UpdateEvent({
     config: {
       suspense: false,
     },
-    level: 1,
   })
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
   const { data: orgDataById } = useOrgById({ orgId: data?.org_id })
