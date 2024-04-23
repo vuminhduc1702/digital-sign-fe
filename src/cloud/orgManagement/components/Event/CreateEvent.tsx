@@ -388,15 +388,6 @@ export function CreateEvent() {
   const { mutate, isLoading, isSuccess } = useCreateEvent()
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
