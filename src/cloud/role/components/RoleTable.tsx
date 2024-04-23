@@ -57,7 +57,7 @@ function RoleTableContextMenu({
       <div className="flex">
         <div className="flex cursor-pointer justify-center p-3">
           <LuPen
-            className="text-lg text-gray-500"
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
             onClick={() => {
               open()
               setSelectedUpdateRole(role)
@@ -66,17 +66,22 @@ function RoleTableContextMenu({
         </div>
         <div className="flex cursor-pointer justify-center p-3">
           <LuFiles
-            className="text-lg text-gray-500"
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
             onClick={() => handleCopyId(id)}
           />
         </div>
         <div className="flex cursor-pointer justify-center p-3">
-          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+          <LuTrash2
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={openDelete}
+          />
         </div>
         {/* <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical className="text-lg text-gray-500" />
+              <LuMoreVertical 
+            className="text-lg text-gray-500 hover:text-black hover:scale-125 transition-all duration-200 ease-in-out"
+             />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent>

@@ -40,7 +40,7 @@ import { cn, flattenOrgs } from '@/utils/misc'
 export const orgSchema = z.object({
   name: nameSchema,
   org_id: z.string().optional(),
-  description: descSchema,
+  description: descSchema.optional(),
   image: z.string().optional(),
   project_id: z.string().optional(),
 })
@@ -54,8 +54,8 @@ export function CreateOrg() {
   const { t } = useTranslation()
 
   const {
-    handleResetDefaultImage,
-    avatarRef,
+    handleResetDefaultImage1,
+    avatarRef1,
     uploadImageErr,
     setUploadImageErr,
     controlUploadImage,
@@ -90,7 +90,7 @@ export function CreateOrg() {
 
   const clearData = () => {
     setUploadImageErr('')
-    handleResetDefaultImage()
+    handleResetDefaultImage1()
     reset()
   }
 

@@ -56,18 +56,15 @@ const transformStatus = (stt: string) => {
 export function SubcriptionTemplate() {
   const { t } = useTranslation()
   const [offset, setOffset] = useState(0)
-  const [searchFilter, setSearchFilter] = useState({
-    search_field: '',
-    search_str: '',
-  })
   const [searchData, setsearchData] = useState<searchFilter>({})
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const projectId = storage.getProject()?.id
   const { data, isLoading, isPreviousData } = useGetSubcriptons({
     projectId,
-    search_field: searchFilter.search_field,
-    search_str: searchFilter.search_str,
+    search_field: searchField.current,
+    search_str: searchQuery,
     searchData: searchData,
     config: { keepPreviousData: true, staleTime: 1000 },
   })
@@ -134,52 +131,33 @@ export function SubcriptionTemplate() {
       {/* <TitleBar title={t('sidebar:payment.pldk')} /> */}
       <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div className="mb-5 flex justify-between">
-          <form
-            id="search-subcription"
-            // className="flex flex-col justify-between space-y-6"
-            className="flex w-full items-center justify-between gap-x-3"
-            onSubmit={handleSubmit(values => {
-              setSearchFilter({
-                search_field: values.key,
-                search_str: values.value,
-              })
-            })}
-          >
-            <div className="flex gap-x-[14px]">
-              <div className="w-96">
-                <SelectDropdown
-                  isClearable={false}
-                  name="key"
-                  control={control}
-                  options={[
-                    {
-                      label: t('schema:registration_code'),
-                      value: 'subscription',
-                    },
-                    {
-                      label: t('schema:customer_code'),
-                      value: 'customer_code',
-                    },
-                    { label: t('schema:customer_name'), value: 'name' },
-                  ]}
-                  // error={formState?.errors?.key}
-                />
-              </div>
-              <SearchField
-                setSearchValue={setSearchQuery}
-                setIsSearchData={setIsSearchData}
-                closeSearch={true}
-              />
-            </div>
-            <CreateSubcription />
-          </form>
+          <div className="flex gap-x-[14px]">
+            <SearchField
+              searchField={searchField}
+              setSearchValue={setSearchQuery}
+              setIsSearchData={setIsSearchData}
+              fieldOptions={[
+                {
+                  label: t('schema:registration_code'),
+                  value: 'subscription',
+                },
+                {
+                  label: t('schema:customer_code'),
+                  value: 'customer_code',
+                },
+                { label: t('schema:customer_name'), value: 'name' },
+              ]}
+              closeSearch={true}
+            />
+          </div>
+          <CreateSubcription />
           {/* <div className="flex items-center gap-x-3">
             <CreateSubcription />
           </div> */}
         </div>
 
         <SubcriptionTable
-          data={data?.data?.data}
+          data={data?.data?.data ?? []}
           offset={offset}
           setOffset={setOffset}
           handleField={handleField}

@@ -52,7 +52,7 @@ export function CreateProject() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const { register, formState, handleSubmit } = useForm<
+  const { register, formState, handleSubmit, reset } = useForm<
     CreateProjectDTO['data']
   >({
     resolver: CreateProjectSchema && zodResolver(CreateProjectSchema),
@@ -79,6 +79,7 @@ export function CreateProject() {
   }
 
   function handleResetForm() {
+    reset()
     handleResetDefaultImage()
     handleResetRestoreProject()
   }

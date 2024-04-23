@@ -6,11 +6,10 @@ import { useState } from 'react'
 import { ContentLayout } from '@/layout/ContentLayout'
 import TitleBar from '@/components/Head/TitleBar'
 import { CreateProject } from '../components/CreateProject'
-import { ComboBoxSelectProject } from '../components/ComboBoxSelectProject'
 import { ListProjectItem } from './../components/ListProjectItem'
-
+import { SearchField } from '@/components/Input'
 import { BasePaginationSchema, nameSchema } from '@/utils/schemaValidation'
-
+import { flattenData } from '@/utils/misc'
 import projectBackgroundImage from '@/assets/images/project-background.png'
 
 export const ProjectSchema = z.object({
@@ -44,13 +43,17 @@ export const ProjectListSchema = z
   })
   .and(BasePaginationSchema)
 
+export type ProjectList = z.infer<typeof ProjectListSchema>
+
 export function ProjectManage() {
   const { t } = useTranslation()
 
   const { data: projectsData } = useProjects()
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Project[]>(
-    [],
-  )
+  const [searchQuery, setSearchQuery] = useState('')
+  const { data } = useProjects({
+    search_str: searchQuery,
+    search_field: 'name',
+  })
 
   return (
     <ContentLayout title={t('cloud:project_manager.title')}>
@@ -61,9 +64,7 @@ export function ProjectManage() {
         />
         <div className="ml-3 flex items-center gap-x-3">
           <CreateProject />
-          <ComboBoxSelectProject
-            setFilteredComboboxData={setFilteredComboboxData}
-          />
+          <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
         </div>
       </div>
 
@@ -84,7 +85,7 @@ export function ProjectManage() {
                 Number(projectsData?.total).toString(),
               )}
             </div>
-            <ListProjectItem listProjectData={filteredComboboxData} />
+            <ListProjectItem listProjectData={data?.projects ?? []} />
           </>
         ) : (
           <div>{t('cloud:project_manager.no_data')}</div>
