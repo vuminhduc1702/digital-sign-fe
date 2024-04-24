@@ -182,17 +182,6 @@ export function CreateDevice() {
                 </FormItem>
               )}
             />
-
-            <SelectSuperordinateOrgTree
-              name={'org_id'}
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
-              error={formState?.errors?.org_id}
-              control={control}
-              options={orgData?.organizations}
-              noSelectionOption={true}
-              customOnChange={() => selectDropdownGroupId.current?.clearValue()}
-            />
-
             <SelectDropdown
               error={formState?.errors?.template_id}
               label={t('cloud:firmware.add_firmware.template')}
