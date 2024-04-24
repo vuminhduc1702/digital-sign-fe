@@ -32,8 +32,8 @@ function DateSegment({ segment, state }: DateSegmentProps) {
       {...segmentProps}
       ref={ref}
       className={cn(
-        'focus:text-accent-foreground focus:rounded-[2px] focus:bg-primary-300 focus:bg-opacity-75 focus:outline-none',
-        segment.type !== 'literal' ? 'px-[1px]' : '',
+        'focus:rounded-[2px] focus:bg-primary-300 focus:bg-opacity-75 focus:text-accent-foreground focus:outline-none',
+        segment.type !== 'literal' ? 'px-px' : '',
         segment.isPlaceholder ? 'text-muted-foreground' : '',
       )}
     >

@@ -267,10 +267,11 @@ function Navbar() {
                   {t('user:change_password')}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                <p className="cursor-pointer" onClick={() => logout.mutate({})}>
-                  {t('user:logout')}
-                </p>
+              <DropdownMenuItem
+                className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                onClick={() => logout.mutate({})}
+              >
+                <p>{t('user:logout')}</p>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

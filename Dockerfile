@@ -4,7 +4,7 @@
 FROM node:20.0.0-alpine  as build
 WORKDIR /app
 COPY . .
-COPY .env.example .env
+#COPY .env.example .env
 RUN yarn install
 RUN  yarn run build
 

@@ -1,13 +1,13 @@
-name: CICD Pineline for Innoway Demo FE - Vcloud
+name: CICD Pineline for Innoway Demo FE - VHT - Test Cluster
 
 on:
-  push:
-    tags:
-      - 'vcloud_[0-9]+.[0-9]+.[0-9]+'
-
+  push:    
+    branches:
+      - main
+    
 env:
   image: ui
-  tags: ${GITHUB_REF#refs/tags/}
+  tags: ${{ github.sha }}
   chart-folder: /home/vht/ui
   chart-name: ui
   namespace: ui
@@ -26,7 +26,7 @@ jobs:
       id: build-image
       run: |
         echo "Tag: ${{env.tags}}"
-        cp .env.production.example .env
+        cp .env.test.example .env
         docker build -t ${{env.image}}:${{env.tags}} .
 
   # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
@@ -50,9 +50,10 @@ jobs:
     - name: SSH and deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        password: ${{ secrets.SERVER_PASSWORD }}
+        host: ${{ secrets.SERVER_HOST_TEST }}
+        username: ${{ secrets.SERVER_USER_TEST }}
+        password: ${{ secrets.SERVER_PASSWORD_TEST }}
+        port: ${{ secrets.SERVER_PORT_TEST }}
         timeout: 500s
         script: |
           cd ${{env.chart-folder}}
