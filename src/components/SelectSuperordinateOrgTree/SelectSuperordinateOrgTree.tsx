@@ -45,12 +45,14 @@ export function SelectSuperordinateOrgTree({
 }: SelectSuperordinateOrgTreeProps) {
   const { t } = useTranslation()
   const params = useParams()
-  const tree = useRef()
+  const tree = useRef(null)
+  const ref = useRef([])
   const projectId = storage.getProject()?.id ?? params.projectId
 
   const [nodes, setNodes] = useState<Node[]>([])
   const [checked, setChecked] = useState<string[]>([])
   const [expanded, setExpanded] = useState<string[]>()
+  const [isExpanded, setIsExpanded] = useState(false)
   const [selectedNodes, setSelectedNodes] = useState<OnCheckNode>()
   const [expandedNodes, setExpandedNodes] = useState<OnExpandNode>()
   const [filterText, setFilterText] = useState<string>('')
@@ -213,6 +215,22 @@ export function SelectSuperordinateOrgTree({
     customOnChange && customOnChange(checked)
   }, [checked])
 
+  useEffect(() => {
+    const elements = tree?.current.getElementsByClassName('rct-node-clickable')
+    const text =
+      orgDataFlatten.find(item => item.id === value)?.name ||
+      t('tree:no_selection_org')
+    ref.current = Array.from(elements)
+    for (var i = 0; i < ref.current.length; i++) {
+      var span = ref.current[i]
+      if (span?.outerText === text) {
+        span.classList.add('focus-rct-title')
+      } else {
+        span.classList.remove('focus-rct-title')
+      }
+    }
+  }, [tree, filteredNodes, isExpanded])
+
   return (
     <>
       <div className="mb-2 flex">
@@ -225,16 +243,15 @@ export function SelectSuperordinateOrgTree({
         />
         <img
           src={btnRemove}
-          className={cn('absolute right-[24px] top-[18px] cursor-pointer', {
+          className={cn('absolute right-[24px] top-[25px] cursor-pointer', {
             hidden: filterText.length === 0,
           })}
           onClick={clearFilterNodes}
           alt="remove"
         />
       </div>
-      <div className=" max-h-[300px] overflow-x-auto">
+      <div ref={tree} className=" max-h-[300px] overflow-x-auto">
         <CheckboxTree
-          ref={tree}
           nodes={filteredNodes}
           checked={checked}
           expanded={expanded}
@@ -244,6 +261,7 @@ export function SelectSuperordinateOrgTree({
           }}
           checkModel="all"
           onExpand={(expanded, node) => {
+            setIsExpanded(!isExpanded)
             setExpanded(expanded)
             setExpandedNodes(node)
           }}

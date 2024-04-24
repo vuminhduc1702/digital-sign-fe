@@ -1,7 +1,7 @@
 .custom-node-0 rect {
   fill: #fc0;
   filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
-    rx: 10px;
+  rx: 10px;
   ry: 10px;
   stroke: #fc0;
   stroke-width: 2px;
@@ -94,7 +94,7 @@
   rx: 10px;
   ry: 10px;
   stroke: #795548;
-  stroke-width: 2px;
+  stroke-width: 2px;
 }
 
 .custom-svg-class {
@@ -124,5 +124,5 @@
 
 .clicked-text {
   cursor: pointer;
-  fill: red; 
+  fill: red;
 }
