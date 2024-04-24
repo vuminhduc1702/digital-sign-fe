@@ -1,4 +1,4 @@
-name: CICD Pipeline for Innoway Demo FE - Vcloud
+name: CICD Pineline for Innoway Demo FE - Vcloud
 
 on:
   push:
@@ -29,8 +29,8 @@ jobs:
         cp .env.production.example .env
         docker build -t ${{env.image}}:${{env.tags}} .
 
-      # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
-      # in which case 'username' and 'password' can be omitted.
+  # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+  # in which case 'username' and 'password' can be omitted.
     - name: Push To harbor
       id: push-to-harbor
       env:
@@ -56,5 +56,5 @@ jobs:
         timeout: 500s
         script: |
           cd ${{env.chart-folder}}
-          sed -i "s/tag: .*/tag: ${{github.ref_name}}/g" values.yaml
+          sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
           helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}

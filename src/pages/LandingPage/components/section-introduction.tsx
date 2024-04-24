@@ -27,7 +27,7 @@ export function SectionIntro({
                   'landingpage:introduction_section.service_transmit_data_accurate',
                 )}
               </div>
-              <div className="pl-[40px] pt-[20px] xs2:w-[100%] xs2:pl-0">
+              <div className="pl-[40px] pt-[20px] xs2:w-full xs2:pl-0">
                 <div className="mb-[-8px]">
                   <CheckboxCircleLine
                     width={24}

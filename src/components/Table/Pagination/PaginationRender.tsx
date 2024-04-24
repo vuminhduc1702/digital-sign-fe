@@ -48,11 +48,11 @@ export function PaginationRender({
 
   return (
     <div className="flex w-full flex-col justify-between gap-4 overflow-auto px-2 py-1 sm:flex-row sm:items-center sm:gap-8">
-      <div className="text-muted-foreground flex w-[100px] items-center justify-center whitespace-nowrap text-sm">
+      <div className="flex w-[100px] items-center justify-center whitespace-nowrap text-sm text-muted-foreground">
         {t('table:pagination')}
       </div>
       <DropdownPageLimit table={table} />
-      <div className="text-muted-foreground flex-1 whitespace-nowrap text-sm">
+      <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">
         {t('table:paginationSelected', {
           min: pageIndex * pageSize > totalAttrs ? 1 : pageIndex * pageSize + 1,
           max:

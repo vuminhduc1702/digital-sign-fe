@@ -29,8 +29,8 @@ export const ChangePassword = () => {
         </div>
         <div className="mt-28 flex sm:px-14 lg:px-60">
           <div className="flex w-2/3 shrink flex-col items-center justify-center rounded-s-lg bg-white">
-            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pb-5 lg:pt-10"></div>
-            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pt-5">
+            <div className="flex justify-center pt-16 sm:py-5 lg:pb-5 lg:pt-10"></div>
+            <div className="flex justify-center pt-16 sm:py-5 lg:pt-5">
               <img src={frameAuth} alt="" />
             </div>
           </div>

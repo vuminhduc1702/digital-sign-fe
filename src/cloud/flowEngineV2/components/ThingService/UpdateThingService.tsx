@@ -605,7 +605,7 @@ export function UpdateThingService({
                         </div>
                         <ResizablePanelGroup
                           direction="horizontal"
-                          className={cn('flex w-[100%] md:col-span-3', {
+                          className={cn('flex w-full md:col-span-3', {
                             'flex-col': fullScreen,
                           })}
                         >
@@ -613,7 +613,7 @@ export function UpdateThingService({
                             defaultSize={50}
                             minSize={fullScreen ? 13 : 20.5}
                             className={cn(
-                              'flex w-[100%] flex-col gap-2 md:col-span-1',
+                              'flex w-full flex-col gap-2 md:col-span-1',
                             )}
                             ref={codeEditorRef}
                           >
@@ -717,7 +717,7 @@ export function UpdateThingService({
                             defaultSize={50}
                             minSize={fullScreen ? 10.5 : 16.5}
                             className={cn(
-                              'flex w-[100%] flex-col gap-2 md:col-span-1',
+                              'flex w-full flex-col gap-2 md:col-span-1',
                             )}
                             ref={resultEditorRef}
                           >

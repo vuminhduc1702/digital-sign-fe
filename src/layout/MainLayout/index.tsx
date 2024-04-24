@@ -39,7 +39,7 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
             <NavLink
               to="https://iot.vtscloud.vn/"
               reloadDocument
-              className="flex h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white"
+              className="flex h-20 min-w-[256px] items-center justify-center border-b-2 border-solid bg-white"
             >
               <img src={logo} alt="logo" className="h-14 cursor-pointer" />
             </NavLink>

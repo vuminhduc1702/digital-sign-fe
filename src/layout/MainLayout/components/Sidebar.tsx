@@ -13,7 +13,7 @@ function Sidebar() {
         <NavLink
           to="https://iot.vtscloud.vn/"
           reloadDocument
-          className="flex h-20 items-center justify-center border-b-[2px] border-solid bg-white"
+          className="flex h-20 items-center justify-center border-b-2 border-solid bg-white"
         >
           <img src={logo} alt="logo" className="h-14 cursor-pointer" />
         </NavLink>
