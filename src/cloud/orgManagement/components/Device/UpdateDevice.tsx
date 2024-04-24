@@ -7,7 +7,6 @@ import { z } from 'zod'
 import { type SelectInstance } from 'react-select'
 
 import { Button } from '@/components/Button'
-import { Drawer } from '@/components/Drawer'
 import {
   InputField,
   SelectDropdown,
@@ -41,6 +40,16 @@ import {
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { cn, flattenOrgs } from '@/utils/misc'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -152,229 +161,244 @@ export function UpdateDevice({
   )
 
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={close}
-      title={t('cloud:org_manage.device_manage.add_device.edit')}
-      renderFooter={() => (
-        <>
-          <Button
-            className="rounded border-none"
-            variant="secondary"
-            size="lg"
-            onClick={close}
-            startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
-            }
-          />
-          <Button
-            className="rounded border-none"
-            form="update-device"
-            type="submit"
-            size="lg"
-            isLoading={isLoading}
-            startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-            }
-            disabled={!formState.isDirty || isLoading}
-          />
-        </>
-      )}
-    >
-      <div className="flex-y">
-        <Form {...form}>
-          <form
-            id="update-device"
-            className="w-full space-y-6"
-            onSubmit={handleSubmit(values => {
-              mutate({
-                data: {
-                  name: values.name,
-                  key: values.key,
-                  org_id: values.org_id,
-                  group_id: values.group_id,
-                  template_id: values.template_id,
-                },
-                deviceId,
-              })
-            })}
-          >
-            <>
-              <InputField
-                label={t('cloud:org_manage.device_manage.add_device.name')}
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-              <FormField
-                control={form.control}
-                name="org_id"
-                render={({ field: { onChange, value, ...field } }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {t('cloud:org_manage.device_manage.add_device.parent')}
-                    </FormLabel>
-                    <div>
-                      <FormControl>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+      <SheetContent
+        onInteractOutside={e => {
+          e.preventDefault()
+        }}
+        className={cn('flex h-full max-w-xl flex-col justify-between')}
+      >
+        <SheetHeader>
+          <SheetTitle>
+            {t('cloud:custom_protocol.adapter.table.edit')}
+          </SheetTitle>
+        </SheetHeader>
+        <div className="min-h-[85%] overflow-y-auto">
+          <div className="flex-y">
+            <Form {...form}>
+              <form
+                id="update-device"
+                className="w-full space-y-6"
+                onSubmit={handleSubmit(values => {
+                  mutate({
+                    data: {
+                      name: values.name,
+                      key: values.key,
+                      org_id: values.org_id,
+                      group_id: values.group_id,
+                      template_id: values.template_id,
+                    },
+                    deviceId,
+                  })
+                })}
+              >
+                <>
+                  <InputField
+                    label={t('cloud:org_manage.device_manage.add_device.name')}
+                    error={formState.errors['name']}
+                    registration={register('name')}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="org_id"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t(
+                            'cloud:org_manage.device_manage.add_device.parent',
+                          )}
+                        </FormLabel>
                         <div>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                id="org_id"
-                                className={cn(
-                                  'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
-                                  {
-                                    'text-gray-500': !value && value !== '',
-                                  },
-                                )}
-                              >
-                                {value
-                                  ? orgDataFlatten.find(
-                                      item => item.id === value,
-                                    )?.name
-                                  : value === ''
-                                    ? t('tree:no_selection_org')
-                                    : t('placeholder:select_org')}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <SelectSuperordinateOrgTree
-                                {...field}
-                                onChangeValue={onChange}
-                                value={value}
-                                noSelectionOption={true}
-                                customOnChange={() =>
-                                  selectDropdownGroupId.current?.clearValue()
-                                }
-                              />
-                            </PopoverContent>
-                          </Popover>
+                          <FormControl>
+                            <div>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    id="org_id"
+                                    className={cn(
+                                      'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                      {
+                                        'text-gray-500': !value && value !== '',
+                                      },
+                                    )}
+                                  >
+                                    {value
+                                      ? orgDataFlatten.find(
+                                          item => item.id === value,
+                                        )?.name
+                                      : value === ''
+                                        ? t('tree:no_selection_org')
+                                        : t('placeholder:select_org')}
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <SelectSuperordinateOrgTree
+                                    {...field}
+                                    onChangeValue={onChange}
+                                    value={value}
+                                    noSelectionOption={true}
+                                    customOnChange={() =>
+                                      selectDropdownGroupId.current?.clearValue()
+                                    }
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
                         </div>
-                      </FormControl>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
+                      </FormItem>
+                    )}
+                  />
 
-              <SelectDropdown
-                refSelect={selectDropdownGroupId}
-                isClearable={false}
-                label={t('cloud:org_manage.device_manage.add_device.group')}
-                name="group_id"
-                control={control}
-                options={groupSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:group') ||
-                  option.label === t('table:no_group')
-                }
-                noOptionsMessage={() => t('table:no_group')}
-                loadingMessage={() => t('loading:group')}
-                isLoading={groupIsLoading}
-                defaultValue={
-                  groupSelectOptions?.find(group => group.value === group_id) ??
-                  ''
-                }
-                error={formState?.errors?.group_id}
-              />
+                  <SelectDropdown
+                    refSelect={selectDropdownGroupId}
+                    isClearable={false}
+                    label={t('cloud:org_manage.device_manage.add_device.group')}
+                    name="group_id"
+                    control={control}
+                    options={groupSelectOptions}
+                    isOptionDisabled={option =>
+                      option.label === t('loading:group') ||
+                      option.label === t('table:no_group')
+                    }
+                    noOptionsMessage={() => t('table:no_group')}
+                    loadingMessage={() => t('loading:group')}
+                    isLoading={groupIsLoading}
+                    defaultValue={
+                      groupSelectOptions?.find(
+                        group => group.value === group_id,
+                      ) ?? ''
+                    }
+                    error={formState?.errors?.group_id}
+                  />
 
-              <SelectDropdown
-                isClearable={false}
-                label={t('cloud:firmware.add_firmware.template')}
-                name="template_id"
-                control={control}
-                options={templateSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:template') ||
-                  option.label === t('table:no_template')
-                }
-                noOptionsMessage={() => t('table:no_template')}
-                loadingMessage={() => t('loading:template')}
-                isLoading={templateIsLoading}
-                defaultValue={templateSelectOptions?.find(
-                  template => template.value === template_id,
-                )}
-                error={formState?.errors?.template_id}
-              />
+                  <SelectDropdown
+                    isClearable={false}
+                    label={t('cloud:firmware.add_firmware.template')}
+                    name="template_id"
+                    control={control}
+                    options={templateSelectOptions}
+                    isOptionDisabled={option =>
+                      option.label === t('loading:template') ||
+                      option.label === t('table:no_template')
+                    }
+                    noOptionsMessage={() => t('table:no_template')}
+                    loadingMessage={() => t('loading:template')}
+                    isLoading={templateIsLoading}
+                    defaultValue={templateSelectOptions?.find(
+                      template => template.value === template_id,
+                    )}
+                    error={formState?.errors?.template_id}
+                  />
 
-              <InputField
-                label={t('cloud:org_manage.device_manage.add_device.key')}
-                error={formState.errors['key']}
-                registration={register('key')}
-              />
-            </>
-          </form>
-        </Form>
+                  <InputField
+                    label={t('cloud:org_manage.device_manage.add_device.key')}
+                    error={formState.errors['key']}
+                    registration={register('key')}
+                  />
+                </>
+              </form>
+            </Form>
 
-        <Form {...heartbeatForm}>
-          <form
-            className="mt-6 w-full"
-            onSubmit={handleSubmitHeartBeat(values => {
-              mutateHeartBeat({
-                data: {
-                  interval: Number(values.interval),
-                  timeout: Number(values.timeout),
-                },
-                deviceId,
-              })
-            })}
-          >
-            <p className="mx-1 my-2">
-              {t('cloud:org_manage.device_manage.add_device.heartbeat')}
-            </p>
-            <div className="flex rounded-lg border border-solid p-2">
-              <InputField
-                registration={registerHeartBeat('interval', {
-                  valueAsNumber: true,
+            <Form {...heartbeatForm}>
+              <form
+                className="mt-6 w-full"
+                onSubmit={handleSubmitHeartBeat(values => {
+                  mutateHeartBeat({
+                    data: {
+                      interval: Number(values.interval),
+                      timeout: Number(values.timeout),
+                    },
+                    deviceId,
+                  })
                 })}
-                error={formStateHeartBeat.errors['interval']}
-                label="Heartbeat Interval"
-                type="number"
-                classnamefieldwrapper="flex items-center"
-                classlabel="mx-1"
-                classchild="mx-1"
-                defaultValue={additional_info?.heartbeat_interval || 0}
-              />
-              <InputField
-                registration={registerHeartBeat('timeout', {
-                  valueAsNumber: true,
-                })}
-                error={formStateHeartBeat.errors['timeout']}
-                label="Life circle"
-                type="number"
-                classnamefieldwrapper="flex items-center"
-                classlabel="mx-1"
-                classchild="mx-1"
-                defaultValue={additional_info?.timeout_lifecycle || 0}
-              />
-            </div>
-            <div className="mt-2 flex justify-end pt-1">
-              <Button
-                className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
-                variant="trans"
-                size="square"
-                type="submit"
-                isLoading={isLoadingHeartBeat}
               >
-                {t(
-                  'cloud:org_manage.device_manage.add_device.create_heartbeat',
-                )}
-              </Button>
-              <Button
-                className="rounded-sm bg-secondary-700 p-1 text-white"
-                variant="trans"
-                size="square"
-                isLoading={isLoadingUpdateHeartBeat}
-                disabled={disableUpdateHeartbeat || isLoadingUpdateHeartBeat}
-                onClick={() => {
-                  mutateUpdateHeartBeat({ deviceId })
-                }}
-              >
-                {t('cloud:org_manage.device_manage.add_device.ping')}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
-    </Drawer>
+                <p className="mx-1 my-2">
+                  {t('cloud:org_manage.device_manage.add_device.heartbeat')}
+                </p>
+                <div className="flex rounded-lg border border-solid p-2">
+                  <InputField
+                    registration={registerHeartBeat('interval', {
+                      valueAsNumber: true,
+                    })}
+                    error={formStateHeartBeat.errors['interval']}
+                    label="Heartbeat Interval"
+                    type="number"
+                    classnamefieldwrapper="flex items-center"
+                    classlabel="mx-1"
+                    classchild="mx-1"
+                    defaultValue={additional_info?.heartbeat_interval || 0}
+                  />
+                  <InputField
+                    registration={registerHeartBeat('timeout', {
+                      valueAsNumber: true,
+                    })}
+                    error={formStateHeartBeat.errors['timeout']}
+                    label="Life circle"
+                    type="number"
+                    classnamefieldwrapper="flex items-center"
+                    classlabel="mx-1"
+                    classchild="mx-1"
+                    defaultValue={additional_info?.timeout_lifecycle || 0}
+                  />
+                </div>
+                <div className="mt-2 flex justify-end pt-1">
+                  <Button
+                    className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
+                    variant="trans"
+                    size="square"
+                    type="submit"
+                    isLoading={isLoadingHeartBeat}
+                  >
+                    {t(
+                      'cloud:org_manage.device_manage.add_device.create_heartbeat',
+                    )}
+                  </Button>
+                  <Button
+                    className="rounded-sm bg-secondary-700 p-1 text-white"
+                    variant="trans"
+                    size="square"
+                    isLoading={isLoadingUpdateHeartBeat}
+                    disabled={
+                      disableUpdateHeartbeat || isLoadingUpdateHeartBeat
+                    }
+                    onClick={() => {
+                      mutateUpdateHeartBeat({ deviceId })
+                    }}
+                  >
+                    {t('cloud:org_manage.device_manage.add_device.ping')}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        </div>
+        <SheetFooter>
+          <>
+            <Button
+              className="rounded border-none"
+              variant="secondary"
+              size="lg"
+              onClick={close}
+              startIcon={
+                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
+            <Button
+              className="rounded border-none"
+              form="update-device"
+              type="submit"
+              size="lg"
+              isLoading={isLoading}
+              startIcon={
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              }
+              disabled={!formState.isDirty || isLoading}
+            />
+          </>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }
