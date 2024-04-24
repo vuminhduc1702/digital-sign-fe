@@ -111,7 +111,7 @@ export function UpdateThing({
           <Button
             isLoading={isLoading}
             disabled={!formState.isDirty || isLoading}
-            form="update-entityThing"
+            form="create-entityThing"
             type="submit"
             size="md"
             className="bg-primary-400"

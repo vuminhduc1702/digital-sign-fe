@@ -51,7 +51,7 @@ export function UpdateProject({
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
-  } = useResetDefaultImage(defaultProjectImage)
+  } = useResetDefaultImage(defaultProjectImage, 'default-project.png')
 
   const cancelButtonRef = useRef(null)
 

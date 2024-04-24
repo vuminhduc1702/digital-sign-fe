@@ -16,9 +16,9 @@ export const useAuthorization = () => {
 
   const userStorage = storage.getToken()
 
-  if (!userStorage) {
-    throw Error(t('error:no_user'))
-  }
+  // if (!userStorage) {
+  //   throw Error(t('error:no_user'))
+  // }
 
   const checkAccess = useCallback(
     ({ allowedRoles }: { allowedRoles: Readonly<RoleTypes[]> }) => {
