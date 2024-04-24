@@ -3,7 +3,7 @@
 ## build stage ##
 FROM node:18.12.0-alpine  as build
 WORKDIR /app
-COPY package.json yarn.lock .
+COPY package.json yarn.lock /app/
 RUN yarn install --frozen-lockfile --non-interactive --ignore-scripts 
 COPY . .
 RUN yarn build
