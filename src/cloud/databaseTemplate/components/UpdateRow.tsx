@@ -72,7 +72,7 @@ export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
         <SheetHeader>
           <SheetTitle>{t('cloud:db_template.add_db.update_row')}</SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <form
             id="update-dashboard"
             className="w-full space-y-6"

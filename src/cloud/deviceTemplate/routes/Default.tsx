@@ -27,6 +27,11 @@ export function Default() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const {
+    close: closeAttrs,
+    open: openAttrs,
+    isOpen: isOpenAttrs,
+  } = useDisclosure()
+  const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
@@ -120,7 +125,12 @@ export function Default() {
                   setIsSearchData={setIsSearchData}
                   closeSearch={true}
                 />
-                <CreateAttr entityId={templateId} entityType="TEMPLATE" />
+                <Button
+                  className="h-[38px] rounded border-none"
+                  onClick={openAttrs}
+                >
+                  {t('cloud:org_manage.org_manage.add_attr.button')}
+                </Button>
               </div>
             </div>
             <AttrTable
@@ -151,6 +161,15 @@ export function Default() {
           </div>
         </div>
       ) : null}
+      {isOpenAttrs && (
+        <CreateAttr
+          entityId={templateId}
+          entityType="TEMPLATE"
+          close={closeAttrs}
+          open={openAttrs}
+          isOpen={isOpenAttrs}
+        />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

@@ -471,7 +471,7 @@ export function UpdateTemplateLwM2M({
             {t('cloud:device_template.add_template.update')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           {LwM2MLoading ? (
             <div className="flex grow items-center justify-center">
               <Spinner showSpinner={showSpinner} size="xl" />

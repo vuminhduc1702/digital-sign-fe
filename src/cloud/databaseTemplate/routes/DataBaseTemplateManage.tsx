@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import { useDisclosure } from '@/utils/hooks'
 
 import TitleBar from '@/components/Head/TitleBar'
 import { ContentLayout } from '@/layout/ContentLayout'
@@ -23,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Switch } from '@/components/Switch'
 import * as z from 'zod'
 import { ReloadIcon } from '@radix-ui/react-icons'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export const searchDataBaseSchema = z.object({
   key: z.string().optional(),
@@ -53,6 +55,16 @@ export function DataBaseTemplateManage() {
   const projectId = storage.getProject()?.id
 
   const { data, mutate, isLoading } = useSelectDataBase()
+  const {
+    open: openCreateColumn,
+    close: closeCreateColumn,
+    isOpen: isOpenCreateColumn,
+  } = useDisclosure()
+  const {
+    open: openCreateRow,
+    close: closeCreateRow,
+    isOpen: isOpenCreateRow,
+  } = useDisclosure()
 
   const keySelect = [
     { label: 'AND', value: '$and' },
@@ -129,18 +141,35 @@ export function DataBaseTemplateManage() {
               <div className="flex justify-end">
                 <div className="mr-[42px] flex items-center gap-x-3">
                   <div className="flex items-center gap-x-2">
-                    <CreateRows
-                      onClose={refetchData}
-                      columnsProp={data?.data?.columns || []}
-                    />
+                    <Button
+                      className="w-full justify-start rounded-md"
+                      variant="trans"
+                      size="square"
+                      startIcon={
+                        <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                      }
+                      onClick={openCreateRow}
+                    >
+                      {t('cloud:db_template.add_db.add_row')}
+                    </Button>
                   </div>
                   {data?.data?.columns && (
                     <div className="flex items-center gap-x-2">
-                      <CreateColumn
-                        isSearch={isShow}
-                        isValidate={textValidate}
-                        onClose={refetchData}
-                      />
+                      <Button
+                        className="w-full justify-start rounded-md"
+                        variant="trans"
+                        size="square"
+                        startIcon={
+                          <PlusIcon
+                            width={16}
+                            height={16}
+                            viewBox="0 0 16 16"
+                          />
+                        }
+                        onClick={openCreateColumn}
+                      >
+                        {t('cloud:db_template.add_db.add_column')}
+                      </Button>
                     </div>
                   )}
                   <div className="flex items-center gap-x-2">
@@ -321,6 +350,23 @@ export function DataBaseTemplateManage() {
                   data={filteredComboboxData}
                   onClose={refetchData}
                   onSearch={onSearch}
+                />
+              )}
+              {isOpenCreateColumn && (
+                <CreateColumn
+                  isSearch={isShow}
+                  isValidate={textValidate}
+                  close={closeCreateColumn}
+                  open={openCreateColumn}
+                  isOpen={isOpenCreateColumn}
+                />
+              )}
+              {isOpenCreateRow && (
+                <CreateRows
+                  columnsProp={data?.data?.columns || []}
+                  close={closeCreateRow}
+                  open={openCreateRow}
+                  isOpen={isOpenCreateRow}
                 />
               )}
             </div>

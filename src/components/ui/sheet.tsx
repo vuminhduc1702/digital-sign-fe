@@ -50,7 +50,7 @@ const sheetVariants = cva(
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {
-  closeButton?: boolean
+  closeButtonAvai?: boolean
 }
 
 const SheetContent = React.forwardRef<
@@ -58,7 +58,7 @@ const SheetContent = React.forwardRef<
   SheetContentProps
 >(
   (
-    { side = 'right', className, children, closeButton, onClick, ...props },
+    { side = 'right', className, children, closeButtonAvai, onClick, ...props },
     ref,
   ) => (
     <SheetPortal>
@@ -69,7 +69,7 @@ const SheetContent = React.forwardRef<
         {...props}
       >
         {children}
-        {closeButton && (
+        {!closeButtonAvai && (
           <SheetPrimitive.Close className="data-[state=open]:bg-secondary absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring disabled:pointer-events-none">
             <div onClick={onClick}>
               <X className="h-4 w-4" />

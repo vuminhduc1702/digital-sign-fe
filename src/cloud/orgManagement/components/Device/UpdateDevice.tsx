@@ -173,7 +173,7 @@ export function UpdateDevice({
             {t('cloud:custom_protocol.adapter.table.edit')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <div className="flex-y">
             <Form {...form}>
               <form

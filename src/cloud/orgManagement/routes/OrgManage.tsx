@@ -32,6 +32,11 @@ export function OrgManage() {
 
   const [searchQuery, setSearchQuery] = useState('')
   const {
+    close: closeAttrs,
+    open: openAttrs,
+    isOpen: isOpenAttrs,
+  } = useDisclosure()
+  const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
@@ -143,7 +148,12 @@ export function OrgManage() {
                     setIsSearchData={setIsSearchData}
                     closeSearch={true}
                   />
-                  <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
+                  <Button
+                    className="h-[38px] rounded border-none"
+                    onClick={openAttrs}
+                  >
+                    {t('cloud:org_manage.org_manage.add_attr.button')}
+                  </Button>
                 </div>
               </div>
               <AttrTable
@@ -177,6 +187,15 @@ export function OrgManage() {
         </div>
       ) : (
         <OrgMap />
+      )}
+      {isOpenAttrs && (
+        <CreateAttr
+          entityId={orgId}
+          entityType="ORGANIZATION"
+          close={closeAttrs}
+          open={openAttrs}
+          isOpen={isOpenAttrs}
+        />
       )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
