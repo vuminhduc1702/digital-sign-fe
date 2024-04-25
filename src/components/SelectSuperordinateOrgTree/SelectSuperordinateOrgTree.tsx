@@ -57,6 +57,7 @@ export function SelectSuperordinateOrgTree({
   const [expandedNodes, setExpandedNodes] = useState<OnExpandNode>()
   const [filterText, setFilterText] = useState<string>('')
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([])
+  const [isFirst, setisFirst] = useState(true)
 
   const { data: orgData } = useGetOrgs({ projectId })
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
@@ -182,6 +183,30 @@ export function SelectSuperordinateOrgTree({
     return filtered
   }
 
+  function findParentValue(nodes: Node[], path: string[] = []) {
+    for (const node of nodes) {
+      if (node.value === value) {
+        return path
+      }
+      if (node.children) {
+        const result: string[] = findParentValue(node.children, [
+          ...path,
+          node.value,
+        ])
+        if (result) {
+          return result
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (value && isFirst) {
+      const expandFirst = findParentValue(filteredNodes)
+      setExpanded(expandFirst)
+    }
+  }, [filteredNodes])
+
   function onFilterChange(e) {
     setFilterText(e.target.value)
     filterTree()
@@ -229,7 +254,7 @@ export function SelectSuperordinateOrgTree({
         span.classList.remove('focus-rct-title')
       }
     }
-  }, [tree, filteredNodes, isExpanded])
+  }, [tree, filteredNodes, isExpanded, expanded])
 
   return (
     <>
@@ -264,6 +289,7 @@ export function SelectSuperordinateOrgTree({
             setIsExpanded(!isExpanded)
             setExpanded(expanded)
             setExpandedNodes(node)
+            setisFirst(false)
           }}
           onClick={node => {
             setSelectedNodes(node)
