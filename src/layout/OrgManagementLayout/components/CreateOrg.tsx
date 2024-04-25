@@ -155,6 +155,7 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
                     org_id: dataCreateOrg.id,
                   })
                 }
+                close && close()
               })}
             >
               <>

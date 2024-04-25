@@ -121,6 +121,7 @@ export function UpdateGroup({
                   },
                   groupId,
                 })
+                close && close()
               })}
             >
               <>

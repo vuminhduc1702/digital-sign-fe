@@ -190,6 +190,7 @@ export function UpdateDevice({
                     },
                     deviceId,
                   })
+                  close && close()
                 })}
               >
                 <>
@@ -312,6 +313,7 @@ export function UpdateDevice({
                     },
                     deviceId,
                   })
+                  close && close()
                 })}
               >
                 <p className="mx-1 my-2">

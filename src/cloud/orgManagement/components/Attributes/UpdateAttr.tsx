@@ -130,6 +130,7 @@ export function UpdateAttr({
                 entityType,
                 entityId,
               })
+              close && close()
             })}
           >
             <>

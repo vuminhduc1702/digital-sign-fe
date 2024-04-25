@@ -198,6 +198,7 @@ export function UpdateRole({
                 },
                 roleId,
               })
+              close && close()
             })}
           >
             <>

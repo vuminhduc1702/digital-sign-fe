@@ -166,7 +166,7 @@ export function UpdateUser({
             <form
               id="update-user"
               className="w-full space-y-6"
-              onSubmit={handleSubmit(values =>
+              onSubmit={handleSubmit(values => {
                 mutate({
                   data: {
                     name: values.name,
@@ -186,8 +186,9 @@ export function UpdateUser({
                         : undefined,
                   },
                   userId,
-                }),
-              )}
+                })
+                close && close()
+              })}
             >
               <>
                 <InputField

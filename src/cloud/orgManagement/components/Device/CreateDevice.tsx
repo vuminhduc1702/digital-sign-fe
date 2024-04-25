@@ -132,6 +132,7 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                     template_id: values.template_id,
                   },
                 })
+                close && close()
               })}
             >
               <>

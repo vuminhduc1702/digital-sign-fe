@@ -88,6 +88,7 @@ export function UpdateDashboard({
                 },
                 dashboardId: id,
               })
+              close && close()
             })}
           >
             <>

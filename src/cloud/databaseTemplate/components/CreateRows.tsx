@@ -98,6 +98,7 @@ export default function CreateRows({
                   fields: values.fields,
                 },
               })
+              close && close()
             })}
           >
             <>

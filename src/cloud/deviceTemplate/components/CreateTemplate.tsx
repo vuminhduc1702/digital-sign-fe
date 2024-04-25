@@ -176,6 +176,7 @@ export default function CreateTemplate({
                 },
                 templateId: dataCreateTemplate.id,
               })
+              close && close()
             })}
           >
             <>

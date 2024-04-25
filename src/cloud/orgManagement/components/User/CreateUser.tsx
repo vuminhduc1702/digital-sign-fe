@@ -171,6 +171,7 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                         : undefined,
                   },
                 })
+                close && close()
               })}
             >
               <>

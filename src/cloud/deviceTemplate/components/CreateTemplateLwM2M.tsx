@@ -411,6 +411,7 @@ export default function CreateTemplateLwM2M({
             id="create-template"
             onSubmit={handleSubmit(async () => {
               await mutateAsyncCreateTemplatelwm2m({ data })
+              close && close()
             })}
           >
             <>
