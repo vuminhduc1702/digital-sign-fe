@@ -667,7 +667,7 @@ export function DashboardDetail() {
                       {t('cloud:dashboard.detail_dashboard.add_widget.create')}
                     </SheetTitle>
                   </SheetHeader>
-                  <div className="min-h-[85%] overflow-y-auto">
+                  <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
                     <div className="flex w-full gap-x-8">
                       <div className="w-full space-y-6">
                         <TooltipProvider>

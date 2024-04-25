@@ -128,7 +128,7 @@ export function UpdateOrg({
             {t('cloud:org_manage.org_manage.add_org.edit')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <Form {...form}>
             <form
               id="update-org"

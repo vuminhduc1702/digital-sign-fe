@@ -28,6 +28,7 @@ import {
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { SearchField } from '@/components/Input'
 import { useGetTemplates } from '../api'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export function TemplateDefault() {
   const { t } = useTranslation()
@@ -40,6 +41,11 @@ export function TemplateDefault() {
     close: closeDelete,
     open: openDelete,
     isOpen: isOpenDelete,
+  } = useDisclosure()
+  const {
+    close: closeTemplate,
+    open: openTemplate,
+    isOpen: isOpenTemplate,
   } = useDisclosure()
 
   const { templateId } = useParams()
@@ -86,7 +92,13 @@ export function TemplateDefault() {
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
-        <CreateTemplate />
+        <Button
+          className="h-9 w-9 rounded-md"
+          variant="trans"
+          size="square"
+          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+          onClick={openTemplate}
+        />
         <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
@@ -181,6 +193,9 @@ export function TemplateDefault() {
           />
         ) : null}
       </div>
+      {isOpenTemplate && (
+        <CreateTemplate close={closeTemplate} isOpen={isOpenTemplate} />
+      )}
       {isOpenDelete && id ? (
         <ConfirmDialog
           icon="danger"

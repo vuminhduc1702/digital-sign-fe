@@ -328,7 +328,7 @@ export function UpdateEvent({
             {t('cloud:org_manage.event_manage.add_event.edit')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <Form {...form}>
             <form
               id="update-event"

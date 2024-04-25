@@ -103,7 +103,7 @@ export function UpdateAttr({
             {t('cloud:org_manage.org_manage.add_attr.edit_full')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <form
             id="update-attr"
             className="w-full space-y-6"

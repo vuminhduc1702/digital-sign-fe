@@ -161,7 +161,7 @@ export function UpdateUser({
             {t('cloud:org_manage.user_manage.add_user.edit')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <Form {...form}>
             <form
               id="update-user"

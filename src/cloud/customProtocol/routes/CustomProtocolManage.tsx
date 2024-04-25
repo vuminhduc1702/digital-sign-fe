@@ -30,6 +30,11 @@ export function CustomProtocolManage() {
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
   } = useDisclosure()
+  const {
+    close: closeAdapter,
+    open: openAdapter,
+    isOpen: isOpenAdapter,
+  } = useDisclosure()
 
   const projectId = storage.getProject()?.id
   const {
@@ -117,7 +122,12 @@ export function CustomProtocolManage() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateAdapter />
+            <Button
+              className="h-[38px] rounded border-none"
+              onClick={openAdapter}
+            >
+              {t('cloud:custom_protocol.adapter.button')}
+            </Button>
           </div>
         </div>
         <AdapterTable
@@ -148,6 +158,9 @@ export function CustomProtocolManage() {
           }
         />
       </div>
+      {isOpenAdapter && (
+        <CreateAdapter close={closeAdapter} isOpen={isOpenAdapter} />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

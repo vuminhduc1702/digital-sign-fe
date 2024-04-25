@@ -26,6 +26,7 @@ import {
 } from '@/components/Dropdowns'
 import { SearchField } from '@/components/Input'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export function DataBaseSidebar() {
   const { t } = useTranslation()
@@ -33,6 +34,11 @@ export function DataBaseSidebar() {
   const [searchQuery, setSearchQuery] = useState('')
   const [name, setName] = useState('')
 
+  const {
+    close: closeDataBase,
+    open: openDataBase,
+    isOpen: isOpenDataBase,
+  } = useDisclosure()
   const {
     close: closeDelete,
     open: openDelete,
@@ -74,7 +80,14 @@ export function DataBaseSidebar() {
           />
           <p>{t('cloud:db_template.sidebar.title')}</p>
         </div>
-        <CreateDataBase />
+
+        <Button
+          className="h-9 w-9 rounded-md"
+          variant="trans"
+          size="square"
+          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+          onClick={openDataBase}
+        />
         <SearchField setSearchValue={setSearchQuery} />
       </div>
       <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
@@ -137,6 +150,13 @@ export function DataBaseSidebar() {
           </div>
         )}
       </div>
+      {isOpenDataBase && (
+        <CreateDataBase
+          close={closeDataBase}
+          isOpen={isOpenDataBase}
+          projectId={projectId}
+        />
+      )}
       {isOpenDelete && name ? (
         <ConfirmDialog
           icon="danger"

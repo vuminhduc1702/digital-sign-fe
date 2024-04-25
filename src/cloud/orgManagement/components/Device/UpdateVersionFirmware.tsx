@@ -77,7 +77,7 @@ export function UpdateVersionFirmWare({
         <SheetHeader>
           <SheetTitle>{t('cloud:firmware.update_version')}</SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <form
             id="update-version"
             className="mt-2 flex w-full flex-col justify-between space-y-6"

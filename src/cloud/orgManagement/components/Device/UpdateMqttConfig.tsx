@@ -104,7 +104,7 @@ export function UpdateMqttConfig({
             {t('cloud:org_manage.device_manage.mqtt_config.title')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <form
             id="update-mqtt"
             className="mt-6"

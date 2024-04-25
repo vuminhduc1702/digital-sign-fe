@@ -16,6 +16,7 @@ import { SearchField } from '@/components/Input'
 import TreeView from './Tree'
 import { useGetOrgs, useGetOrgsWoExpand } from '@/layout/MainLayout/api'
 import { flattenData } from '@/utils/misc'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export type OrgMapType = {
   id: string
@@ -47,6 +48,11 @@ function OrgManageSidebar() {
   const [searchQuery, setSearchQuery] = useState('')
   const projectId = storage.getProject()?.id
   const { orgId } = useParams()
+  const {
+    close: closeCreateOrg,
+    open: openCreateOrg,
+    isOpen: isOpenCreateOrg,
+  } = useDisclosure()
   const { data: projectByIdData } = useProjectById({
     projectId,
     config: { enabled: !!projectId },
@@ -195,8 +201,13 @@ function OrgManageSidebar() {
           />
           <p>{t('cloud:org_manage.org_list')}</p>
         </div>
-
-        <CreateOrg />
+        <Button
+          className="rounded-md"
+          variant="trans"
+          size="square"
+          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+          onClick={openCreateOrg}
+        />
         <SearchField
           className="flex md:hidden 2xl:flex"
           setSearchValue={setSearchQuery}
@@ -234,6 +245,13 @@ function OrgManageSidebar() {
               t('cloud:org_manage.org_manage.overview.choose_project')}
           </Button>
         </div>
+        {isOpenCreateOrg && (
+          <CreateOrg
+            close={closeCreateOrg}
+            open={openCreateOrg}
+            isOpen={isOpenCreateOrg}
+          />
+        )}
         {isOpen ? (
           <UpdateOrg
             close={close}

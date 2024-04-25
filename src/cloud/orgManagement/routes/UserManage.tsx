@@ -24,6 +24,11 @@ export function UserManage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [offset, setOffset] = useState(0)
   const {
+    close: closeUser,
+    open: openUser,
+    isOpen: isOpenUser,
+  } = useDisclosure()
+  const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
@@ -112,7 +117,9 @@ export function UserManage() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateUser />
+            <Button className="h-[38px] rounded border-none" onClick={openUser}>
+              {t('cloud:org_manage.user_manage.add_user.button')}
+            </Button>
           </div>
         </div>
         <UserTable
@@ -143,6 +150,9 @@ export function UserManage() {
           }
         />
       </div>
+      {isOpenUser && (
+        <CreateUser close={closeUser} open={openUser} isOpen={isOpenUser} />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

@@ -165,7 +165,7 @@ export function UpdateRole({
         <SheetHeader>
           <SheetTitle>{t('cloud:role_manage.add_role.edit')}</SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%] overflow-y-auto">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <form
             id="update-role"
             className="w-full space-y-5"
