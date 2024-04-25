@@ -56,5 +56,5 @@ jobs:
         timeout: 500s
         script: |
           cd ${{env.chart-folder}}
-          sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
+          sed -i "s/tag: .*/tag: ${{github.ref_name}}/g" values.yaml
           helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
