@@ -75,17 +75,16 @@ export function CreateThing({
     label: thing.name,
   }))
 
-  useEffect(() => {
-    if (isSuccessCreateThing) {
-      setValue('name', '')
-      setValue('description', '')
-    }
+  const resetData = () => {
+    setValue('name', '')
+    setValue('description', '')
     setValue('type', thingType)
-  }, [isSuccessCreateThing])
+  }
 
   return (
     <FormDialog
       isDone={isSuccessCreateThing}
+      resetData={resetData}
       title={t('cloud:custom_protocol.thing.create')}
       body={
         <form
