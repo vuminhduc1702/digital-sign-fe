@@ -1,7 +1,7 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Link } from '@/components/Link'
 import { BaseTable } from '@/components/Table'
 import { PATHS } from '@/routes/PATHS'
@@ -10,6 +10,7 @@ import storage from '@/utils/storage'
 import { type ModuleConfig } from '../types'
 import { BaseTablePagination } from '@/types'
 import { type BaseTableProps } from '@/components/Table'
+import { useNavigation } from 'react-router-dom'
 
 type PartialBaseTableProps<T> = Omit<
   BaseTableProps<ModuleConfig>,
@@ -27,6 +28,7 @@ type LwM2MTableProps = {
 
 export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const projectId = storage.getProject()?.id
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const params = useParams()
@@ -37,6 +39,10 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
     return () => clearTimeout(timer)
   }, [moduleConfig])
   const templateId = params.templateId as string
+
+  function moveToLink(id: string) {
+    navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}/${templateId}/${id}`)
+  }
   const columnHelper = createColumnHelper<ModuleConfig>()
   const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(
     () => [
@@ -83,6 +89,7 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
       path={PATHS.TEMPLATE_LWM2M}
       projectId={projectId}
       orgId={templateId}
+      viewDetailOnClick={moveToLink}
       {...props}
     />
   ) : (

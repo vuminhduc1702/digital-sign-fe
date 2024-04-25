@@ -6,7 +6,7 @@ import i18n from '@/i18n'
 import * as z from 'zod'
 
 import { Button } from '@/components/Button'
-import { FormDrawer, InputField, SelectDropdown } from '@/components/Form'
+import { InputField, SelectDropdown } from '@/components/Form'
 import TitleBar from '@/components/Head/TitleBar'
 import storage from '@/utils/storage'
 import { useCreateRole, type CreateRoleDTO } from '../api'
@@ -15,10 +15,20 @@ import { cn } from '@/utils/misc'
 
 import { nameSchema } from '@/utils/schemaValidation'
 import { type PolicyActions, type PolicyResources } from '../types'
-
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 
 export const resourcesList = [
   { value: 'users', label: i18n.t('schema:users') },
@@ -87,7 +97,20 @@ export const roleSchema = z
       }),
     ]),
   )
-export function CreateRole({ project_id = '' }: { project_id?: string }) {
+
+type CreateRoleProps = {
+  project_id?: string
+  open?: () => void
+  close?: () => void
+  isOpen?: boolean
+}
+
+export function CreateRole({
+  project_id = '',
+  open,
+  close,
+  isOpen,
+}: CreateRoleProps) {
   const { t } = useTranslation()
   const [type, setType] = useState('Generic')
 
@@ -172,280 +195,298 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
   }
 
   return (
-    <FormDrawer
-      isDone={isSuccess}
-      resetData={resetData}
-      triggerButton={
-        <Button className="h-[38px] rounded border-none">
-          {t('cloud:role_manage.add_role.button')}
-        </Button>
-      }
-      title={t('cloud:role_manage.add_role.title')}
-      submitButton={
-        <Button
-          className="rounded border-none"
-          form="create-role"
-          type="submit"
-          size="lg"
-          isLoading={isLoading}
-          startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-          }
-        />
-      }
-      size="lg"
-    >
-      <form
-        id="create-role"
-        className="w-full space-y-5"
-        onSubmit={handleSubmit(values => {
-          if (type === 'Generic') {
-            const policies = values.policies.map(policy => {
-              resourceArrRef.current =
-                policy?.resources?.map(resource => resource) || []
-              actionArrRef.current = policy.actions.map(action => action)
-              return {
-                policy_name: policy.policy_name,
-                resources: resourceArrRef.current,
-                actions: actionArrRef.current,
-              }
-            })
-            const data: CreateRoleDTO['data'] = {
-              name: values.name,
-              policies,
-              project_id: projectId,
-              role_type: type,
-            }
-
-            if (project_id) {
-              data.applicable_to = 'TENANT_DEV'
-            }
-
-            mutate({ data })
-          } else {
-            const policies = values.policies.map(policy => {
-              const deviceArr = policy.devices.map(devices => devices)
-              const eventArr = policy.events.map(events => events)
-              const userArr = policy.users.map(users => users)
-              const orgsArr = policy.orgs.map(orgs => orgs)
-
-              const group_resources = {
-                groups: [...deviceArr, ...eventArr, ...userArr, ...orgsArr],
-              }
-              actionArrRef.current = policy.actions.map(action => action)
-              return {
-                policy_name: policy.policy_name,
-                group_resources,
-                actions: actionArrRef.current,
-              }
-            })
-
-            const data: CreateRoleDTO['data'] = {
-              name: values.name,
-              policies,
-              project_id: projectId,
-              role_type: type,
-            }
-
-            if (project_id) {
-              data.applicable_to = 'TENANT_DEV'
-            }
-
-            mutate({ data })
-          }
-        })}
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+      <SheetContent
+        onInteractOutside={e => {
+          e.preventDefault()
+        }}
+        className={cn('flex h-full max-w-4xl flex-col justify-between')}
       >
-        <>
-          <div className="w-fit rounded-2xl bg-slate-200">
-            {roleType.map(item => {
-              return (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => {
-                    setValue('role_type', item)
-                    setType(item)
-                  }}
-                  className={cn('px-4 py-2 text-slate-400', {
-                    'bg-primary-400 rounded-2xl text-white': type === item,
-                  })}
-                >
-                  {item}
-                </button>
-              )
-            })}
-          </div>
-          <InputField
-            label={t('cloud:role_manage.add_role.name')}
-            error={formState.errors['name']}
-            registration={register('name')}
-          />
-          <div className="flex justify-between space-x-3">
-            <TitleBar
-              title={t('cloud:role_manage.add_policy.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
-            />
-            <Button
-              className="rounded-md"
-              variant="trans"
-              size="square"
-              startIcon={
-                <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-              }
-              onClick={() =>
-                append({
-                  policy_name: '',
-                  resources: [],
-                  devices: [],
-                  actions: [],
-                  users: [],
-                  events: [],
-                  orgs: [],
-                })
-              }
-            />
-          </div>
-          {fields.map((field, index) => (
-            <section
-              className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
-              key={field.id}
-            >
-              <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                <div className="space-y-1">
-                  <InputField
-                    label={t('cloud:role_manage.add_policy.name')}
-                    registration={register(
-                      `policies.${index}.policy_name` as const,
-                    )}
-                    error={formState?.errors?.policies?.[index]?.policy_name}
-                  />
-                </div>
-                {type === 'Generic' && (
-                  <SelectDropdown
-                    label={t('cloud:role_manage.add_policy.resources')}
-                    error={formState?.errors?.policies?.[index]?.resources}
-                    name={`policies.${index}.resources`}
-                    options={resourcesList.map(resourcesType => resourcesType)}
-                    control={control}
-                    isMulti
-                    closeMenuOnSelect={false}
-                  />
-                )}
-                {type === 'Group' && (
-                  <div className="space-y-3">
-                    <SelectDropdown
-                      label={t('sidebar:device.title')}
-                      name={`policies.${index}.devices`}
-                      control={control}
-                      options={groupDataDeviceOptions}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:device') ||
-                        option.label === t('table:no_device')
-                      }
-                      noOptionsMessage={() => t('table:no_device')}
-                      loadingMessage={() => t('loading:device')}
-                      isLoading={isLoadingGroup}
-                      isMulti
-                      closeMenuOnSelect={false}
-                      handleClearSelectDropdown={() =>
-                        setValue(`policies.${index}.devices`, [])
-                      }
-                      error={formState?.errors?.policies?.[index]?.root}
-                    />
-
-                    <SelectDropdown
-                      label={t('cloud:org_manage.event_manage.title')}
-                      name={`policies.${index}.events`}
-                      options={groupDataEventOptions}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:event') ||
-                        option.label === t('table:no_event')
-                      }
-                      noOptionsMessage={() => t('table:no_event')}
-                      loadingMessage={() => t('loading:event')}
-                      isLoading={isLoadingGroup}
-                      isMulti
-                      control={control}
-                      closeMenuOnSelect={false}
-                      handleClearSelectDropdown={() =>
-                        setValue(`policies.${index}.events`, [])
-                      }
-                      error={formState?.errors?.policies?.[index]?.root}
-                    />
-
-                    <SelectDropdown
-                      label={t('cloud:org_manage.user_manage.title')}
-                      name={`policies.${index}.users`}
-                      options={groupDataUserOptions}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:user') ||
-                        option.label === t('table:no_user')
-                      }
-                      noOptionsMessage={() => t('table:no_user')}
-                      loadingMessage={() => t('loading:user')}
-                      isLoading={isLoadingGroup}
-                      isMulti
-                      control={control}
-                      closeMenuOnSelect={false}
-                      handleClearSelectDropdown={() =>
-                        setValue(`policies.${index}.users`, [])
-                      }
-                      error={formState?.errors?.policies?.[index]?.root}
-                    />
-
-                    <SelectDropdown
-                      label={t('cloud:org_manage.org_manage.title')}
-                      name={`policies.${index}.orgs`}
-                      options={groupDataOrgOptions}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:org') ||
-                        option.label === t('table:no_org')
-                      }
-                      noOptionsMessage={() => t('table:no_org')}
-                      loadingMessage={() => t('loading:org')}
-                      isLoading={isLoadingGroup}
-                      isMulti
-                      control={control}
-                      closeMenuOnSelect={false}
-                      handleClearSelectDropdown={() =>
-                        setValue(`policies.${index}.orgs`, [])
-                      }
-                      error={formState?.errors?.policies?.[index]?.root}
-                    />
-                  </div>
-                )}
-
-                <SelectDropdown
-                  label={
-                    t('cloud:role_manage.add_policy.actions') ??
-                    'Authorization actions'
+        <SheetHeader>
+          <SheetTitle>{t('cloud:role_manage.add_role.title')}</SheetTitle>
+        </SheetHeader>
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
+          <form
+            id="create-role"
+            className="w-full space-y-5"
+            onSubmit={handleSubmit(values => {
+              if (type === 'Generic') {
+                const policies = values.policies.map(policy => {
+                  resourceArrRef.current =
+                    policy?.resources?.map(resource => resource) || []
+                  actionArrRef.current = policy.actions.map(action => action)
+                  return {
+                    policy_name: policy.policy_name,
+                    resources: resourceArrRef.current,
+                    actions: actionArrRef.current,
                   }
-                  name={`policies.${index}.actions`}
-                  options={actionsList.map(actionsType => actionsType)}
-                  control={control}
-                  isMulti
-                  closeMenuOnSelect={false}
-                  error={formState?.errors?.policies?.[index]?.actions}
+                })
+                const data: CreateRoleDTO['data'] = {
+                  name: values.name,
+                  policies,
+                  project_id: projectId,
+                  role_type: type,
+                }
+
+                if (project_id) {
+                  data.applicable_to = 'TENANT_DEV'
+                }
+
+                mutate({ data })
+              } else {
+                const policies = values.policies.map(policy => {
+                  const deviceArr = policy.devices.map(devices => devices)
+                  const eventArr = policy.events.map(events => events)
+                  const userArr = policy.users.map(users => users)
+                  const orgsArr = policy.orgs.map(orgs => orgs)
+
+                  const group_resources = {
+                    groups: [...deviceArr, ...eventArr, ...userArr, ...orgsArr],
+                  }
+                  actionArrRef.current = policy.actions.map(action => action)
+                  return {
+                    policy_name: policy.policy_name,
+                    group_resources,
+                    actions: actionArrRef.current,
+                  }
+                })
+
+                const data: CreateRoleDTO['data'] = {
+                  name: values.name,
+                  policies,
+                  project_id: projectId,
+                  role_type: type,
+                }
+
+                if (project_id) {
+                  data.applicable_to = 'TENANT_DEV'
+                }
+
+                mutate({ data })
+              }
+            })}
+          >
+            <>
+              <div className="w-fit rounded-2xl bg-slate-200">
+                {roleType.map(item => {
+                  return (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => {
+                        setValue('role_type', item)
+                        setType(item)
+                      }}
+                      className={cn('px-4 py-2 text-slate-400', {
+                        'bg-primary-400 rounded-2xl text-white': type === item,
+                      })}
+                    >
+                      {item}
+                    </button>
+                  )
+                })}
+              </div>
+              <InputField
+                label={t('cloud:role_manage.add_role.name')}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <div className="flex justify-between space-x-3">
+                <TitleBar
+                  title={t('cloud:role_manage.add_policy.title')}
+                  className="w-full rounded-md bg-secondary-700 pl-3"
+                />
+                <Button
+                  className="rounded-md"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                  }
+                  onClick={() =>
+                    append({
+                      policy_name: '',
+                      resources: [],
+                      devices: [],
+                      actions: [],
+                      users: [],
+                      events: [],
+                      orgs: [],
+                    })
+                  }
                 />
               </div>
-              <Button
-                type="button"
-                size="square"
-                variant="none"
-                className="mt-3 self-start !pr-0"
-                onClick={() => remove(index)}
-                startIcon={
-                  <img
-                    src={btnDeleteIcon}
-                    alt="Delete policy"
-                    className="h-10 w-10"
+              {fields.map((field, index) => (
+                <section
+                  className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
+                  key={field.id}
+                >
+                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
+                    <div className="space-y-1">
+                      <InputField
+                        label={t('cloud:role_manage.add_policy.name')}
+                        registration={register(
+                          `policies.${index}.policy_name` as const,
+                        )}
+                        error={
+                          formState?.errors?.policies?.[index]?.policy_name
+                        }
+                      />
+                    </div>
+                    {type === 'Generic' && (
+                      <SelectDropdown
+                        label={t('cloud:role_manage.add_policy.resources')}
+                        error={formState?.errors?.policies?.[index]?.resources}
+                        name={`policies.${index}.resources`}
+                        options={resourcesList.map(
+                          resourcesType => resourcesType,
+                        )}
+                        control={control}
+                        isMulti
+                        closeMenuOnSelect={false}
+                      />
+                    )}
+                    {type === 'Group' && (
+                      <div className="space-y-3">
+                        <SelectDropdown
+                          label={t('sidebar:device.title')}
+                          name={`policies.${index}.devices`}
+                          control={control}
+                          options={groupDataDeviceOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:device') ||
+                            option.label === t('table:no_device')
+                          }
+                          noOptionsMessage={() => t('table:no_device')}
+                          loadingMessage={() => t('loading:device')}
+                          isLoading={isLoadingGroup}
+                          isMulti
+                          closeMenuOnSelect={false}
+                          handleClearSelectDropdown={() =>
+                            setValue(`policies.${index}.devices`, [])
+                          }
+                          error={formState?.errors?.policies?.[index]?.root}
+                        />
+
+                        <SelectDropdown
+                          label={t('cloud:org_manage.event_manage.title')}
+                          name={`policies.${index}.events`}
+                          options={groupDataEventOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:event') ||
+                            option.label === t('table:no_event')
+                          }
+                          noOptionsMessage={() => t('table:no_event')}
+                          loadingMessage={() => t('loading:event')}
+                          isLoading={isLoadingGroup}
+                          isMulti
+                          control={control}
+                          closeMenuOnSelect={false}
+                          handleClearSelectDropdown={() =>
+                            setValue(`policies.${index}.events`, [])
+                          }
+                          error={formState?.errors?.policies?.[index]?.root}
+                        />
+
+                        <SelectDropdown
+                          label={t('cloud:org_manage.user_manage.title')}
+                          name={`policies.${index}.users`}
+                          options={groupDataUserOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:user') ||
+                            option.label === t('table:no_user')
+                          }
+                          noOptionsMessage={() => t('table:no_user')}
+                          loadingMessage={() => t('loading:user')}
+                          isLoading={isLoadingGroup}
+                          isMulti
+                          control={control}
+                          closeMenuOnSelect={false}
+                          handleClearSelectDropdown={() =>
+                            setValue(`policies.${index}.users`, [])
+                          }
+                          error={formState?.errors?.policies?.[index]?.root}
+                        />
+
+                        <SelectDropdown
+                          label={t('cloud:org_manage.org_manage.title')}
+                          name={`policies.${index}.orgs`}
+                          options={groupDataOrgOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:org') ||
+                            option.label === t('table:no_org')
+                          }
+                          noOptionsMessage={() => t('table:no_org')}
+                          loadingMessage={() => t('loading:org')}
+                          isLoading={isLoadingGroup}
+                          isMulti
+                          control={control}
+                          closeMenuOnSelect={false}
+                          handleClearSelectDropdown={() =>
+                            setValue(`policies.${index}.orgs`, [])
+                          }
+                          error={formState?.errors?.policies?.[index]?.root}
+                        />
+                      </div>
+                    )}
+
+                    <SelectDropdown
+                      label={
+                        t('cloud:role_manage.add_policy.actions') ??
+                        'Authorization actions'
+                      }
+                      name={`policies.${index}.actions`}
+                      options={actionsList.map(actionsType => actionsType)}
+                      control={control}
+                      isMulti
+                      closeMenuOnSelect={false}
+                      error={formState?.errors?.policies?.[index]?.actions}
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    size="square"
+                    variant="none"
+                    className="mt-3 self-start !pr-0"
+                    onClick={() => remove(index)}
+                    startIcon={
+                      <img
+                        src={btnDeleteIcon}
+                        alt="Delete policy"
+                        className="h-10 w-10"
+                      />
+                    }
                   />
-                }
-              />
-            </section>
-          ))}
-        </>
-      </form>
-    </FormDrawer>
+                </section>
+              ))}
+            </>
+          </form>
+        </div>
+
+        <SheetFooter>
+          <>
+            <Button
+              className="rounded border-none"
+              variant="secondary"
+              size="lg"
+              onClick={close}
+              startIcon={
+                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
+            <Button
+              className="rounded border-none"
+              form="create-role"
+              type="submit"
+              size="lg"
+              isLoading={isLoading}
+              startIcon={
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
+          </>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }

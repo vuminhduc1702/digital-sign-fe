@@ -351,3 +351,19 @@ label .rct-checkbox {
   background: none;
   cursor: not-allowed;
 }
+
+.focus-rct-title {
+  background: rgb(255 204.85 204 / 100%) !important;
+}
+
+.rct-node-clickable:hover {
+  background: rgb(255 204.85 204 / 50%) !important;
+  cursor: pointer !important;
+  outline: 0;
+}
+
+.rct-node-clickable:focus {
+  background: rgb(255 204.85 204 / 100%) !important;
+  cursor: pointer !important;
+  outline: 0;
+}

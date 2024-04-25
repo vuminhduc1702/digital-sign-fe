@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '@/components/Button'
-import { FormDrawer, InputField } from '@/components/Form'
+import { InputField } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useAddColumn, useCreateDataBase, type AddColumnDTO } from '../api'
 
 import { nameSchema } from '@/utils/schemaValidation'
-
+import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
@@ -17,6 +17,17 @@ import { useParams } from 'react-router-dom'
 import { type AddRowsDTO, useAddRows } from '../api/addRows'
 import { useEffect, useState } from 'react'
 import { type FieldsRows } from '../types'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import { cn } from '@/utils/misc'
 
 export const createRowsSchema = z.object({
   fields: z.array(z.record(z.string())),
@@ -24,10 +35,14 @@ export const createRowsSchema = z.object({
 
 export default function CreateRows({
   columnsProp,
-  onClose,
+  open,
+  close,
+  isOpen,
 }: {
   columnsProp: string[]
-  onClose: () => void
+  open?: () => void
+  close?: () => void
+  isOpen?: boolean
 }) {
   const { t } = useTranslation()
 
@@ -58,89 +73,103 @@ export default function CreateRows({
   })
 
   useEffect(() => {
-    if (isSuccess) onClose()
+    if (isSuccess) close && close()
   }, [isSuccess])
   return (
-    <FormDrawer
-      isDone={isSuccess}
-      resetData={() => reset()}
-      triggerButton={
-        <Button
-          className="w-full justify-start rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        >
-          {t('cloud:db_template.add_db.add_row')}
-        </Button>
-      }
-      title={t('cloud:db_template.add_db.add_row')}
-      submitButton={
-        <Button
-          className="rounded border-none"
-          form="create-database"
-          type="submit"
-          isLoading={isLoading}
-          size="lg"
-          startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-          }
-        />
-      }
-    >
-      <form
-        className="w-full space-y-5"
-        id="create-database"
-        onSubmit={handleSubmit(async values => {
-          mutateAsync({
-            dataSendBE: {
-              project_id: projectId,
-              table: tableName || '',
-              fields: values.fields,
-            },
-          })
-        })}
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+      <SheetContent
+        onInteractOutside={e => {
+          e.preventDefault()
+        }}
+        className={cn('flex h-full max-w-xl flex-col justify-between')}
       >
-        <>
-          <Button
-            className="h-9 w-9 rounded-md"
-            variant="trans"
-            size="square"
-            startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-            onClick={() => append(defaultValues)}
-          />
-          {fields.map((field, index) => (
-            <section
-              key={field.id}
-              className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
-            >
-              <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                {columnsProp?.map(item => (
-                  <InputField
-                    label={item}
-                    error={formState?.errors?.fields?.[index]?.item}
-                    registration={register(`fields.${index}.${item}` as const)}
-                  />
-                ))}
-              </div>
+        <SheetHeader>
+          <SheetTitle>{t('cloud:db_template.add_db.add_row')}</SheetTitle>
+        </SheetHeader>
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
+          <form
+            className="w-full space-y-5"
+            id="create-database"
+            onSubmit={handleSubmit(async values => {
+              mutateAsync({
+                dataSendBE: {
+                  project_id: projectId,
+                  table: tableName || '',
+                  fields: values.fields,
+                },
+              })
+            })}
+          >
+            <>
               <Button
-                type="button"
-                size="square"
+                className="h-9 w-9 rounded-md"
                 variant="trans"
-                className="mt-3 border-none"
-                onClick={() => remove(index)}
+                size="square"
                 startIcon={
-                  <img
-                    src={btnDeleteIcon}
-                    alt="Delete device template"
-                    className="h-8 w-8"
-                  />
+                  <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                 }
+                onClick={() => append(defaultValues)}
               />
-            </section>
-          ))}
-        </>
-      </form>
-    </FormDrawer>
+              {fields.map((field, index) => (
+                <section
+                  key={field.id}
+                  className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
+                >
+                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
+                    {columnsProp?.map(item => (
+                      <InputField
+                        label={item}
+                        error={formState?.errors?.fields?.[index]?.item}
+                        registration={register(
+                          `fields.${index}.${item}` as const,
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <Button
+                    type="button"
+                    size="square"
+                    variant="trans"
+                    className="mt-3 border-none"
+                    onClick={() => remove(index)}
+                    startIcon={
+                      <img
+                        src={btnDeleteIcon}
+                        alt="Delete device template"
+                        className="h-8 w-8"
+                      />
+                    }
+                  />
+                </section>
+              ))}
+            </>
+          </form>
+        </div>
+
+        <SheetFooter>
+          <>
+            <Button
+              className="rounded border-none"
+              variant="secondary"
+              size="lg"
+              onClick={close}
+              startIcon={
+                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
+            <Button
+              className="rounded border-none"
+              form="create-database"
+              type="submit"
+              isLoading={isLoading}
+              size="lg"
+              startIcon={
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
+          </>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }

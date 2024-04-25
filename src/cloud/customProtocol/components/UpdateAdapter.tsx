@@ -10,7 +10,6 @@ import {
   SelectField,
   type SelectOption,
 } from '@/components/Form'
-import { Drawer } from '@/components/Drawer'
 import {
   type UpdateAdapterDTO,
   useUpdateAdapter,
@@ -160,7 +159,7 @@ export function UpdateAdapter({
             {t('cloud:custom_protocol.adapter.table.edit')}
           </SheetTitle>
         </SheetHeader>
-        <div className="min-h-[85%]">
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
           <form
             id="update-adapter"
             className="flex w-full flex-col justify-between"
@@ -253,55 +252,65 @@ export function UpdateAdapter({
                   registration={register('name')}
                 />
                 {!AdapterIsLoading ? (
-                  <div className="relative w-[calc(100%-2.5rem)]">
-                    <SelectDropdown
-                      label={t('cloud:custom_protocol.thing.id')}
-                      name="thing_id"
-                      control={control}
-                      options={thingSelectData}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:entity_thing') ||
-                        option.label === t('table:no_thing')
-                      }
-                      noOptionsMessage={() => t('table:no_thing')}
-                      loadingMessage={() => t('loading:entity_thing')}
-                      isLoading={AdapterIsLoading}
-                      placeholder={t('cloud:custom_protocol.thing.choose')}
-                      defaultValue={thingSelectData.find(
-                        thing => thing.value === getValues('thing_id'),
-                      )}
-                      handleClearSelectDropdown={() =>
-                        selectDropdownServiceRef.current?.clearValue()
-                      }
-                      handleChangeSelect={() =>
-                        selectDropdownServiceRef.current?.clearValue()
-                      }
-                      error={formState?.errors?.thing_id}
+                  <div className="relative w-full">
+                    <div className="w-[calc(100%-2.5rem)]">
+                      <SelectDropdown
+                        label={t('cloud:custom_protocol.thing.id')}
+                        name="thing_id"
+                        control={control}
+                        options={thingSelectData}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:entity_thing') ||
+                          option.label === t('table:no_thing')
+                        }
+                        noOptionsMessage={() => t('table:no_thing')}
+                        loadingMessage={() => t('loading:entity_thing')}
+                        isLoading={AdapterIsLoading}
+                        placeholder={t('cloud:custom_protocol.thing.choose')}
+                        defaultValue={thingSelectData.find(
+                          thing => thing.value === getValues('thing_id'),
+                        )}
+                        handleClearSelectDropdown={() =>
+                          selectDropdownServiceRef.current?.clearValue()
+                        }
+                        handleChangeSelect={() =>
+                          selectDropdownServiceRef.current?.clearValue()
+                        }
+                        error={formState?.errors?.thing_id}
+                      />
+                    </div>
+                    <CreateThing
+                      thingType="thing"
+                      classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
                     />
-                    <CreateThing thingType="thing" />
                   </div>
                 ) : null}
                 {!isLoadingService ? (
-                  <div className="relative w-[calc(100%-2.5rem)]">
-                    <SelectDropdown
-                      refSelect={selectDropdownServiceRef}
-                      label={t('cloud:custom_protocol.service.title')}
-                      name="handle_service"
-                      control={control}
-                      options={serviceSelectData}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:service_thing') ||
-                        option.label === t('table:no_service')
-                      }
-                      noOptionsMessage={() => t('table:no_service')}
-                      placeholder={t('cloud:custom_protocol.service.choose')}
-                      defaultValue={serviceSelectData?.find(
-                        service =>
-                          service.value === getValues('handle_service'),
-                      )}
-                      error={formState?.errors?.handle_service}
+                  <div className="relative w-full">
+                    <div className="flex w-[calc(100%-2.5rem)] justify-between">
+                      <SelectDropdown
+                        refSelect={selectDropdownServiceRef}
+                        label={t('cloud:custom_protocol.service.title')}
+                        name="handle_service"
+                        control={control}
+                        options={serviceSelectData}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:service_thing') ||
+                          option.label === t('table:no_service')
+                        }
+                        noOptionsMessage={() => t('table:no_service')}
+                        placeholder={t('cloud:custom_protocol.service.choose')}
+                        defaultValue={serviceSelectData?.find(
+                          service =>
+                            service.value === getValues('handle_service'),
+                        )}
+                        error={formState?.errors?.handle_service}
+                      />
+                    </div>
+                    <CreateService
+                      thingId={watch('thing_id')}
+                      classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
                     />
-                    <CreateService thingId={watch('thing_id')} />
                   </div>
                 ) : null}
                 <SelectField
@@ -582,16 +591,5 @@ export function UpdateAdapter({
         </SheetFooter>
       </SheetContent>
     </Sheet>
-    // <Drawer
-    //   isOpen={isOpen}
-    //   onClose={close}
-    //   title={t('cloud:custom_protocol.adapter.table.edit')}
-    //   renderFooter={() => (
-    //     <>
-    //     </>
-    //   )}
-    // >
-
-    // </Drawer>
   )
 }

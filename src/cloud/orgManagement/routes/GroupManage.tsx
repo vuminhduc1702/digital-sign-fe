@@ -20,7 +20,11 @@ export function GroupManage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const { orgId } = useParams()
-
+  const {
+    close: closeGroup,
+    open: openGroup,
+    isOpen: isOpenGroup,
+  } = useDisclosure()
   const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
@@ -106,7 +110,12 @@ export function GroupManage() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateGroup />
+            <Button
+              className="h-[38px] rounded border-none"
+              onClick={openGroup}
+            >
+              {t('cloud:org_manage.group_manage.add_group.button')}
+            </Button>
           </div>
         </div>
         <GroupTable
@@ -137,6 +146,9 @@ export function GroupManage() {
           }
         />
       </div>
+      {isOpenGroup && (
+        <CreateGroup close={closeGroup} open={openGroup} isOpen={isOpenGroup} />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

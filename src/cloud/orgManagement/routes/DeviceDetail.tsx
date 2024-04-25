@@ -35,6 +35,11 @@ export function DeviceDetail() {
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
   const {
+    close: closeAttrs,
+    open: openAttrs,
+    isOpen: isOpenAttrs,
+  } = useDisclosure()
+  const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
@@ -239,7 +244,12 @@ export function DeviceDetail() {
                   setIsSearchData={setIsSearchDataAttrs}
                   closeSearch={true}
                 />
-                <CreateAttr entityId={deviceId} entityType="DEVICE" />
+                <Button
+                  className="h-[38px] rounded border-none"
+                  onClick={openAttrs}
+                >
+                  {t('cloud:org_manage.org_manage.add_attr.button')}
+                </Button>
               </div>
             </div>
             <AttrTable
@@ -331,6 +341,15 @@ export function DeviceDetail() {
           </div>
         </TabsContent>
       </Tabs>
+      {isOpenAttrs && (
+        <CreateAttr
+          entityId={deviceId}
+          entityType="DEVICE"
+          open={openAttrs}
+          close={closeAttrs}
+          isOpen={isOpenAttrs}
+        />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

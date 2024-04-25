@@ -44,6 +44,11 @@ export function RoleSidebar() {
     isPreviousData,
   } = useGetRoles({ projectId, offset })
   const {
+    open: openCreateRole,
+    close: closeCreateRole,
+    isOpen: isOpenCreateRole,
+  } = useDisclosure()
+  const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
@@ -105,7 +110,12 @@ export function RoleSidebar() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateRole />
+            <Button
+              className="h-[38px] rounded border-none"
+              onClick={openCreateRole}
+            >
+              {t('cloud:role_manage.add_role.button')}
+            </Button>
           </div>
         </div>
         <RoleTable
@@ -137,6 +147,14 @@ export function RoleSidebar() {
           }
         />
       </div>
+      {isOpenCreateRole && (
+        <CreateRole
+          project_id={projectId}
+          open={openCreateRole}
+          close={closeCreateRole}
+          isOpen={isOpenCreateRole}
+        />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

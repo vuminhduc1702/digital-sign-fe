@@ -33,6 +33,11 @@ export function DashboardManage() {
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
   } = useDisclosure()
+  const {
+    close: closeDashboard,
+    open: openDashboard,
+    isOpen: isOpenDashboard,
+  } = useDisclosure()
 
   const {
     data: dashboardData,
@@ -110,7 +115,13 @@ export function DashboardManage() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateDashboard projectId={projectId} />
+
+            <Button
+              className="h-[38px] rounded border-none"
+              onClick={openDashboard}
+            >
+              {t('cloud:dashboard.add_dashboard.button')}
+            </Button>
           </div>
         </div>
         <DashboardTable
@@ -143,6 +154,14 @@ export function DashboardManage() {
           }
         />
       </div>
+      {isOpenDashboard && (
+        <CreateDashboard
+          projectId={projectId}
+          open={openDashboard}
+          close={closeDashboard}
+          isOpen={isOpenDashboard}
+        />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
