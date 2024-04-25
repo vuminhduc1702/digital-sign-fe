@@ -225,7 +225,6 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
       thingId: getValues('thing_id'),
       config: {
         enabled: !!getValues('thing_id'),
-        suspense: false,
       },
     })
 

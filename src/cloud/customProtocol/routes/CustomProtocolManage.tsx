@@ -46,7 +46,6 @@ export function CustomProtocolManage() {
     offset,
     search_field: searchField.current,
     search_str: searchQuery,
-    config: { keepPreviousData: true },
   })
 
   const {

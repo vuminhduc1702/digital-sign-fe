@@ -38,7 +38,6 @@ export function ThingTemplate() {
     projectId,
     type: 'thing',
     offset,
-    config: { keepPreviousData: true },
     search_field: searchField.current,
     search_str: searchQuery,
   })

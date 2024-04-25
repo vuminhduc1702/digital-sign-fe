@@ -87,15 +87,15 @@ export function UpdateThingService({
     useThingServiceById({
       thingId,
       name,
-      // config: { suspense: false },
     })
 
   const { register, formState, control, handleSubmit, watch, setValue } =
     useForm<CreateServiceThingDTO['data']>({
       resolver: serviceThingSchema && zodResolver(serviceThingSchema),
       defaultValues: {
-        ...thingServiceData?.data,
-        description: thingServiceData?.data?.description ?? '',
+        // ...thingServiceData?.data,
+        ...thingServiceDataProps?.find(thing => thing.name === name),
+        // description: thingServiceData?.data?.description ?? '',
       },
     })
 

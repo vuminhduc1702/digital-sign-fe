@@ -132,7 +132,6 @@ export function UpdateTemplateLwM2M({
       thingId: getValues('thing_id'),
       config: {
         enabled: !!getValues('thing_id'),
-        suspense: false,
       },
     })
 
@@ -396,7 +395,6 @@ export function UpdateTemplateLwM2M({
   }
   const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateById({
     templateId: selectedUpdateTemplate?.id,
-    config: { suspense: false },
   })
   const transport_Config = selectedUpdateTemplate?.transport_config
   // ? const transportConfigdata = JSON.parse(transport_Config)

@@ -93,9 +93,6 @@ export function CreateControllerButton({
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
@@ -107,7 +104,6 @@ export function CreateControllerButton({
       thingId: watch('thing_id'),
       config: {
         enabled: !!watch('thing_id'),
-        suspense: false,
       },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -120,7 +116,6 @@ export function CreateControllerButton({
       thingId: watch('thing_id'),
       name: watch('handle_service'),
       config: {
-        suspense: false,
         enabled: !!watch('thing_id') && !!watch('handle_service'),
       },
     })

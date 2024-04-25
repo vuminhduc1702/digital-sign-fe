@@ -45,11 +45,7 @@ const SelfAccount = () => {
   const { mutate, isLoading } = useMutationSelfAccountInfo()
 
   //get user info
-  const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
-    config: {
-      suspense: false,
-    },
-  })
+  const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({})
 
   const { register, formState, handleSubmit, watch, reset, setValue } = useForm<
     UpdateSelfAccountInfoDTO['data']

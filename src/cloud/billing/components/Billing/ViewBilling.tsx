@@ -24,7 +24,6 @@ export function ViewBilling({ id, close, isOpen }: ViewBillingProps) {
 
   const { data } = useBillingById({
     id,
-    config: { suspense: false },
   })
 
   return (

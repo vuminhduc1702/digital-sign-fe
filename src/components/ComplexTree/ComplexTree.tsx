@@ -83,9 +83,6 @@ export function ComplexTree<TFormValues extends FieldValues>({
       selectedItems.length > 0 && selectedItems.toString() !== no_org
         ? selectedItems.toString()
         : '',
-    config: {
-      suspense: false,
-    },
   })
 
   function parseData(data: Org[]) {
