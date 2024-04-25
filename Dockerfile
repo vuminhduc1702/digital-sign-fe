@@ -1,13 +1,12 @@
 
 ##### Dockerfile #####
 ## build stage ##
-FROM node:20.0.0-alpine  as build
+FROM node:18.12.0-alpine  as build
 WORKDIR /app
+COPY package.json yarn.lock /app/
+RUN yarn install --frozen-lockfile --non-interactive --ignore-scripts 
 COPY . .
-#COPY .env.example .env
-RUN yarn install
-RUN  yarn run build
-
+RUN yarn build
 ## run stage ##
 FROM nginx:alpine
 COPY  --from=build /app/dist  /run

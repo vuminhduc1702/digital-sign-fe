@@ -16,7 +16,7 @@ jobs:
   # Job 1: build && test
   build:
     name: Build and push image
-    runs-on: worker-poc
+    runs-on: worker-mongo
     if: github.actor == 'hkm15022001' || github.actor == 'nguyenleccss361'
     steps:
       # Checkout code
@@ -45,7 +45,7 @@ jobs:
   deploy:
     name: Deploy to kubernetes
     needs: build
-    runs-on: worker-poc
+    runs-on: worker-mongo
     steps:
     - name: SSH and deploy
       uses: appleboy/ssh-action@master
