@@ -34,11 +34,8 @@ export function SectionPackageData() {
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { data: PackofData, isLoading: isLoadingPackofData } = useGetPackofdata(
-    {
-      config: { suspense: false },
-    },
-  )
+  const { data: PackofData, isLoading: isLoadingPackofData } =
+    useGetPackofdata()
   const showSpinner = useSpinDelay(isLoadingPackofData, {
     delay: 150,
     minDuration: 300,

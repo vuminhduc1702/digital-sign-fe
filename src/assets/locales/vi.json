@@ -296,7 +296,8 @@
           "success_update": "Sửa thiết bị thành công",
           "success_delete": "Xoá thiết bị thành công",
           "choose_device": "Vui lòng chọn thiết bị",
-          "select_require_err": "Vui lòng chọn"
+          "select_require_err": "Vui lòng chọn",
+          "input_require_err": "Vui lòng nhập"
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
@@ -331,6 +332,8 @@
           "status": "Trạng thái",
           "retry": " Số lần lặp lại",
           "test_condition_time": "Thời gian kiểm tra điều kiện",
+          "input_placeholder": "Vui lòng nhập",
+          "select_placeholder": "Vui lòng chọn",
           "start": "Bắt đầu",
           "end": "Kết thúc",
           "group": "Nhóm",

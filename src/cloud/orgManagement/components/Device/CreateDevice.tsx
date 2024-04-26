@@ -82,9 +82,6 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
     projectId,
     offset,
     entity_type: 'DEVICE',
-    config: {
-      suspense: false,
-    },
   })
   const groupSelectOptions = groupData?.groups?.map(groups => ({
     label: groups?.name,

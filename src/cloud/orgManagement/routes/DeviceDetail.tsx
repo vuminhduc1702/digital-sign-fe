@@ -125,9 +125,6 @@ export function DeviceDetail() {
     entityId: deviceId,
     entityType: 'DEVICE',
     offset: attrLogOffset,
-    config: {
-      suspense: false,
-    },
   })
 
   const [rowSelectionAttrLog, setRowSelectionAttrLog] = useState({})
@@ -168,9 +165,6 @@ export function DeviceDetail() {
   } = useMQTTLog({
     device_id: deviceId,
     project_id: projectId,
-    config: {
-      suspense: false,
-    },
   })
 
   const [rowSelectionMQTTLog, setRowSelectionMQTTLog] = useState({})

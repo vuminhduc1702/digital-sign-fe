@@ -48,10 +48,6 @@ export default function DevRole() {
   const { data, isLoading, isPreviousData } = useGetRoles({
     projectId,
     applicable_to: 'TENANT_DEV',
-    config: {
-      keepPreviousData: true,
-      suspense: false,
-    },
     offset,
     search_str: searchQuery,
     search_field: searchField.current,

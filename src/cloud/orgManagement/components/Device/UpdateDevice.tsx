@@ -132,9 +132,6 @@ export function UpdateDevice({
     projectId,
     offset,
     entity_type: 'DEVICE',
-    config: {
-      suspense: false,
-    },
   })
   const groupSelectOptions = groupData?.groups?.map(groups => ({
     label: groups?.name,

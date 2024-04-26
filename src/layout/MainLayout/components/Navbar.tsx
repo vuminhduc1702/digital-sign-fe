@@ -35,11 +35,7 @@ function Navbar() {
   const { t } = useTranslation()
   const { data: projectsData } = useProjects()
 
-  const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
-    config: {
-      suspense: false,
-    },
-  })
+  const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({})
   const { data: userDataFromStorage } = useUser()
 
   const { checkAccess } = useAuthorization()

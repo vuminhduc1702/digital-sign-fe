@@ -123,7 +123,7 @@ export function UpdateAdapter({
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
       thingId: getValues('thing_id') || thing_id,
-      config: { enabled: !!getValues('thing_id'), suspense: false },
+      config: { enabled: !!getValues('thing_id') },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,

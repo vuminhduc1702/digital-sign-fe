@@ -66,7 +66,7 @@ export function SubcriptionTemplate() {
     search_field: searchField.current,
     search_str: searchQuery,
     searchData: searchData,
-    config: { keepPreviousData: true, staleTime: 1000 },
+    config: { staleTime: 1000 },
   })
   const ref = useRef(null)
   const handleField = (field: string, value: any) => {

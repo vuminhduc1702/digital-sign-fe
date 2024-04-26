@@ -82,7 +82,6 @@ export function UpdateTemplate({
   const { data: attrData, isLoading: attrLoading } = useGetAttrs({
     entityType: 'TEMPLATE',
     entityId: selectedUpdateTemplate?.id,
-    config: { suspense: false },
   })
 
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({

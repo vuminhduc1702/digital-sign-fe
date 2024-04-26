@@ -53,7 +53,7 @@ export function BillingTemplate() {
     start_time: startTime,
     searchData: searchData,
     end_time: endTime,
-    config: { keepPreviousData: true, staleTime: 1000 },
+    config: { staleTime: 1000 },
   })
   const ref = useRef(null)
   const handleField = (field: string, value: any) => {

@@ -35,9 +35,6 @@ export default function FuelTemplate() {
 
   const { data } = useFuel({
     data: JSON.parse(codeInputRef.current),
-    config: {
-      suspense: false,
-    },
   })
 
   const callApiFuel = () => {

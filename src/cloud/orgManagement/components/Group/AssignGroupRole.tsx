@@ -48,9 +48,6 @@ const AssignGroupRole = ({
     projectId: projectId || '',
     orgId: orgId || '',
     expand: true,
-    config: {
-      suspense: false,
-    },
   })
 
   const { mutate, isLoading, isSuccess } = useAssignRoupRole()

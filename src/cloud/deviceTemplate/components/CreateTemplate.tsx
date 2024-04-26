@@ -124,7 +124,6 @@ export default function CreateTemplate({
       thingId: getValues('thing_id'),
       config: {
         enabled: !!getValues('thing_id'),
-        suspense: false,
       },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({

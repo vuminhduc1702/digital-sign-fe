@@ -42,7 +42,6 @@ export function UpdateSubcription({
 
   const { data, refetch } = useSubcriptionById({
     id,
-    config: { suspense: false },
   })
 
   const { mutateAsync, isLoading, isSuccess } = useUpdateSubcription()

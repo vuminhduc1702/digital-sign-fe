@@ -25,7 +25,7 @@ export function CustomerManageTemplate() {
     projectId,
     search_field: searchField.current,
     search_str: searchQuery,
-    config: { keepPreviousData: true, staleTime: 1000 },
+    config: { staleTime: 1000 },
   })
   const ref = useRef(null)
   const { register, formState, control, handleSubmit } = useForm({

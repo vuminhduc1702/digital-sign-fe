@@ -37,7 +37,6 @@ export function ViewPopup({
     searchData: {
       user_id: id,
     },
-    config: { keepPreviousData: true, suspense: false },
   })
 
   const { data: dataBill, isPreviousData: isPrevious } = useGetBillings({
@@ -45,7 +44,6 @@ export function ViewPopup({
     searchData: {
       customer_name: customerName || '',
     },
-    config: { keepPreviousData: true, suspense: false },
   })
 
   return (

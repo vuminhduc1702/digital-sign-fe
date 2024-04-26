@@ -58,9 +58,6 @@ export function UpdateRole({
 
   const { data: groupData } = useGetGroups({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const groupDataDeviceOptions = groupData?.groups
     ?.filter(item => item.entity_type === 'DEVICE')

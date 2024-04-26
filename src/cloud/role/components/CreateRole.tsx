@@ -157,9 +157,6 @@ export function CreateRole({
 
   const { data: groupData, isLoading: isLoadingGroup } = useGetGroups({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const groupDataDeviceOptions = groupData?.groups
     ?.filter(item => item.entity_type === 'DEVICE')

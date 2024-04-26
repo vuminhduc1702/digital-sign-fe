@@ -50,7 +50,6 @@ export function UpdateVersionFirmWare({
   const projectId = storage.getProject()?.id
   const { data } = useGetFirmwares({
     projectId,
-    config: { suspense: false },
   })
 
   const { mutate, isLoading, isSuccess } = useUpdateVersionFirmware()
