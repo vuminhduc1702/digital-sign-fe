@@ -388,6 +388,12 @@ export default function CreateTemplateLwM2M({
     handle_msg_svc: selectedService,
   }
 
+  useEffect(() => {
+    if (isSuccessCreateTemplatelwm2m && close) {
+      close()
+    }
+  }, [isSuccessCreateTemplatelwm2m])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -407,7 +413,6 @@ export default function CreateTemplateLwM2M({
             id="create-template"
             onSubmit={handleSubmit(async () => {
               await mutateAsyncCreateTemplatelwm2m({ data })
-              close && close()
             })}
           >
             <>

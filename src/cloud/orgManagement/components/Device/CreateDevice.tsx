@@ -14,7 +14,7 @@ import { nameSchema } from '@/utils/schemaValidation'
 import storage from '@/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { useGetTemplates } from '@/cloud/deviceTemplate/api'
@@ -100,6 +100,12 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
     null,
   )
 
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -129,7 +135,6 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                     template_id: values.template_id,
                   },
                 })
-                close && close()
               })}
             >
               <>

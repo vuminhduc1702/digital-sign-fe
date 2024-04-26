@@ -493,6 +493,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+
   useEffect(() => {
     setActionType(watch(`action.${0}.action_type`))
   }, [watch(`action.${0}.action_type`)])
@@ -591,7 +592,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                     },
                   },
                 })
-                close && close()
               })}
             >
               <>

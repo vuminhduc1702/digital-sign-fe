@@ -49,7 +49,7 @@ export function GroupDetail() {
   } = useDeleteMultipleAttrs()
 
   useEffect(() => {
-    if (isSuccessDeleteMultipleAttrs) {
+    if (isSuccessDeleteMultipleAttrs && close) {
       close()
     }
   }, [isSuccessDeleteMultipleAttrs])

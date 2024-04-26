@@ -86,10 +86,10 @@ export function UpdateTemplateLwM2M({
   const { mutate, isLoading, isSuccess } = useUpdateTemplate()
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const projectId = storage.getProject()?.id
   const [openAccordion] = useState()
@@ -483,7 +483,6 @@ export function UpdateTemplateLwM2M({
                   data,
                   templateId: selectedUpdateTemplate?.id,
                 })
-                close && close()
               })}
             >
               <>

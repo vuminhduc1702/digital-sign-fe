@@ -85,10 +85,10 @@ export function UpdateRole({
     }))
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const policiesCurrent =
     policy?.map((policy: Policies) => {
@@ -195,7 +195,6 @@ export function UpdateRole({
                 },
                 roleId,
               })
-              close && close()
             })}
           >
             <>

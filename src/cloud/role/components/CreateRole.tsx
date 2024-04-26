@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import i18n from '@/i18n'
@@ -191,6 +191,12 @@ export function CreateRole({
     setType('Generic')
   }
 
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -261,7 +267,6 @@ export function CreateRole({
 
                 mutate({ data })
               }
-              close && close()
             })}
           >
             <>

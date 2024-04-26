@@ -70,10 +70,10 @@ export function UpdateCustomer({
   } = useDisclosure()
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   // const [rowSelection, setRowSelection] = useState({})
   // const pdfHeader = useMemo(

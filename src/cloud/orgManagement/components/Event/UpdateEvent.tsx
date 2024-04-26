@@ -299,10 +299,10 @@ export function UpdateEvent({
   }
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const showSpinner = useSpinDelay(groupSelectOptions == null, {
     delay: 150,
@@ -387,7 +387,6 @@ export function UpdateEvent({
                   },
                   eventId,
                 })
-                close && close()
               })}
             >
               {groupSelectOptions != null ? (

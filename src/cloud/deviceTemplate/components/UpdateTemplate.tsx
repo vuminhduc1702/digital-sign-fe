@@ -60,10 +60,10 @@ export function UpdateTemplate({
   const { mutate, isLoading, isSuccess } = useUpdateTemplate()
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const projectId = storage.getProject()?.id
   // const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
@@ -198,7 +198,6 @@ export function UpdateTemplate({
                   data,
                   templateId: selectedUpdateTemplate?.id,
                 })
-                close && close()
               })}
             >
               <>

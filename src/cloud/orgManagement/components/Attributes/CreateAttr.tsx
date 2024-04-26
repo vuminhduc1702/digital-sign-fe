@@ -30,6 +30,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import { useEffect } from 'react'
 
 type CreateAttrProps = {
   entityId: string
@@ -91,6 +92,12 @@ export function CreateAttr({
     control,
   })
 
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -116,7 +123,6 @@ export function CreateAttr({
                   attributes: [...values.attributes],
                 },
               })
-              close && close()
             })}
           >
             <>
