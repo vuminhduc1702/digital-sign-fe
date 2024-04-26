@@ -7,6 +7,7 @@ export type ThingService = {
   description: string
   fail_limit: number
   lock_time: string
+  code: string
 } & BodyEventService
 
 export type ThingServiceList = {

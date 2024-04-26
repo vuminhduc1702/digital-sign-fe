@@ -95,7 +95,9 @@ export function UpdateThingService({
       defaultValues: {
         // ...thingServiceData?.data,
         ...thingServiceDataProps?.find(thing => thing.name === name),
-        // description: thingServiceData?.data?.description ?? '',
+        description:
+          thingServiceDataProps?.find(thing => thing.name === name)
+            ?.description ?? '',
       },
     })
 
@@ -125,8 +127,11 @@ export function UpdateThingService({
   } = useExecuteService()
 
   useEffect(() => {
-    setCodeInput(thingServiceData?.data?.code ?? '')
-  }, [thingServiceData])
+    // setCodeInput(thingServiceData?.data?.code ?? '')
+    setCodeInput(
+      thingServiceDataProps?.find(thing => thing.name === name)?.code ?? '',
+    )
+  }, [])
 
   useEffect(() => {
     if (isSuccessExecute) {
@@ -259,7 +264,7 @@ export function UpdateThingService({
                   mutate({
                     data: {
                       name: values.name,
-                      description: values.description,
+                      description: values.description ?? '',
                       output: values.output,
                       input: dataInput,
                       code: codeInput,
