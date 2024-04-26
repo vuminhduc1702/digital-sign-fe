@@ -38,7 +38,6 @@ export function CreateFirmWare() {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
-  const [templateValue, setTemplateValue] = useState<SelectOption | null>()
 
   const { data } = useGetTemplates({ projectId })
 
@@ -48,9 +47,18 @@ export function CreateFirmWare() {
       resolver: entityFirmWareSchema && zodResolver(entityFirmWareSchema),
       defaultValues: { template_id: '' },
     })
+
+  const resetData = () => {
+    setValue('name', '')
+    setValue('template_id', '')
+    setValue('tag', '')
+    setValue('version', '')
+    setValue('description', '')
+  }
+
   return (
     <FormDialog
-      resetData={() => setTemplateValue(null)}
+      resetData={resetData}
       isDone={isSuccess}
       title={t('cloud:firmware.add_firmware.title')}
       body={

@@ -243,6 +243,11 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      columnHelper.accessor('description', {
+        header: () => <span>{t('cloud:firmware.table.description')}</span>,
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
     ],
     [props.offset],
   )
@@ -250,7 +255,7 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={data}
+      data={data || []}
       columns={columns}
       onDataText={t('table:no_firmware')}
       {...props}

@@ -752,6 +752,7 @@
         "version": "Firmware Version",
         "create_time": "Ngày tạo",
         "created_by": "Người tạo",
+        "description": "Mô tả",
         "delete_firmware": "Xoá Firmware",
         "delete_firmware_confirm": "Bạn có chắc chắn muốn xóa Fireware {{FIRMWARE_NAME}}?",
         "delete_multiple_firmware_confirm": "Bạn có chắc chắn muốn xóa các Fireware đã chọn?"
