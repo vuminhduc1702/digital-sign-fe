@@ -40,7 +40,7 @@ export function UpdateDashboard({
 }: UpdateDashboardProps) {
   const { t } = useTranslation()
 
-  const { mutate, isLoading, isSuccess } = useUpdateDashboard()
+  const { mutateAsync, isLoading } = useUpdateDashboard()
   const { register, formState, handleSubmit } = useForm<
     UpdateDashboardDTO['data']
   >({
@@ -54,12 +54,6 @@ export function UpdateDashboard({
       dashboard_setting: null,
     },
   })
-
-  useEffect(() => {
-    if (isSuccess) {
-      close()
-    }
-  }, [isSuccess, close])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -76,8 +70,8 @@ export function UpdateDashboard({
           <form
             id="update-dashboard"
             className="w-full space-y-6"
-            onSubmit={handleSubmit(values => {
-              mutate({
+            onSubmit={handleSubmit(async values => {
+              await mutateAsync({
                 data: {
                   title: values.title,
                   configuration: {
@@ -88,6 +82,7 @@ export function UpdateDashboard({
                 },
                 dashboardId: id,
               })
+
               close && close()
             })}
           >
