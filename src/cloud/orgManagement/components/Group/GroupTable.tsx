@@ -1,6 +1,5 @@
 import React, { useMemo, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
