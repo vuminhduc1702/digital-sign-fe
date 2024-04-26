@@ -108,6 +108,7 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
                     org_id: values.org_id !== no_org_val ? values.org_id : '',
                   },
                 })
+                close && close()
               })}
             >
               <>

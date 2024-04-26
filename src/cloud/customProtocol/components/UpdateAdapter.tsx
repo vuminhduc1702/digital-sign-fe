@@ -242,6 +242,7 @@ export function UpdateAdapter({
                   })
                 }
               }
+              close && close()
             })}
           >
             <div className="flex w-full grow flex-col">

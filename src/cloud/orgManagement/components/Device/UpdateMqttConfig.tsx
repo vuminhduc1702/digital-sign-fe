@@ -128,6 +128,7 @@ export function UpdateMqttConfig({
                 },
                 deviceId,
               })
+              close && close()
             })}
           >
             <>

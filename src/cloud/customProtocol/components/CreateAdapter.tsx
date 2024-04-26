@@ -341,6 +341,8 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
                   })
                 }
               }
+
+              close && close()
             })}
           >
             <div className="flex w-full grow flex-col">

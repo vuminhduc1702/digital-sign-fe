@@ -96,6 +96,7 @@ export function CreateDashboard({
                   dashboard_setting: null,
                 },
               })
+              close && close()
             })}
           >
             <>

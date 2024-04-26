@@ -591,7 +591,7 @@ export function DashboardDetail() {
               isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
-
+                close && close()
                 // resize bug?
                 if (detailDashboard != null) {
                   mutateUpdateDashboard({

@@ -591,6 +591,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                     },
                   },
                 })
+                close && close()
               })}
             >
               <>

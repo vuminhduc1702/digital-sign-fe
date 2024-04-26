@@ -92,6 +92,7 @@ export function UpdateVersionFirmWare({
                   name: name,
                 },
               })
+              close && close()
             })}
           >
             <SelectDropdown

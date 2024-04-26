@@ -102,6 +102,7 @@ export default function CreateColumn({
                   fields: values.fields,
                 },
               })
+              close && close()
             })}
           >
             <>

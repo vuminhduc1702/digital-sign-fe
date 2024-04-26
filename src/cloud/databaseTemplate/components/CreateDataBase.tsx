@@ -90,6 +90,7 @@ export default function CreateDataBase({
                   fields: values.fields,
                 },
               })
+              close && close()
             })}
           >
             <>
