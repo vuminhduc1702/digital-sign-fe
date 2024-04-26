@@ -33,7 +33,7 @@ function ThingServiceTableContextMenu({
   data,
   ...props
 }: {
-  thingId: string
+  thingId?: string
   name: string
   description: string
   data: ThingService[]
@@ -154,9 +154,9 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
         cell: info => {
           const { name, description } = info.row.original
           return ThingServiceTableContextMenu({
+            thingId,
             name,
             description,
-            thingId,
             data,
           })
         },

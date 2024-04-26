@@ -430,9 +430,6 @@ export function CreateWidget({
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
 
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
@@ -440,9 +437,6 @@ export function CreateWidget({
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,

@@ -60,10 +60,10 @@ export function UpdateTemplate({
   const { mutate, isLoading, isSuccess } = useUpdateTemplate()
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const projectId = storage.getProject()?.id
   // const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
@@ -82,7 +82,6 @@ export function UpdateTemplate({
   const { data: attrData, isLoading: attrLoading } = useGetAttrs({
     entityType: 'TEMPLATE',
     entityId: selectedUpdateTemplate?.id,
-    config: { suspense: false },
   })
 
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
@@ -199,7 +198,6 @@ export function UpdateTemplate({
                   data,
                   templateId: selectedUpdateTemplate?.id,
                 })
-                close && close()
               })}
             >
               <>

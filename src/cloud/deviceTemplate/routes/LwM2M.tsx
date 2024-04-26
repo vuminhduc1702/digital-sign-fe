@@ -34,9 +34,6 @@ export function LwM2M() {
     isLoading: isLoadingLwM2MDataById,
   } = useTemplateById({
     templateId,
-    config: {
-      suspense: false,
-    },
   })
 
   const selectedModule =

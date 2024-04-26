@@ -87,10 +87,10 @@ export function UpdateMqttConfig({
     },
   })
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -128,7 +128,6 @@ export function UpdateMqttConfig({
                 },
                 deviceId,
               })
-              close && close()
             })}
           >
             <>

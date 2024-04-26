@@ -50,7 +50,6 @@ export function UpdateVersionFirmWare({
   const projectId = storage.getProject()?.id
   const { data } = useGetFirmwares({
     projectId,
-    config: { suspense: false },
   })
 
   const { mutate, isLoading, isSuccess } = useUpdateVersionFirmware()
@@ -61,10 +60,10 @@ export function UpdateVersionFirmWare({
     defaultValues: { version: '' },
   })
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -93,7 +92,6 @@ export function UpdateVersionFirmWare({
                   name: name,
                 },
               })
-              close && close()
             })}
           >
             <SelectDropdown

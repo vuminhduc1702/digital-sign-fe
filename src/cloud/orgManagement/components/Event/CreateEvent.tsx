@@ -198,14 +198,22 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.device_manage.add_device.select_require_err',
       ),
     }),
-    threshold: z.string().min(1, {
-      message: i18n
-        .t('placeholder:input_text_value')
-        .replace(
-          '{{VALUE}}',
-          i18n.t('cloud:org_manage.event_manage.add_event.condition.threshold'),
+    threshold: z
+      .string({
+        required_error: i18n.t(
+          'cloud:org_manage.device_manage.add_device.input_require_err',
         ),
-    }),
+      })
+      .min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t(
+              'cloud:org_manage.event_manage.add_event.condition.threshold',
+            ),
+          ),
+      }),
     logical_operator: z.enum(['and', 'or'] as const, {
       required_error: i18n.t(
         'cloud:org_manage.device_manage.add_device.select_require_err',
@@ -407,7 +415,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     orgId: watch('org_id')?.toString() || orgId,
     projectId,
     entity_type: 'EVENT',
-    config: { suspense: false },
   })
   const groupSelectOptions = groupData?.groups?.map(group => ({
     label: group?.name,
@@ -416,7 +423,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id')?.toString() || orgId,
     projectId,
-    config: { suspense: false },
   })
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
@@ -445,7 +451,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     useGetServiceThings({
       thingId: watch('cmd.thing_id') ?? '',
       config: {
-        suspense: false,
         enabled:
           !!watch('cmd.thing_id') &&
           parseInt(watch('cmd.thing_id') as unknown as string) !== 0,
@@ -488,9 +493,17 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+
   useEffect(() => {
     setActionType(watch(`action.${0}.action_type`))
   }, [watch(`action.${0}.action_type`)])
+
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -579,7 +592,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                     },
                   },
                 })
-                close && close()
               })}
             >
               <>
@@ -599,7 +611,12 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           </FormLabel>
                           <div>
                             <FormControl>
-                              <Input {...field} />
+                              <Input
+                                {...field}
+                                placeholder={t(
+                                  'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                )}
+                              />
                             </FormControl>
                             <FormMessage />
                           </div>
@@ -680,7 +697,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                 {...field}
                               />
                             </FormControl>
-                            <FormMessage className={cn('absolute')} />
+                            <FormMessage />
                           </div>
                         </FormItem>
                       )}
@@ -750,7 +767,11 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                 value={value}
                               >
                                 <SelectTrigger className="h-9">
-                                  <SelectValue />
+                                  <SelectValue
+                                    placeholder={t(
+                                      'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                    )}
+                                  />
                                 </SelectTrigger>
                                 <SelectContent>
                                   {eventTypeOptions?.map(type => (
@@ -764,7 +785,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                 </SelectContent>
                               </Select>
                             </FormControl>
-                            <FormMessage className={cn('absolute')} />
+                            <FormMessage />
                           </div>
                         </FormItem>
                       )}
@@ -1026,7 +1047,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                         </SelectContent>
                                       </Select>
                                     </FormControl>
-                                    <FormMessage className={cn('absolute')} />
+                                    <FormMessage />
                                   </div>
                                 </FormItem>
                               )}
@@ -1065,7 +1086,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                         </SelectContent>
                                       </Select>
                                     </FormControl>
-                                    <FormMessage className={cn('absolute')} />
+                                    <FormMessage />
                                   </div>
                                 </FormItem>
                               )}
@@ -1126,7 +1147,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                           </SelectContent>
                                         </Select>
                                       </FormControl>
-                                      <FormMessage className={cn('absolute')} />
+                                      <FormMessage />
                                     </div>
                                   </FormItem>
                                 )}
@@ -1151,6 +1172,8 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                       )
                     })
                   : null}
+
+                {/* Thao tác xử lý */}
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t(
@@ -1216,7 +1239,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                     </SelectContent>
                                   </Select>
                                 </FormControl>
-                                <FormMessage className={cn('absolute')} />
+                                <FormMessage />
                               </div>
                             </FormItem>
                           )}
@@ -1239,6 +1262,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       customOnChange={value =>
                                         setValue('cmd.thing_id', value)
                                       }
+                                      // customOnChange={onChange}
                                       isOptionDisabled={option =>
                                         option.label ===
                                           t('loading:entity_thing') ||
@@ -1262,7 +1286,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       }
                                       {...field}
                                     />
-                                    <FormMessage className={cn('absolute')} />
+                                    <FormMessage />
                                   </div>
                                 </FormControl>
                               </FormItem>
@@ -1309,6 +1333,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                         setValue('cmd.handle_service', value)
                                         resetField(`cmd.input.${index}.value`)
                                       }}
+                                      // customOnChange={onChange}
                                       isOptionDisabled={option =>
                                         option.label ===
                                           t('loading:service_thing') ||
@@ -1330,7 +1355,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       )}
                                       {...field}
                                     />
-                                    <FormMessage className={cn('absolute')} />
+                                    <FormMessage />
                                   </div>
                                 </FormControl>
                               </FormItem>
@@ -1419,9 +1444,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                                 </SelectContent>
                                               </Select>
                                             </FormControl>
-                                            <FormMessage
-                                              className={cn('absolute')}
-                                            />
+                                            <FormMessage />
                                           </div>
                                         </FormItem>
                                       )}

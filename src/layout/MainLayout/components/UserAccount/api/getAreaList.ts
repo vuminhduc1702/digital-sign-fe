@@ -29,7 +29,6 @@ export const useAreaList = ({ config, parentCode, type }: UseAreaList) => {
   return useQuery<ExtractFnReturnType<AreaQueryFnType>>({
     queryKey: ['area-list', parentCode, type],
     queryFn: () => getAreaList({ parentCode, type }),
-    suspense: false,
     select: (data: any) => {
       const transformArr = data.map((item: any) => {
         return { value: item.areaCode, label: item.name }

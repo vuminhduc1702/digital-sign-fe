@@ -228,9 +228,6 @@ export function UpdateWidget({
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const deviceSelectData = deviceData?.devices.map(
     (device: { id: string; name: string }) => ({

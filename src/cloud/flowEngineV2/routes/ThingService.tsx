@@ -43,7 +43,6 @@ export function ThingServices() {
     thingId,
     search_field: searchField.current,
     search_str: searchQuery,
-    config: { keepPreviousData: true },
   })
 
   const {

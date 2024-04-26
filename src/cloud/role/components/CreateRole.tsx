@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import i18n from '@/i18n'
@@ -157,9 +157,6 @@ export function CreateRole({
 
   const { data: groupData, isLoading: isLoadingGroup } = useGetGroups({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const groupDataDeviceOptions = groupData?.groups
     ?.filter(item => item.entity_type === 'DEVICE')
@@ -193,6 +190,12 @@ export function CreateRole({
     reset()
     setType('Generic')
   }
+
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -264,7 +267,6 @@ export function CreateRole({
 
                 mutate({ data })
               }
-              close && close()
             })}
           >
             <>

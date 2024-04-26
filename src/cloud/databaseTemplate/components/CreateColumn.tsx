@@ -76,7 +76,9 @@ export default function CreateColumn({
   })
 
   useEffect(() => {
-    if (isSuccess) close && close()
+    if (isSuccess && close) {
+      close()
+    }
   }, [isSuccess])
 
   return (
@@ -102,7 +104,6 @@ export default function CreateColumn({
                   fields: values.fields,
                 },
               })
-              close && close()
             })}
           >
             <>

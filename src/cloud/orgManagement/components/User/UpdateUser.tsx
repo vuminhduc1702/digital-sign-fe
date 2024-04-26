@@ -89,10 +89,10 @@ export function UpdateUser({
   const { mutate, isLoading, isSuccess } = useUpdateUser()
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const form = useForm<UpdateUserDTO['data']>({
     resolver: updatedUserSchema && zodResolver(updatedUserSchema),
@@ -187,7 +187,6 @@ export function UpdateUser({
                   },
                   userId,
                 })
-                close && close()
               })}
             >
               <>

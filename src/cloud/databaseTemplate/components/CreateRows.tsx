@@ -73,8 +73,11 @@ export default function CreateRows({
   })
 
   useEffect(() => {
-    if (isSuccess) close && close()
+    if (isSuccess && close) {
+      close()
+    }
   }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -98,7 +101,6 @@ export default function CreateRows({
                   fields: values.fields,
                 },
               })
-              close && close()
             })}
           >
             <>

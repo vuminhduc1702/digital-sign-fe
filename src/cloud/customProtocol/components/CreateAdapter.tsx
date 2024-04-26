@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import i18n from '@/i18n'
 import { type SelectInstance } from 'react-select'
@@ -225,7 +225,6 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
       thingId: getValues('thing_id'),
       config: {
         enabled: !!getValues('thing_id'),
-        suspense: false,
       },
     })
 
@@ -249,6 +248,12 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+
+  useEffect(() => {
+    if (isSuccessAdapter && close) {
+      close()
+    }
+  }, [isSuccessAdapter])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -342,8 +347,6 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
                   })
                 }
               }
-
-              close && close()
             })}
           >
             <div className="flex w-full grow flex-col">

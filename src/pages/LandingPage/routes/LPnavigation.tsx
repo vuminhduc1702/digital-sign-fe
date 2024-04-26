@@ -33,7 +33,6 @@ function LPnavigation({
   const { data: userDataFromStorage } = useUser()
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
-      suspense: false,
       enabled: !!userDataFromStorage,
     },
   })

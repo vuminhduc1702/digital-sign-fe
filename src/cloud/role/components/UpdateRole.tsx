@@ -58,9 +58,6 @@ export function UpdateRole({
 
   const { data: groupData } = useGetGroups({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const groupDataDeviceOptions = groupData?.groups
     ?.filter(item => item.entity_type === 'DEVICE')
@@ -88,10 +85,10 @@ export function UpdateRole({
     }))
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const policiesCurrent =
     policy?.map((policy: Policies) => {
@@ -198,7 +195,6 @@ export function UpdateRole({
                 },
                 roleId,
               })
-              close && close()
             })}
           >
             <>

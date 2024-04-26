@@ -42,9 +42,6 @@ const MainTenant = () => {
     offset: offset || 0,
     search_field: searchField.current,
     search_str: searchQuery,
-    config: {
-      suspense: false,
-    },
   })
 
   const [rowSelection, setRowSelection] = useState({})

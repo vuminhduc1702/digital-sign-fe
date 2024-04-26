@@ -132,9 +132,6 @@ export function UpdateDevice({
     projectId,
     offset,
     entity_type: 'DEVICE',
-    config: {
-      suspense: false,
-    },
   })
   const groupSelectOptions = groupData?.groups?.map(groups => ({
     label: groups?.name,
@@ -151,10 +148,10 @@ export function UpdateDevice({
   }))
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const selectDropdownGroupId = useRef<SelectInstance<SelectOption> | null>(
     null,
@@ -190,7 +187,6 @@ export function UpdateDevice({
                     },
                     deviceId,
                   })
-                  close && close()
                 })}
               >
                 <>
@@ -313,7 +309,6 @@ export function UpdateDevice({
                     },
                     deviceId,
                   })
-                  close && close()
                 })}
               >
                 <p className="mx-1 my-2">

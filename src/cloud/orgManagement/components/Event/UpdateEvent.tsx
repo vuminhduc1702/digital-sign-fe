@@ -206,9 +206,6 @@ export function UpdateEvent({
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
   const { data: orgDataById } = useOrgById({ orgId: data?.org_id })
@@ -217,7 +214,6 @@ export function UpdateEvent({
     orgId: watch('org_id') || orgId,
     projectId,
     entity_type: 'EVENT',
-    config: { suspense: false },
   })
   const groupSelectOptions = groupData?.groups?.map(group => ({
     label: group?.name,
@@ -227,7 +223,6 @@ export function UpdateEvent({
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
     projectId,
-    config: { suspense: false },
   })
   const deviceSelectOptions = deviceData?.devices.map(device => ({
     value: device.id,
@@ -250,7 +245,6 @@ export function UpdateEvent({
     useGetServiceThings({
       thingId: watch('cmd.thing_id') ?? '',
       config: {
-        suspense: false,
         enabled:
           !!watch('cmd.thing_id') &&
           parseInt(watch('cmd.thing_id') as unknown as string) !== 0,
@@ -305,10 +299,10 @@ export function UpdateEvent({
   }
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const showSpinner = useSpinDelay(groupSelectOptions == null, {
     delay: 150,
@@ -393,7 +387,6 @@ export function UpdateEvent({
                   },
                   eventId,
                 })
-                close && close()
               })}
             >
               {groupSelectOptions != null ? (
