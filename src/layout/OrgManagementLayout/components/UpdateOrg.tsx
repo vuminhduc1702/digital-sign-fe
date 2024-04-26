@@ -178,6 +178,7 @@ export function UpdateOrg({
                     },
                     org_id: selectedUpdateOrg?.id,
                   })
+                  close && close()
                 }
               })}
             >

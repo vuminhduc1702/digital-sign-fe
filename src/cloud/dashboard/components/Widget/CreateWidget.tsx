@@ -508,6 +508,8 @@ export function CreateWidget({
     return result
   }
 
+  console.log(formState.errors)
+
   const setDeviceOptionForMap = (attribute: string) => {
     const result: Array<{
       value: string
@@ -517,14 +519,13 @@ export function CreateWidget({
       item?.attr_keys?.map(attr => {
         if (attr === attribute) {
           // filter all item in deviceData that have id = item.entity_id
-          const devices = deviceData?.devices.filter(
-            device =>
-              device.id === item.entity_id &&
-              device.attributes.filter(
+          const devices = deviceData?.devices.filter(device => {
+            device.id === item.entity_id &&
+              device.attributes?.filter(
                 attr =>
                   attr.attribute_key === attribute && attr.value_type === 'DBL',
-              ),
-          )
+              )
+          })
           devices?.map(device => {
             const deviceInfo = getDeviceInfo(device.id)
             if (deviceInfo.includes('undefined')) return

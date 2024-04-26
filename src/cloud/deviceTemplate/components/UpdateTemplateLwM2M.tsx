@@ -483,6 +483,7 @@ export function UpdateTemplateLwM2M({
                   data,
                   templateId: selectedUpdateTemplate?.id,
                 })
+                close && close()
               })}
             >
               <>

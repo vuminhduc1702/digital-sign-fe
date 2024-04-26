@@ -387,6 +387,7 @@ export function UpdateEvent({
                   },
                   eventId,
                 })
+                close && close()
               })}
             >
               {groupSelectOptions != null ? (

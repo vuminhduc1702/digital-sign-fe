@@ -89,6 +89,7 @@ export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
                   project_id: projectId,
                 },
               })
+              close && close()
             })}
           >
             <>

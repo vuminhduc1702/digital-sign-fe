@@ -261,6 +261,7 @@ export function CreateRole({
 
                 mutate({ data })
               }
+              close && close()
             })}
           >
             <>

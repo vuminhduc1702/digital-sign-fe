@@ -72,12 +72,6 @@ export function UpdateAdapter({
 
   const { mutate, isLoading, isSuccess } = useUpdateAdapter()
 
-  useEffect(() => {
-    if (isSuccess) {
-      close()
-    }
-  }, [isSuccess, close])
-
   const projectId = storage.getProject()?.id
   const [isShow, setIsShow] = useState(true)
 
@@ -242,6 +236,7 @@ export function UpdateAdapter({
                   })
                 }
               }
+              close && close()
             })}
           >
             <div className="flex w-full grow flex-col">

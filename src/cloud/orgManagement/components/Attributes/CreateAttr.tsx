@@ -116,6 +116,7 @@ export function CreateAttr({
                   attributes: [...values.attributes],
                 },
               })
+              close && close()
             })}
           >
             <>

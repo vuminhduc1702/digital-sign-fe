@@ -198,6 +198,7 @@ export function UpdateTemplate({
                   data,
                   templateId: selectedUpdateTemplate?.id,
                 })
+                close && close()
               })}
             >
               <>
