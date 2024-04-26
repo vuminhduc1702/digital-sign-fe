@@ -45,9 +45,6 @@ const AssignUser = ({
     projectId: projectId || '',
     orgId: orgId || '',
     expand: true,
-    config: {
-      suspense: false,
-    },
   })
 
   const { mutate, isLoading, isSuccess } = useAssignUser()

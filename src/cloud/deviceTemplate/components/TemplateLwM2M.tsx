@@ -59,9 +59,7 @@ export function TemplateLwM2M() {
   const { data } = useGetTemplates({
     projectId,
     protocol: 'lwm2m',
-    config: {
-      suspense: false,
-    },
+
     search_str: searchQuery,
     search_field: 'name',
   })

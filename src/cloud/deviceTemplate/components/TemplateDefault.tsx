@@ -62,9 +62,7 @@ export function TemplateDefault() {
   const { data } = useGetTemplates({
     projectId,
     protocol: 'default',
-    config: {
-      suspense: false,
-    },
+
     search_str: searchQuery,
     search_field: 'name',
   })

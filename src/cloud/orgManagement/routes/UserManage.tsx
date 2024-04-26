@@ -44,7 +44,6 @@ export function UserManage() {
     projectId,
     orgId,
     offset,
-    config: { keepPreviousData: true },
     search_str: searchQuery,
     search_field: searchField.current,
   })

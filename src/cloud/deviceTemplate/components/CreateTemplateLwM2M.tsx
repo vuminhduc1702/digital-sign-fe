@@ -116,7 +116,6 @@ export default function CreateTemplateLwM2M({
       thingId: getValues('thing_id'),
       config: {
         enabled: !!getValues('thing_id'),
-        suspense: false,
       },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -145,9 +144,6 @@ export default function CreateTemplateLwM2M({
   const [itemNames, setItemNames] = useState<ItemNames>({})
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-    config: {
-      suspense: false,
-    },
   })
   const XMLDataRef = useRef<LWM2MResponse[]>([])
   const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
@@ -391,6 +387,12 @@ export default function CreateTemplateLwM2M({
     thing_id: selectedThing,
     handle_msg_svc: selectedService,
   }
+
+  useEffect(() => {
+    if (isSuccessCreateTemplatelwm2m && close) {
+      close()
+    }
+  }, [isSuccessCreateTemplatelwm2m])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>

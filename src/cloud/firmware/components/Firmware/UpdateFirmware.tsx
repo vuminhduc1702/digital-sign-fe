@@ -68,10 +68,10 @@ export function UpdateFirmWare({
     defaultValues: { name, description, tag, version, template_id },
   })
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>

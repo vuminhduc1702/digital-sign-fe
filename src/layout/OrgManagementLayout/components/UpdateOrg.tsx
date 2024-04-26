@@ -101,10 +101,10 @@ export function UpdateOrg({
   const { data: orgDataById } = useOrgById({ orgId: selectedOrgBelonged })
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   useEffect(() => {
     if (selectedUpdateOrg) {

@@ -46,7 +46,7 @@ export function CreateSubcription() {
 
   const { data: PlanDataById } = usePlanById({
     planId: planValue || '',
-    config: { enabled: !!planValue, suspense: false },
+    config: { enabled: !!planValue },
   })
 
   const { mutate, isLoading, isSuccess } = useCreateSubcription()

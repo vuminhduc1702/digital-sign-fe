@@ -89,10 +89,10 @@ export function UpdateUser({
   const { mutate, isLoading, isSuccess } = useUpdateUser()
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const form = useForm<UpdateUserDTO['data']>({
     resolver: updatedUserSchema && zodResolver(updatedUserSchema),
@@ -166,7 +166,7 @@ export function UpdateUser({
             <form
               id="update-user"
               className="w-full space-y-6"
-              onSubmit={handleSubmit(values =>
+              onSubmit={handleSubmit(values => {
                 mutate({
                   data: {
                     name: values.name,
@@ -186,8 +186,8 @@ export function UpdateUser({
                         : undefined,
                   },
                   userId,
-                }),
-              )}
+                })
+              })}
             >
               <>
                 <InputField

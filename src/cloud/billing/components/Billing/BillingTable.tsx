@@ -32,7 +32,6 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { close, open, isOpen } = useDisclosure()
   const { data } = useBillingById({
     id,
-    config: { suspense: false },
   })
 
   return (

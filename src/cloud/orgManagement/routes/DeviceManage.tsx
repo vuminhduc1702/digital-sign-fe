@@ -45,7 +45,6 @@ export function DeviceManage() {
     orgId,
     projectId,
     offset,
-    config: { keepPreviousData: true },
     search_str: searchQuery,
     search_field: searchField.current,
   })

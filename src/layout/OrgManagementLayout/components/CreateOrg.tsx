@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -86,7 +86,8 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
-  const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })
+  const { mutate: mutateUpdateOrg, isSuccess: isSuccessUpdateOrg } =
+    useUpdateOrg({ isOnCreateOrg: true })
 
   const {
     mutateAsync: mutateAsyncCreateOrg,
@@ -110,6 +111,12 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
     handleResetDefaultImage()
     reset()
   }
+
+  useEffect(() => {
+    if (isSuccessUpdateOrg && close) {
+      close()
+    }
+  }, [isSuccessUpdateOrg])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>

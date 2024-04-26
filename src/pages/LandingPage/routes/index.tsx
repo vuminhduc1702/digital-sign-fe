@@ -47,7 +47,6 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const { data: userDataFromStorage } = useUser()
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
-      suspense: false,
       enabled: !!userDataFromStorage,
     },
   })

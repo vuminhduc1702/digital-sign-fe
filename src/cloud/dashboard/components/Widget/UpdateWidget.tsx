@@ -26,7 +26,7 @@ import {
   type SelectOption,
 } from '@/components/Form'
 import { useGetOrgs } from '@/layout/MainLayout/api'
-import { cn, flattenData } from '@/utils/misc'
+import { cn, flattenData, flattenOrgs } from '@/utils/misc'
 import { useDefaultCombobox } from '@/utils/hooks'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import storage from '@/utils/storage'
@@ -223,13 +223,11 @@ export function UpdateWidget({
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
   })
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const deviceSelectData = deviceData?.devices.map(
     (device: { id: string; name: string }) => ({

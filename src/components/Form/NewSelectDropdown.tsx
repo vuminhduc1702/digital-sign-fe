@@ -93,7 +93,9 @@ export function NewSelectDropdown<
           const isErr = error != null || (error != null && state.isFocused)
           return {
             ...baseStyles,
-            borderColor: isErr ? 'red' : '',
+            height: '36px',
+            borderRadius: '6px',
+            borderColor: isErr ? 'red' : '#b4b5b6',
             boxShadow: isErr ? 'red' : '',
             ':hover': {
               borderColor: isErr ? 'red' : '',

@@ -178,7 +178,6 @@ export function DashboardDetail() {
       orgIds: findOrgs(),
       projectId,
       config: {
-        suspense: false,
         retry: 5,
         retryDelay: 5000,
       },
@@ -592,7 +591,7 @@ export function DashboardDetail() {
               isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
-
+                close && close()
                 // resize bug?
                 if (detailDashboard != null) {
                   mutateUpdateDashboard({

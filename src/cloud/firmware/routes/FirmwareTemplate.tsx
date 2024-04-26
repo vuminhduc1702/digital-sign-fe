@@ -29,7 +29,6 @@ export function FirmwareTemplate() {
     isLoading: isLoadingFirmware,
   } = useGetFirmwares({
     projectId,
-    config: { keepPreviousData: true },
     offset,
     search_field: searchField.current,
     search_str: searchQuery,

@@ -26,6 +26,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import { useEffect } from 'react'
 
 export const dataBaseAttrSchema = z.object({
   table: nameSchema,
@@ -67,6 +68,13 @@ export default function CreateDataBase({
     name: 'fields',
     control,
   })
+
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  })
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent

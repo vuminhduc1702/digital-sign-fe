@@ -48,9 +48,6 @@ export function Default() {
     entityType,
     entityId: templateId,
     key_search: searchQuery,
-    config: {
-      suspense: false,
-    },
   })
 
   const projectId = storage.getProject()?.id

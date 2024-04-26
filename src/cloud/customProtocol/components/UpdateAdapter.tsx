@@ -72,12 +72,6 @@ export function UpdateAdapter({
 
   const { mutate, isLoading, isSuccess } = useUpdateAdapter()
 
-  useEffect(() => {
-    if (isSuccess) {
-      close()
-    }
-  }, [isSuccess, close])
-
   const projectId = storage.getProject()?.id
   const [isShow, setIsShow] = useState(true)
 
@@ -123,7 +117,7 @@ export function UpdateAdapter({
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
       thingId: getValues('thing_id') || thing_id,
-      config: { enabled: !!getValues('thing_id'), suspense: false },
+      config: { enabled: !!getValues('thing_id') },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
@@ -145,6 +139,12 @@ export function UpdateAdapter({
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>

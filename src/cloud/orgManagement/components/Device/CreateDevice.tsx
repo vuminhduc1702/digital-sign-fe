@@ -14,7 +14,7 @@ import { nameSchema } from '@/utils/schemaValidation'
 import storage from '@/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { useGetTemplates } from '@/cloud/deviceTemplate/api'
@@ -82,9 +82,6 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
     projectId,
     offset,
     entity_type: 'DEVICE',
-    config: {
-      suspense: false,
-    },
   })
   const groupSelectOptions = groupData?.groups?.map(groups => ({
     label: groups?.name,
@@ -102,6 +99,12 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
   const selectDropdownGroupId = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>

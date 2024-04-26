@@ -45,10 +45,10 @@ export function UploadFileFirmWare({
       resolver: uploadFileSchema && zodResolver(uploadFileSchema),
     })
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>

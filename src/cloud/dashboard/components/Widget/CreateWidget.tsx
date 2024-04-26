@@ -46,6 +46,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { cn, flattenOrgs } from '@/utils/misc'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -429,17 +430,13 @@ export function CreateWidget({
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
+
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
@@ -511,6 +508,8 @@ export function CreateWidget({
     return result
   }
 
+  console.log(formState.errors)
+
   const setDeviceOptionForMap = (attribute: string) => {
     const result: Array<{
       value: string
@@ -520,14 +519,13 @@ export function CreateWidget({
       item?.attr_keys?.map(attr => {
         if (attr === attribute) {
           // filter all item in deviceData that have id = item.entity_id
-          const devices = deviceData?.devices.filter(
-            device =>
-              device.id === item.entity_id &&
-              device.attributes.filter(
+          const devices = deviceData?.devices.filter(device => {
+            device.id === item.entity_id &&
+              device.attributes?.filter(
                 attr =>
                   attr.attribute_key === attribute && attr.value_type === 'DBL',
-              ),
-          )
+              )
+          })
           devices?.map(device => {
             const deviceInfo = getDeviceInfo(device.id)
             if (deviceInfo.includes('undefined')) return
@@ -854,30 +852,71 @@ export function CreateWidget({
                         error={formState.errors['title']}
                         registration={register('title')}
                       />
-                      <SelectSuperordinateOrgTree
-                        name={'org_id'}
-                        label={t(
-                          'cloud:org_manage.device_manage.add_device.parent',
+
+                      <FormField
+                        control={form.control}
+                        name="org_id"
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t(
+                                'cloud:org_manage.device_manage.add_device.parent',
+                              )}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <div>
+                                  <Popover>
+                                    <PopoverTrigger asChild>
+                                      <Button
+                                        id="org_id"
+                                        className={cn(
+                                          'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                          {
+                                            'text-gray-500':
+                                              !value && value !== '',
+                                          },
+                                        )}
+                                      >
+                                        {value
+                                          ? orgDataFlatten.find(
+                                              item => item.id === value,
+                                            )?.name
+                                          : value === ''
+                                            ? t('tree:no_selection_org')
+                                            : t('placeholder:select_org')}
+                                      </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                      <SelectSuperordinateOrgTree
+                                        {...field}
+                                        onChangeValue={onChange}
+                                        value={value}
+                                        noSelectionOption={true}
+                                        customOnChange={() => {
+                                          selectDropdownDeviceRef.current?.clearValue()
+                                          resetField('attributeConfig', {
+                                            defaultValue: [
+                                              {
+                                                attribute_key: '',
+                                                label: '',
+                                                color: '',
+                                                max: 100,
+                                                min: 0,
+                                                unit: '',
+                                              },
+                                            ],
+                                          })
+                                        }}
+                                      />
+                                    </PopoverContent>
+                                  </Popover>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
                         )}
-                        error={formState?.errors?.org_id}
-                        control={control}
-                        options={orgData?.organizations}
-                        noSelectionOption={true}
-                        customOnChange={() => {
-                          selectDropdownDeviceRef.current?.clearValue()
-                          resetField('attributeConfig', {
-                            defaultValue: [
-                              {
-                                attribute_key: '',
-                                label: '',
-                                color: '',
-                                max: 100,
-                                min: 0,
-                                unit: '',
-                              },
-                            ],
-                          })
-                        }}
                       />
 
                       <SelectDropdown
