@@ -1022,7 +1022,6 @@ export function UpdateWidget({
                         ) : (
                           <SelectField
                             label={t('ws:filter.time_period')}
-                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={
                               formState?.errors?.widgetSetting?.time_period
                             }

@@ -1575,5 +1575,8 @@
   },
   "tree": {
     "no_selection_org": "Không trực thuộc tổ chức"
+  },
+  "combobox": {
+    "select_device": "Chọn thiết bị"
   }
 }

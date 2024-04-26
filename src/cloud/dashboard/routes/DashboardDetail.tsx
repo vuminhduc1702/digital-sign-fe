@@ -311,13 +311,15 @@ export function DashboardDetail() {
   // get device search list
   function getMapDeviceList(widgetInfo: any) {
     const result: EntityId[] = []
-    widgetInfo?.attribute_config?.map(item => {
+    widgetInfo?.attribute_config?.map((item: any) => {
       const entityName = item.deviceName
       const id = item.label
       if (
         result.findIndex(
           entity => entity.id === id && entity.entityName === entityName,
-        ) === -1
+        ) === -1 &&
+        id &&
+        entityName
       ) {
         result.push({
           entityName: entityName,
@@ -507,7 +509,7 @@ export function DashboardDetail() {
                       />
                     ) : null}
                     {widgetInfo?.description === 'MAP' ? (
-                      <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
+                      <div className="absolute right-[10%] top-0 mr-8 mt-3 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
                           setFilteredComboboxData={setFilteredComboboxDataMap}
                           data={getMapDeviceList(widgetInfo)}
