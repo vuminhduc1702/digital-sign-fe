@@ -60,10 +60,10 @@ export function UpdateVersionFirmWare({
     defaultValues: { version: '' },
   })
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -92,7 +92,6 @@ export function UpdateVersionFirmWare({
                   name: name,
                 },
               })
-              close && close()
             })}
           >
             <SelectDropdown

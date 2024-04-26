@@ -40,7 +40,7 @@ export function UpdateDashboard({
 }: UpdateDashboardProps) {
   const { t } = useTranslation()
 
-  const { mutateAsync, isLoading } = useUpdateDashboard()
+  const { mutateAsync, isLoading, isSuccess } = useUpdateDashboard()
   const { register, formState, handleSubmit } = useForm<
     UpdateDashboardDTO['data']
   >({
@@ -54,6 +54,12 @@ export function UpdateDashboard({
       dashboard_setting: null,
     },
   })
+
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -82,8 +88,6 @@ export function UpdateDashboard({
                 },
                 dashboardId: id,
               })
-
-              close && close()
             })}
           >
             <>

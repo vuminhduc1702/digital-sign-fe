@@ -27,6 +27,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import { useEffect } from 'react'
 
 export const dashboardSchema = z.object({
   id: z.string().optional(),
@@ -69,6 +70,12 @@ export function CreateDashboard({
     resolver: dashboardSchema && zodResolver(dashboardSchema),
   })
 
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -96,7 +103,6 @@ export function CreateDashboard({
                   dashboard_setting: null,
                 },
               })
-              close && close()
             })}
           >
             <>

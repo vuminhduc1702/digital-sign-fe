@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type SelectInstance } from 'react-select'
@@ -137,6 +137,13 @@ export default function CreateTemplate({
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+
+  useEffect(() => {
+    if (isSuccessCreateTemplate && close) {
+      close()
+    }
+  }, [isSuccessCreateTemplate])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -175,7 +182,6 @@ export default function CreateTemplate({
                 },
                 templateId: dataCreateTemplate.id,
               })
-              close && close()
             })}
           >
             <>

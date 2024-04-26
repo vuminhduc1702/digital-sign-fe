@@ -73,10 +73,10 @@ export function UpdateGroup({
   const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   const form = useForm<UpdateGroupDTO['data']>({
     resolver: groupUpdateSchema && zodResolver(groupUpdateSchema),
@@ -121,7 +121,6 @@ export function UpdateGroup({
                   },
                   groupId,
                 })
-                close && close()
               })}
             >
               <>

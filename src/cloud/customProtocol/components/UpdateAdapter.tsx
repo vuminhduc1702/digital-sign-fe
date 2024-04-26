@@ -140,6 +140,12 @@ export function UpdateAdapter({
     null,
   )
 
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -236,7 +242,6 @@ export function UpdateAdapter({
                   })
                 }
               }
-              close && close()
             })}
           >
             <div className="flex w-full grow flex-col">

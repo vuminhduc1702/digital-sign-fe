@@ -34,6 +34,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn, flattenOrgs } from '@/utils/misc'
+import { useEffect } from 'react'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
@@ -81,6 +82,12 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
     setValue,
   } = form
 
+  useEffect(() => {
+    if (isSuccess && close) {
+      close()
+    }
+  }, [isSuccess])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -108,7 +115,6 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
                     org_id: values.org_id !== no_org_val ? values.org_id : '',
                   },
                 })
-                close && close()
               })}
             >
               <>

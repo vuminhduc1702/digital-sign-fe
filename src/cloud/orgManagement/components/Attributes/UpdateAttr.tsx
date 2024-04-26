@@ -85,10 +85,10 @@ export function UpdateAttr({
   )
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -130,7 +130,6 @@ export function UpdateAttr({
                 entityType,
                 entityId,
               })
-              close && close()
             })}
           >
             <>
