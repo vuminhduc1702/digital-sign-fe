@@ -759,30 +759,34 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                               'cloud:org_manage.event_manage.add_event.type_event',
                             )}
                           </FormLabel>
-                          <Select
-                            {...field}
-                            onValueChange={onChange}
-                            value={value}
-                          >
-                            <FormControl>
-                              <SelectTrigger className="h-9">
-                                <SelectValue
-                                  placeholder={t(
-                                    'cloud:org_manage.event_manage.add_event.input_placeholder',
-                                  )}
-                                />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {eventTypeOptions?.map(type => (
-                                <SelectItem key={type.value} value={type.value}>
-                                  {type.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-
-                          <FormMessage />
+                          <div>
+                            <Select
+                              {...field}
+                              onValueChange={onChange}
+                              value={value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={t(
+                                      'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                    )}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {eventTypeOptions?.map(type => (
+                                  <SelectItem
+                                    key={type.value}
+                                    value={type.value}
+                                  >
+                                    {type.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </div>
                         </FormItem>
                       )}
                     />
@@ -1021,29 +1025,30 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
                                     )}
                                   </FormLabel>
-
-                                  <Select
-                                    {...field}
-                                    onValueChange={onChange}
-                                    value={value}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger className="h-9">
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {conditionTypeOptions?.map(type => (
-                                        <SelectItem
-                                          key={type.value}
-                                          value={type.value}
-                                        >
-                                          {type.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
+                                  <div>
+                                    <Select
+                                      {...field}
+                                      onValueChange={onChange}
+                                      value={value}
+                                    >
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        {conditionTypeOptions?.map(type => (
+                                          <SelectItem
+                                            key={type.value}
+                                            value={type.value}
+                                          >
+                                            {type.label}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </div>
                                 </FormItem>
                               )}
                             />
@@ -1059,29 +1064,30 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       'cloud:org_manage.event_manage.add_event.condition.operator.title',
                                     )}
                                   </FormLabel>
-
-                                  <Select
-                                    {...field}
-                                    onValueChange={onChange}
-                                    value={value}
-                                  >
-                                    <FormControl>
-                                      <SelectTrigger className="h-9">
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                      {operatorOptions?.map(option => (
-                                        <SelectItem
-                                          key={option.value}
-                                          value={option.value}
-                                        >
-                                          {option.label}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                  <FormMessage />
+                                  <div>
+                                    <Select
+                                      {...field}
+                                      onValueChange={onChange}
+                                      value={value}
+                                    >
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        {operatorOptions?.map(option => (
+                                          <SelectItem
+                                            key={option.value}
+                                            value={option.value}
+                                          >
+                                            {option.label}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </div>
                                 </FormItem>
                               )}
                             />
@@ -1117,29 +1123,32 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                         'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
                                       )}
                                     </FormLabel>
-
-                                    <Select
-                                      {...field}
-                                      onValueChange={onChange}
-                                      value={value}
-                                    >
-                                      <FormControl>
-                                        <SelectTrigger className="h-9">
-                                          <SelectValue />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {logicalOperatorOption?.map(option => (
-                                          <SelectItem
-                                            key={option.value}
-                                            value={option.value}
-                                          >
-                                            {option.label}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
+                                    <div>
+                                      <Select
+                                        {...field}
+                                        onValueChange={onChange}
+                                        value={value}
+                                      >
+                                        <FormControl>
+                                          <SelectTrigger>
+                                            <SelectValue />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          {logicalOperatorOption?.map(
+                                            option => (
+                                              <SelectItem
+                                                key={option.value}
+                                                value={option.value}
+                                              >
+                                                {option.label}
+                                              </SelectItem>
+                                            ),
+                                          )}
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </div>
                                   </FormItem>
                                 )}
                               />
@@ -1202,35 +1211,35 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   'cloud:org_manage.event_manage.add_event.action.action_type.title',
                                 )}
                               </FormLabel>
-
-                              <Select
-                                {...field}
-                                onValueChange={onChange}
-                                value={value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger className="h-9">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {// const actionOptions = actionFields.length < 2 ? actionTypeOptions : actionTypeOptions.filter(item => item.value !== 'report')
-                                  (actionFields.length < 2
-                                    ? actionTypeOptions
-                                    : actionTypeOptions.filter(
-                                        item => item.value !== 'report',
-                                      )
-                                  )?.map(option => (
-                                    <SelectItem
-                                      key={option.value}
-                                      value={option.value}
-                                    >
-                                      {option.label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
+                              <div>
+                                <Select
+                                  {...field}
+                                  onValueChange={onChange}
+                                  value={value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {(actionFields.length < 2
+                                      ? actionTypeOptions
+                                      : actionTypeOptions.filter(
+                                          item => item.value !== 'report',
+                                        )
+                                    )?.map(option => (
+                                      <SelectItem
+                                        key={option.value}
+                                        value={option.value}
+                                      >
+                                        {option.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </div>
                             </FormItem>
                           )}
                         />
@@ -1412,28 +1421,30 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                               'cloud:custom_protocol.service.service_input.type',
                                             )}
                                           </FormLabel>
-                                          <Select
-                                            {...field}
-                                            onValueChange={onChange}
-                                            value={value}
-                                          >
-                                            <FormControl>
-                                              <SelectTrigger>
-                                                <SelectValue />
-                                              </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                              {outputList?.map(option => (
-                                                <SelectItem
-                                                  key={option.value}
-                                                  value={option.value}
-                                                >
-                                                  {option.label}
-                                                </SelectItem>
-                                              ))}
-                                            </SelectContent>
-                                          </Select>
-                                          <FormMessage />
+                                          <div>
+                                            <Select
+                                              {...field}
+                                              onValueChange={onChange}
+                                              value={value}
+                                            >
+                                              <FormControl>
+                                                <SelectTrigger>
+                                                  <SelectValue />
+                                                </SelectTrigger>
+                                              </FormControl>
+                                              <SelectContent>
+                                                {outputList?.map(option => (
+                                                  <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                  >
+                                                    {option.label}
+                                                  </SelectItem>
+                                                ))}
+                                              </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                          </div>
                                         </FormItem>
                                       )}
                                     />
