@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type DataSeries, type LatestData } from '../../types'
 import { type widgetSchema } from '../Widget'
 import { useTranslation } from 'react-i18next'

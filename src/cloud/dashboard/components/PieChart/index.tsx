@@ -5,7 +5,7 @@ import { useSpinDelay } from 'spin-delay'
 import { Spinner } from '@/components/Spinner'
 
 import { type DataSeries, type TimeSeries, type LatestData } from '../../types'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
 
 type PieWidgetDataType = {
