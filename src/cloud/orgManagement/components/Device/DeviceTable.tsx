@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
+} from '@/components/ui/tooltip'
 
 import { type DeviceAdditionalInfo, type Device } from '../../types'
 import { type BaseTablePagination } from '@/types'

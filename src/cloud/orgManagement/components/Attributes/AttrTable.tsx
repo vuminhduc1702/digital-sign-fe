@@ -36,7 +36,7 @@ import {
   TooltipProvider,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/Tooltip'
+} from '@/components/ui/tooltip'
 
 export const STATUS = {
   true: 'Có',

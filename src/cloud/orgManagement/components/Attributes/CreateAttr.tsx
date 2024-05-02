@@ -10,7 +10,7 @@ import {
   useCreateAttr,
   type EntityType,
 } from '@/cloud/orgManagement/api/attrAPI'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import TitleBar from '@/components/Head/TitleBar'
 
 import { attrListSchema } from '@/utils/schemaValidation'

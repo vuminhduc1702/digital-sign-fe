@@ -30,8 +30,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
-import { Checkbox } from '@/components/Checkbox'
+} from '@/components/ui/tooltip'
+import { Checkbox } from '@/components/ui/checkbox'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 import btnAddIcon from '@/assets/icons/btn-add.svg'

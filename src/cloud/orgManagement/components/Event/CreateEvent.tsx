@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { useParams } from 'react-router-dom'
 import { useCreateAttrChart } from '@/cloud/dashboard/api'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,
   InputField,
