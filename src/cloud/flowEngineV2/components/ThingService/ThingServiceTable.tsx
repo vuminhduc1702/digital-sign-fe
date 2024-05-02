@@ -98,6 +98,7 @@ function ThingServiceTableContextMenu({
       {isOpen ? (
         <UpdateThingService
           name={name}
+          description={description}
           close={close}
           isOpen={isOpen}
           thingServiceDataProps={data}

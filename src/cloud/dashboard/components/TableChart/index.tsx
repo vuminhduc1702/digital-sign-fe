@@ -7,7 +7,7 @@ import { BaseTable } from '@/components/Table'
 
 import { type DeviceAttrLog } from '@/cloud/orgManagement/api/attrAPI'
 import { type TimeSeries } from '../../types'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
 
 type TableChartDataType = DeviceAttrLog & {

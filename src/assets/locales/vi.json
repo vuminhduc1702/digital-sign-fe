@@ -1046,7 +1046,17 @@
     "result_limit": "Giới hạn số kết quả: ",
     "search": "Tìm kiếm",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "pagination": "Số dòng hiển thị",
+    "total": "TỔNG SỐ",
+    "searchCount": "KẾT QUẢ TÌM KIẾM",
+    "selectCount": "ĐÃ CHỌN",
+    "paginationSelected": "Hiển thị {{min}}-{{max}} của {{total}} mục",
+    "filter": {
+      "select_all": "Tất cả"
+    },
+    "loading": "Xin vui lòng chờ...",
+    "search_field": "Tìm kiếm theo trường"
   },
   "btn": {
     "create": "Tạo mới",
@@ -1541,46 +1551,6 @@
         "content": "Hệ thống Telco của Viettel hỗ trợ các doanh nghiệp đã đăng ký sử dụng thuê bao của Viettel quản lý thông tin thuê bao một cách miễn phí. Khách hàng chỉ cần tạo tài khoản và cung cấp thông tin GPKD để thực hiện quản lý."
       }
     }
-  },
-  "table": {
-    "no": "STT",
-    "pagination": "Số dòng hiển thị",
-    "total": "TỔNG SỐ",
-    "searchCount": "KẾT QUẢ TÌM KIẾM",
-    "selectCount": "ĐÃ CHỌN",
-    "excel": "Xuất Excel",
-    "delete": "Xoá",
-    "paginationSelected": "Hiển thị {{min}}-{{max}} của {{total}} mục",
-    "print": "In",
-    "excel": "Excel",
-    "pdf": "PDF",
-    "filter": {
-      "select_all": "Tất cả"
-    },
-    "loading": "Xin vui lòng chờ...",
-    "view_detail": "Xem chi tiết",
-    "search_field": "Tìm kiếm theo trường",
-    "copy_id": "Copy ID",
-    "no_device": "Không có thiết bị.",
-    "no_in_org": "Không trực thuộc tổ chức.",
-    "no_user": "Không có người dùng.",
-    "no_event": "Không có sự kiện.",
-    "no_attr": "Không có thuộc tính.",
-    "no_log_attr": "Không có bản tin thuộc tính.",
-    "no_mqtt_hist": "Không có lịch sử MQTT.",
-    "no_thing": "Không có Thing.",
-    "no_firmware": "Không có Firmware.",
-    "no_dashboard": "Không có bảng điều khiển.",
-    "no_adapter": "Không có Adapter.",
-    "no_customer": "Không có thông tin khách hàng",
-    "no_subscription": "Không có đăng ký dịch vụ.",
-    "no_bill": "Không có hóa đơn",
-    "no_tenant": "Không có tenant.",
-    "no_template": "Không có nhóm thuộc tính.",
-    "no_service": "Không có nghiệp vụ.",
-    "no_event_service": "Không có sự kiện nghiệp vụ.",
-    "no_role": "Không có vai trò.",
-    "no_tenant_role": "Không có vai trò tenant."
   },
   "tree": {
     "no_selection_org": "Không trực thuộc tổ chức"

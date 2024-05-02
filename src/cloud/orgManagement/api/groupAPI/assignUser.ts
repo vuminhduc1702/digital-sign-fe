@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { axios } from '@/lib/axios'
 import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type assignUserSchema } from '../../components/Group/AssignUser'
 
 export type AssignUserDTO = {
