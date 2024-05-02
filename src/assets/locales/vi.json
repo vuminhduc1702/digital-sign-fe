@@ -722,6 +722,9 @@
           "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
           "light": "Đèn đường",
+          "light_on": "Đèn sáng",
+          "light_off": "Đèn tắt",
+          "light_blinking": "Đèn nhấp nháy",
           "data_chart": "Dữ liệu",
           "data_table": "Bảng dữ liệu",
           "controller": {

@@ -15,6 +15,7 @@ import {
 import { type z } from 'zod'
 import { type DataSeries, type LatestData } from '../../types'
 import { type widgetSchema } from '../Widget'
+import { useTranslation } from 'react-i18next'
 
 type PieWidgetDataType = {
   keyId: string
@@ -31,6 +32,7 @@ export const LightChart = ({
   data: DataSeries
   widgetInfo: z.infer<typeof widgetSchema>
 }) => {
+  const { t } = useTranslation()
   const [dataLight, setDataLight] = useState<PieWidgetDataType[]>([])
 
   useEffect(() => {
@@ -104,11 +106,17 @@ export const LightChart = ({
                 <TooltipContent>
                   <div className="">
                     {item.value === 'true'
-                      ? 'Đèn sáng'
+                      ? t(
+                          'cloud:dashboard.detail_dashboard.add_widget.light_on',
+                        )
                       : item.value === 'false'
-                        ? 'Đèn tắt'
+                        ? t(
+                            'cloud:dashboard.detail_dashboard.add_widget.light_off',
+                          )
                         : item.value === 'blinking'
-                          ? 'Đèn nhấp nháy'
+                          ? t(
+                              'cloud:dashboard.detail_dashboard.add_widget.light_blinking',
+                            )
                           : ''}
                   </div>
                 </TooltipContent>
