@@ -7,6 +7,7 @@ import { cn } from '@/utils/misc'
 
 import { type SelectOption } from './SelectField'
 import { type ControllerPassThroughProps } from '@/types'
+import { useFormField } from '../ui/form'
 
 type SelectProps<
   TFormValues extends FieldValues,
@@ -39,7 +40,7 @@ export function NewSelectDropdown<
   // name,
   // control,
   // label,
-  error,
+  // error,
   classlabel,
   classchild,
   classnamefieldwrapper,
@@ -55,6 +56,7 @@ export function NewSelectDropdown<
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
+  const { error } = useFormField()
 
   return (
     <Select
