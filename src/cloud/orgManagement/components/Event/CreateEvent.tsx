@@ -326,6 +326,7 @@ export const eventTypeSchema = z.discriminatedUnion('type', [
       .and(z.object({ end_time: z.string().optional() })),
   }),
 ])
+
 export const createEventSchema = z
   .object({
     project_id: z.string().optional(),
