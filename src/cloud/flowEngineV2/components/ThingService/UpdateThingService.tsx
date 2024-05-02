@@ -67,12 +67,14 @@ import {
 
 type UpdateThingProps = {
   name: string
+  description: string
   close: () => void
   isOpen: boolean
   thingServiceDataProps?: ThingService[]
 }
 export function UpdateThingService({
   name,
+  description,
   close,
   isOpen,
   thingServiceDataProps,
@@ -95,9 +97,7 @@ export function UpdateThingService({
       defaultValues: {
         // ...thingServiceData?.data,
         ...thingServiceDataProps?.find(thing => thing.name === name),
-        description:
-          thingServiceDataProps?.find(thing => thing.name === name)
-            ?.description ?? '',
+        description: description ?? '',
       },
     })
 
