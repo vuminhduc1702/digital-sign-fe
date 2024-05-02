@@ -1,4 +1,4 @@
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type mqttConfigSchema } from '../../components/Device/UpdateMqttConfig'
 import { axios } from '@/lib/axios'
 import { queryClient, type MutationConfig } from '@/lib/react-query'

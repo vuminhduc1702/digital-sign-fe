@@ -12,7 +12,7 @@ import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import { Spinner } from '@/components/Spinner'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,
   InputField,
@@ -165,7 +165,18 @@ export function UpdateControllerButton({
                       project_id: projectId,
                       thing_id: values.thing_id,
                       service_name: values.handle_service,
-                      input: values.input,
+                      input: (
+                        values.input as {
+                          name: string
+                          value: string | boolean
+                        }[]
+                      ).reduce(
+                        (acc, curr) => {
+                          acc[curr.name] = curr.value
+                          return acc
+                        },
+                        {} as { [key: string]: string | boolean },
+                      ),
                     },
                   ],
                 }),
@@ -329,15 +340,15 @@ export function UpdateControllerButton({
                                 'cloud:custom_protocol.service.choose_input',
                               )}
                               defaultValue={inputSelectData?.find(ele => {
-                                return ele.value === watchInput[index].name
+                                return ele.value === watchInput?.[index].name
                               })}
                               error={formState?.errors?.input?.[index]?.name}
                             />
                           </div>
                         </div>
-                        {watchInput[index].name ===
+                        {watchInput?.[index].name ===
                         '' ? null : checkInputValueType(
-                            watchInput[index].name,
+                            watchInput?.[index].name as string,
                             index,
                           ) === 'checkbox' ? (
                           <FieldWrapper
@@ -381,10 +392,9 @@ export function UpdateControllerButton({
                                 `input.${index}.value` as const,
                               )}
                               type={checkInputValueType(
-                                watchInput[index].name,
+                                watchInput?.[index].name as string,
                                 index,
                               )}
-                              value={watchInput[index].value}
                               name={`input.${index}.value`}
                             />
                           </div>

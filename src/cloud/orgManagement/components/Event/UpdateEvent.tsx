@@ -23,7 +23,7 @@ import {
   useUpdateEvent,
   type UpdateEventDTO,
 } from '../../api/eventAPI/updateEvent'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import { Spinner } from '@/components/Spinner'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'

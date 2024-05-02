@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from '@/components/Accordion'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   InputField,
   SelectDropdown,

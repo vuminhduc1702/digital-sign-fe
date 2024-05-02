@@ -4,12 +4,6 @@ import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useSpinDelay } from 'spin-delay'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/Tooltip'
 import { Button } from '@/components/Button/Button'
 import TitleBar from '@/components/Head/TitleBar'
 import { Spinner } from '@/components/Spinner'
@@ -85,6 +79,12 @@ import BD_05 from '@/assets/images/landingpage/BD_05.png'
 import BD_06 from '@/assets/images/landingpage/BD_06.png'
 import BD_07 from '@/assets/images/landingpage/BD_07.png'
 import BD_08 from '@/assets/images/landingpage/BD_08.png'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export type WidgetAttrDeviceType = Array<{
   id: string

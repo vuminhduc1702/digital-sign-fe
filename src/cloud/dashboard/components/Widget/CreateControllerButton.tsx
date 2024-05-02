@@ -22,7 +22,7 @@ import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import i18n from '@/i18n'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 
 import { widgetCategorySchema } from '../../types'
 import { type WidgetCategoryType } from './CreateWidget'
@@ -193,7 +193,18 @@ export function CreateControllerButton({
                         project_id: projectId,
                         thing_id: values.thing_id,
                         service_name: values.handle_service,
-                        input: values.input,
+                        input: (
+                          values.input as {
+                            name: string
+                            value: string | boolean
+                          }[]
+                        ).reduce(
+                          (acc, curr) => {
+                            acc[curr.name] = curr.value
+                            return acc
+                          },
+                          {} as { [key: string]: string | boolean },
+                        ),
                       },
                     ],
                   }),
@@ -367,7 +378,6 @@ export function CreateControllerButton({
                                 input[index].name,
                                 index,
                               )}
-                              value={input[index].value}
                             />
                           )}
                         </div>
