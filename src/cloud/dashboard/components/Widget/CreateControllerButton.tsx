@@ -22,7 +22,7 @@ import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import i18n from '@/i18n'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 
 import { widgetCategorySchema } from '../../types'
 import { type WidgetCategoryType } from './CreateWidget'

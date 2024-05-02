@@ -12,7 +12,7 @@ import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import { Spinner } from '@/components/Spinner'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,
   InputField,
