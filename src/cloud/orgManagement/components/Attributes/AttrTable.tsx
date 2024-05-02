@@ -264,7 +264,7 @@ export function AttrTable({
           return (
             <Switch
               key={attribute_key + +info.getValue()}
-              defaultChecked={info.getValue() === 'true' ? true : false}
+              defaultChecked={info.getValue() ? true : false}
               onCheckedChange={checked => {
                 debouncedSwitchChange(checked, attribute_key)
               }}
