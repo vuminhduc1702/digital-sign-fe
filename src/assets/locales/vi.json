@@ -685,6 +685,7 @@
         "title_card": "Tạo biểu đồ dữ liệu",
         "title_controller": "Tạo bảng điều khiển",
         "title_map": "Tạo bản đồ",
+        "title_light": "Tạo đèn đường",
         "update": "Sửa biểu đồ",
         "update_line": "Sửa biểu đồ đường",
         "update_bar": "Sửa biểu đồ cột",
@@ -720,6 +721,7 @@
           "pie_chart": "Biểu đồ tròn",
           "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
+          "light": "Đèn đường",
           "data_chart": "Dữ liệu",
           "data_table": "Bảng dữ liệu",
           "controller": {
