@@ -9,7 +9,7 @@ import {
   type TimeSeries,
   type LatestData,
 } from '../../types'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
 import L, { type LatLngTuple, type Map } from 'leaflet'
 import { type Device } from '@/cloud/orgManagement'
