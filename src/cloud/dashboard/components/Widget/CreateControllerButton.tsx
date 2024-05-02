@@ -193,7 +193,18 @@ export function CreateControllerButton({
                         project_id: projectId,
                         thing_id: values.thing_id,
                         service_name: values.handle_service,
-                        input: values.input,
+                        input: (
+                          values.input as {
+                            name: string
+                            value: string | boolean
+                          }[]
+                        ).reduce(
+                          (acc, curr) => {
+                            acc[curr.name] = curr.value
+                            return acc
+                          },
+                          {} as { [key: string]: string | boolean },
+                        ),
                       },
                     ],
                   }),
@@ -367,7 +378,6 @@ export function CreateControllerButton({
                                 input[index].name,
                                 index,
                               )}
-                              value={input[index].value}
                             />
                           )}
                         </div>
