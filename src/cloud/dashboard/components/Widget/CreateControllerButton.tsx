@@ -159,11 +159,6 @@ export function CreateControllerButton({
     }
   }
 
-  console.log(
-    thingServiceIsLoading,
-    'thingServiceIsLoadingthingServiceIsLoadingthingServiceIsLoading',
-  )
-
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[48rem]">
