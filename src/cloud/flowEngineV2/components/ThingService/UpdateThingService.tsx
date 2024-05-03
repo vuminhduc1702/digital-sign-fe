@@ -109,11 +109,6 @@ export function UpdateThingService({
       },
     })
 
-  console.log(
-    thingServiceData?.data,
-    'thingServiceData?.datathingServiceData?.data',
-  )
-
   const { fields, append, remove } = useFieldArray({
     name: 'input',
     control,
