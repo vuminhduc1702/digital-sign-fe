@@ -57,7 +57,7 @@ import {
   ResizablePanelGroup,
 } from '@/components/Resizable'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -334,15 +334,19 @@ export function UpdateThingService({
                   ) : null}
                 </div>
                 <Tabs defaultValue="info">
-                  <TabsList className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
-                    <TabsTrigger value="info">
+                  <TabsList className="mt-2 flex items-center bg-secondary-400 px-10">
+                    <TabsTrigger value="info" className="w-1/2">
                       <div className="flex items-center gap-x-2">
-                        <p>{t('cloud:custom_protocol.service.info')}</p>
+                        <p className="text-lg font-medium">
+                          {t('cloud:custom_protocol.service.info')}
+                        </p>
                       </div>
                     </TabsTrigger>
-                    <TabsTrigger value="tab_2">
+                    <TabsTrigger value="tab_2" className="w-1/2">
                       <div className="flex items-center gap-x-2">
-                        <p>{t('cloud:custom_protocol.service.tab_2')}</p>
+                        <p className="text-lg font-medium">
+                          {t('cloud:custom_protocol.service.tab_2')}
+                        </p>
                       </div>
                     </TabsTrigger>
                   </TabsList>

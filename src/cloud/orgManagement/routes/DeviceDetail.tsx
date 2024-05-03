@@ -12,7 +12,7 @@ import { DeviceBreadcrumbs } from '../components/Device'
 import { Button } from '@/components/Button'
 
 import { DeviceListIcon, DeviceLogIcon } from '@/components/SVGIcons'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
