@@ -29,7 +29,7 @@ import {
 } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
 import { Spinner } from '@/components/Spinner'
-import { Switch } from '@/components/Switch'
+import { Switch } from '@/components/ui/switch'
 import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
 import btnRunCode from '@/assets/icons/btn-run-code.svg'
 import { cn } from '@/utils/misc'
@@ -38,8 +38,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
-import { Checkbox } from '@/components/Checkbox'
+} from '@/components/ui/tooltip'
+import { Checkbox } from '@/components/ui/checkbox'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 import { type InputService, type ThingService } from '../../types'

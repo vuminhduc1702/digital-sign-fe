@@ -11,7 +11,7 @@ import {
   AccordionItem,
   AccordionContent,
   AccordionTrigger,
-} from '@/components/Accordion'
+} from '@/components/ui/accordion'
 
 import { LuChevronDown } from 'react-icons/lu'
 import tongquanIcon from '@/assets/icons/sb-tongquan.svg'

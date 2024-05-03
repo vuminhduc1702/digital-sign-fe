@@ -12,7 +12,7 @@ import {
   valueTypeList,
 } from '@/cloud/orgManagement/components/Attributes'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,
   InputField,
