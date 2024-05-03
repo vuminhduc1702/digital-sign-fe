@@ -324,7 +324,11 @@ export function CreateControllerButton({
                               }
                               noOptionsMessage={() => t('table:no_input')}
                               loadingMessage={() => t('loading:input')}
-                              isLoading={thingServiceIsLoading}
+                              isLoading={
+                                watch('thing_id') && watch('handle_service')
+                                  ? thingServiceIsLoading
+                                  : false
+                              }
                               placeholder={t(
                                 'cloud:custom_protocol.service.choose_input',
                               )}
