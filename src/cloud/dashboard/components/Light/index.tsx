@@ -82,47 +82,51 @@ export const LightChart = ({
     <>
       {dataLight.length > 0 ? (
         <div className="ml-2 mt-8 flex items-center gap-10">
-          {dataLight?.map(item => (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="flex cursor-pointer flex-col items-center justify-between gap-y-4 rounded-md bg-white p-8 shadow-[0_5px_15px_rgba(149,157,165,0.2)]">
-                    <img
-                      src={
-                        item.value === 'true'
-                          ? lightOnICon
-                          : item.value === 'false'
-                            ? lightOffIcon
-                            : item.value === 'blinking'
-                              ? lightBlinkingIcon
-                              : lightOnICon
-                      }
-                      alt="light icon"
-                      className="h-10 w-10"
-                    />
-                    {item.id}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div className="">
-                    {item.value === 'true'
-                      ? t(
-                          'cloud:dashboard.detail_dashboard.add_widget.light_on',
-                        )
-                      : item.value === 'false'
+          {dataLight?.map(item => {
+            console.log('item', item)
+
+            return (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <div className="flex cursor-pointer flex-col items-center justify-between gap-y-4 rounded-md bg-white p-8 shadow-[0_5px_15px_rgba(149,157,165,0.2)]">
+                      <img
+                        src={
+                          item.value === 'true'
+                            ? lightOnICon
+                            : item.value === 'false'
+                              ? lightOffIcon
+                              : item.value === 'blinking'
+                                ? lightBlinkingIcon
+                                : lightOnICon
+                        }
+                        alt="light icon"
+                        className="h-10 w-10"
+                      />
+                      {item.id}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="">
+                      {item.value === 'true'
                         ? t(
-                            'cloud:dashboard.detail_dashboard.add_widget.light_off',
+                            'cloud:dashboard.detail_dashboard.add_widget.light_on',
                           )
-                        : item.value === 'blinking'
+                        : item.value === 'false'
                           ? t(
-                              'cloud:dashboard.detail_dashboard.add_widget.light_blinking',
+                              'cloud:dashboard.detail_dashboard.add_widget.light_off',
                             )
-                          : ''}
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ))}
+                          : item.value === 'blinking'
+                            ? t(
+                                'cloud:dashboard.detail_dashboard.add_widget.light_blinking',
+                              )
+                            : ''}
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )
+          })}
         </div>
       ) : (
         <div className="flex h-full items-center justify-center">
