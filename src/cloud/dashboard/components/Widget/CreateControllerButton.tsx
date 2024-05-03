@@ -159,6 +159,11 @@ export function CreateControllerButton({
     }
   }
 
+  console.log(
+    thingServiceIsLoading,
+    'thingServiceIsLoadingthingServiceIsLoadingthingServiceIsLoading',
+  )
+
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[48rem]">
@@ -324,7 +329,11 @@ export function CreateControllerButton({
                               }
                               noOptionsMessage={() => t('table:no_input')}
                               loadingMessage={() => t('loading:input')}
-                              isLoading={thingServiceIsLoading}
+                              isLoading={
+                                watch('thing_id') && watch('handle_service')
+                                  ? thingServiceIsLoading
+                                  : false
+                              }
                               placeholder={t(
                                 'cloud:custom_protocol.service.choose_input',
                               )}
