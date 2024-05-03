@@ -154,6 +154,7 @@ export function UpdateControllerButton({
     <FormDialog
       size="max"
       title={t('cloud:dashboard.config_chart.update_controller')}
+      resetData={() => setValue('input', inputParse)}
       isDone={isDone}
       body={
         <form
