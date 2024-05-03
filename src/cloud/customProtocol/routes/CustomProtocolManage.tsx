@@ -100,84 +100,86 @@ export function CustomProtocolManage() {
       : []
 
   return (
-    <div className="flex grow flex-col">
-      <TitleBar title={t('cloud:custom_protocol.adapter.header')} />
-      <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
-        <div className="flex justify-between">
-          <div className="flex w-full items-center justify-between gap-x-3">
-            <SearchField
-              setSearchValue={setSearchQuery}
-              searchField={searchField}
-              fieldOptions={[
-                {
-                  value: 'name',
-                  label: t('cloud:custom_protocol.adapter.name'),
-                },
-                {
-                  value: 'id',
-                  label: t('cloud:custom_protocol.adapter.id'),
-                },
-              ]}
-              setIsSearchData={setIsSearchData}
-              closeSearch={true}
-            />
-            <Button
-              className="h-[38px] rounded border-none"
-              onClick={openAdapter}
-            >
-              {t('cloud:custom_protocol.adapter.button')}
-            </Button>
+    <ContentLayout title={t('sidebar:cloud.custom_protocol')}>
+      <div className="flex grow flex-col">
+        <TitleBar title={t('cloud:custom_protocol.adapter.header')} />
+        <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
+          <div className="flex justify-between">
+            <div className="flex w-full items-center justify-between gap-x-3">
+              <SearchField
+                setSearchValue={setSearchQuery}
+                searchField={searchField}
+                fieldOptions={[
+                  {
+                    value: 'name',
+                    label: t('cloud:custom_protocol.adapter.name'),
+                  },
+                  {
+                    value: 'id',
+                    label: t('cloud:custom_protocol.adapter.id'),
+                  },
+                ]}
+                setIsSearchData={setIsSearchData}
+                closeSearch={true}
+              />
+              <Button
+                className="h-[38px] rounded border-none"
+                onClick={openAdapter}
+              >
+                {t('cloud:custom_protocol.adapter.button')}
+              </Button>
+            </div>
           </div>
+          <AdapterTable
+            data={adapterData?.adapters ?? []}
+            offset={offset}
+            setOffset={setOffset}
+            total={adapterData?.total ?? 0}
+            isPreviousData={isPreviousDataAdapter}
+            isLoading={isLoadingAdapter}
+            rowSelection={rowSelection}
+            setRowSelection={setRowSelection}
+            pdfHeader={pdfHeader}
+            formatExcel={formatExcel}
+            isSearchData={searchQuery.length > 0 && isSearchData}
+            utilityButton={
+              Object.keys(rowSelection).length > 0 && (
+                <div className="flex items-center">
+                  <Button
+                    size="sm"
+                    onClick={openDeleteMulti}
+                    className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                  >
+                    <div>{t('btn:delete')}:</div>
+                    <div>{Object.keys(rowSelection).length}</div>
+                  </Button>
+                </div>
+              )
+            }
+          />
         </div>
-        <AdapterTable
-          data={adapterData?.adapters ?? []}
-          offset={offset}
-          setOffset={setOffset}
-          total={adapterData?.total ?? 0}
-          isPreviousData={isPreviousDataAdapter}
-          isLoading={isLoadingAdapter}
-          rowSelection={rowSelection}
-          setRowSelection={setRowSelection}
-          pdfHeader={pdfHeader}
-          formatExcel={formatExcel}
-          isSearchData={searchQuery.length > 0 && isSearchData}
-          utilityButton={
-            Object.keys(rowSelection).length > 0 && (
-              <div className="flex items-center">
-                <Button
-                  size="sm"
-                  onClick={openDeleteMulti}
-                  className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
-                >
-                  <div>{t('btn:delete')}:</div>
-                  <div>{Object.keys(rowSelection).length}</div>
-                </Button>
-              </div>
-            )
-          }
-        />
+        {isOpenAdapter && (
+          <CreateAdapter close={closeAdapter} isOpen={isOpenAdapter} />
+        )}
+        {isOpenDeleteMulti ? (
+          <ConfirmDialog
+            icon="danger"
+            title={t('cloud:dashboard.table.delete_dashboard_full')}
+            body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
+            close={closeDeleteMulti}
+            isOpen={isOpenDeleteMulti}
+            handleSubmit={() =>
+              mutateDeleteMultipleAdapters(
+                {
+                  data: { ids: rowSelectionKey },
+                },
+                { onSuccess: () => setRowSelection({}) },
+              )
+            }
+            isLoading={isLoading}
+          />
+        ) : null}
       </div>
-      {isOpenAdapter && (
-        <CreateAdapter close={closeAdapter} isOpen={isOpenAdapter} />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:dashboard.table.delete_dashboard_full')}
-          body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          handleSubmit={() =>
-            mutateDeleteMultipleAdapters(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
-    </div>
+    </ContentLayout>
   )
 }
