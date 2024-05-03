@@ -8,7 +8,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/Accordion'
+} from '@/components/ui/accordion'
 
 export function QandA() {
   const { t } = useTranslation()

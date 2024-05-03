@@ -29,7 +29,7 @@ import {
 } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
 import { Spinner } from '@/components/Spinner'
-import { Switch } from '@/components/Switch'
+import { Switch } from '@/components/ui/switch'
 import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
 import btnRunCode from '@/assets/icons/btn-run-code.svg'
 import { cn } from '@/utils/misc'
@@ -57,13 +57,14 @@ import {
   ResizablePanelGroup,
 } from '@/components/Resizable'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/Dropdowns'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 
 type UpdateThingProps = {
   name: string
@@ -85,6 +86,14 @@ export function UpdateThingService({
   const cancelButtonRef = useRef(null)
   const [typeInput, setTypeInput] = useState('')
 
+  const {
+    data: thingData,
+    isLoading: isLoadingThing,
+    isPreviousData: isPreviousDataThing,
+  } = useGetServiceThings({
+    thingId,
+  })
+
   const { data: thingServiceData, isLoading: thingServiceLoading } =
     useThingServiceById({
       thingId,
@@ -94,10 +103,9 @@ export function UpdateThingService({
   const { register, formState, control, handleSubmit, watch, setValue } =
     useForm<CreateServiceThingDTO['data']>({
       resolver: serviceThingSchema && zodResolver(serviceThingSchema),
-      defaultValues: {
-        // ...thingServiceData?.data,
-        ...thingServiceDataProps?.find(thing => thing.name === name),
-        description: description ?? '',
+      values: {
+        ...thingServiceData?.data,
+        description: thingServiceData?.data?.description || '',
       },
     })
 
@@ -129,9 +137,9 @@ export function UpdateThingService({
   useEffect(() => {
     // setCodeInput(thingServiceData?.data?.code ?? '')
     setCodeInput(
-      thingServiceDataProps?.find(thing => thing.name === name)?.code ?? '',
+      thingData?.data?.find(thing => thing.name === name)?.code ?? '',
     )
-  }, [])
+  }, [thingData])
 
   useEffect(() => {
     if (isSuccessExecute) {
@@ -203,7 +211,8 @@ export function UpdateThingService({
   }
 
   return (
-    !thingServiceLoading && (
+    !thingServiceLoading &&
+    !isLoadingThing && (
       <Dialog
         isOpen={isOpen}
         onClose={() => null}
@@ -334,20 +343,24 @@ export function UpdateThingService({
                   ) : null}
                 </div>
                 <Tabs defaultValue="info">
-                  <TabsList className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
-                    <TabsTrigger value="info">
+                  <TabsList className="mt-2 flex items-center bg-secondary-400 px-10">
+                    <TabsTrigger value="info" className="w-1/2">
                       <div className="flex items-center gap-x-2">
-                        <p>{t('cloud:custom_protocol.service.info')}</p>
+                        <p className="text-lg font-medium">
+                          {t('cloud:custom_protocol.service.info')}
+                        </p>
                       </div>
                     </TabsTrigger>
-                    <TabsTrigger value="tab_2">
+                    <TabsTrigger value="tab_2" className="w-1/2">
                       <div className="flex items-center gap-x-2">
-                        <p>{t('cloud:custom_protocol.service.tab_2')}</p>
+                        <p className="text-lg font-medium">
+                          {t('cloud:custom_protocol.service.tab_2')}
+                        </p>
                       </div>
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="info" className="mt-2 flex grow flex-col">
-                    {thingServiceLoading ? (
+                    {thingServiceLoading || isLoadingThing ? (
                       <div className="flex items-center justify-center">
                         <Spinner size="xl" />
                       </div>
@@ -558,7 +571,7 @@ export function UpdateThingService({
                                   'max-h-96': fullScreen,
                                 })}
                               >
-                                {thingServiceDataProps?.map(item => {
+                                {thingData?.data?.map(item => {
                                   const typeOutput = outputList.filter(
                                     data => data.value === item.output,
                                   )

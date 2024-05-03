@@ -9,7 +9,7 @@ import {
 import { UpdateAttr } from '@/cloud/orgManagement/components/Attributes'
 import { Button } from '@/components/Button'
 
-import { Switch } from '@/components/Switch'
+import { Switch } from '@/components/ui/switch'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { useDisclosure } from '@/utils/hooks'
 import { getVNDateFormat } from '@/utils/misc'

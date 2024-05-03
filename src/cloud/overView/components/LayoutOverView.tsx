@@ -25,7 +25,7 @@ import { useRestoreProject } from '@/cloud/project/api/restoreProject'
 import { Button } from '@/components/Button'
 
 import { Link } from '@/components/Link'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PATHS } from '@/routes/PATHS'
 import { cn } from '@/utils/misc'
 import storage from '@/utils/storage'

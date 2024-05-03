@@ -65,6 +65,11 @@ export function UpdateControllerButton({
     widgetInfoMemo?.datasource.handle_service != null
       ? JSON.parse(widgetInfoMemo?.datasource.handle_service)
       : ''
+  const keyArrData = Object.keys(parseArrData.executorCmds[0].input)
+  const inputParse = keyArrData?.map(item => ({
+    name: item,
+    value: parseArrData.executorCmds[0]?.input?.[item],
+  }))
 
   const [isDone, setIsDone] = useState(false)
 
@@ -76,11 +81,11 @@ export function UpdateControllerButton({
     useForm<z.infer<typeof controllerBtnUpdateSchema>>({
       resolver:
         controllerBtnUpdateSchema && zodResolver(controllerBtnUpdateSchema),
-      defaultValues: {
+      values: {
         title: widgetInfoMemo?.title ?? '',
         thing_id: parseThingId,
         handle_service: parseHandleService,
-        input: parseArrData.executorCmds[0].input,
+        input: inputParse,
       },
     })
 
@@ -149,6 +154,7 @@ export function UpdateControllerButton({
     <FormDialog
       size="max"
       title={t('cloud:dashboard.config_chart.update_controller')}
+      resetData={() => setValue('input', inputParse)}
       isDone={isDone}
       body={
         <form
@@ -310,7 +316,8 @@ export function UpdateControllerButton({
                         value: '',
                         id: uuidv4(),
                       }
-                      setValue('input', [...input, addInput])
+                      append(addInput)
+                      // setValue('input', [...input, addInput])
                     }}
                   />
                 </div>
