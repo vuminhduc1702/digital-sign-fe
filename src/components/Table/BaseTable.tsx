@@ -140,6 +140,8 @@ export function BaseTable<T extends Record<string, any>>({
               table.toggleAllPageRowsSelected(!!value)
             }}
             aria-label="Select all"
+            className="h-4 w-4"
+            classNameCheck="h-4 w-4"
           />
         </div>
       ),
@@ -151,6 +153,8 @@ export function BaseTable<T extends Record<string, any>>({
             onCheckedChange={value => {
               row.toggleSelected(!!value)
             }}
+            className="h-4 w-4"
+            classNameCheck="h-4 w-4"
           />
         </div>
       ),
