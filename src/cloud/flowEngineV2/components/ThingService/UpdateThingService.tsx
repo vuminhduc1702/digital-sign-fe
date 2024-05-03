@@ -365,7 +365,7 @@ export function UpdateThingService({
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="info" className="mt-2 flex grow flex-col">
-                    {thingServiceLoading ? (
+                    {thingServiceLoading || isLoadingThing ? (
                       <div className="flex items-center justify-center">
                         <Spinner size="xl" />
                       </div>
