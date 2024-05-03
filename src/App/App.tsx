@@ -15,7 +15,7 @@ import { queryClient } from '@/lib/react-query'
 import { Spinner } from '@/components/Spinner'
 import { AuthLoader, logoutFn } from '@/lib/auth'
 import { AppRoutes } from '@/routes'
-import { Toaster } from '@/components/Toaster'
+import { Toaster } from '@/components/ui/sonner'
 
 import '@/style/main.css'
 import { SkeletonLoading } from '@/components/Skeleton'
