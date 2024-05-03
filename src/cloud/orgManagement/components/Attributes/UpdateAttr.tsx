@@ -108,14 +108,16 @@ export function UpdateAttr({
             id="update-attr"
             className="w-full space-y-6"
             onSubmit={handleSubmit(async values => {
-              await mutateAsyncUpdateLogged({
-                data: {
-                  logged: values.logged,
-                },
-                device_id: entityId,
-                attribute_key: attributeKey,
-                entityType: entityType,
-              })
+              if (formState.dirtyFields.logged) {
+                await mutateAsyncUpdateLogged({
+                  data: {
+                    logged: values.logged,
+                  },
+                  device_id: entityId,
+                  attribute_key: attributeKey,
+                  entityType: entityType,
+                })
+              }
               mutate({
                 data: {
                   attributes: [
