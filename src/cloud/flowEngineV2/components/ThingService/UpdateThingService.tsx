@@ -64,6 +64,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/Dropdowns'
+import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 
 type UpdateThingProps = {
   name: string
@@ -85,6 +86,14 @@ export function UpdateThingService({
   const cancelButtonRef = useRef(null)
   const [typeInput, setTypeInput] = useState('')
 
+  const {
+    data: thingData,
+    isLoading: isLoadingThing,
+    isPreviousData: isPreviousDataThing,
+  } = useGetServiceThings({
+    thingId,
+  })
+
   const { data: thingServiceData, isLoading: thingServiceLoading } =
     useThingServiceById({
       thingId,
@@ -94,12 +103,16 @@ export function UpdateThingService({
   const { register, formState, control, handleSubmit, watch, setValue } =
     useForm<CreateServiceThingDTO['data']>({
       resolver: serviceThingSchema && zodResolver(serviceThingSchema),
-      defaultValues: {
-        // ...thingServiceData?.data,
-        ...thingServiceDataProps?.find(thing => thing.name === name),
-        description: description ?? '',
+      values: {
+        ...thingServiceData?.data,
+        description: thingServiceData?.data?.description || '',
       },
     })
+
+  console.log(
+    thingServiceData?.data,
+    'thingServiceData?.datathingServiceData?.data',
+  )
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
@@ -129,9 +142,9 @@ export function UpdateThingService({
   useEffect(() => {
     // setCodeInput(thingServiceData?.data?.code ?? '')
     setCodeInput(
-      thingServiceDataProps?.find(thing => thing.name === name)?.code ?? '',
+      thingData?.data?.find(thing => thing.name === name)?.code ?? '',
     )
-  }, [])
+  }, [thingData])
 
   useEffect(() => {
     if (isSuccessExecute) {
@@ -203,7 +216,8 @@ export function UpdateThingService({
   }
 
   return (
-    !thingServiceLoading && (
+    !thingServiceLoading &&
+    !isLoadingThing && (
       <Dialog
         isOpen={isOpen}
         onClose={() => null}
@@ -562,7 +576,7 @@ export function UpdateThingService({
                                   'max-h-96': fullScreen,
                                 })}
                               >
-                                {thingServiceDataProps?.map(item => {
+                                {thingData?.data?.map(item => {
                                   const typeOutput = outputList.filter(
                                     data => data.value === item.output,
                                   )
