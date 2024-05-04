@@ -14,6 +14,7 @@ import { type widgetSchema } from '../Widget'
 import L, { type LatLngTuple, type Map } from 'leaflet'
 import { type Device } from '@/cloud/orgManagement'
 import { toast } from 'sonner'
+import { type MapData } from '../ComboBoxSelectDeviceDashboard'
 
 export function MapChart({
   data,
@@ -24,7 +25,7 @@ export function MapChart({
   data: DataSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
-  filter: Device[]
+  filter: MapData[]
 }) {
   // streets
   const STREETS_MAP =
@@ -191,7 +192,15 @@ export function MapChart({
             }
           })
           return (
-            <Marker position={[lat, lng]} key={index}>
+            <Marker
+              position={[lat, lng]}
+              key={index}
+              eventHandlers={{
+                click: event => {
+                  map.current?.setView([lat, lng], 20)
+                },
+              }}
+            >
               <Popup>
                 {deviceDetailInfo && deviceDetailInfo.length > 0
                   ? `Thiết bị ${deviceNameArray[index]} (${lat},${lng})`
