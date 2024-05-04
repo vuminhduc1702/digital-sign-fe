@@ -12,6 +12,7 @@ export function GroupBreadcrumbs() {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const params = useParams()
+  const orgId = params.orgId || ''
   const groupId = params.groupId as string
   const { data: groupData } = useGroupById({ groupId })
 
@@ -21,7 +22,9 @@ export function GroupBreadcrumbs() {
         <li className="inline-flex items-center">
           <Link
             className="inline-flex items-center text-body-sm text-secondary-500 hover:text-white"
-            to={`${PATHS.GROUP_MANAGE}/${projectId}/${params.orgId}`}
+            to={`${PATHS.GROUP_MANAGE}/${projectId}${
+              orgId === ' ' ? '/' : `/${orgId}`
+            }`}
           >
             {t('cloud:org_manage.org_manage.breadcrumb.group_list')}
           </Link>

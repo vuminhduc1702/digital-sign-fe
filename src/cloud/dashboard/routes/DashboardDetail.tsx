@@ -41,7 +41,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
+import {
+  ComboBoxSelectDeviceDashboard,
+  type MapData,
+} from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import lightOnICon from '@/assets/icons/light-on.svg'
 
@@ -185,7 +188,6 @@ export function DashboardDetail() {
         retryDelay: 5000,
       },
     })
-  useEffect(() => {}, [isPreviousDeviceData])
 
   function triggerRerenderLayout() {
     setRerenderLayout(true)
@@ -267,7 +269,7 @@ export function DashboardDetail() {
   }, [widgetList, lastJsonMessage])
 
   function combinedObject(data: any[]) {
-    let combinedObject: TimeSeries = {}
+    let combinedObject: any = {}
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
         for (const key in obj) {
@@ -300,7 +302,7 @@ export function DashboardDetail() {
   }
 
   const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
-    Device[]
+    MapData[]
   >([])
 
   function getDeviceInfo(deviceId: string) {
@@ -316,13 +318,7 @@ export function DashboardDetail() {
     widgetInfo?.attribute_config?.map((item: any) => {
       const entityName = item.deviceName
       const id = item.label
-      if (
-        result.findIndex(
-          entity => entity.id === id && entity.entityName === entityName,
-        ) === -1 &&
-        id &&
-        entityName
-      ) {
+      if (result.findIndex(entity => entity.id === id) === -1 && id) {
         result.push({
           entityName: entityName,
           entityType: 'DEVICE',
@@ -516,7 +512,7 @@ export function DashboardDetail() {
                       />
                     ) : null}
                     {widgetInfo?.description === 'MAP' ? (
-                      <div className="absolute right-[10%] top-0 mr-8 mt-3 flex gap-x-2">
+                      <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
                           setFilteredComboboxData={setFilteredComboboxDataMap}
                           data={getMapDeviceList(widgetInfo)}

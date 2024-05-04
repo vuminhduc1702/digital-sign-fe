@@ -25,8 +25,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps & IconProps>(
           className={cn(
             'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black shadow-sm placeholder:text-secondary-700 focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
             {
-              'pl-8': startIcon,
-              'pr-8': endIcon,
+              'pl-10': startIcon,
+              'pr-10': endIcon,
               'border-primary focus:outline-primary': error != null,
             },
             className,

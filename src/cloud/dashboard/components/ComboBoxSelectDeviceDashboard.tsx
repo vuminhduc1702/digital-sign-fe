@@ -19,11 +19,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Input } from '@/components/ui/input'
 import { Button } from '@/components/Button'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { cn } from '@/utils/misc'
+import { useDisclosure } from '@/utils/hooks'
+import { LuX, LuSearch } from 'react-icons/lu'
 
-type MapData = {
+export type MapData = {
   entityName: string
   entityType: string
   id: string
@@ -31,7 +34,7 @@ type MapData = {
 
 type ComboBoxSelectDeviceDashboardProps = {
   data: MapData[]
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Device[]>>
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<MapData[]>>
   offset?: number
 } & FieldWrapperPassThroughProps
 
@@ -41,64 +44,92 @@ export function ComboBoxSelectDeviceDashboard({
   offset,
   ...props
 }: ComboBoxSelectDeviceDashboardProps) {
-  const [open, setOpen] = useState(false)
+  const { close, open, isOpen } = useDisclosure()
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
-  const [value, setValue] = useState('')
-
-  useEffect(() => {
-    setFilteredComboboxData?.(data)
-  }, [query])
+  const [filterData, setFilterData] = useState<MapData[]>(data)
 
   return (
-    <div>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <div className="flex h-full w-[200px] items-center justify-center ">
-            <Button
-              role="combobox"
-              aria-expanded={open}
-              className="flex w-[200px] items-center rounded bg-white py-1 !text-sm text-black"
-            >
-              {value
-                ? data.find(item => item.id === value)?.entityName
-                : t('combobox:select_device')}
-              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </div>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] py-2">
-          <Command>
-            <CommandInput
-              className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-1 text-sm placeholder-secondary-700 focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm`}
-              onChangeCapture={event => setQuery(event.target.value)}
-            />
-            <CommandEmpty>{t('error:not_found')}</CommandEmpty>
-            <CommandGroup>
-              {data?.map(item => (
-                <CommandItem
-                  key={item.id}
-                  className={`relative cursor-pointer select-none py-2 pl-10 pr-4`}
-                  value={item.entityName}
-                  onClick={() => {
-                    setFilteredComboboxData?.([item])
-                    setQuery(item.entityName)
-                    setValue(item.id)
-                  }}
-                >
-                  {item.entityName}
-                  <CheckIcon
-                    className={cn(
-                      'ml-auto h-4 w-4',
-                      value === item.id ? 'opacity-100' : 'opacity-0',
-                    )}
+    <Popover defaultOpen={isOpen} onOpenChange={open}>
+      <PopoverTrigger asChild>
+        <div className="flex h-full w-[200px] items-center justify-center">
+          <Input
+            type="text"
+            placeholder={t('combobox:select_device')}
+            value={query}
+            onChange={e => {
+              setQuery(e.target.value)
+              const filteredData = data.filter(
+                item =>
+                  item.entityName
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase()) ||
+                  item.id.toLowerCase().includes(e.target.value.toLowerCase()),
+              )
+              setFilterData(filteredData)
+            }}
+            endIcon={
+              <>
+                {query.length > 0 ? (
+                  <LuX
+                    className="absolute right-6 top-1/4 h-[50%] cursor-pointer"
+                    onClick={() => {
+                      setQuery('')
+                      setFilteredComboboxData?.(data)
+                    }}
                   />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </div>
+                ) : undefined}
+                <LuSearch
+                  className="absolute right-2 h-[50%] cursor-pointer text-[#4B465C]"
+                  // onClick={() => {
+                  //   if (query.length === 0) {
+                  //     setFilteredComboboxData?.(data)
+                  //   } else {
+                  //     const filteredData = data.filter(
+                  //       item =>
+                  //         item.entityName
+                  //           .toLowerCase()
+                  //           .includes(query.toLowerCase()) ||
+                  //         item.id.toLowerCase().includes(query.toLowerCase()),
+                  //     )
+                  //     console.log(filteredData)
+                  //     setFilteredComboboxData?.(filteredData)
+                  //   }
+                  //   open()
+                  // }}
+                />
+              </>
+            }
+          />
+        </div>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-[200px] py-2"
+        onCloseAutoFocus={e => e.preventDefault()}
+      >
+        {filterData?.length === 0 ? (
+          <div>{t('error:not_found')}</div>
+        ) : (
+          filterData?.map(item => (
+            <div
+              key={item.id}
+              className={`relative cursor-pointer select-none py-2`}
+              onClick={() => {
+                const displayQuery = item.entityName
+                  ? item.entityName + ' - ' + item.id
+                  : item.id
+                setQuery(displayQuery)
+                setFilteredComboboxData?.([item])
+                close()
+              }}
+            >
+              {item?.entityName
+                ? item?.entityName + ' - ' + item?.id
+                : item?.id}
+            </div>
+          ))
+        )}
+      </PopoverContent>
+    </Popover>
   )
 }

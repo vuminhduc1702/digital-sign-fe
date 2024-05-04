@@ -815,12 +815,16 @@ export function UpdateWidget({
                                     value:
                                       widgetInfoMemo?.attribute_config[index]
                                         ?.label,
-                                    label:
-                                      widgetInfoMemo?.attribute_config[index]
-                                        ?.deviceName +
-                                      ' - ' +
-                                      widgetInfoMemo?.attribute_config[index]
-                                        ?.label,
+                                    label: widgetInfoMemo?.attribute_config[
+                                      index
+                                    ]?.deviceName
+                                      ? widgetInfoMemo?.attribute_config[index]
+                                          ?.deviceName +
+                                        ' - ' +
+                                        widgetInfoMemo?.attribute_config[index]
+                                          ?.label
+                                      : widgetInfoMemo?.attribute_config[index]
+                                          ?.label,
                                   }
                                 : null
                             }
