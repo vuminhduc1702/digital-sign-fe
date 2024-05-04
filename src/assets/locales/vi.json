@@ -685,6 +685,7 @@
         "title_card": "Tạo biểu đồ dữ liệu",
         "title_controller": "Tạo bảng điều khiển",
         "title_map": "Tạo bản đồ",
+        "title_light": "Tạo đèn đường",
         "update": "Sửa biểu đồ",
         "update_line": "Sửa biểu đồ đường",
         "update_bar": "Sửa biểu đồ cột",
@@ -720,6 +721,10 @@
           "pie_chart": "Biểu đồ tròn",
           "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
+          "light": "Đèn đường",
+          "light_on": "Đèn sáng",
+          "light_off": "Đèn tắt",
+          "light_blinking": "Đèn nhấp nháy",
           "data_chart": "Dữ liệu",
           "data_table": "Bảng dữ liệu",
           "controller": {
@@ -727,7 +732,7 @@
             "input_list": "Danh sách biến đầu vào",
             "input": "Nhập tên biến",
             "value": "Giá trị",
-            "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công. Dữ liệu trả về: {{DATA}}"
+            "success": "Thực thi nghiệp vụ thành công."
           }
         }
       },

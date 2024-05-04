@@ -21,6 +21,7 @@ import {
   MapChart,
   PieChart,
   TableChart,
+  LightChart,
 } from '../components'
 import {
   CreateControllerButton,
@@ -45,6 +46,7 @@ import {
   type MapData,
 } from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
+import lightOnICon from '@/assets/icons/light-on.svg'
 
 import { WS_URL } from '@/config'
 import {
@@ -88,6 +90,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import BD_09 from '@/assets/images/landingpage/BD_09.png'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -210,6 +213,15 @@ export function DashboardDetail() {
     if (lastJsonMessage != null) {
       if (lastJsonMessage?.errorCode !== 0) {
         toast.error(lastJsonMessage.errorMsg)
+      }
+
+      if (
+        lastJsonMessage?.errorCode === 0 &&
+        !Array.isArray(lastJsonMessage.data)
+      ) {
+        toast.success(
+          t('cloud:dashboard.detail_dashboard.add_widget.controller.success'),
+        )
       }
     }
   }, [lastJsonMessage])
@@ -500,7 +512,11 @@ export function DashboardDetail() {
                           widgetInfo?.datasource?.controller_message as string
                         }
                         sendMessage={sendMessage}
-                        lastJsonMessage={lastJsonMessage}
+                      />
+                    ) : widgetInfo?.description === 'LIGHT' ? (
+                      <LightChart
+                        data={lastestValues}
+                        widgetInfo={widgetInfo}
                       />
                     ) : null}
                     {widgetInfo?.description === 'MAP' ? (
@@ -808,6 +824,43 @@ export function DashboardDetail() {
                             <TooltipContent>
                               <div className="">
                                 <img src={BD_05} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('LASTEST')
+                                  setWidgetCategory('LIGHT')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <img
+                                  src={lightOnICon}
+                                  alt="light icon"
+                                  className="h-[58px] w-[58px]"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.light',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_09} alt="" className="w-[200px]" />
                               </div>
                             </TooltipContent>
                           </Tooltip>
