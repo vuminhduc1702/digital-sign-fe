@@ -57,7 +57,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 export function UpdateWidget({
   widgetInfo,
@@ -811,12 +815,16 @@ export function UpdateWidget({
                                     value:
                                       widgetInfoMemo?.attribute_config[index]
                                         ?.label,
-                                    label:
-                                      widgetInfoMemo?.attribute_config[index]
-                                        ?.deviceName +
-                                      ' - ' +
-                                      widgetInfoMemo?.attribute_config[index]
-                                        ?.label,
+                                    label: widgetInfoMemo?.attribute_config[
+                                      index
+                                    ]?.deviceName
+                                      ? widgetInfoMemo?.attribute_config[index]
+                                          ?.deviceName +
+                                        ' - ' +
+                                        widgetInfoMemo?.attribute_config[index]
+                                          ?.label
+                                      : widgetInfoMemo?.attribute_config[index]
+                                          ?.label,
                                   }
                                 : null
                             }

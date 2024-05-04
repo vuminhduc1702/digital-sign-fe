@@ -10,7 +10,7 @@ import { Link } from '@/components/Link'
 import { useLogin } from '@/lib/auth'
 import { PATHS } from '@/routes/PATHS'
 import { emailSchema, passwordSchema } from '@/utils/schemaValidation'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import storage from '@/utils/storage'
 
 import {

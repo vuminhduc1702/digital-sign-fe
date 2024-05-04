@@ -4,12 +4,6 @@ import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useSpinDelay } from 'spin-delay'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/Tooltip'
 import { Button } from '@/components/Button/Button'
 import TitleBar from '@/components/Head/TitleBar'
 import { Spinner } from '@/components/Spinner'
@@ -27,6 +21,7 @@ import {
   MapChart,
   PieChart,
   TableChart,
+  LightChart,
 } from '../components'
 import {
   CreateControllerButton,
@@ -46,8 +41,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
+import {
+  ComboBoxSelectDeviceDashboard,
+  type MapData,
+} from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
+import lightOnICon from '@/assets/icons/light-on.svg'
 
 import { WS_URL } from '@/config'
 import {
@@ -85,6 +84,13 @@ import BD_05 from '@/assets/images/landingpage/BD_05.png'
 import BD_06 from '@/assets/images/landingpage/BD_06.png'
 import BD_07 from '@/assets/images/landingpage/BD_07.png'
 import BD_08 from '@/assets/images/landingpage/BD_08.png'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import BD_09 from '@/assets/images/landingpage/BD_09.png'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -182,7 +188,6 @@ export function DashboardDetail() {
         retryDelay: 5000,
       },
     })
-  useEffect(() => {}, [isPreviousDeviceData])
 
   function triggerRerenderLayout() {
     setRerenderLayout(true)
@@ -208,6 +213,15 @@ export function DashboardDetail() {
     if (lastJsonMessage != null) {
       if (lastJsonMessage?.errorCode !== 0) {
         toast.error(lastJsonMessage.errorMsg)
+      }
+
+      if (
+        lastJsonMessage?.errorCode === 0 &&
+        !Array.isArray(lastJsonMessage.data)
+      ) {
+        toast.success(
+          t('cloud:dashboard.detail_dashboard.add_widget.controller.success'),
+        )
       }
     }
   }, [lastJsonMessage])
@@ -264,7 +278,7 @@ export function DashboardDetail() {
   }, [widgetList, lastJsonMessage])
 
   function combinedObject(data: any[]) {
-    let combinedObject: TimeSeries = {}
+    let combinedObject: any = {}
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
         for (const key in obj) {
@@ -297,7 +311,7 @@ export function DashboardDetail() {
   }
 
   const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
-    Device[]
+    MapData[]
   >([])
 
   function getDeviceInfo(deviceId: string) {
@@ -313,13 +327,7 @@ export function DashboardDetail() {
     widgetInfo?.attribute_config?.map((item: any) => {
       const entityName = item.deviceName
       const id = item.label
-      if (
-        result.findIndex(
-          entity => entity.id === id && entity.entityName === entityName,
-        ) === -1 &&
-        id &&
-        entityName
-      ) {
+      if (result.findIndex(entity => entity.id === id) === -1 && id) {
         result.push({
           entityName: entityName,
           entityType: 'DEVICE',
@@ -504,11 +512,15 @@ export function DashboardDetail() {
                           widgetInfo?.datasource?.controller_message as string
                         }
                         sendMessage={sendMessage}
-                        lastJsonMessage={lastJsonMessage}
+                      />
+                    ) : widgetInfo?.description === 'LIGHT' ? (
+                      <LightChart
+                        data={lastestValues}
+                        widgetInfo={widgetInfo}
                       />
                     ) : null}
                     {widgetInfo?.description === 'MAP' ? (
-                      <div className="absolute right-[10%] top-0 mr-8 mt-3 flex gap-x-2">
+                      <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
                           setFilteredComboboxData={setFilteredComboboxDataMap}
                           data={getMapDeviceList(widgetInfo)}
@@ -812,6 +824,43 @@ export function DashboardDetail() {
                             <TooltipContent>
                               <div className="">
                                 <img src={BD_05} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('LASTEST')
+                                  setWidgetCategory('LIGHT')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <img
+                                  src={lightOnICon}
+                                  alt="light icon"
+                                  className="h-[58px] w-[58px]"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.light',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_09} alt="" className="w-[200px]" />
                               </div>
                             </TooltipContent>
                           </Tooltip>

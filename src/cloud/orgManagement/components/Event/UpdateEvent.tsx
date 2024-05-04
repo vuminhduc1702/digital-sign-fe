@@ -23,7 +23,7 @@ import {
   useUpdateEvent,
   type UpdateEventDTO,
 } from '../../api/eventAPI/updateEvent'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import { Spinner } from '@/components/Spinner'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'
@@ -64,7 +64,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Sheet,
   SheetClose,

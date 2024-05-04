@@ -11,7 +11,11 @@ import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { cn, getVNDateFormat } from '@/utils/misc'
 import { type Subcription } from '../../types'
 import { UpdateSubcription } from './UpdateSubcription'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Button } from '@/components/Button'
 import btnFilterIcon from '@/assets/icons/btn-filter.svg'
 import {

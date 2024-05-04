@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
+} from '@/components/ui/tooltip'
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 
 import { Button } from '@/components/Button/Button'

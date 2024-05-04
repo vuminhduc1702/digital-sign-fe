@@ -9,7 +9,7 @@ import { Button } from '@/components/Button'
 import { FieldWrapper, InputField, SelectField } from '@/components/Form'
 import { booleanSelectOption, numberInput, valueTypeList } from './CreateAttr'
 import { type EntityType, useUpdateAttr } from '../../api/attrAPI'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
 import { type Attribute } from '@/types'
@@ -108,14 +108,16 @@ export function UpdateAttr({
             id="update-attr"
             className="w-full space-y-6"
             onSubmit={handleSubmit(async values => {
-              await mutateAsyncUpdateLogged({
-                data: {
-                  logged: values.logged,
-                },
-                device_id: entityId,
-                attribute_key: attributeKey,
-                entityType: entityType,
-              })
+              if (formState.dirtyFields.logged) {
+                await mutateAsyncUpdateLogged({
+                  data: {
+                    logged: values.logged,
+                  },
+                  device_id: entityId,
+                  attribute_key: attributeKey,
+                  entityType: entityType,
+                })
+              }
               mutate({
                 data: {
                   attributes: [

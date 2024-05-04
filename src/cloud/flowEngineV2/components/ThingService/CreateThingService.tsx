@@ -21,7 +21,7 @@ import { cn } from '@/utils/misc'
 import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
 import { FormDialog } from '@/components/FormDialog'
 import { PlusIcon } from '@/components/SVGIcons'
-import { Switch } from '@/components/Switch'
+import { Switch } from '@/components/ui/switch'
 import storage from '@/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
@@ -30,8 +30,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
-import { Checkbox } from '@/components/Checkbox'
+} from '@/components/ui/tooltip'
+import { Checkbox } from '@/components/ui/checkbox'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 import btnAddIcon from '@/assets/icons/btn-add.svg'

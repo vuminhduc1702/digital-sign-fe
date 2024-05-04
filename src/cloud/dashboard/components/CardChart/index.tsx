@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
-import { type z } from 'zod'
+import type * as z from 'zod'
 
 import { Spinner } from '@/components/Spinner'
 

@@ -12,9 +12,9 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/Accordion'
+} from '@/components/ui/accordion'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   InputField,
   SelectDropdown,

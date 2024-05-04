@@ -45,7 +45,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
 
 export const WS_REALTIME_PERIOD = [
@@ -508,8 +512,6 @@ export function CreateWidget({
     return result
   }
 
-  console.log(formState.errors)
-
   const setDeviceOptionForMap = (attribute: string) => {
     const result: Array<{
       value: string
@@ -520,6 +522,7 @@ export function CreateWidget({
         if (attr === attribute) {
           // filter all item in deviceData that have id = item.entity_id
           const devices = deviceData?.devices.filter(device => {
+            device?.attributes && console.log(device.attributes)
             device.id === item.entity_id &&
               device.attributes?.filter(
                 attr =>
@@ -617,7 +620,9 @@ export function CreateWidget({
                           ? t('cloud:dashboard.config_chart.title_card')
                           : widgetCategory === 'MAP'
                             ? t('cloud:dashboard.config_chart.title_map')
-                            : null}
+                            : widgetCategory === 'LIGHT'
+                              ? t('cloud:dashboard.config_chart.title_light')
+                              : null}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button

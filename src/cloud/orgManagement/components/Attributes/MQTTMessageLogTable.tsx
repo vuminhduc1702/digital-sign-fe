@@ -14,7 +14,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
+} from '@/components/ui/tooltip'
 
 type PartialBaseTableProps<T> = Omit<
   BaseTableProps<MQTTMessage>,

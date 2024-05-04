@@ -187,7 +187,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [data, props.offset],
+    [props.offset],
   )
 
   return (

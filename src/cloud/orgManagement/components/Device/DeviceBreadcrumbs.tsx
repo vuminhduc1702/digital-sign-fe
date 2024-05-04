@@ -14,6 +14,7 @@ export function DeviceBreadcrumbs() {
   const projectId = storage.getProject()?.id
 
   const params = useParams()
+  const orgId = params.orgId || ''
   const deviceId = params.deviceId as string
   const { data: deviceData } = useDeviceById({ deviceId })
 
@@ -23,7 +24,9 @@ export function DeviceBreadcrumbs() {
         <li className="inline-flex items-center">
           <Link
             className="inline-flex items-center text-body-sm text-secondary-500 hover:text-white"
-            to={`${PATHS.DEVICE_MANAGE}/${projectId}/${params.orgId}`}
+            to={`${PATHS.DEVICE_MANAGE}/${projectId}${
+              orgId === ' ' ? '/' : `/${orgId}`
+            }`}
           >
             {t('cloud:org_manage.org_manage.breadcrumb.device_list')}
           </Link>
