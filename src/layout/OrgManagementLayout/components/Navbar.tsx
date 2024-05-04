@@ -19,7 +19,6 @@ function OrgManageNavbar() {
   const projectId = storage.getProject()?.id
   const params = useParams()
   const orgId = params.orgId || ''
-  console.log('orgId', orgId, orgId === ' ')
 
   return (
     <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">

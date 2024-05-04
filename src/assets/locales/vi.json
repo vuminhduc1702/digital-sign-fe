@@ -161,7 +161,7 @@
       },
       "group_manage": {
         "title": "Nhóm",
-        "header": "Quản lý nhóm",
+        "header": "Danh sách nhóm",
         "table": {
           "id": "ID",
           "name": "Tên",
@@ -231,7 +231,7 @@
       },
       "device_manage": {
         "title": "Thiết bị",
-        "header": "Quản lý thiết bị",
+        "header": "Danh sách thiết bị",
         "table": {
           "id": "ID",
           "payload_as_string": "Message",
