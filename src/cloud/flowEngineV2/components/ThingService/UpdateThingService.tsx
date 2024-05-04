@@ -68,18 +68,10 @@ import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 
 type UpdateThingProps = {
   name: string
-  description: string
   close: () => void
   isOpen: boolean
-  thingServiceDataProps?: ThingService[]
 }
-export function UpdateThingService({
-  name,
-  description,
-  close,
-  isOpen,
-  thingServiceDataProps,
-}: UpdateThingProps) {
+export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
   const { t } = useTranslation()
   const params = useParams()
   const thingId = params.thingId as string
@@ -94,11 +86,17 @@ export function UpdateThingService({
     thingId,
   })
 
-  const { data: thingServiceData, isLoading: thingServiceLoading } =
-    useThingServiceById({
-      thingId,
-      name,
-    })
+  const {
+    data: thingServiceData,
+    isLoading: thingServiceLoading,
+    refetch: thingServiceRefetch,
+  } = useThingServiceById({
+    thingId,
+    name,
+    config: {
+      staleTime: 0,
+    },
+  })
 
   const { register, formState, control, handleSubmit, watch, setValue } =
     useForm<CreateServiceThingDTO['data']>({
@@ -135,11 +133,8 @@ export function UpdateThingService({
   } = useExecuteService()
 
   useEffect(() => {
-    // setCodeInput(thingServiceData?.data?.code ?? '')
-    setCodeInput(
-      thingData?.data?.find(thing => thing.name === name)?.code ?? '',
-    )
-  }, [thingData])
+    setCodeInput(thingServiceData?.data?.code ?? '')
+  }, [thingServiceData?.data?.code])
 
   useEffect(() => {
     if (isSuccessExecute) {
@@ -344,7 +339,11 @@ export function UpdateThingService({
                 </div>
                 <Tabs defaultValue="info">
                   <TabsList className="mt-2 flex items-center bg-secondary-400 px-10">
-                    <TabsTrigger value="info" className="w-1/2">
+                    <TabsTrigger
+                      value="info"
+                      className="w-1/2"
+                      onClick={thingServiceRefetch}
+                    >
                       <div className="flex items-center gap-x-2">
                         <p className="text-lg font-medium">
                           {t('cloud:custom_protocol.service.info')}

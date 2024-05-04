@@ -29,6 +29,9 @@ export function ThingEventServices({ serviceName }: ThingServicesTab2Props) {
     serviceName,
     startTime: selectValue !== '0' ? startTime : null,
     endTime: endTime,
+    config: {
+      staleTime: 0,
+    },
   })
 
   const eventSelectData = [
