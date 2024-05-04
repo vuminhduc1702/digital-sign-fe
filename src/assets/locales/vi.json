@@ -732,7 +732,7 @@
             "input_list": "Danh sách biến đầu vào",
             "input": "Nhập tên biến",
             "value": "Giá trị",
-            "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công. Dữ liệu trả về: {{DATA}}"
+            "success": "Thực thi nghiệp vụ thành công."
           }
         }
       },

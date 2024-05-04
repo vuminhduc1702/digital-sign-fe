@@ -214,6 +214,15 @@ export function DashboardDetail() {
       if (lastJsonMessage?.errorCode !== 0) {
         toast.error(lastJsonMessage.errorMsg)
       }
+
+      if (
+        lastJsonMessage?.errorCode === 0 &&
+        !Array.isArray(lastJsonMessage.data)
+      ) {
+        toast.success(
+          t('cloud:dashboard.detail_dashboard.add_widget.controller.success'),
+        )
+      }
     }
   }, [lastJsonMessage])
 
@@ -503,7 +512,6 @@ export function DashboardDetail() {
                           widgetInfo?.datasource?.controller_message as string
                         }
                         sendMessage={sendMessage}
-                        lastJsonMessage={lastJsonMessage}
                       />
                     ) : widgetInfo?.description === 'LIGHT' ? (
                       <LightChart
