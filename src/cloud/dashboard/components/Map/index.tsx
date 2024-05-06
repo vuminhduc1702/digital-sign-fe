@@ -135,8 +135,6 @@ export function MapChart({
         return
       }
       // find index of device in dataForMap
-      console.log(deviceDetailInfo)
-      console.log('search', searchDevice)
       const deviceIndex = deviceDetailInfo.findIndex(
         device => device?.id === searchDevice.id,
       )
