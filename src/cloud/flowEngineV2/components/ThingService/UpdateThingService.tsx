@@ -55,7 +55,7 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@/components/Resizable'
+} from '@/components/ui/resizable'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -63,7 +63,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 
 type UpdateThingProps = {

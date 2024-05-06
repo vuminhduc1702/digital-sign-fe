@@ -7,7 +7,7 @@ import * as z from 'zod'
 import { format } from 'date-fns'
 import { LuCalendar } from 'react-icons/lu'
 import { Button } from '@/components/Button'
-import { Calendar } from '@/components/Calendar'
+import { Calendar } from '@/components/ui/calendar'
 import { InputField, SelectField } from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
 import {

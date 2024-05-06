@@ -22,7 +22,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
