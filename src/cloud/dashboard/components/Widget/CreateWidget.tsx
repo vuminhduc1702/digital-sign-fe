@@ -10,7 +10,8 @@ import * as z from 'zod'
 
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import { Button } from '@/components/ui/button'
-import { Calendar, TimePicker } from '@/components/ui/calendar'
+import { Calendar } from '@/components/ui/calendar'
+import { TimePicker } from '@/components/ui/time-picker'
 import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import {
   FieldWrapper,
