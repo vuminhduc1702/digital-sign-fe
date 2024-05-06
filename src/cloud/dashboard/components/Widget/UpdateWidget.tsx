@@ -62,6 +62,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { queryClient } from '@/lib/react-query'
 
 export function UpdateWidget({
   widgetInfo,
@@ -252,7 +253,13 @@ export function UpdateWidget({
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
-  } = useCreateAttrChart()
+  } = useCreateAttrChart({
+    config: {
+      onSuccess: () => {
+        queryClient.prefetchQuery(['devices'])
+      },
+    },
+  })
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
     const result = item?.attr_keys?.map(attr => ({
       deviceId: item?.entity_id,

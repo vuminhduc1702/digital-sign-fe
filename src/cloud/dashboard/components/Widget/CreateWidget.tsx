@@ -51,6 +51,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
+import { queryClient } from '@/lib/react-query'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -449,12 +450,13 @@ export function CreateWidget({
 
   const getDeviceInfo = (id: string) => {
     let device = null
-    for (const d of deviceData?.devices || []) {
+    for (const d of deviceData?.devices ?? []) {
       if (d.id === id) {
         device = d
         break
       }
     }
+    console.log(device)
     return device?.name + ' - ' + device?.id
   }
 
@@ -462,7 +464,13 @@ export function CreateWidget({
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
-  } = useCreateAttrChart()
+  } = useCreateAttrChart({
+    config: {
+      onSuccess: () => {
+        queryClient.prefetchQuery(['devices'])
+      },
+    },
+  })
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
     const result = item.attr_keys.map(attr => ({
       label: attr,
@@ -520,15 +528,10 @@ export function CreateWidget({
     attrChartData?.entities?.map(item => {
       item?.attr_keys?.map(attr => {
         if (attr === attribute) {
-          // filter all item in deviceData that have id = item.entity_id
-          const devices = deviceData?.devices.filter(device => {
-            device?.attributes && console.log(device.attributes)
-            device.id === item.entity_id &&
-              device.attributes?.filter(
-                attr =>
-                  attr.attribute_key === attribute && attr.value_type === 'DBL',
-              )
-          })
+          const devices = deviceData?.devices.filter(
+            device => device.id === item.entity_id,
+          )
+
           devices?.map(device => {
             const deviceInfo = getDeviceInfo(device.id)
             if (deviceInfo.includes('undefined')) return
