@@ -257,7 +257,7 @@ export function SelectSuperordinateOrgTree({
   }, [tree, filteredNodes, isExpanded, expanded])
 
   return (
-    <>
+    <div className="m-2">
       <div className="mb-2 flex">
         <input
           className="w-full rounded-md border border-secondary-600 p-1.5"
@@ -316,6 +316,6 @@ export function SelectSuperordinateOrgTree({
           }}
         />
       </div>
-    </>
+    </div>
   )
 }
