@@ -60,10 +60,8 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
       {...fieldProps}
       ref={ref}
       className={cn(
-        'focus-within:black mx-auto flex h-10 w-fit justify-center rounded-none border border-secondary-600 bg-transparent px-3 py-2 text-body-sm shadow-sm transition-colors hover:border-black focus-within:hover:border-secondary-600 focus-visible:outline-none',
-        props.isDisabled
-          ? 'cursor-not-allowed bg-secondary-500 text-black hover:border-secondary-600'
-          : '',
+        'mx-auto flex h-10 w-fit justify-center rounded-md border border-secondary-500 bg-transparent px-3 py-2 text-body-sm transition-colors focus-within:border-primary-300 hover:border-primary-300 focus-within:hover:border-primary-300 focus-visible:outline-none',
+        props.isDisabled ? 'cursor-not-allowed opacity-50' : '',
       )}
     >
       {state.segments.map((segment, i) => (
