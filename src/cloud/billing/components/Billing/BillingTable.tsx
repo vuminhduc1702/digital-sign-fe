@@ -27,7 +27,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { type BaseTableProps } from '@/components/Table'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {

@@ -37,7 +37,7 @@ import { EditBtnIcon, PlusIcon } from '@/components/SVGIcons'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
-import { Calendar, TimePicker } from '@/components/Calendar'
+import { Calendar } from '@/components/ui/calendar'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
 import {
@@ -63,6 +63,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { queryClient } from '@/lib/react-query'
+import { TimePicker } from '@/components/ui/time-picker'
 
 export function UpdateWidget({
   widgetInfo,

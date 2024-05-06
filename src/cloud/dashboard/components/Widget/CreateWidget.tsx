@@ -10,7 +10,7 @@ import * as z from 'zod'
 
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import { Button } from '@/components/Button'
-import { Calendar, TimePicker } from '@/components/Calendar'
+import { Calendar } from '@/components/ui/calendar'
 import { Dialog, DialogTitle } from '@/components/Dialog'
 import {
   FieldWrapper,
@@ -52,6 +52,7 @@ import {
 } from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
 import { queryClient } from '@/lib/react-query'
+import { TimePicker } from '@/components/ui/time-picker'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -456,7 +457,6 @@ export function CreateWidget({
         break
       }
     }
-    console.log(device)
     return device?.name + ' - ' + device?.id
   }
 
