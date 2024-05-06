@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenu,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 
 function LPnavigation({
   childToParent,

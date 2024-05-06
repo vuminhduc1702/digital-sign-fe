@@ -5,7 +5,7 @@ import {
   DialogHeader as UIDialogHeader,
   DialogTitle as UIDialogTitle,
   DialogTrigger as UIDialogTrigger,
-} from './DialogShadcn'
+} from '@/components/ui/dialog'
 import 'intersection-observer'
 
 type DialogProps = {
@@ -27,10 +27,7 @@ export const Dialog = ({
 }: DialogProps) => {
   return (
     <>
-      <UIDialog
-        modal={false}
-        open={isOpen}
-      >
+      <UIDialog modal={false} open={isOpen}>
         <UIDialogContent>
           <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
             <span
