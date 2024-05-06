@@ -5,7 +5,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   FieldWrapper,
   InputField,
@@ -45,13 +45,13 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@/components/Resizable'
+} from '@/components/ui/resizable'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 
 export const inputSchema = z.object({
   name: z

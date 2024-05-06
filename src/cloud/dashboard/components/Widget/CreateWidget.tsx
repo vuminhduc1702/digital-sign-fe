@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
 
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
-import { Button } from '@/components/Button'
-import { Calendar, TimePicker } from '@/components/Calendar'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Button } from '@/components/ui/button'
+import { Calendar, TimePicker } from '@/components/ui/calendar'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import {
   FieldWrapper,
   InputField,

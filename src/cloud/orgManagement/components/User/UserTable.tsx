@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { BaseTable } from '@/components/Table'
 import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { UpdateUser } from './UpdateUser'
@@ -22,7 +22,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { type BaseTableProps } from '@/components/Table'
 

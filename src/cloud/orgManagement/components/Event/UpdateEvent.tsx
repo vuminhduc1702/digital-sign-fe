@@ -7,7 +7,7 @@ import { useCreateAttrChart } from '@/cloud/dashboard/api'
 import { useSpinDelay } from 'spin-delay'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   FieldWrapper,
   InputField,

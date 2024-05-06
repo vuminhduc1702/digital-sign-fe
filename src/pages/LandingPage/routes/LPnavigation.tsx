@@ -4,7 +4,7 @@ import { useLogout, useUser } from '@/lib/auth'
 import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
 import { useSpinDelay } from 'spin-delay'
 import { Spinner } from '@/components/Spinner'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { PATHS } from '@/routes/PATHS'
 import { API_URL } from '@/config'
 import defaultUserIcon from '@/assets/icons/default-user.svg'
@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenu,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 
 function LPnavigation({
   childToParent,

@@ -1,7 +1,7 @@
 import Group150 from '@/assets/images/landingpage/Group_150.png'
 import Group148 from '@/assets/images/landingpage/Group_148.png'
 import { ArrowRightUpLine, CheckboxCircleLine } from '@/components/SVGIcons'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@/components/Link'
 import i18n from '@/i18n'

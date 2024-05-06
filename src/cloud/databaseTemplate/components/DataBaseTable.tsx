@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { BaseTable } from '@/components/Table'
@@ -20,7 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 function DataBaseTableContextMenu({

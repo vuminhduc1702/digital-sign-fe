@@ -10,8 +10,8 @@ import {
   ACCEPTED_RESTORE_FILE,
   restoreProjectSchema,
 } from '../api'
-import { Button } from '@/components/Button'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { useEffect, useRef, useState } from 'react'
 import FileField from '@/components/Form/FileField'
 import { useUploadImage } from '@/layout/OrgManagementLayout/api'

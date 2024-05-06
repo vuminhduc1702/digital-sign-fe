@@ -7,7 +7,7 @@ import { AttrTable, CreateAttr } from '../components/Attributes'
 import { GroupBreadcrumbs } from '../components/Group/GroupBreadcrumbs'
 
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'

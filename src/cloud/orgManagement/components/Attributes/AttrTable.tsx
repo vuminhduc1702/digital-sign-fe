@@ -7,7 +7,7 @@ import {
   type EntityType,
 } from '@/cloud/orgManagement/api/attrAPI'
 import { UpdateAttr } from '@/cloud/orgManagement/components/Attributes'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { Switch } from '@/components/ui/switch'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
@@ -28,7 +28,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 import {

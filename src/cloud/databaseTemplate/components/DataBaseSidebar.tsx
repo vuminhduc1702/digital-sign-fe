@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { PATHS } from '@/routes/PATHS'
 import { useCopyId, useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
@@ -23,7 +23,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { SearchField } from '@/components/Input'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { PlusIcon } from '@/components/SVGIcons'

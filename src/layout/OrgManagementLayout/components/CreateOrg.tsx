@@ -3,7 +3,7 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, TextAreaField } from '@/components/Form'
 import FileField from '@/components/Form/FileField'
 import {

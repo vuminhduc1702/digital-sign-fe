@@ -10,7 +10,7 @@ import { type BaseTablePagination } from '@/types'
 import { DownloadIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import btnFilterIcon from '@/assets/icons/btn-filter.svg'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   Popover,
   PopoverContent,
@@ -27,7 +27,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { type BaseTableProps } from '@/components/Table'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {

@@ -15,7 +15,7 @@ import { QandA } from '../components/section-Q&A'
 import { SectionFooter } from '../components/footer'
 import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '@/routes/PATHS'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { API_URL } from '@/config'
 import { cn, scrollToIntro } from '@/utils/misc'
 import { ContentLayout } from '@/layout/ContentLayout'
@@ -34,7 +34,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenu,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 
 import VietNam from '@/assets/images/landingpage/vietnam-flag.png'
 import English from '@/assets/images/landingpage/uk-flag.png'

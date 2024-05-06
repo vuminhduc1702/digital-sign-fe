@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { LuChevronDown } from 'react-icons/lu'
 import btnRunCode from '@/assets/icons/btn-run-code.svg'
 import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/utils/misc'
 import { useFuel } from '../api/fuel/callFuelApi'
 import { useMutationFuelAi } from '../api/fuel/updateFuelApi'
@@ -14,7 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 
 export default function FuelTemplate() {
   const [fullScreen, setFullScreen] = useState(false)

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { type EntityTypeURL, type OrgMapType } from './OrgManageSidebar'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import btnEditIcon from '@/assets/icons/btn-edit.svg'
@@ -23,7 +23,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 interface TreeViewProps {

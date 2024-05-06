@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, SelectField } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'

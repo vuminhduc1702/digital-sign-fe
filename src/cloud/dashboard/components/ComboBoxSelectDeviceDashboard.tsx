@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { cn } from '@/utils/misc'
 import { useDisclosure } from '@/utils/hooks'

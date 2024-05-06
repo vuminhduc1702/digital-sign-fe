@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { PATHS } from '@/routes/PATHS'
@@ -24,7 +24,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { SearchField } from '@/components/Input'
 import { useGetTemplates } from '../api'

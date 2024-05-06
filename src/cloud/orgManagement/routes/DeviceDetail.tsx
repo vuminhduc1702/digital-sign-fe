@@ -9,7 +9,7 @@ import { AttrTable, CreateAttr } from '../components/Attributes'
 import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 import { DeviceBreadcrumbs } from '../components/Device'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { DeviceListIcon, DeviceLogIcon } from '@/components/SVGIcons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'

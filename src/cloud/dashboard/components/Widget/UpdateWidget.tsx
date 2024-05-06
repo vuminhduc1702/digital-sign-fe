@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import ColorPicker from 'react-pick-color'
 
 import { FormDialog } from '@/components/FormDialog'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   type Widget,
   type WidgetCreate,
@@ -37,7 +37,7 @@ import { EditBtnIcon, PlusIcon } from '@/components/SVGIcons'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
-import { Calendar, TimePicker } from '@/components/Calendar'
+import { Calendar, TimePicker } from '@/components/ui/calendar'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
 import {

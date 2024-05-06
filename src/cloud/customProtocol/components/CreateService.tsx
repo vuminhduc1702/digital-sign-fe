@@ -7,7 +7,7 @@ import { InputField, SelectField } from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
 import { serviceThingSchema } from './CreateAdapter'
 import { CodeEditor } from './CodeEditor'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import i18n from '@/i18n'
 import { cn } from '@/utils/misc'
 import {

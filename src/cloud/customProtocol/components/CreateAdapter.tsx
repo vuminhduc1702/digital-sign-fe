@@ -6,7 +6,7 @@ import * as z from 'zod'
 import i18n from '@/i18n'
 import { type SelectInstance } from 'react-select'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   InputField,
   SelectDropdown,

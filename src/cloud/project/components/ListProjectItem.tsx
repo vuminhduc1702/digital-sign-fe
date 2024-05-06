@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/tooltip'
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 
-import { Button } from '@/components/Button/Button'
+import { Button } from '@/components/ui/button'
 import { useDisclosure } from '@/utils/hooks'
 import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
@@ -29,7 +29,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 
 export function ListProjectItem({

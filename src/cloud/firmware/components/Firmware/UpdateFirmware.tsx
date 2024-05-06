@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   InputField,
   SelectDropdown,
@@ -15,7 +15,7 @@ import {
 } from '../../api/firmwareAPI'
 
 import { useGetTemplates } from '@/cloud/deviceTemplate/api'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import storage from '@/utils/storage'
 import { entityFirmWareSchema } from './CreateFirmware'
 

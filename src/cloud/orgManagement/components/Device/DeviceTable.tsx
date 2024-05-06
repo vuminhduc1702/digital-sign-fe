@@ -8,7 +8,7 @@ import {
   filterFns,
 } from '@tanstack/react-table'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { BaseTable } from '@/components/Table'
 import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { PATHS } from '@/routes/PATHS'
@@ -41,7 +41,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 import { type BaseTableProps } from '@/components/Table'
