@@ -2,10 +2,29 @@ import * as React from 'react'
 import * as PopoverPrimitive from '@radix-ui/react-popover'
 
 import { cn } from '@/utils/misc'
+import { useFormField } from './form'
 
 const Popover = PopoverPrimitive.Root
 
-const PopoverTrigger = PopoverPrimitive.Trigger
+// const PopoverTrigger = PopoverPrimitive.Trigger
+
+const PopoverTrigger = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>
+>(({ className, ...props }, ref) => {
+  const { error } = useFormField()
+  return (
+    <PopoverPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        'hover:border-2 hover:border-[#2684FF] focus:outline-none',
+        { 'border-primary hover:border-2 hover:border-primary': error != null },
+        className,
+      )}
+      {...props}
+    ></PopoverPrimitive.Trigger>
+  )
+})
 
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
