@@ -49,10 +49,14 @@ export function ComboBoxSelectDeviceDashboard({
   const [query, setQuery] = useState('')
   const [filterData, setFilterData] = useState<MapData[]>(data)
 
+  useEffect(() => {
+    setFilterData(data)
+  }, [data])
+
   return (
     <Popover defaultOpen={isOpen} onOpenChange={open}>
-      <PopoverTrigger asChild>
-        <div className="flex h-full w-[200px] items-center justify-center">
+      <PopoverTrigger asChild className="outline-none">
+        <div className="flex h-full w-[200px] items-center justify-center hover:border-none">
           <Input
             type="text"
             placeholder={t('combobox:select_device')}

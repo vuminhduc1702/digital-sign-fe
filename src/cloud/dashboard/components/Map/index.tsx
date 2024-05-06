@@ -8,6 +8,7 @@ import {
   type DataSeries,
   type TimeSeries,
   type LatestData,
+  type EntityId,
 } from '../../types'
 import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
@@ -22,7 +23,7 @@ export function MapChart({
   isEditMode,
   filter,
 }: {
-  data: DataSeries
+  data: MapSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
   filter: MapData[]
@@ -42,9 +43,7 @@ export function MapChart({
   const { t } = useTranslation()
   const [dragMode, setDragMode] = useState(true)
   const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
-  const [deviceDetailInfo, setDeviceDetailInfo] = useState<WSWidgetMapData[]>(
-    [],
-  )
+  const [deviceDetailInfo, setDeviceDetailInfo] = useState<EntityId[]>([])
   const map = useRef<Map>(null)
   const searchDevice = filter[0]
 
@@ -60,44 +59,29 @@ export function MapChart({
     if (data?.data) {
       const dataList = data.data
       const deviceList = data.device
-      const parseData = extractData(dataList)
+      const parseData = extractData(dataList, deviceList)
       setDataForMap(parseData)
       setDeviceDetailInfo(deviceList)
     }
   }, [data])
 
-  function extractData(dataList: LatestData) {
-    const dataForMapChart = Object.entries(dataList).reduce(
-      (result: Array<LatLngTuple>, [, dataItem]) => {
-        if (Object.keys(dataItem).length === 0) {
-          const coor: LatLngTuple = [999, 0]
-          result.push(coor)
-        } else {
-          const dataLatIndex = Object.keys(dataItem).findIndex(
-            key => key === 'latitude',
-          )
-          const dataLongIndex = Object.keys(dataItem).findIndex(
-            key => key === 'longitude',
-          )
-          if (!Object.values(dataItem)[dataLatIndex]) {
-            const coor: LatLngTuple = [999, 0]
-            result.push(coor)
-          } else {
-            let dataLat = Object.values(dataItem)[dataLatIndex]?.value
-            let dataLong = Object.values(dataItem)[dataLongIndex]?.value
-            if (dataLat !== null && dataLong !== null) {
-              const coor: LatLngTuple = [
-                parseFloat(dataLat),
-                parseFloat(dataLong),
-              ]
-              result.push(coor)
-            }
-          }
-        }
-        return result
-      },
-      [],
-    )
+  function extractData(dataList: LatestData[], deviceList: EntityId[]) {
+    const availableDeviceList = [
+      ...new Set(widgetInfo?.attribute_config?.map((item: any) => item.label)),
+    ]
+    for (let i = 0; i < deviceList.length; i++) {
+      if (!availableDeviceList.includes(deviceList[i].id)) {
+        delete deviceList[i]
+        delete dataList[i]
+      }
+    }
+    const dataForMapChart: LatLngTuple[] = dataList.map((item, index) => {
+      const { longitude, latitude } = item
+      if (longitude === null || latitude === null) {
+        return [999, 999]
+      }
+      return [parseFloat(latitude.value), parseFloat(longitude.value)]
+    })
     return dataForMapChart
   }
 
@@ -119,6 +103,7 @@ export function MapChart({
   // }
   function getDefaultPosition() {
     const result = dataForMap.find(item => {
+      if (!item) return false
       const [lat, lng] = item
       return lat && lng
     })
@@ -151,8 +136,11 @@ export function MapChart({
       }
       // find index of device in dataForMap
       const deviceIndex = deviceDetailInfo.findIndex(
-        device => device.id === searchDevice.id,
+        device => device?.id === searchDevice.id,
       )
+      if (deviceIndex === -1) {
+        return
+      }
       const [lat, lng] = dataForMap[deviceIndex]
       if (lat === 999) {
         toast.error(t('cloud:dashboard.map.device_not_found'))

@@ -30,8 +30,8 @@ export type DataSeries = {
 export type WSWidgetMapData = { id: string; name: string; value: string }
 
 export type MapSeries = {
-  data: LatestData
-  device: WSWidgetMapData[]
+  data: LatestData[]
+  device: EntityId[]
 }
 
 export type DataItem = {

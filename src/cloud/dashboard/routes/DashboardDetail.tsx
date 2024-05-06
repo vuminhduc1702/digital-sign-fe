@@ -57,7 +57,7 @@ import {
   type WidgetType,
 } from '../types'
 import { type Device } from '@/cloud/orgManagement'
-import { type EntityId } from '../types'
+import { type EntityId, type MapSeries } from '../types'
 
 import { StarFilledIcon } from '@radix-ui/react-icons'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
@@ -91,6 +91,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import BD_09 from '@/assets/images/landingpage/BD_09.png'
+import { queryClient } from '@/lib/react-query'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -179,9 +180,11 @@ export function DashboardDetail() {
     return result
   }
 
+  const findOrgsVar = findOrgs()
+
   const { data: deviceData, isPreviousData: isPreviousDeviceData } =
     useGetDevices({
-      orgIds: findOrgs(),
+      orgIds: findOrgsVar,
       projectId,
       config: {
         retry: 5,
@@ -385,10 +388,15 @@ export function DashboardDetail() {
             {(Object.keys(widgetDetailDB).length !== 0 ||
               Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
-                const widgetInfo = { ...widgetList?.[widgetId] }
-                widgetInfo?.attribute_config?.map(item => {
-                  item.deviceName = getDeviceInfo(item.label)?.name
-                })
+                const widgetInfo = {
+                  ...widgetList?.[widgetId],
+                  attribute_config: widgetList?.[
+                    widgetId
+                  ]?.attribute_config?.map(item => ({
+                    ...item,
+                    deviceName: getDeviceInfo(item.label)?.name,
+                  })),
+                }
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -414,7 +422,7 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const lastestValues: DataSeries =
+                const lastestValues: MapSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
                         lastJsonMessage?.data?.map(device => ({
