@@ -28,6 +28,7 @@ import {
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { SearchField } from '@/components/Input'
 import { useGetTemplates } from '../api'
+import { PlusIcon } from '@/components/SVGIcons'
 
 export function TemplateLwM2M() {
   const { t } = useTranslation()
@@ -36,6 +37,11 @@ export function TemplateLwM2M() {
   const [id, setId] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeTemplate,
+    open: openTemplate,
+    isOpen: isOpenTemplate,
+  } = useDisclosure()
   const {
     close: closeDelete,
     open: openDelete,
@@ -53,9 +59,7 @@ export function TemplateLwM2M() {
   const { data } = useGetTemplates({
     projectId,
     protocol: 'lwm2m',
-    config: {
-      suspense: false,
-    },
+
     search_str: searchQuery,
     search_field: 'name',
   })
@@ -81,7 +85,13 @@ export function TemplateLwM2M() {
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
-        <CreateTemplateLwM2M />
+        <Button
+          className="h-9 w-9 rounded-md"
+          variant="trans"
+          size="square"
+          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+          onClick={openTemplate}
+        />
         <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
@@ -176,6 +186,13 @@ export function TemplateLwM2M() {
           />
         ) : null}
       </div>
+      {isOpenTemplate && (
+        <CreateTemplateLwM2M
+          open={openTemplate}
+          close={closeTemplate}
+          isOpen={isOpenTemplate}
+        />
+      )}
       {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"

@@ -12,7 +12,7 @@ import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import { Spinner } from '@/components/Spinner'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,
   InputField,
@@ -65,6 +65,11 @@ export function UpdateControllerButton({
     widgetInfoMemo?.datasource.handle_service != null
       ? JSON.parse(widgetInfoMemo?.datasource.handle_service)
       : ''
+  const keyArrData = Object.keys(parseArrData.executorCmds[0].input)
+  const inputParse = keyArrData?.map(item => ({
+    name: item,
+    value: parseArrData.executorCmds[0]?.input?.[item],
+  }))
 
   const [isDone, setIsDone] = useState(false)
 
@@ -76,11 +81,11 @@ export function UpdateControllerButton({
     useForm<z.infer<typeof controllerBtnUpdateSchema>>({
       resolver:
         controllerBtnUpdateSchema && zodResolver(controllerBtnUpdateSchema),
-      defaultValues: {
+      values: {
         title: widgetInfoMemo?.title ?? '',
         thing_id: parseThingId,
         handle_service: parseHandleService,
-        input: parseArrData.executorCmds[0].input,
+        input: inputParse,
       },
     })
 
@@ -91,9 +96,6 @@ export function UpdateControllerButton({
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
 
   const thingSelectData = thingData?.data?.list?.map(thing => ({
@@ -105,7 +107,6 @@ export function UpdateControllerButton({
     thingId: watch('thing_id'),
     config: {
       enabled: !!watch('thing_id'),
-      suspense: false,
     },
   })
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -117,7 +118,6 @@ export function UpdateControllerButton({
     thingId: watch('thing_id'),
     name: watch('handle_service'),
     config: {
-      suspense: false,
       enabled: !!watch('thing_id') && !!watch('handle_service'),
     },
   })
@@ -154,6 +154,7 @@ export function UpdateControllerButton({
     <FormDialog
       size="max"
       title={t('cloud:dashboard.config_chart.update_controller')}
+      resetData={() => setValue('input', inputParse)}
       isDone={isDone}
       body={
         <form
@@ -170,7 +171,18 @@ export function UpdateControllerButton({
                       project_id: projectId,
                       thing_id: values.thing_id,
                       service_name: values.handle_service,
-                      input: values.input,
+                      input: (
+                        values.input as {
+                          name: string
+                          value: string | boolean
+                        }[]
+                      ).reduce(
+                        (acc, curr) => {
+                          acc[curr.name] = curr.value
+                          return acc
+                        },
+                        {} as { [key: string]: string | boolean },
+                      ),
                     },
                   ],
                 }),
@@ -304,7 +316,8 @@ export function UpdateControllerButton({
                         value: '',
                         id: uuidv4(),
                       }
-                      setValue('input', [...input, addInput])
+                      append(addInput)
+                      // setValue('input', [...input, addInput])
                     }}
                   />
                 </div>
@@ -334,15 +347,15 @@ export function UpdateControllerButton({
                                 'cloud:custom_protocol.service.choose_input',
                               )}
                               defaultValue={inputSelectData?.find(ele => {
-                                return ele.value === watchInput[index].name
+                                return ele.value === watchInput?.[index].name
                               })}
                               error={formState?.errors?.input?.[index]?.name}
                             />
                           </div>
                         </div>
-                        {watchInput[index].name ===
+                        {watchInput?.[index].name ===
                         '' ? null : checkInputValueType(
-                            watchInput[index].name,
+                            watchInput?.[index].name as string,
                             index,
                           ) === 'checkbox' ? (
                           <FieldWrapper
@@ -386,10 +399,9 @@ export function UpdateControllerButton({
                                 `input.${index}.value` as const,
                               )}
                               type={checkInputValueType(
-                                watchInput[index].name,
+                                watchInput?.[index].name as string,
                                 index,
                               )}
-                              value={watchInput[index].value}
                               name={`input.${index}.value`}
                             />
                           </div>

@@ -34,6 +34,69 @@
   stroke-width: 2px;
 }
 
+.custom-node-4 rect {
+  fill: #42a5f5;
+  filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
+  rx: 10px;
+  ry: 10px;
+  stroke: #42a5f5;
+  stroke-width: 2px;
+}
+
+.custom-node-5 rect {
+  fill: #66bb6a;
+  filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
+  rx: 10px;
+  ry: 10px;
+  stroke: #66bb6a;
+  stroke-width: 2px;
+}
+
+.custom-node-6 rect {
+  fill: #ffeb3b;
+  filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
+  rx: 10px;
+  ry: 10px;
+  stroke: #ffeb3b;
+  stroke-width: 2px;
+}
+
+.custom-node-7 rect {
+  fill: #ff9800;
+  filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
+  rx: 10px;
+  ry: 10px;
+  stroke: #ff9800;
+  stroke-width: 2px;
+}
+
+.custom-node-8 rect {
+  fill: #9c27b0;
+  filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
+  rx: 10px;
+  ry: 10px;
+  stroke: #9c27b0;
+  stroke-width: 2px;
+}
+
+.custom-node-9 rect {
+  fill: #e91e63;
+  filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
+  rx: 10px;
+  ry: 10px;
+  stroke: #e91e63;
+  stroke-width: 2px;
+}
+
+.custom-node-10 rect {
+  fill: #795548;
+  filter: drop-shadow(3px 7px 0 rgb(0 0 0 / 40%));
+  rx: 10px;
+  ry: 10px;
+  stroke: #795548;
+  stroke-width: 2px;
+}
+
 .custom-svg-class {
   background-color: #f8f8f8;
   border: 1px solid #ccc;
@@ -60,6 +123,6 @@
 }
 
 .clicked-text {
-  cursor: pointer; /* Đổi con trỏ chuột khi click */
-  fill: red; /* Hoặc màu sắc khác tùy chọn */
+  cursor: pointer;
+  fill: red;
 }

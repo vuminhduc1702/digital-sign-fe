@@ -21,7 +21,7 @@ import { cn } from '@/utils/misc'
 import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
 import { FormDialog } from '@/components/FormDialog'
 import { PlusIcon } from '@/components/SVGIcons'
-import { Switch } from '@/components/Switch'
+import { Switch } from '@/components/ui/switch'
 import storage from '@/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
@@ -30,8 +30,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
-import { Checkbox } from '@/components/Checkbox'
+} from '@/components/ui/tooltip'
+import { Checkbox } from '@/components/ui/checkbox'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 import btnAddIcon from '@/assets/icons/btn-add.svg'
@@ -65,7 +65,7 @@ export const inputListSchema = z.array(inputSchema)
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
-  description: z.string(),
+  description: z.string().optional(),
   input: inputListSchema,
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
   fail_limit: z.number().optional(),
@@ -112,8 +112,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const [, setInputTypeValue] = useState('')
   const [isShowConsole, setIsShowConsole] = useState(false)
   const thingId = params.thingId as string
-  const { mutate: mutateService, isLoading: isLoadingService } =
-    useCreateServiceThing()
+  const {
+    mutate: mutateService,
+    isLoading: isLoadingService,
+    isSuccess,
+  } = useCreateServiceThing()
   const codeEditorRef = useRef<ImperativePanelHandle>(null)
   const resultEditorRef = useRef<ImperativePanelHandle>(null)
 

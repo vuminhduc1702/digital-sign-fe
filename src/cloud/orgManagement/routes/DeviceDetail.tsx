@@ -12,7 +12,7 @@ import { DeviceBreadcrumbs } from '../components/Device'
 import { Button } from '@/components/Button'
 
 import { DeviceListIcon, DeviceLogIcon } from '@/components/SVGIcons'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
@@ -34,6 +34,11 @@ export function DeviceDetail() {
   const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
+  const {
+    close: closeAttrs,
+    open: openAttrs,
+    isOpen: isOpenAttrs,
+  } = useDisclosure()
   const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
@@ -120,9 +125,6 @@ export function DeviceDetail() {
     entityId: deviceId,
     entityType: 'DEVICE',
     offset: attrLogOffset,
-    config: {
-      suspense: false,
-    },
   })
 
   const [rowSelectionAttrLog, setRowSelectionAttrLog] = useState({})
@@ -163,9 +165,6 @@ export function DeviceDetail() {
   } = useMQTTLog({
     device_id: deviceId,
     project_id: projectId,
-    config: {
-      suspense: false,
-    },
   })
 
   const [rowSelectionMQTTLog, setRowSelectionMQTTLog] = useState({})
@@ -239,7 +238,12 @@ export function DeviceDetail() {
                   setIsSearchData={setIsSearchDataAttrs}
                   closeSearch={true}
                 />
-                <CreateAttr entityId={deviceId} entityType="DEVICE" />
+                <Button
+                  className="h-[38px] rounded border-none"
+                  onClick={openAttrs}
+                >
+                  {t('cloud:org_manage.org_manage.add_attr.button')}
+                </Button>
               </div>
             </div>
             <AttrTable
@@ -331,6 +335,15 @@ export function DeviceDetail() {
           </div>
         </TabsContent>
       </Tabs>
+      {isOpenAttrs && (
+        <CreateAttr
+          entityId={deviceId}
+          entityType="DEVICE"
+          open={openAttrs}
+          close={closeAttrs}
+          isOpen={isOpenAttrs}
+        />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

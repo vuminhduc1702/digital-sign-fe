@@ -9,7 +9,7 @@ import {
 import { UpdateAttr } from '@/cloud/orgManagement/components/Attributes'
 import { Button } from '@/components/Button'
 
-import { Switch } from '@/components/Switch'
+import { Switch } from '@/components/ui/switch'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { useDisclosure } from '@/utils/hooks'
 import { getVNDateFormat } from '@/utils/misc'
@@ -36,7 +36,7 @@ import {
   TooltipProvider,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/Tooltip'
+} from '@/components/ui/tooltip'
 
 export const STATUS = {
   true: 'Có',
@@ -264,7 +264,7 @@ export function AttrTable({
           return (
             <Switch
               key={attribute_key + +info.getValue()}
-              defaultChecked={info.getValue() === 'true' ? true : false}
+              defaultChecked={info.getValue() ? true : false}
               onCheckedChange={checked => {
                 debouncedSwitchChange(checked, attribute_key)
               }}

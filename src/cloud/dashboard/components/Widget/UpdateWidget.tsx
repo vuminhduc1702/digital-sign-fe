@@ -26,7 +26,7 @@ import {
   type SelectOption,
 } from '@/components/Form'
 import { useGetOrgs } from '@/layout/MainLayout/api'
-import { cn, flattenData } from '@/utils/misc'
+import { cn, flattenData, flattenOrgs } from '@/utils/misc'
 import { useDefaultCombobox } from '@/utils/hooks'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import storage from '@/utils/storage'
@@ -57,7 +57,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 export function UpdateWidget({
   widgetInfo,
@@ -223,13 +227,11 @@ export function UpdateWidget({
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
   })
+  const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const deviceSelectData = deviceData?.devices.map(
     (device: { id: string; name: string }) => ({
@@ -813,12 +815,16 @@ export function UpdateWidget({
                                     value:
                                       widgetInfoMemo?.attribute_config[index]
                                         ?.label,
-                                    label:
-                                      widgetInfoMemo?.attribute_config[index]
-                                        ?.deviceName +
-                                      ' - ' +
-                                      widgetInfoMemo?.attribute_config[index]
-                                        ?.label,
+                                    label: widgetInfoMemo?.attribute_config[
+                                      index
+                                    ]?.deviceName
+                                      ? widgetInfoMemo?.attribute_config[index]
+                                          ?.deviceName +
+                                        ' - ' +
+                                        widgetInfoMemo?.attribute_config[index]
+                                          ?.label
+                                      : widgetInfoMemo?.attribute_config[index]
+                                          ?.label,
                                   }
                                 : null
                             }
@@ -1021,7 +1027,6 @@ export function UpdateWidget({
                         ) : (
                           <SelectField
                             label={t('ws:filter.time_period')}
-                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={
                               formState?.errors?.widgetSetting?.time_period
                             }

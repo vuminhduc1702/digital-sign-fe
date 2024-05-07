@@ -140,6 +140,8 @@ export function BaseTable<T extends Record<string, any>>({
               table.toggleAllPageRowsSelected(!!value)
             }}
             aria-label="Select all"
+            className="h-4 w-4"
+            classNameCheck="h-4 w-4"
           />
         </div>
       ),
@@ -151,6 +153,8 @@ export function BaseTable<T extends Record<string, any>>({
             onCheckedChange={value => {
               row.toggleSelected(!!value)
             }}
+            className="h-4 w-4"
+            classNameCheck="h-4 w-4"
           />
         </div>
       ),
@@ -318,7 +322,7 @@ export function BaseTable<T extends Record<string, any>>({
                                     header.id === 'view' ||
                                     header.id === 'delete'
                                   ? 'h-9 w-10'
-                                  : 'min-w-[80px] overflow-hidden truncate overflow-ellipsis whitespace-nowrap break-words bg-white px-2 text-left text-sm text-black',
+                                  : 'min-w-[80px] truncate overflow-ellipsis whitespace-nowrap break-words bg-white px-2 text-left text-sm text-black',
                             )}
                           >
                             {flexRender(
@@ -349,7 +353,7 @@ export function BaseTable<T extends Record<string, any>>({
                           return (
                             <TableCell
                               key={index}
-                              className="h-[30px] max-h-[30px] !min-w-[80px] !overflow-hidden !truncate !whitespace-nowrap !break-words px-2 py-0 text-left"
+                              className="h-[30px] max-h-[30px] min-w-[80px] truncate whitespace-nowrap break-words px-2 py-0 text-left"
                               onClick={
                                 cell.column.id !== 'contextMenu' &&
                                 cell.column.id !== 'select'

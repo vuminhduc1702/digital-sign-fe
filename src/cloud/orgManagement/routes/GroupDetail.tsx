@@ -28,6 +28,11 @@ export function GroupDetail() {
   const entityType = 'GROUP'
 
   const {
+    close: closeAttrs,
+    open: openAttrs,
+    isOpen: isOpenAttrs,
+  } = useDisclosure()
+  const {
     data: attrsData,
     isLoading: isLoadingAttrs,
     isPreviousData: isPreviousDataAttrs,
@@ -44,7 +49,7 @@ export function GroupDetail() {
   } = useDeleteMultipleAttrs()
 
   useEffect(() => {
-    if (isSuccessDeleteMultipleAttrs) {
+    if (isSuccessDeleteMultipleAttrs && close) {
       close()
     }
   }, [isSuccessDeleteMultipleAttrs])
@@ -102,7 +107,12 @@ export function GroupDetail() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateAttr entityId={groupId} entityType="GROUP" />
+            <Button
+              className="h-[38px] rounded border-none"
+              onClick={openAttrs}
+            >
+              {t('cloud:org_manage.org_manage.add_attr.button')}
+            </Button>
           </div>
         </div>
         <AttrTable
@@ -142,6 +152,15 @@ export function GroupDetail() {
           isLoading={isLoading}
         />
       ) : null}
+      {isOpenAttrs && (
+        <CreateAttr
+          entityId={groupId}
+          entityType="GROUP"
+          close={closeAttrs}
+          open={openAttrs}
+          isOpen={isOpenAttrs}
+        />
+      )}
     </div>
   )
 }

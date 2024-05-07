@@ -7,6 +7,7 @@ import { cn } from '@/utils/misc'
 
 import { type SelectOption } from './SelectField'
 import { type ControllerPassThroughProps } from '@/types'
+import { useFormField } from '../ui/form'
 
 type SelectProps<
   TFormValues extends FieldValues,
@@ -39,7 +40,7 @@ export function NewSelectDropdown<
   // name,
   // control,
   // label,
-  error,
+  // error,
   classlabel,
   classchild,
   classnamefieldwrapper,
@@ -55,6 +56,7 @@ export function NewSelectDropdown<
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
+  const { error } = useFormField()
 
   return (
     <Select
@@ -93,10 +95,12 @@ export function NewSelectDropdown<
           const isErr = error != null || (error != null && state.isFocused)
           return {
             ...baseStyles,
-            borderColor: isErr ? 'red' : '',
+            height: '36px',
+            borderRadius: '6px',
+            borderColor: isErr ? 'red' : '#b4b5b6',
             boxShadow: isErr ? 'red' : '',
             ':hover': {
-              borderColor: isErr ? 'red' : '',
+              borderColor: isErr ? 'red' : '#2684FF',
               boxShadow: isErr ? '0 0 0 1px red' : '0 0 0 1px #2684FF',
             },
           }

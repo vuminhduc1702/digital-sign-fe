@@ -79,6 +79,12 @@ function FireWareTableContextMenu({
           />
         </div>
         <div className="flex cursor-pointer justify-center p-3">
+          <UploadIcon
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={openUpload}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
           <LuTrash2
             className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
             onClick={openDelete}
@@ -243,6 +249,11 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      columnHelper.accessor('description', {
+        header: () => <span>{t('cloud:firmware.table.description')}</span>,
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
     ],
     [props.offset],
   )
@@ -250,7 +261,7 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={data}
+      data={data || []}
       columns={columns}
       onDataText={t('table:no_firmware')}
       {...props}

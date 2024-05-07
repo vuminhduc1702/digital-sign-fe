@@ -9,11 +9,12 @@ import {
   type TimeSeries,
   type LatestData,
 } from '../../types'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
-import { type LatLngTuple, type Map } from 'leaflet'
+import L, { type LatLngTuple, type Map } from 'leaflet'
 import { type Device } from '@/cloud/orgManagement'
 import { toast } from 'sonner'
+import { type MapData } from '../ComboBoxSelectDeviceDashboard'
 
 export function MapChart({
   data,
@@ -24,8 +25,20 @@ export function MapChart({
   data: DataSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
-  filter: Device[]
+  filter: MapData[]
 }) {
+  // streets
+  const STREETS_MAP =
+    'https://mt0.google.com/vt/lyrs=m&hl=vi&src=app&x={x}&y={y}&z={z}'
+  const STREETS_MAP_WO_LABEL =
+    'https://mt0.google.com/vt/lyrs=m&hl=vi&src=app&x={x}&y={y}&z={z}&apistyle=s.t%3A0|s.e%3Al|p.v%3Aoff'
+
+  // satellite
+  const SATELLITE_MAP =
+    'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}&s=Ga'
+  const SATELLITE_MAP_WO_LABEL =
+    'http://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+
   const { t } = useTranslation()
   const [dragMode, setDragMode] = useState(true)
   const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
@@ -90,19 +103,34 @@ export function MapChart({
 
   const [renderedInit, setRenderedInit] = useState(false)
 
+  // function getDefaultPosition() {
+  //   const filterData = dataForMap.filter((item: any) => item[0] !== 999)
+  //   if (filterData.length === 1) {
+  //     const [lat, lng] = filterData[0]
+  //     map.current?.setView([lat, lng], 20)
+  //     return
+  //   }
+  //   map.current?.fitBounds(
+  //     dataForMap.filter((item: any) => item[0] !== 999),
+  //     {
+  //       padding: [30, 30],
+  //     },
+  //   )
+  // }
   function getDefaultPosition() {
-    const filterData = dataForMap.filter((item: any) => item[0] !== 999)
-    if (filterData.length === 1) {
-      const [lat, lng] = filterData[0]
-      map.current?.setView([lat, lng], 20)
-      return
+    const result = dataForMap.find(item => {
+      const [lat, lng] = item
+      return lat && lng
+    })
+
+    if (result) {
+      const lat = Number(result.lat)
+      const lng = Number(result.lng)
+      if (!isNaN(lat) && !isNaN(lng)) {
+        return [lat, lng] as [number, number]
+      }
     }
-    map.current?.fitBounds(
-      dataForMap.filter((item: any) => item[0] !== 999),
-      {
-        padding: [30, 30],
-      },
-    )
+    return undefined
   }
 
   useEffect(() => {
@@ -138,13 +166,16 @@ export function MapChart({
     <>
       <MapContainer
         className="z-0 mx-2 mt-12 h-[90%]"
-        zoom={0}
+        zoom={5}
         scrollWheelZoom
         dragging={dragMode}
         attributionControl={false}
+        center={getDefaultPosition() ? getDefaultPosition() : [17, 104]}
         ref={map}
+        maxBoundsViscosity={1.0}
+        maxBounds={L.latLngBounds(L.latLng(-90, -100), L.latLng(90, 150))}
       >
-        <TileLayer url="http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga" />
+        <TileLayer url={STREETS_MAP} />
         {dataForMap.map((coor, index) => {
           const [lat, lng] = coor
           if (lat === 999) {
@@ -161,7 +192,15 @@ export function MapChart({
             }
           })
           return (
-            <Marker position={[lat, lng]} key={index}>
+            <Marker
+              position={[lat, lng]}
+              key={index}
+              eventHandlers={{
+                click: event => {
+                  map.current?.setView([lat, lng], 20)
+                },
+              }}
+            >
               <Popup>
                 {deviceDetailInfo && deviceDetailInfo.length > 0
                   ? `Thiết bị ${deviceNameArray[index]} (${lat},${lng})`

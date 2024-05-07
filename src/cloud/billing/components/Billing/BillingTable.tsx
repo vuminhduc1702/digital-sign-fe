@@ -11,7 +11,11 @@ import { DownloadIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import { PDFDownloadLink } from '@react-pdf/renderer'
 import btnFilterIcon from '@/assets/icons/btn-filter.svg'
 import { Button } from '@/components/Button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { cn, getVNDateFormat } from '@/utils/misc'
 import { useBillingById } from '../../api/billingAPI'
@@ -32,7 +36,6 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { close, open, isOpen } = useDisclosure()
   const { data } = useBillingById({
     id,
-    config: { suspense: false },
   })
 
   return (

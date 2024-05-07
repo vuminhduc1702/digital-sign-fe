@@ -24,7 +24,7 @@ export const useUpdateService = ({ config }: UseUpdateServiceOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['serviceById'],
+        queryKey: ['service-things'],
       })
       toast.success(t('cloud:custom_protocol.service.success_update'))
     },

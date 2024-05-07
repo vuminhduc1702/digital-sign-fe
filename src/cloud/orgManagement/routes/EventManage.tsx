@@ -21,6 +21,11 @@ export function EventManage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const {
+    close: closeEvent,
+    open: openEvent,
+    isOpen: isOpenEvent,
+  } = useDisclosure()
+  const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
@@ -36,7 +41,6 @@ export function EventManage() {
   } = useGetEvents({
     orgId,
     projectId,
-    config: { keepPreviousData: true },
     search_field: searchField.current,
     search_str: searchQuery,
   })
@@ -105,7 +109,12 @@ export function EventManage() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateEvent />
+            <Button
+              className="h-[38px] rounded border-none"
+              onClick={openEvent}
+            >
+              {t('cloud:org_manage.event_manage.add_event.button')}
+            </Button>
           </div>
         </div>
         <EventTable
@@ -133,6 +142,9 @@ export function EventManage() {
           }
         />
       </div>
+      {isOpenEvent && (
+        <CreateEvent close={closeEvent} open={openEvent} isOpen={isOpenEvent} />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

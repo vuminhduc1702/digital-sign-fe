@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { axios } from '@/lib/axios'
 import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { toast } from 'sonner'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type createEventSchema } from '../../components/Event'
 
 export type UpdateEventDTO = {
@@ -22,8 +22,6 @@ export const updateEvent = ({ data, eventId }: UpdateEventDTO) => {
   const typeEvent = data?.type
   if (typeEvent === 'event') {
     delete data?.schedule
-  } else {
-    delete data?.interval
   }
   delete data?.type
 

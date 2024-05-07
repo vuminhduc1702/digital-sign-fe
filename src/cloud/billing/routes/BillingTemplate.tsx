@@ -12,7 +12,11 @@ import { searchSubcriptionSchema } from '@/cloud/subcription/routes/SubcriptionT
 import { Button } from '@/components/Button'
 import { Calendar } from '@/components/Calendar'
 import { InputField, SelectDropdown } from '@/components/Form'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { SearchIcon } from '@/components/SVGIcons'
 import { cn } from '@/utils/misc'
 import { useGetBillings, type SearchFilter } from '../api/billingAPI'
@@ -53,7 +57,7 @@ export function BillingTemplate() {
     start_time: startTime,
     searchData: searchData,
     end_time: endTime,
-    config: { keepPreviousData: true, staleTime: 1000 },
+    config: { staleTime: 1000 },
   })
   const ref = useRef(null)
   const handleField = (field: string, value: any) => {

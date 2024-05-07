@@ -5,7 +5,7 @@ import { useSpinDelay } from 'spin-delay'
 import { Spinner } from '@/components/Spinner'
 
 import { type DataSeries, type TimeSeries, type LatestData } from '../../types'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
 
 type PieWidgetDataType = {
@@ -26,10 +26,14 @@ export const PieChart = ({
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]
   >([])
+  const [dataPieChart, setDataPieChart] = useState<PieWidgetDataType[]>([])
+
+  const [total, setTotal] = useState<number>(0)
 
   function getColor(attributeKey: string, deviceId: string) {
     const attributeConfig = widgetInfo.attribute_config.filter(
-      obj => obj.attribute_key === attributeKey && obj.label === deviceId,
+      obj => obj.attribute_key === attributeKey,
+      // && obj.label === deviceId,
     )
     if (attributeConfig.length > 0) {
       return attributeConfig[0].color
@@ -45,7 +49,7 @@ export const PieChart = ({
       const parseResult = extractData(dataList, deviceList)
       setDataTransformedFeedToChart(dataManipulation(parseResult))
     }
-  }, [data])
+  }, [data, widgetInfo])
 
   function extractData(dataList: LatestData, deviceList: any[]) {
     const parseResult: Array<{
@@ -62,7 +66,9 @@ export const PieChart = ({
           deviceName: deviceList[i].entityName,
           deviceId: deviceList[i].id,
           color: getColor(key, deviceList[i].id),
-          value: value.value,
+          value: Number.isFinite(parseFloat(value?.value))
+            ? parseFloat(value?.value)
+            : 0,
         })
       }
     }
@@ -84,11 +90,27 @@ export const PieChart = ({
     minDuration: 300,
   })
 
+  useEffect(() => {
+    const sum = dataTransformedFeedToChart.reduce((acc, data) => {
+      return acc + data.value
+    }, 0)
+    setTotal(sum)
+    if (sum === 0) {
+      const dataParse = dataTransformedFeedToChart.map(item => ({
+        ...item,
+        value: 1,
+      }))
+      setDataPieChart(dataParse)
+    } else {
+      setDataPieChart(dataTransformedFeedToChart)
+    }
+  }, [dataTransformedFeedToChart])
+
   return (
     <>
       {dataTransformedFeedToChart.length > 0 ? (
         <ResponsivePie
-          data={dataTransformedFeedToChart}
+          data={dataPieChart}
           margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
           colors={({ id, data }) => {
             return data[`${id}Color`] as string
@@ -111,6 +133,7 @@ export const PieChart = ({
             from: 'color',
             modifiers: [['darker', 2]],
           }}
+          valueFormat={value => (total === 0 ? `0` : `${value}`)}
           legends={[
             {
               anchor: 'bottom',

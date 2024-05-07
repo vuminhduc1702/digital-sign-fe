@@ -50,9 +50,6 @@ export default function DdosTemplate() {
 
   const { data } = useDdos({
     data: JSON.parse(codeInputRef.current),
-    config: {
-      suspense: false,
-    },
   })
 
   const callApiDdos = () => {

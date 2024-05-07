@@ -24,6 +24,11 @@ export function DeviceManage() {
   const [searchQuery, setSearchQuery] = useState('')
   const params = useParams()
   const {
+    close: closeDevice,
+    open: openDevice,
+    isOpen: isOpenDevice,
+  } = useDisclosure()
+  const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
@@ -40,7 +45,6 @@ export function DeviceManage() {
     orgId,
     projectId,
     offset,
-    config: { keepPreviousData: true },
     search_str: searchQuery,
     search_field: searchField.current,
   })
@@ -114,7 +118,12 @@ export function DeviceManage() {
               setIsSearchData={setIsSearchData}
               closeSearch={true}
             />
-            <CreateDevice />
+            <Button
+              className="h-[38px] rounded border-none"
+              onClick={openDevice}
+            >
+              {t('cloud:org_manage.device_manage.add_device.button')}
+            </Button>
           </div>
         </div>
         <DeviceTable
@@ -144,6 +153,13 @@ export function DeviceManage() {
           }
         />
       </div>
+      {isOpenDevice && (
+        <CreateDevice
+          close={closeDevice}
+          open={openDevice}
+          isOpen={isOpenDevice}
+        />
+      )}
       {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"

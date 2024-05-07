@@ -33,7 +33,7 @@ function ThingServiceTableContextMenu({
   data,
   ...props
 }: {
-  thingId: string
+  thingId?: string
   name: string
   description: string
   data: ThingService[]
@@ -98,6 +98,7 @@ function ThingServiceTableContextMenu({
       {isOpen ? (
         <UpdateThingService
           name={name}
+          description={description}
           close={close}
           isOpen={isOpen}
           thingServiceDataProps={data}
@@ -154,9 +155,9 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
         cell: info => {
           const { name, description } = info.row.original
           return ThingServiceTableContextMenu({
+            thingId,
             name,
             description,
-            thingId,
             data,
           })
         },
@@ -186,7 +187,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [data, props.offset],
+    [props.offset],
   )
 
   return (

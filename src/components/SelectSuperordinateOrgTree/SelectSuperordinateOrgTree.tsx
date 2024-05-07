@@ -45,16 +45,19 @@ export function SelectSuperordinateOrgTree({
 }: SelectSuperordinateOrgTreeProps) {
   const { t } = useTranslation()
   const params = useParams()
-  const tree = useRef()
+  const tree = useRef(null)
+  const ref = useRef([])
   const projectId = storage.getProject()?.id ?? params.projectId
 
   const [nodes, setNodes] = useState<Node[]>([])
   const [checked, setChecked] = useState<string[]>([])
   const [expanded, setExpanded] = useState<string[]>()
+  const [isExpanded, setIsExpanded] = useState(false)
   const [selectedNodes, setSelectedNodes] = useState<OnCheckNode>()
   const [expandedNodes, setExpandedNodes] = useState<OnExpandNode>()
   const [filterText, setFilterText] = useState<string>('')
   const [filteredNodes, setFilteredNodes] = useState<Node[]>([])
+  const [isFirst, setisFirst] = useState(true)
 
   const { data: orgData } = useGetOrgs({ projectId })
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
@@ -180,6 +183,30 @@ export function SelectSuperordinateOrgTree({
     return filtered
   }
 
+  function findParentValue(nodes: Node[], path: string[] = []) {
+    for (const node of nodes) {
+      if (node.value === value) {
+        return path
+      }
+      if (node.children) {
+        const result: string[] = findParentValue(node.children, [
+          ...path,
+          node.value,
+        ])
+        if (result) {
+          return result
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (value && isFirst) {
+      const expandFirst = findParentValue(filteredNodes)
+      setExpanded(expandFirst)
+    }
+  }, [filteredNodes])
+
   function onFilterChange(e) {
     setFilterText(e.target.value)
     filterTree()
@@ -213,8 +240,24 @@ export function SelectSuperordinateOrgTree({
     customOnChange && customOnChange(checked)
   }, [checked])
 
+  useEffect(() => {
+    const elements = tree?.current.getElementsByClassName('rct-node-clickable')
+    const text =
+      orgDataFlatten.find(item => item.id === value)?.name ||
+      t('tree:no_selection_org')
+    ref.current = Array.from(elements)
+    for (var i = 0; i < ref.current.length; i++) {
+      var span = ref.current[i]
+      if (span?.outerText === text) {
+        span.classList.add('focus-rct-title')
+      } else {
+        span.classList.remove('focus-rct-title')
+      }
+    }
+  }, [tree, filteredNodes, isExpanded, expanded])
+
   return (
-    <>
+    <div className="m-2">
       <div className="mb-2 flex">
         <input
           className="w-full rounded-md border border-secondary-600 p-1.5"
@@ -225,16 +268,15 @@ export function SelectSuperordinateOrgTree({
         />
         <img
           src={btnRemove}
-          className={cn('absolute right-[24px] top-[18px] cursor-pointer', {
+          className={cn('absolute right-[24px] top-[25px] cursor-pointer', {
             hidden: filterText.length === 0,
           })}
           onClick={clearFilterNodes}
           alt="remove"
         />
       </div>
-      <div className=" max-h-[300px] overflow-x-auto">
+      <div ref={tree} className=" max-h-[300px] overflow-x-auto">
         <CheckboxTree
-          ref={tree}
           nodes={filteredNodes}
           checked={checked}
           expanded={expanded}
@@ -244,8 +286,10 @@ export function SelectSuperordinateOrgTree({
           }}
           checkModel="all"
           onExpand={(expanded, node) => {
+            setIsExpanded(!isExpanded)
             setExpanded(expanded)
             setExpandedNodes(node)
+            setisFirst(false)
           }}
           onClick={node => {
             setSelectedNodes(node)
@@ -272,6 +316,6 @@ export function SelectSuperordinateOrgTree({
           }}
         />
       </div>
-    </>
+    </div>
   )
 }

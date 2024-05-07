@@ -8,9 +8,8 @@ import type * as z from 'zod'
 import { Button } from '@/components/Button'
 import { FieldWrapper, InputField, SelectField } from '@/components/Form'
 import { booleanSelectOption, numberInput, valueTypeList } from './CreateAttr'
-import { Drawer } from '@/components/Drawer'
 import { type EntityType, useUpdateAttr } from '../../api/attrAPI'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
 import { type Attribute } from '@/types'
@@ -18,6 +17,17 @@ import { attrSchema } from '@/utils/schemaValidation'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import { cn } from '@/utils/misc'
 
 type UpdateAttrProps = {
   entityId: string
@@ -75,127 +85,140 @@ export function UpdateAttr({
   )
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   return (
-    <Drawer
-      isOpen={isOpen}
-      onClose={close}
-      title={t('cloud:org_manage.org_manage.add_attr.edit_full')}
-      renderFooter={() => (
-        <>
-          <Button
-            className="rounded border-none"
-            variant="secondary"
-            size="lg"
-            onClick={close}
-            startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
-            }
-          />
-          <Button
-            className="rounded border-none"
-            form="update-attr"
-            type="submit"
-            size="lg"
-            isLoading={isLoading}
-            startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-            }
-            disabled={!formState.isDirty || isLoading}
-          />
-        </>
-      )}
-    >
-      <form
-        id="update-attr"
-        className="w-full space-y-6"
-        onSubmit={handleSubmit(async values => {
-          await mutateAsyncUpdateLogged({
-            data: {
-              logged: values.logged,
-            },
-            device_id: entityId,
-            attribute_key: attributeKey,
-            entityType: entityType,
-          })
-          mutate({
-            data: {
-              attributes: [
-                {
-                  attribute_key: attributeKey,
-                  logged: values.logged,
-                  value: values.value,
-                  value_t: values.value_t,
-                },
-              ],
-            },
-            entityType,
-            entityId,
-          })
-        })}
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+      <SheetContent
+        onInteractOutside={e => {
+          e.preventDefault()
+        }}
+        className={cn('flex h-full max-w-xl flex-col justify-between')}
       >
-        <>
-          <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
-            <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-              <SelectField
-                label={t('cloud:org_manage.org_manage.add_attr.value_type')}
-                error={formState.errors['value_t']}
-                registration={register('value_t')}
-                options={valueTypeList.map(valueType => ({
-                  label: valueType.name,
-                  value: valueType.type,
-                }))}
-              />
-              {watch(`value_t`) === 'BOOL' ? (
-                <SelectField
-                  className="h-[36px] py-1"
-                  label={t('cloud:org_manage.org_manage.add_attr.value')}
-                  error={formState?.errors?.value}
-                  registration={register(`value` as const)}
-                  options={booleanSelectOption}
-                />
-              ) : (
-                <InputField
-                  label={t('cloud:org_manage.org_manage.add_attr.value')}
-                  error={formState?.errors?.value}
-                  registration={register(`value` as const)}
-                  step={0.000001}
-                  type={
-                    numberInput.includes(
-                      watch(`value_t`) as (typeof numberInput)[number],
-                    )
-                      ? 'number'
-                      : 'text'
-                  }
-                />
-              )}
-              <FieldWrapper
-                className="w-fit space-y-2"
-                label={t('cloud:org_manage.org_manage.add_attr.logged')}
-                error={formState.errors['logged']}
-              >
-                <Controller
-                  control={control}
-                  name={'logged'}
-                  render={({ field: { onChange, value, ...field } }) => {
-                    return (
-                      <Checkbox
-                        {...field}
-                        checked={value}
-                        onCheckedChange={onChange}
-                      />
-                    )
-                  }}
-                />
-              </FieldWrapper>
-            </div>
-          </section>
-        </>
-      </form>
-    </Drawer>
+        <SheetHeader>
+          <SheetTitle>
+            {t('cloud:org_manage.org_manage.add_attr.edit_full')}
+          </SheetTitle>
+        </SheetHeader>
+        <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
+          <form
+            id="update-attr"
+            className="w-full space-y-6"
+            onSubmit={handleSubmit(async values => {
+              if (formState.dirtyFields.logged) {
+                await mutateAsyncUpdateLogged({
+                  data: {
+                    logged: values.logged,
+                  },
+                  device_id: entityId,
+                  attribute_key: attributeKey,
+                  entityType: entityType,
+                })
+              }
+              mutate({
+                data: {
+                  attributes: [
+                    {
+                      attribute_key: attributeKey,
+                      logged: values.logged,
+                      value: values.value,
+                      value_t: values.value_t,
+                    },
+                  ],
+                },
+                entityType,
+                entityId,
+              })
+            })}
+          >
+            <>
+              <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
+                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+                  <SelectField
+                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
+                    error={formState.errors['value_t']}
+                    registration={register('value_t')}
+                    options={valueTypeList.map(valueType => ({
+                      label: valueType.name,
+                      value: valueType.type,
+                    }))}
+                  />
+                  {watch(`value_t`) === 'BOOL' ? (
+                    <SelectField
+                      className="h-[36px] py-1"
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
+                      error={formState?.errors?.value}
+                      registration={register(`value` as const)}
+                      options={booleanSelectOption}
+                    />
+                  ) : (
+                    <InputField
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
+                      error={formState?.errors?.value}
+                      registration={register(`value` as const)}
+                      step={0.000001}
+                      type={
+                        numberInput.includes(
+                          watch(`value_t`) as (typeof numberInput)[number],
+                        )
+                          ? 'number'
+                          : 'text'
+                      }
+                    />
+                  )}
+                  <FieldWrapper
+                    className="w-fit space-y-2"
+                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                    error={formState.errors['logged']}
+                  >
+                    <Controller
+                      control={control}
+                      name={'logged'}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                </div>
+              </section>
+            </>
+          </form>
+        </div>
+
+        <SheetFooter>
+          <>
+            <Button
+              className="rounded border-none"
+              variant="secondary"
+              size="lg"
+              onClick={close}
+              startIcon={
+                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
+            <Button
+              className="rounded border-none"
+              form="update-attr"
+              type="submit"
+              size="lg"
+              isLoading={isLoading}
+              startIcon={
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              }
+              disabled={!formState.isDirty || isLoading}
+            />
+          </>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }

@@ -5,8 +5,8 @@ import { useRef, useState } from 'react'
 import bg_pack_of_data from '@/assets/images/landingpage/bg_pack_of_data.png'
 import { useGetPackofdata } from '../api/getPackofdata'
 import { Button } from '@/components/Button'
-import { Switch } from '@/components/Switch'
-import { Checkbox } from '@/components/Checkbox'
+import { Switch } from '@/components/ui/switch'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useDisclosure } from '@/utils/hooks'
 import { ComparePackOfData } from './compare-packofdata'
 import { Spinner } from '@/components/Spinner'
@@ -34,11 +34,8 @@ export function SectionPackageData() {
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { data: PackofData, isLoading: isLoadingPackofData } = useGetPackofdata(
-    {
-      config: { suspense: false },
-    },
-  )
+  const { data: PackofData, isLoading: isLoadingPackofData } =
+    useGetPackofdata()
   const showSpinner = useSpinDelay(isLoadingPackofData, {
     delay: 150,
     minDuration: 300,

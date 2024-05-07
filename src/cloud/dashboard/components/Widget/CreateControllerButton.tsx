@@ -22,7 +22,7 @@ import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import i18n from '@/i18n'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 
 import { widgetCategorySchema } from '../../types'
 import { type WidgetCategoryType } from './CreateWidget'
@@ -93,9 +93,6 @@ export function CreateControllerButton({
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
-    config: {
-      suspense: false,
-    },
   })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
@@ -107,7 +104,6 @@ export function CreateControllerButton({
       thingId: watch('thing_id'),
       config: {
         enabled: !!watch('thing_id'),
-        suspense: false,
       },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -120,7 +116,6 @@ export function CreateControllerButton({
       thingId: watch('thing_id'),
       name: watch('handle_service'),
       config: {
-        suspense: false,
         enabled: !!watch('thing_id') && !!watch('handle_service'),
       },
     })
@@ -198,7 +193,18 @@ export function CreateControllerButton({
                         project_id: projectId,
                         thing_id: values.thing_id,
                         service_name: values.handle_service,
-                        input: values.input,
+                        input: (
+                          values.input as {
+                            name: string
+                            value: string | boolean
+                          }[]
+                        ).reduce(
+                          (acc, curr) => {
+                            acc[curr.name] = curr.value
+                            return acc
+                          },
+                          {} as { [key: string]: string | boolean },
+                        ),
                       },
                     ],
                   }),
@@ -318,7 +324,11 @@ export function CreateControllerButton({
                               }
                               noOptionsMessage={() => t('table:no_input')}
                               loadingMessage={() => t('loading:input')}
-                              isLoading={thingServiceIsLoading}
+                              isLoading={
+                                watch('thing_id') && watch('handle_service')
+                                  ? thingServiceIsLoading
+                                  : false
+                              }
                               placeholder={t(
                                 'cloud:custom_protocol.service.choose_input',
                               )}
@@ -372,7 +382,6 @@ export function CreateControllerButton({
                                 input[index].name,
                                 index,
                               )}
-                              value={input[index].value}
                             />
                           )}
                         </div>

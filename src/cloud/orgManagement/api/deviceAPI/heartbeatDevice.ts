@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { useTranslation } from 'react-i18next'
-import { type z } from 'zod'
+import type * as z from 'zod'
 import { axios } from '@/lib/axios'
 import { queryClient, type MutationConfig } from '@/lib/react-query'
 import { toast } from 'sonner'

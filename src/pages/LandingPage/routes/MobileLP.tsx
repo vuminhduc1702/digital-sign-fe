@@ -1,5 +1,14 @@
-import { Drawer } from '@/components/Drawer'
 import LPnavigation from './LPnavigation'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 
 type MobileSidebarProps = {
   sidebarOpen: boolean
@@ -13,21 +22,25 @@ function MobileLP({
   childToParent,
 }: MobileSidebarProps) {
   return (
-    <Drawer
-      isOpen={sidebarOpen}
-      onClose={() => setSidebarOpen(false)}
-      title={''}
-      renderFooter={() => <></>}
+    <Sheet
+      open={sidebarOpen}
+      onOpenChange={() => setSidebarOpen(false)}
       modal={true}
-      side="left"
-      classNameBody="xs2:max-w-[320px] relative flex w-full max-w-[420px] flex-1 flex-col bg-red-600 text-white"
-      classNameHeader="absolute right-2 top-4 z-10"
-      classNameContentArea="justify-start"
+      key="left"
     >
-      <nav className="space-y-1 px-2">
-        <LPnavigation childToParent={childToParent} />
-      </nav>
-    </Drawer>
+      <SheetContent
+        className="max-w-xs bg-secondary-400"
+        side="left"
+        closeButtonAvai={true}
+      >
+        <SheetHeader className="absolute right-2 top-1 z-10"></SheetHeader>
+        <div className="h-full overflow-y-auto">
+          <nav className="space-y-1 px-2">
+            <LPnavigation childToParent={childToParent} />
+          </nav>
+        </div>
+      </SheetContent>
+    </Sheet>
   )
 }
 

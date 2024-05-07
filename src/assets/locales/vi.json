@@ -161,7 +161,7 @@
       },
       "group_manage": {
         "title": "Nhóm",
-        "header": "Quản lý nhóm",
+        "header": "Danh sách nhóm",
         "table": {
           "id": "ID",
           "name": "Tên",
@@ -231,7 +231,7 @@
       },
       "device_manage": {
         "title": "Thiết bị",
-        "header": "Quản lý thiết bị",
+        "header": "Danh sách thiết bị",
         "table": {
           "id": "ID",
           "payload_as_string": "Message",
@@ -296,7 +296,8 @@
           "success_update": "Sửa thiết bị thành công",
           "success_delete": "Xoá thiết bị thành công",
           "choose_device": "Vui lòng chọn thiết bị",
-          "select_require_err": "Vui lòng chọn"
+          "select_require_err": "Vui lòng chọn",
+          "input_require_err": "Vui lòng nhập"
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
@@ -331,6 +332,8 @@
           "status": "Trạng thái",
           "retry": " Số lần lặp lại",
           "test_condition_time": "Thời gian kiểm tra điều kiện",
+          "input_placeholder": "Vui lòng nhập",
+          "select_placeholder": "Vui lòng chọn",
           "start": "Bắt đầu",
           "end": "Kết thúc",
           "group": "Nhóm",
@@ -682,6 +685,7 @@
         "title_card": "Tạo biểu đồ dữ liệu",
         "title_controller": "Tạo bảng điều khiển",
         "title_map": "Tạo bản đồ",
+        "title_light": "Tạo đèn đường",
         "update": "Sửa biểu đồ",
         "update_line": "Sửa biểu đồ đường",
         "update_bar": "Sửa biểu đồ cột",
@@ -717,6 +721,10 @@
           "pie_chart": "Biểu đồ tròn",
           "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
+          "light": "Đèn đường",
+          "light_on": "Đèn sáng",
+          "light_off": "Đèn tắt",
+          "light_blinking": "Đèn nhấp nháy",
           "data_chart": "Dữ liệu",
           "data_table": "Bảng dữ liệu",
           "controller": {
@@ -724,7 +732,7 @@
             "input_list": "Danh sách biến đầu vào",
             "input": "Nhập tên biến",
             "value": "Giá trị",
-            "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công. Dữ liệu trả về: {{DATA}}"
+            "success": "Thực thi nghiệp vụ thành công."
           }
         }
       },
@@ -749,6 +757,7 @@
         "version": "Firmware Version",
         "create_time": "Ngày tạo",
         "created_by": "Người tạo",
+        "description": "Mô tả",
         "delete_firmware": "Xoá Firmware",
         "delete_firmware_confirm": "Bạn có chắc chắn muốn xóa Fireware {{FIRMWARE_NAME}}?",
         "delete_multiple_firmware_confirm": "Bạn có chắc chắn muốn xóa các Fireware đã chọn?"
@@ -1037,7 +1046,17 @@
     "result_limit": "Giới hạn số kết quả: ",
     "search": "Tìm kiếm",
     "min": "Min",
-    "max": "Max"
+    "max": "Max",
+    "pagination": "Số dòng hiển thị",
+    "total": "TỔNG SỐ",
+    "searchCount": "KẾT QUẢ TÌM KIẾM",
+    "selectCount": "ĐÃ CHỌN",
+    "paginationSelected": "Hiển thị {{min}}-{{max}} của {{total}} mục",
+    "filter": {
+      "select_all": "Tất cả"
+    },
+    "loading": "Xin vui lòng chờ...",
+    "search_field": "Tìm kiếm theo trường"
   },
   "btn": {
     "create": "Tạo mới",
@@ -1533,47 +1552,10 @@
       }
     }
   },
-  "table": {
-    "no": "STT",
-    "pagination": "Số dòng hiển thị",
-    "total": "TỔNG SỐ",
-    "searchCount": "KẾT QUẢ TÌM KIẾM",
-    "selectCount": "ĐÃ CHỌN",
-    "excel": "Xuất Excel",
-    "delete": "Xoá",
-    "paginationSelected": "Hiển thị {{min}}-{{max}} của {{total}} mục",
-    "print": "In",
-    "excel": "Excel",
-    "pdf": "PDF",
-    "filter": {
-      "select_all": "Tất cả"
-    },
-    "loading": "Xin vui lòng chờ...",
-    "view_detail": "Xem chi tiết",
-    "search_field": "Tìm kiếm theo trường",
-    "copy_id": "Copy ID",
-    "no_device": "Không có thiết bị.",
-    "no_in_org": "Không trực thuộc tổ chức.",
-    "no_user": "Không có người dùng.",
-    "no_event": "Không có sự kiện.",
-    "no_attr": "Không có thuộc tính.",
-    "no_log_attr": "Không có bản tin thuộc tính.",
-    "no_mqtt_hist": "Không có lịch sử MQTT.",
-    "no_thing": "Không có Thing.",
-    "no_firmware": "Không có Firmware.",
-    "no_dashboard": "Không có bảng điều khiển.",
-    "no_adapter": "Không có Adapter.",
-    "no_customer": "Không có thông tin khách hàng",
-    "no_subscription": "Không có đăng ký dịch vụ.",
-    "no_bill": "Không có hóa đơn",
-    "no_tenant": "Không có tenant.",
-    "no_template": "Không có nhóm thuộc tính.",
-    "no_service": "Không có nghiệp vụ.",
-    "no_event_service": "Không có sự kiện nghiệp vụ.",
-    "no_role": "Không có vai trò.",
-    "no_tenant_role": "Không có vai trò tenant."
-  },
   "tree": {
     "no_selection_org": "Không trực thuộc tổ chức"
+  },
+  "combobox": {
+    "select_device": "Chọn thiết bị"
   }
 }

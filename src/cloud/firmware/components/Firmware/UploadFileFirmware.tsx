@@ -45,10 +45,10 @@ export function UploadFileFirmWare({
       resolver: uploadFileSchema && zodResolver(uploadFileSchema),
     })
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && close) {
       close()
     }
-  }, [isSuccess, close])
+  }, [isSuccess])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -82,34 +82,36 @@ export function UploadFileFirmWare({
             })}
           >
             <>
-              <div className="flex items-center justify-center rounded-md border border-dashed border-rose-300 bg-red-50">
-                <label
-                  htmlFor="file"
-                  className="flex cursor-pointer items-center justify-center gap-3 px-2 py-6"
-                >
-                  <UploadIcon className="h-6 w-6 text-primary-400" />
-                  <div>
-                    {file ? (
-                      <div className="flex cursor-pointer items-center justify-center gap-1">
-                        <span>Name: {file.name}</span>
-                      </div>
-                    ) : (
-                      'Upload File'
-                    )}
-                  </div>
-                </label>
-                {file && (
-                  <button
-                    className="rounded-md text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                    onClick={() => {
-                      setValue('file', null)
-                      setFile(null)
-                    }}
+              <div className="flex flex-col items-center justify-center rounded-md border border-dashed border-rose-300 bg-red-50">
+                <div className="flex items-center justify-center">
+                  <label
+                    htmlFor="file"
+                    className="flex cursor-pointer items-center justify-center gap-3 px-2 py-6"
                   >
-                    <span className="sr-only">Close panel</span>
-                    <HiOutlineXMark className="h-5 w-5" aria-hidden="true" />
-                  </button>
-                )}
+                    <UploadIcon className="h-6 w-6 text-primary-400" />
+                    <div>
+                      {file ? (
+                        <div className="flex cursor-pointer items-center justify-center gap-1">
+                          <span>Name: {file.name}</span>
+                        </div>
+                      ) : (
+                        'Upload File'
+                      )}
+                    </div>
+                  </label>
+                  {file && (
+                    <button
+                      className="rounded-md text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                      onClick={() => {
+                        setValue('file', null)
+                        setFile(null)
+                      }}
+                    >
+                      <span className="sr-only">Close panel</span>
+                      <HiOutlineXMark className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
                 <InputField
                   id="file"
                   type="file"
@@ -120,11 +122,14 @@ export function UploadFileFirmWare({
                       setError('file', { message: '' })
                     }
                   }}
+                  classnamefieldwrapper="hidden"
                 />
               </div>
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.file?.message}
-              </p>
+              {formState?.errors?.file?.message && (
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.file?.message}
+                </p>
+              )}
             </>
           </form>
         </div>

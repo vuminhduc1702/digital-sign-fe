@@ -4,14 +4,7 @@ import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useSpinDelay } from 'spin-delay'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/Tooltip'
 import { Button } from '@/components/Button/Button'
-import { Drawer } from '@/components/Drawer'
 import TitleBar from '@/components/Head/TitleBar'
 import { Spinner } from '@/components/Spinner'
 import { toast } from 'sonner'
@@ -28,6 +21,7 @@ import {
   MapChart,
   PieChart,
   TableChart,
+  LightChart,
 } from '../components'
 import {
   CreateControllerButton,
@@ -37,8 +31,22 @@ import {
   type Widget,
   type WidgetCategoryType,
 } from '../components/Widget'
-import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import {
+  ComboBoxSelectDeviceDashboard,
+  type MapData,
+} from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
+import lightOnICon from '@/assets/icons/light-on.svg'
 
 import { WS_URL } from '@/config'
 import {
@@ -76,6 +84,13 @@ import BD_05 from '@/assets/images/landingpage/BD_05.png'
 import BD_06 from '@/assets/images/landingpage/BD_06.png'
 import BD_07 from '@/assets/images/landingpage/BD_07.png'
 import BD_08 from '@/assets/images/landingpage/BD_08.png'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import BD_09 from '@/assets/images/landingpage/BD_09.png'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -169,12 +184,10 @@ export function DashboardDetail() {
       orgIds: findOrgs(),
       projectId,
       config: {
-        suspense: false,
         retry: 5,
         retryDelay: 5000,
       },
     })
-  useEffect(() => {}, [isPreviousDeviceData])
 
   function triggerRerenderLayout() {
     setRerenderLayout(true)
@@ -200,6 +213,15 @@ export function DashboardDetail() {
     if (lastJsonMessage != null) {
       if (lastJsonMessage?.errorCode !== 0) {
         toast.error(lastJsonMessage.errorMsg)
+      }
+
+      if (
+        lastJsonMessage?.errorCode === 0 &&
+        !Array.isArray(lastJsonMessage.data)
+      ) {
+        toast.success(
+          t('cloud:dashboard.detail_dashboard.add_widget.controller.success'),
+        )
       }
     }
   }, [lastJsonMessage])
@@ -256,7 +278,7 @@ export function DashboardDetail() {
   }, [widgetList, lastJsonMessage])
 
   function combinedObject(data: any[]) {
-    let combinedObject: TimeSeries = {}
+    let combinedObject: any = {}
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
         for (const key in obj) {
@@ -289,7 +311,7 @@ export function DashboardDetail() {
   }
 
   const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
-    Device[]
+    MapData[]
   >([])
 
   function getDeviceInfo(deviceId: string) {
@@ -302,14 +324,10 @@ export function DashboardDetail() {
   // get device search list
   function getMapDeviceList(widgetInfo: any) {
     const result: EntityId[] = []
-    widgetInfo?.attribute_config?.map(item => {
+    widgetInfo?.attribute_config?.map((item: any) => {
       const entityName = item.deviceName
       const id = item.label
-      if (
-        result.findIndex(
-          entity => entity.id === id && entity.entityName === entityName,
-        ) === -1
-      ) {
+      if (result.findIndex(entity => entity.id === id) === -1 && id) {
         result.push({
           entityName: entityName,
           entityType: 'DEVICE',
@@ -494,7 +512,11 @@ export function DashboardDetail() {
                           widgetInfo?.datasource?.controller_message as string
                         }
                         sendMessage={sendMessage}
-                        lastJsonMessage={lastJsonMessage}
+                      />
+                    ) : widgetInfo?.description === 'LIGHT' ? (
+                      <LightChart
+                        data={lastestValues}
+                        widgetInfo={widgetInfo}
                       />
                     ) : null}
                     {widgetInfo?.description === 'MAP' ? (
@@ -583,7 +605,7 @@ export function DashboardDetail() {
               isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
-
+                close && close()
                 // resize bug?
                 if (detailDashboard != null) {
                   mutateUpdateDashboard({
@@ -644,327 +666,377 @@ export function DashboardDetail() {
                 setWidgetList={setWidgetList}
               />
             ) : (
-              <Drawer
-                isOpen={isOpen}
-                onClose={close}
-                title={t('cloud:dashboard.detail_dashboard.add_widget.create')}
-                renderFooter={() => (
-                  <>
-                    <Button
-                      className="rounded border-none"
-                      variant="secondary"
-                      size="lg"
-                      onClick={close}
-                      startIcon={
-                        <img
-                          src={btnCancelIcon}
-                          alt="Submit"
-                          className="h-5 w-5"
-                        />
-                      }
-                    />
-                  </>
-                )}
-              >
-                <div className="flex w-full gap-x-8">
-                  <div className="w-full space-y-6">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateWidget(true)
-                              setWidgetType('TIMESERIES')
-                              setWidgetCategory('LINE')
-                              setIsMultipleAttr(true)
-                              setIsMultipleDevice(true)
-                            }}
-                          >
-                            <ChartLine
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.line_chart',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="">
-                            <img src={BD_01} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+              <Sheet open={isOpen} onOpenChange={close} modal={false}>
+                <SheetContent
+                  onInteractOutside={e => {
+                    e.preventDefault()
+                  }}
+                  className={cn(
+                    'flex h-full max-w-xl flex-col justify-between',
+                  )}
+                >
+                  <SheetHeader>
+                    <SheetTitle>
+                      {t('cloud:dashboard.detail_dashboard.add_widget.create')}
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
+                    <div className="flex w-full gap-x-8">
+                      <div className="w-full space-y-6">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('TIMESERIES')
+                                  setWidgetCategory('LINE')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <ChartLine
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.line_chart',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_01} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
 
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateWidget(true)
-                              setWidgetType('TIMESERIES')
-                              setWidgetCategory('BAR')
-                              setIsMultipleAttr(true)
-                              setIsMultipleDevice(true)
-                            }}
-                          >
-                            <ChartGraph
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="">
-                            <img src={DB_03} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('TIMESERIES')
+                                  setWidgetCategory('BAR')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <ChartGraph
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={DB_03} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
 
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          {' '}
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateWidget(true)
-                              setWidgetType('TIMESERIES')
-                              setWidgetCategory('TABLE')
-                              setIsMultipleAttr(true)
-                              setIsMultipleDevice(true)
-                            }}
-                          >
-                            <ChartTableData
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.data_table',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="">
-                            <img src={BD_04} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              {' '}
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('TIMESERIES')
+                                  setWidgetCategory('TABLE')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <ChartTableData
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.data_table',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_04} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
 
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateControllerBtn(true)
-                              setWidgetCategory('CONTROLLER')
-                            }}
-                          >
-                            <ChartControl
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.controller.title',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="">
-                            <img src={BD_05} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateControllerBtn(true)
+                                  setWidgetCategory('CONTROLLER')
+                                }}
+                              >
+                                <ChartControl
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.controller.title',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_05} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('LASTEST')
+                                  setWidgetCategory('LIGHT')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <img
+                                  src={lightOnICon}
+                                  alt="light icon"
+                                  className="h-[58px] w-[58px]"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.light',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_09} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      <div className="w-full space-y-6">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('LASTEST')
+                                  setWidgetCategory('PIE')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <ChartCircle
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_02} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('LASTEST')
+                                  setWidgetCategory('GAUGE')
+                                  setIsMultipleAttr(false)
+                                  setIsMultipleDevice(false)
+                                }}
+                              >
+                                <ChartGaugeIcon
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.gauge',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="p-[8px]">
+                                <img src={BD_06} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('LASTEST')
+                                  setWidgetCategory('CARD')
+                                  setIsMultipleAttr(false)
+                                  setIsMultipleDevice(false)
+                                }}
+                              >
+                                <ChartData
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.data_chart',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_07} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Button
+                                type="button"
+                                size="square"
+                                className="flex w-[245px] justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                                variant="secondaryLight"
+                                onClick={() => {
+                                  close()
+                                  setIsShowCreateWidget(true)
+                                  setWidgetType('LASTEST')
+                                  setWidgetCategory('MAP')
+                                  setIsMultipleAttr(true)
+                                  setIsMultipleDevice(true)
+                                }}
+                              >
+                                <ChartMap
+                                  height={58}
+                                  width={58}
+                                  viewBox="0 0 58 58"
+                                />
+                                <span className="flex items-center">
+                                  {t(
+                                    'cloud:dashboard.detail_dashboard.add_widget.map',
+                                  )}
+                                </span>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <div className="">
+                                <img src={BD_08} alt="" className="w-[200px]" />
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-full space-y-6">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateWidget(true)
-                              setWidgetType('LASTEST')
-                              setWidgetCategory('PIE')
-                              setIsMultipleAttr(true)
-                              setIsMultipleDevice(true)
-                            }}
-                          >
-                            <ChartCircle
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="">
-                            <img src={BD_02} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
 
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateWidget(true)
-                              setWidgetType('LASTEST')
-                              setWidgetCategory('GAUGE')
-                              setIsMultipleAttr(false)
-                              setIsMultipleDevice(false)
-                            }}
-                          >
-                            <ChartGaugeIcon
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.gauge',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="p-[8px]">
-                            <img src={BD_06} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateWidget(true)
-                              setWidgetType('LASTEST')
-                              setWidgetCategory('CARD')
-                              setIsMultipleAttr(false)
-                              setIsMultipleDevice(false)
-                            }}
-                          >
-                            <ChartData
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.data_chart',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="">
-                            <img src={BD_07} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Button
-                            type="button"
-                            size="square"
-                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
-                            variant="secondaryLight"
-                            onClick={() => {
-                              close()
-                              setIsShowCreateWidget(true)
-                              setWidgetType('LASTEST')
-                              setWidgetCategory('MAP')
-                              setIsMultipleAttr(true)
-                              setIsMultipleDevice(true)
-                            }}
-                          >
-                            <ChartMap
-                              height={58}
-                              width={58}
-                              viewBox="0 0 58 58"
-                            />
-                            <span className="flex items-center">
-                              {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.map',
-                              )}
-                            </span>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="">
-                            <img src={BD_08} alt="" className="w-[200px]" />
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                </div>
-              </Drawer>
+                  <SheetFooter>
+                    <>
+                      <Button
+                        className="rounded border-none"
+                        variant="secondary"
+                        size="lg"
+                        onClick={close}
+                        startIcon={
+                          <img
+                            src={btnCancelIcon}
+                            alt="Submit"
+                            className="h-5 w-5"
+                          />
+                        }
+                      />
+                    </>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
             )}
           </div>
         ) : (

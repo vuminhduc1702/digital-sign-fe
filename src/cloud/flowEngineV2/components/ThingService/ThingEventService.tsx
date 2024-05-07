@@ -30,8 +30,7 @@ export function ThingEventServices({ serviceName }: ThingServicesTab2Props) {
     startTime: selectValue !== '0' ? startTime : null,
     endTime: endTime,
     config: {
-      suspense: false,
-      keepPreviousData: true,
+      staleTime: 0,
     },
   })
 

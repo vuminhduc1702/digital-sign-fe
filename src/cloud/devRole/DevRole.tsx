@@ -15,6 +15,8 @@ import { SearchField } from '@/components/Input'
 import { type Project } from '../project/routes/ProjectManage'
 
 import narrowLeft from '@/assets/icons/narrow-left.svg'
+import { Button } from '@/components/Button'
+import { useDisclosure } from '@/utils/hooks'
 
 export default function DevRole() {
   const { t } = useTranslation()
@@ -25,6 +27,11 @@ export default function DevRole() {
   const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
+  const {
+    open: openCreateRole,
+    close: closeCreateRole,
+    isOpen: isOpenCreateRole,
+  } = useDisclosure()
 
   const { data: projectsData } = useProjects()
 
@@ -41,10 +48,6 @@ export default function DevRole() {
   const { data, isLoading, isPreviousData } = useGetRoles({
     projectId,
     applicable_to: 'TENANT_DEV',
-    config: {
-      keepPreviousData: true,
-      suspense: false,
-    },
     offset,
     search_str: searchQuery,
     search_field: searchField.current,
@@ -122,7 +125,12 @@ export default function DevRole() {
                   setIsSearchData={setIsSearchData}
                   closeSearch={true}
                 />
-                <CreateRole project_id={projectId} />
+                <Button
+                  className="h-[38px] rounded border-none"
+                  onClick={openCreateRole}
+                >
+                  {t('cloud:role_manage.add_role.button')}
+                </Button>
               </div>
             )}
           </div>
@@ -144,6 +152,14 @@ export default function DevRole() {
           )}
         </div>
       </div>
+      {isOpenCreateRole && (
+        <CreateRole
+          project_id={projectId}
+          open={openCreateRole}
+          close={closeCreateRole}
+          isOpen={isOpenCreateRole}
+        />
+      )}
     </ContentLayout>
   )
 }

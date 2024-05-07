@@ -10,7 +10,11 @@ import { Button } from '@/components/Button'
 import { Calendar } from '@/components/Calendar'
 import { InputField, SelectField } from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { PlusIcon } from '@/components/SVGIcons'
 import i18n from '@/i18n'
 import { useAreaList } from '@/layout/MainLayout/components/UserAccount/api/getAreaList'

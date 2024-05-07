@@ -26,7 +26,6 @@ import { Default } from '@/cloud/deviceTemplate/routes/Default'
 import { LwM2M } from '@/cloud/deviceTemplate/routes/LwM2M'
 import { Navigate, type RouteObject } from 'react-router-dom'
 
-import TestMap from '@/cloud/testMap/routes/TestMap'
 import storage from '@/utils/storage'
 import { Authorization } from '@/lib/authorization'
 import { endProgress, startProgress } from '@/components/Progress'
@@ -250,21 +249,6 @@ export const protectedRoutes = [
           return null
         },
         children: [{ path: ':projectId', children: [{ path: ':tableName' }] }],
-      },
-      {
-        path: PATHS.TEST_MAP,
-        element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <TestMap />
-          </ErrorBoundary>
-        ),
-        loader: async () => {
-          startProgress()
-          await import('@/cloud/testMap/routes/TestMap')
-          endProgress()
-
-          return null
-        },
       },
     ],
   },
