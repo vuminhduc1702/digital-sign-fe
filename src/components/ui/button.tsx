@@ -21,9 +21,9 @@ const buttonVariants = cva(
         none: 'bg-transparent shadow-none border-none',
       },
       size: {
-        sm: 'py-2 px-4 !text-body-light',
-        md: 'py-2 px-6 !text-body-md',
-        lg: 'py-3 px-8 !text-body-md',
+        sm: 'py-2 px-4 text-body-light',
+        md: 'py-2 px-6 text-body-md',
+        lg: 'py-3 px-8 text-body-md',
         square: 'py-2 px-2',
       },
     },
