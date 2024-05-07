@@ -124,7 +124,6 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -313,32 +312,11 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
-  const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
-    MapData[]
-  >([])
-
   function getDeviceInfo(deviceId: string) {
     const deviceInfo = deviceData?.devices.find(
       device => device.id === deviceId,
     )
     return deviceInfo
-  }
-
-  // get device search list
-  function getMapDeviceList(widgetInfo: any) {
-    const result: EntityId[] = []
-    widgetInfo?.attribute_config?.map((item: any) => {
-      const entityName = item.deviceName
-      const id = item.label
-      if (result.findIndex(entity => entity.id === id) === -1 && id) {
-        result.push({
-          entityName: entityName,
-          entityType: 'DEVICE',
-          id: id,
-        })
-      }
-    })
-    return result
   }
 
   return (
@@ -446,6 +424,8 @@ export function DashboardDetail() {
                             // x: index % 2 === 0 ? 0 : 4,
                             x: index % 2 === 0 ? 0 : 6,
                             y: 0,
+                            // w: 1,
+                            // h: 1,
                             w: widgetInfo?.description === 'CARD' ? 3 : 6,
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
@@ -487,11 +467,6 @@ export function DashboardDetail() {
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
-                        filter={
-                          filteredComboboxDataMap.length >= 1
-                            ? filteredComboboxDataMap
-                            : []
-                        }
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
@@ -526,14 +501,6 @@ export function DashboardDetail() {
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                       />
-                    ) : null}
-                    {widgetInfo?.description === 'MAP' ? (
-                      <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
-                        <ComboBoxSelectDeviceDashboard
-                          setFilteredComboboxData={setFilteredComboboxDataMap}
-                          data={getMapDeviceList(widgetInfo)}
-                        />
-                      </div>
                     ) : null}
                     {isEditMode ? (
                       <div

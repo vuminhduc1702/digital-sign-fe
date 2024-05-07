@@ -35,13 +35,13 @@ export type MapData = {
 type ComboBoxSelectDeviceDashboardProps = {
   data: MapData[]
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<MapData[]>>
-  offset?: number
+  setSearchWidget?: React.Dispatch<React.SetStateAction<string>>
 } & FieldWrapperPassThroughProps
 
 export function ComboBoxSelectDeviceDashboard({
   data,
   setFilteredComboboxData,
-  offset,
+  setSearchWidget,
   ...props
 }: ComboBoxSelectDeviceDashboardProps) {
   const { close, open, isOpen } = useDisclosure()

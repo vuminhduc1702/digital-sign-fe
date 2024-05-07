@@ -28,17 +28,21 @@ export const getGroups = ({
   search_str,
   search_field,
 }: GetGroups): Promise<GroupList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    org_id: orgId || '',
+    entity_type: entity_type || '',
+    get_attr: String(get_attr),
+    offset: String(offset),
+    limit: String(limit),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/groups`, {
-    params: {
-      project_id: projectId,
-      org_id: orgId,
-      entity_type,
-      get_attr,
-      offset,
-      limit,
-      search_str,
-      search_field,
-    },
+    params,
   })
 }
 

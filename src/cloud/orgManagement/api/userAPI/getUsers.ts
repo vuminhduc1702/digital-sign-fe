@@ -32,17 +32,31 @@ export const getUsers = ({
   search_str,
   search_field,
 }: GetUsers): Promise<UserList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    org_id: orgId || '',
+    name: name || '',
+    expand: String(expand),
+    offset: String(offset),
+    limit: String(limit),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/users`, {
-    params: {
-      project_id: projectId,
-      org_id: orgId,
-      name,
-      expand,
-      offset,
-      limit,
-      search_str,
-      search_field,
-    },
+    params,
+    // : {
+    //   project_id: projectId,xx
+    //   org_id: orgId,
+    //   name,
+    //   expand,
+    //   offset,
+    //   limit,
+    //   search_str,
+    //   search_field,
+    // },
   })
 }
 
