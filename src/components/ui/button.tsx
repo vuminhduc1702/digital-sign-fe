@@ -8,22 +8,27 @@ import { Spinner } from '../Spinner'
 
 const buttonVariants = cva(
   // 'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-  'flex cursor-pointer items-center justify-center gap-x-2 border border-secondary-600 shadow-sm hover:opacity-80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
+  'flex cursor-pointer items-center justify-center rounded-md font-medium gap-x-2 border border-secondary-600 shadow-sm hover:opacity-80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
   {
     variants: {
       variant: {
         primary: 'bg-primary-400 text-white',
-        secondary: 'bg-secondary-600',
+        secondary: 'bg-secondary-600 hover:bg-secondary/80',
         secondaryLight: 'bg-secondary-500',
         danger: 'bg-primary-400 text-white',
         trans: 'bg-transparent',
         muted: 'bg-white',
+        outline:
+          'border-input bg-background hover:bg-accent hover:text-accent-foreground',
         none: 'bg-transparent shadow-none border-none',
       },
       size: {
-        sm: 'py-2 px-4 text-body-light',
-        md: 'py-2 px-6 text-body-md',
-        lg: 'py-3 px-8 text-body-md',
+        sm: 'py-2 px-4',
+        //  !text-body-light',
+        md: 'py-2 px-6',
+        // !text-body-md',
+        lg: 'py-3 px-8',
+        //  !text-body-md',
         square: 'py-2 px-2',
       },
     },
