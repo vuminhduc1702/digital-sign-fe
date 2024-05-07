@@ -1,4 +1,4 @@
-name: CICD Pipeline for Innoway Demo FE - VHT - Test Cluster
+name: CICD Pipeline for Innoway Devportal FE - VHT - Test Cluster
 
 on:
   push:    
@@ -11,6 +11,8 @@ env:
   chart-folder: /home/vht/ui
   chart-name: ui
   namespace: ui
+  repo-infra-url: https://gitlabvht.innoway.vn/minhhk1/viot-app-chart.git
+  repo-infra-branch: main
 
 jobs:
   # Job 1: build && test
@@ -25,10 +27,15 @@ jobs:
     - name: Build Image
       id: build-image
       run: |
-        echo "Tag: ${{env.tags}}"
-        cp .env.test.example .env
-        docker build -t ${{env.image}}:${{env.tags}} .
-
+        docker pull ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest
+        if [ "$?" -ne 0 ]; then
+          docker build -t ${{env.image}}:${{env.tags}} .
+        else 
+          echo "Tag: ${{env.tags}}"
+          cp .env.test.example .env
+          docker build --from-cache ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest -t ${{env.image}}:${{env.tags}} .
+        fi
+        
   # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
   # in which case 'username' and 'password' can be omitted.
     - name: Push To harbor
@@ -38,10 +45,28 @@ jobs:
       run: |
         docker tag ${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
         docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+        docker tag ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest
+        docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest
     - name: Clean image after push
       run: |
-        echo "Image pushed to ${{ steps.push-to-harbor.outputs.registry-paths }}"
-        docker rmi -f  ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+        docker image ls | grep  ${{env.image}} | awk {'print $3 '} | xargs -I delete-images docker rmi delete-images
+        docker rmi $(docker images -f "dangling=true" -q)
+  update-config:
+      runs-on: worker-mongo
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ env.repo-infra-url }}
+          ref: ${{ env.repo-infra-branch }}
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN}}
+      - name: edit image tag
+        run: |
+          cd ${{  env.chart-name  }}
+          sed -i "s/tag: .*/tag: ${{ env.tags }}/g" values.yaml
+          git push origin main
+          
   deploy:
     name: Deploy to kubernetes
     needs: build
@@ -59,3 +84,5 @@ jobs:
           cd ${{env.chart-folder}}
           sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
           helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
+
+
