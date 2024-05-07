@@ -694,6 +694,7 @@
         "update_pie": "Sửa biểu đồ tròn",
         "update_gauge": "Sửa biểu đồ đồng hồ đo",
         "update_card": "Sửa biểu đồ dữ liệu",
+        "update_map": "Sửa bản đồ",
         "name": "Tên biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
@@ -727,6 +728,7 @@
           "light_blinking": "Đèn nhấp nháy",
           "data_chart": "Dữ liệu",
           "data_table": "Bảng dữ liệu",
+          "choose_latlng": "Vui lòng chọn thuộc tính tọa độ còn lại",
           "controller": {
             "title": "Điều khiển",
             "input_list": "Danh sách biến đầu vào",
@@ -737,7 +739,9 @@
         }
       },
       "map": {
-        "device_not_found": "Không tìm thấy thiết bị nào"
+        "device_not_found": "Không tìm thấy thiết bị nào",
+        "googleMap": "Google Map",
+        "openStreetMap": "Open Street Map"
       },
       "card": {
         "no_log_attr": "Không có bản tin thuộc tính"
@@ -1122,6 +1126,7 @@
     "select_org": "Chọn tổ chức"
   },
   "search": {
+    "all": "Tất cả",
     "title": "Tìm kiếm",
     "no_org": "Không trực thuộc tổ chức",
     "no_group": "Không trực thuộc nhóm"

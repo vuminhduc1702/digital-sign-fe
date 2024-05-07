@@ -12,40 +12,49 @@ import {
 } from '../../types'
 import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
-import L, { type LatLngTuple, type Map } from 'leaflet'
+import L, { type LatLngTuple, type Map, type Marker as TMarker } from 'leaflet'
 import { type Device } from '@/cloud/orgManagement'
 import { toast } from 'sonner'
 import { type MapData } from '../ComboBoxSelectDeviceDashboard'
+import MarkerClusterGroup from 'react-leaflet-cluster'
+import { ComboBoxSelectDeviceDashboard } from '../ComboBoxSelectDeviceDashboard'
+import { MapSetting } from './MapSetting'
 
 export function MapChart({
   data,
   widgetInfo,
   isEditMode,
-  filter,
 }: {
   data: MapSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
-  filter: MapData[]
 }) {
-  // streets
+  // google map
   const STREETS_MAP =
     'https://mt0.google.com/vt/lyrs=m&hl=vi&src=app&x={x}&y={y}&z={z}'
   const STREETS_MAP_WO_LABEL =
     'https://mt0.google.com/vt/lyrs=m&hl=vi&src=app&x={x}&y={y}&z={z}&apistyle=s.t%3A0|s.e%3Al|p.v%3Aoff'
 
-  // satellite
+  // google map satellite
   const SATELLITE_MAP =
     'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}&s=Ga'
   const SATELLITE_MAP_WO_LABEL =
     'http://mt0.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 
+  // open street map
+  const OPEN_STREET_MAP = 'https://{s}.tile.osm.org/{z}/{x}/{y}.png'
+
   const { t } = useTranslation()
   const [dragMode, setDragMode] = useState(true)
+  // 0 - google map, 1 - open street map
+  const [mapType, setMapType] = useState(0)
   const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
   const [deviceDetailInfo, setDeviceDetailInfo] = useState<EntityId[]>([])
   const map = useRef<Map>(null)
-  const searchDevice = filter[0]
+  const markerRefs = useRef<Array<TMarker>>([])
+  const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
+    MapData[]
+  >([])
 
   useEffect(() => {
     if (isEditMode) {
@@ -87,20 +96,23 @@ export function MapChart({
 
   const [renderedInit, setRenderedInit] = useState(false)
 
-  // function getDefaultPosition() {
-  //   const filterData = dataForMap.filter((item: any) => item[0] !== 999)
-  //   if (filterData.length === 1) {
-  //     const [lat, lng] = filterData[0]
-  //     map.current?.setView([lat, lng], 20)
-  //     return
-  //   }
-  //   map.current?.fitBounds(
-  //     dataForMap.filter((item: any) => item[0] !== 999),
-  //     {
-  //       padding: [30, 30],
-  //     },
-  //   )
-  // }
+  // get device search list
+  function getMapDeviceList(widgetInfo: any) {
+    const result: EntityId[] = []
+    widgetInfo?.attribute_config?.map((item: any) => {
+      const entityName = item.deviceName
+      const id = item.label
+      if (result.findIndex(entity => entity.id === id) === -1 && id) {
+        result.push({
+          entityName: entityName,
+          entityType: 'DEVICE',
+          id: id,
+        })
+      }
+    })
+    return result
+  }
+
   function getDefaultPosition() {
     const result = dataForMap.find(item => {
       if (!item) return false
@@ -124,10 +136,15 @@ export function MapChart({
       setRenderedInit(true)
       return
     }
-    if (filter.length > 1 || filter.length === 0 || filter[0] === undefined) {
+    if (
+      filteredComboboxDataMap.length > 1 ||
+      filteredComboboxDataMap.length === 0 ||
+      filteredComboboxDataMap[0] === undefined
+    ) {
       return
     }
-    if (!searchDevice) {
+
+    if (!filteredComboboxDataMap[0]) {
       getDefaultPosition()
       return
     } else {
@@ -136,7 +153,7 @@ export function MapChart({
       }
       // find index of device in dataForMap
       const deviceIndex = deviceDetailInfo.findIndex(
-        device => device?.id === searchDevice.id,
+        device => device?.id === filteredComboboxDataMap[0].id,
       )
       if (deviceIndex === -1) {
         return
@@ -147,11 +164,28 @@ export function MapChart({
         return
       }
       map.current?.setView([lat, lng], 20)
+
+      markerRefs.current.map((markerRef, index) => {
+        if (!markerRef?.getLatLng()) {
+          return
+        }
+        const { lat: markerLat, lng: markerLng } = markerRef.getLatLng()
+        if (markerLat === lat && markerLng === lng) {
+          const marker = markerRef
+          marker.openPopup()
+        }
+      })
     }
-  }, [dataForMap, searchDevice])
+  }, [dataForMap, filteredComboboxDataMap])
 
   return (
     <>
+      <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
+        <ComboBoxSelectDeviceDashboard
+          setFilteredComboboxData={setFilteredComboboxDataMap}
+          data={getMapDeviceList(widgetInfo)}
+        />
+      </div>
       <MapContainer
         className="z-0 mx-2 mt-12 h-[90%]"
         zoom={5}
@@ -161,43 +195,56 @@ export function MapChart({
         center={getDefaultPosition() ? getDefaultPosition() : [17, 104]}
         ref={map}
         maxBoundsViscosity={1.0}
-        maxBounds={L.latLngBounds(L.latLng(-90, -100), L.latLng(90, 150))}
+        maxBounds={L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 150))}
       >
-        <TileLayer url={STREETS_MAP} />
-        {dataForMap.map((coor, index) => {
-          const [lat, lng] = coor
-          if (lat === 999) {
-            return
-          }
-          const deviceNameArray = deviceDetailInfo?.map((item: any) => {
-            const deviceData = JSON.parse(widgetInfo.datasource.init_message)
-              .entityDataCmds[0].query.entityFilter.entityIds
-            const deviceFilter = deviceData.filter(
-              (device: any) => device === item.id,
-            )
-            if (deviceFilter.length != 0) {
-              return item.entityName
+        <TileLayer url={mapType === 0 ? STREETS_MAP : OPEN_STREET_MAP} />
+        <MarkerClusterGroup disabledCusteringAtZoom={18}>
+          {dataForMap.map((coor, index) => {
+            const [lat, lng] = coor
+            if (lat === 999) {
+              return
             }
-          })
-          return (
-            <Marker
-              position={[lat, lng]}
-              key={index}
-              eventHandlers={{
-                click: event => {
-                  map.current?.setView([lat, lng], 20)
-                },
-              }}
-            >
-              <Popup>
-                {deviceDetailInfo && deviceDetailInfo.length > 0
-                  ? `Thiết bị ${deviceNameArray[index]} (${lat},${lng})`
-                  : `Thiết bị ${index} (${lat},${lng})`}
-              </Popup>
-            </Marker>
-          )
-        })}
+            const deviceNameArray = deviceDetailInfo?.map((item: any) => {
+              const deviceData = JSON.parse(widgetInfo.datasource.init_message)
+                .entityDataCmds[0].query.entityFilter.entityIds
+              const deviceFilter = deviceData.filter(
+                (device: any) => device === item.id,
+              )
+              if (deviceFilter.length != 0) {
+                return item.entityName
+              }
+            })
+            return (
+              <Marker
+                ref={ele => {
+                  if (ele) {
+                    markerRefs.current[index] = ele
+                  }
+                }}
+                position={[lat, lng]}
+                key={index}
+                eventHandlers={{
+                  click: event => {
+                    map.current?.setView([lat, lng], 20)
+                  },
+                }}
+              >
+                <Popup>
+                  {deviceDetailInfo && deviceDetailInfo.length > 0
+                    ? `Thiết bị ${deviceNameArray[index]}`
+                    : `Thiết bị ${index}`}
+                </Popup>
+              </Marker>
+            )
+          })}
+        </MarkerClusterGroup>
       </MapContainer>
+      <MapSetting
+        isMapLabel={true}
+        setIsMapLabel={() => {}}
+        mapType={mapType}
+        setMapType={setMapType}
+      />
     </>
   )
 }

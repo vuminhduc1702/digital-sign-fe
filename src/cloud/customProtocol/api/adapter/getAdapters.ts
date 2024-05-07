@@ -21,14 +21,25 @@ export const getAdapters = ({
   search_str,
   search_field,
 }: GetAdapters): Promise<AdapterList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    offset: String(offset),
+    limit: String(limit),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/adapter`, {
-    params: {
-      project_id: projectId,
-      offset,
-      limit,
-      search_str,
-      search_field,
-    },
+    params,
+    // : {
+    //   project_id: projectId,
+    //   offset,
+    //   limit,
+    //   search_str,
+    //   search_field,
+    // },
   })
 }
 
