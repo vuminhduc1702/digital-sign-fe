@@ -72,6 +72,7 @@ jobs:
           git add .
           git commit -m "edit tag name by cicd"
           git push origin main
+          rm -rf ${{env.repo-folder}}
   # Job3: ssh to master node and run helm upgrade
   deploy:
     name: Deploy to kubernetes
