@@ -29,7 +29,7 @@ jobs:
     - name: Build Image
       id: build-image
       run: |
-        output=$(docker pull harbor.innoway.vn:8083/vht-iot-platform/reactjs-basic:9a3539e2fbb101f5aada35c69dc6b8230835d50 2>&1|| true)
+        output=$(docker pull ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest 2>&1|| true)
 
         if [[ "$output" == *"not found"* ]]; then
           docker build -t ${{env.image}}:${{env.tags}} .
@@ -52,12 +52,13 @@ jobs:
         docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest
     - name: Clean image after push
       run: |
-        docker image ls | grep  ${{env.image}} | awk {'print $3 '} | xargs -I delete-images docker rmi delete-images
-        docker rmi $(docker images -f "dangling=true" -q)
+        docker image ls | grep  ${{env.image}} | awk {'print $3 '} | xargs -I delete-images docker rmi delete-images || true
+        docker rmi $(docker images -f "dangling=true" -q) || true
 
   # Job2: Edit image tag in gitlab repo
   update-config:
       runs-on: worker-mongo
+      needs: build
       steps:
       - name: Checkout code
         run: git clone https://${{env.repo-infra-user}}:${{secrets.GITLAB_TOKEN}}@${{env.repo-infra-name}}
