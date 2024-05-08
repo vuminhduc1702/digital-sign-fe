@@ -32,7 +32,7 @@ jobs:
         output=$(docker pull ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest 2>&1|| true)
 
         if [[ "$output" == *"not found"* ]]; then
-          echo "Latest image not found !! "
+          echo " Latest image not found !! "
           docker build -t ${{env.image}}:${{env.tags}} .
         else 
           echo "Tag: ${{env.tags}}"
@@ -66,29 +66,29 @@ jobs:
       - name: edit image tag
         run: |
           cd ${{env.repo-folder}}/${{env.chart-name}}
-          sed -i "s/tag: .*/tag: ${{ env.tags }}/g" values.yaml
+          sed -i "s/tag: .*/tag: ${{ env.tags }}/g" values-dev.yaml
           git config user.email "minhhk1@viettel.com.vn"
           git config user.name "minhhk1"
           git add .
           git commit -m "edit tag name by cicd"
           git push origin main
-  # Job3: ssh to master node and run helm upgrade
-  deploy:
-    name: Deploy to kubernetes
-    needs: build
-    runs-on: worker-mongo
-    steps:
-    - name: SSH and deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST_TEST }}
-        username: ${{ secrets.SERVER_USER_TEST }}
-        password: ${{ secrets.SERVER_PASSWORD_TEST }}
-        port: ${{ secrets.SERVER_PORT_TEST }}
-        timeout: 500s
-        script: |
-          cd ${{env.chart-folder}}
-          sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
-          helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
+  # # Job3: ssh to master node and run helm upgrade
+  # deploy:
+  #   name: Deploy to kubernetes
+  #   needs: build
+  #   runs-on: worker-mongo
+  #   steps:
+  #   - name: SSH and deploy
+  #     uses: appleboy/ssh-action@master
+  #     with:
+  #       host: ${{ secrets.SERVER_HOST_TEST }}
+  #       username: ${{ secrets.SERVER_USER_TEST }}
+  #       password: ${{ secrets.SERVER_PASSWORD_TEST }}
+  #       port: ${{ secrets.SERVER_PORT_TEST }}
+  #       timeout: 500s
+  #       script: |
+  #         cd ${{env.chart-folder}}
+  #         sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
+  #         helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
 
 
