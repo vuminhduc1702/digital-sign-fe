@@ -32,11 +32,12 @@ jobs:
         output=$(docker pull ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest 2>&1|| true)
 
         if [[ "$output" == *"not found"* ]]; then
+          echo "Latest image not found !! "
           docker build -t ${{env.image}}:${{env.tags}} .
         else 
           echo "Tag: ${{env.tags}}"
           cp .env.test.example .env
-          docker build --from-cache ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest -t ${{env.image}}:${{env.tags}} .
+          docker build --cache-from ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest -t ${{env.image}}:${{env.tags}} .
         fi
         
   # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
