@@ -3,7 +3,7 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, TextAreaField } from '@/components/Form'
 import FileField from '@/components/Form/FileField'
 import {
@@ -117,10 +117,10 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
   }
 
   useEffect(() => {
-    if (isSuccessUpdateOrg && close) {
-      close()
+    if (isSuccessCreateOrg) {
+      close?.()
     }
-  }, [isSuccessUpdateOrg])
+  }, [isSuccessCreateOrg])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>

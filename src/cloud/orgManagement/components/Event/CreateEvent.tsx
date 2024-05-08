@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { useParams } from 'react-router-dom'
 import { useCreateAttrChart } from '@/cloud/dashboard/api'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { SelectDropdown, type SelectOption } from '@/components/Form'
 
 import { useGetFirmwares } from '@/cloud/firmware/api/firmwareAPI'

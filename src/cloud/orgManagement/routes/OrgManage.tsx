@@ -17,7 +17,7 @@ import { useDisclosure } from '@/utils/hooks'
 import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import defaultOrgImage from '@/assets/images/default-org.png'
 

@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import btnFilterIcon from '@/assets/icons/btn-filter.svg'
 import {
   DropdownMenu,

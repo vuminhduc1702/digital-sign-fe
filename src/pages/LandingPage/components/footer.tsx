@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import BgFooter from '@/assets/images/landingpage/bg_footer.png'
 import LogoViettel from '@/assets/images/landingpage/Logo_Viettel.png'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   MailSendFill,
   PhoneFill,
