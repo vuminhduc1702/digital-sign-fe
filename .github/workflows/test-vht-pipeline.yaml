@@ -66,12 +66,12 @@ jobs:
       - name: edit image tag
         run: |
           cd ${{env.repo-folder}}/${{env.chart-name}}
-          sed -i "s/tag: .*/tag: ${{ env.tags }}/g" values-dev.yaml
+          sed -i "s/tag: .*/tag: ${{ env.tags }}/g" values-dev.yaml || true
           git config user.email "minhhk1@viettel.com.vn"
           git config user.name "minhhk1"
-          git add .
-          git commit -m "edit tag name by cicd"
-          git push origin main
+          git add . || true
+          git commit -m "edit tag name by cicd" || true
+          git push origin main || true
           rm -rf ${{env.repo-folder}} || true
   # Job3: ssh to master node and run helm upgrade
   deploy:
