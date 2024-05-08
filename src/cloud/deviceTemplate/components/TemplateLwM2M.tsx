@@ -202,6 +202,7 @@ export function TemplateLwM2M() {
           ).replace('{{TEMPLATENAME}}', name)}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

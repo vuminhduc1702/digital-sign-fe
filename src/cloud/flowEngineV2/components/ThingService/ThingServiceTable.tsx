@@ -33,7 +33,7 @@ function ThingServiceTableContextMenu({
   data,
   ...props
 }: {
-  thingId?: string
+  thingId: string
   name: string
   description: string
   data: ThingService[]
@@ -115,7 +115,10 @@ function ThingServiceTableContextMenu({
           ).replace('{{SERVICENAME}}', name)}
           close={closeDelete}
           isOpen={isOpenDelete}
-          handleSubmit={() => mutate({ thingId, name })}
+          isSuccessDelete={isSuccess}
+          handleSubmit={() => {
+            mutate({ thingId, name })
+          }}
           isLoading={isLoading}
         />
       ) : null}

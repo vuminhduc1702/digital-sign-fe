@@ -92,6 +92,7 @@ function CustomerTableContextMenu({
           body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

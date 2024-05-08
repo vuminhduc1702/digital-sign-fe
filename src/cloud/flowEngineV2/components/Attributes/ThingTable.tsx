@@ -99,7 +99,10 @@ function ThingTableContextMenu({
           icon="danger"
           close={closeDelete}
           isOpen={isOpenDelete}
-          handleSubmit={() => mutate({ id })}
+          isSuccessDelete={isSuccess}
+          handleSubmit={() => {
+            mutate({ id })
+          }}
           isLoading={isLoading}
         />
       ) : null}

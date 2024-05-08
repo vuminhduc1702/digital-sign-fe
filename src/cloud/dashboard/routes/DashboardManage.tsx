@@ -171,6 +171,7 @@ export function DashboardManage() {
           body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleDashboards}
           handleSubmit={() =>
             mutateDeleteMultipleDashboards(
               {

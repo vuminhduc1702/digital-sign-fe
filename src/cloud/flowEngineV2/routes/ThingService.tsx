@@ -141,6 +141,7 @@ export function ThingServices() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleThingServices}
           handleSubmit={() =>
             mutateDeleteMultipleThingServices(
               {

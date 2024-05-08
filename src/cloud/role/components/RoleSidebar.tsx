@@ -162,6 +162,7 @@ export function RoleSidebar() {
           body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleRoles}
           handleSubmit={() =>
             mutateDeleteMultipleRoles(
               {
