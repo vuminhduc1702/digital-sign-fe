@@ -9,7 +9,6 @@ import { CreateProject } from '../components/CreateProject'
 import { ListProjectItem } from './../components/ListProjectItem'
 import { SearchField } from '@/components/Input'
 import { BasePaginationSchema, nameSchema } from '@/utils/schemaValidation'
-import { flattenData } from '@/utils/misc'
 import projectBackgroundImage from '@/assets/images/project-background.png'
 
 export const ProjectSchema = z.object({
