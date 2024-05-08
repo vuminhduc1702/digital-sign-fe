@@ -26,16 +26,29 @@ export const getDevices = ({
   search_str,
   search_field,
 }: GetDevices): Promise<DeviceList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    org_id: orgId || '',
+    project_id: projectId,
+    get_attributes: String(get_attributes),
+    offset: String(offset),
+    limit: String(limit),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/devices`, {
-    params: {
-      org_id: orgId,
-      project_id: projectId,
-      offset,
-      limit,
-      get_attributes,
-      search_str,
-      search_field,
-    },
+    params,
+    // : {
+    //   org_id: orgId,
+    //   project_id: projectId,
+    //   offset,
+    //   limit,
+    //   get_attributes,
+    //   search_str,
+    //   search_field,
+    // },
   })
 }
 

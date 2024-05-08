@@ -106,6 +106,10 @@ export function DeviceManage() {
               searchField={searchField}
               fieldOptions={[
                 {
+                  value: 'name,id',
+                  label: t('search:all'),
+                },
+                {
                   value: 'name',
                   label: t('cloud:org_manage.device_manage.table.name'),
                 },

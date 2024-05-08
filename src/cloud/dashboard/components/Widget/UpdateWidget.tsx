@@ -64,6 +64,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { queryClient } from '@/lib/react-query'
+import { toast } from 'sonner'
 
 export function UpdateWidget({
   widgetInfo,
@@ -362,7 +363,7 @@ export function UpdateWidget({
                   : widgetInfo?.description === 'CARD'
                     ? t('cloud:dashboard.config_chart.update_card')
                     : widgetInfo?.description === 'MAP'
-                      ? t('cloud:dashboard.config_chart.update_card')
+                      ? t('cloud:dashboard.config_chart.update_map')
                       : t('cloud:dashboard.config_chart.update')
       }
       isDone={isDone}
@@ -376,6 +377,42 @@ export function UpdateWidget({
                 type: 'TIME_SERIES',
                 key: item.attribute_key,
               }))
+              // missing latitude/longitude in map widget
+              let stopExecution = false
+              values.attributeConfig.map(item => {
+                if (item.attribute_key === 'latitude') {
+                  if (
+                    !values.attributeConfig.find(
+                      i =>
+                        i.label === item.label &&
+                        i.attribute_key === 'longitude',
+                    )
+                  ) {
+                    stopExecution = true
+                    return
+                  }
+                } else if (item.attribute_key === 'longitude') {
+                  if (
+                    !values.attributeConfig.find(
+                      i =>
+                        i.label === item.label &&
+                        i.attribute_key === 'latitude',
+                    )
+                  ) {
+                    stopExecution = true
+                    return
+                  }
+                }
+              })
+              if (stopExecution) {
+                toast.error(
+                  t(
+                    'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
+                  ),
+                )
+                return
+              }
+
               const initMessage = {
                 entityDataCmds: [
                   {
@@ -901,15 +938,17 @@ export function UpdateWidget({
                             </FieldWrapper>
                           </div>
                         ) : null}
-                        <InputField
-                          label={t('cloud:dashboard.config_chart.unit')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.unit
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.unit` as const,
-                          )}
-                        />
+                        {widgetInfoMemo?.description === 'MAP' ? null : (
+                          <InputField
+                            label={t('cloud:dashboard.config_chart.unit')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.unit
+                            }
+                            registration={register(
+                              `attributeConfig.${index}.unit` as const,
+                            )}
+                          />
+                        )}
                         {widgetInfoMemo?.description === 'GAUGE' && (
                           <>
                             <InputField

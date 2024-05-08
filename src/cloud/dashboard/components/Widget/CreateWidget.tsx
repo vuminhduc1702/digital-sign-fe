@@ -52,6 +52,7 @@ import {
 } from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
 import { TimePicker } from '@/components/ui/time-picker'
+import { toast } from 'sonner'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -647,6 +648,43 @@ export function CreateWidget({
                   type: 'TIME_SERIES',
                   key: item.attribute_key,
                 }))
+
+                // missing latitude/longitude in map widget
+                let stopExecution = false
+                values.attributeConfig.map(item => {
+                  if (item.attribute_key === 'latitude') {
+                    if (
+                      !values.attributeConfig.find(
+                        i =>
+                          i.label === item.label &&
+                          i.attribute_key === 'longitude',
+                      )
+                    ) {
+                      stopExecution = true
+                      return
+                    }
+                  } else if (item.attribute_key === 'longitude') {
+                    if (
+                      !values.attributeConfig.find(
+                        i =>
+                          i.label === item.label &&
+                          i.attribute_key === 'latitude',
+                      )
+                    ) {
+                      stopExecution = true
+                      return
+                    }
+                  }
+                })
+                if (stopExecution) {
+                  toast.error(
+                    t(
+                      'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
+                    ),
+                  )
+                  return
+                }
+
                 const initMessage = {
                   entityDataCmds: [
                     {
@@ -1154,15 +1192,18 @@ export function CreateWidget({
                               </FieldWrapper>
                             </div>
                           ) : null}
-                          <InputField
-                            label={t('cloud:dashboard.config_chart.unit')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]?.unit
-                            }
-                            registration={register(
-                              `attributeConfig.${index}.unit` as const,
-                            )}
-                          />
+                          {widgetCategory === 'MAP' ? null : (
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.unit')}
+                              error={
+                                formState?.errors?.attributeConfig?.[index]
+                                  ?.unit
+                              }
+                              registration={register(
+                                `attributeConfig.${index}.unit` as const,
+                              )}
+                            />
+                          )}
                           {widgetCategory === 'GAUGE' && (
                             <>
                               <InputField

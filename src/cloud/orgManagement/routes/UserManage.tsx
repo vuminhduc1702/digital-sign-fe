@@ -105,6 +105,10 @@ export function UserManage() {
               searchField={searchField}
               fieldOptions={[
                 {
+                  value: 'name,id',
+                  label: t('search:all'),
+                },
+                {
                   value: 'name',
                   label: t('cloud:org_manage.user_manage.table.name'),
                 },

@@ -28,13 +28,23 @@ export const getSubcriptons = ({
   search_str,
   searchData,
 }: GetSubcriptons): Promise<GetSubcriptonRes> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    search_str: search_str || '',
+    searchData: JSON.stringify(searchData),
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/priceplan/subscriptions`, {
-    params: {
-      project_id: projectId,
-      search_field,
-      search_str,
-      ...searchData,
-    },
+    params,
+    // : {
+    //   project_id: projectId,
+    //   search_field,
+    //   search_str,
+    //   ...searchData,
+    // },
   })
 }
 
