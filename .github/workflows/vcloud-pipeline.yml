@@ -73,7 +73,7 @@ jobs:
         git add .
         git commit -m "edit tag name by cicd"
         git push origin main
-        rm -rf ${{env.repo-folder}}
+        rm -rf ${{env.repo-folder}} || true
 
     
   # # Job3: helm upgrade set image 
