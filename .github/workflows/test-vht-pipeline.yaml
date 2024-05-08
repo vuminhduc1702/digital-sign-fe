@@ -29,8 +29,9 @@ jobs:
     - name: Build Image
       id: build-image
       run: |
-        docker pull ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest
-        if [ "$?" -ne 0 ]; then
+        output=$(docker pull harbor.innoway.vn:8083/vht-iot-platform/reactjs-basic:9a3539e2fbb101f5aada35c69dc6b8230835d50 2>&1|| true)
+
+        if [[ "$output" == *"not found"* ]]; then
           docker build -t ${{env.image}}:${{env.tags}} .
         else 
           echo "Tag: ${{env.tags}}"
@@ -53,6 +54,8 @@ jobs:
       run: |
         docker image ls | grep  ${{env.image}} | awk {'print $3 '} | xargs -I delete-images docker rmi delete-images
         docker rmi $(docker images -f "dangling=true" -q)
+
+  # Job2: Edit image tag in gitlab repo
   update-config:
       runs-on: worker-mongo
       steps:
@@ -60,10 +63,14 @@ jobs:
         run: git clone https://${{env.repo-infra-user}}:${{secrets.GITLAB_TOKEN}}@${{env.repo-infra-name}}
       - name: edit image tag
         run: |
-          cd ${{  env.chart-name  }}
+          cd ${{env.repo-folder}}/${{env.chart-name}}
           sed -i "s/tag: .*/tag: ${{ env.tags }}/g" values.yaml
+          git config user.email "minhhk1@viettel.com.vn"
+          git config user.name "minhhk1"
+          git add .
+          git commit -m "edit tag name by cicd"
           git push origin main
-
+  # Job3: ssh to master node and run helm upgrade
   deploy:
     name: Deploy to kubernetes
     needs: build
@@ -78,7 +85,7 @@ jobs:
         port: ${{ secrets.SERVER_PORT_TEST }}
         timeout: 500s
         script: |
-          cd ${{env.repo-folder}}/${{env.chart-folder}}
+          cd ${{env.chart-folder}}
           sed -i "s/tag: .*/tag: ${{env.tags}}/g" values.yaml
           helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
 
