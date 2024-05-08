@@ -31,13 +31,6 @@ export const getEvents = ({
   })
   return axios.get(`/api/events`, {
     params,
-    // : {
-    //   org_id: orgId,
-    //   project_id: projectId,
-    //   group_id: groupId,
-    //   search_str,
-    //   search_field,
-    // },
   })
 }
 

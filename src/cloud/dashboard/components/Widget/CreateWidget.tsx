@@ -53,6 +53,7 @@ import {
 import { cn, flattenOrgs } from '@/utils/misc'
 import { TimePicker } from '@/components/ui/time-picker'
 import { toast } from 'sonner'
+import { queryClient } from '@/lib/react-query'
 
 export const WS_REALTIME_PERIOD = [
   {

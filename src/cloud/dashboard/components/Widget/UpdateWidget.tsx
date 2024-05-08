@@ -26,8 +26,7 @@ import {
   type SelectOption,
 } from '@/components/Form'
 import { useGetOrgs } from '@/layout/MainLayout/api'
-import { cn, flattenData, flattenOrgs } from '@/utils/misc'
-import { useDefaultCombobox } from '@/utils/hooks'
+import { cn, flattenOrgs } from '@/utils/misc'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import storage from '@/utils/storage'
 import { useCreateAttrChart } from '../../api'
