@@ -1,6 +1,6 @@
 import { type MutableRefObject } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useReactToPrint } from 'react-to-print'
+// import { useReactToPrint } from 'react-to-print'
 import * as XLSX from 'xlsx'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,6 +12,12 @@ import {
   PDFDownloadLink,
   Font,
 } from '@react-pdf/renderer'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { LuFileDown } from 'react-icons/lu'
 
 interface ButtonProps {
   refComponent: MutableRefObject<HTMLElement> | MutableRefObject<null>
@@ -55,7 +61,16 @@ export function ExportTable({
 }: ButtonProps) {
   const { t } = useTranslation()
 
+  const handleCSV = () => {
+    if (formatExcel.length === 0) return
+    const ws = XLSX.utils.json_to_sheet(formatExcel)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+    XLSX.writeFile(wb, 'ExportedFile.csv')
+  }
+
   const handleExcel = () => {
+    if (formatExcel.length === 0) return
     /* create worksheet */
     const ws = XLSX.utils.json_to_sheet(formatExcel)
     /* create workbook and export */
@@ -63,11 +78,9 @@ export function ExportTable({
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
     XLSX.writeFile(wb, 'ExportedFile.xlsx')
   }
-  const handlePrint = useReactToPrint({
-    content: () => refComponent.current,
-  })
 
   const PdfComponent = () => {
+    if (formatExcel.length === 0) return null
     return (
       <Document>
         <Page size="A4" style={styles.table}>
@@ -112,42 +125,54 @@ export function ExportTable({
 
   return (
     <div className="flex items-center gap-x-1">
-      <Button
-        className="min-w-[60px] rounded-none border bg-gray-300 text-black hover:opacity-80"
-        size="sm"
-        onClick={handleExcel}
-      >
-        {Object.keys(rowSelection).length > 0
-          ? `${t('table:excel')}: ${Object.keys(rowSelection).length}`
-          : t('table:excel')}
-      </Button>
-      {pdfHeader.length > 0 && (
-        <PDFDownloadLink
-          document={<PdfComponent />}
-          fileName="InnowayTable.pdf"
+      <Popover>
+        <PopoverTrigger className="hover:border-none">
+          <Button
+            size="sm"
+            className="h-[36px] min-w-[60px] rounded-none bg-white text-black hover:opacity-80"
+            startIcon={<LuFileDown />}
+          >
+            {t('table:export')}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="end"
+          className="w-[225px] rounded-none border-secondary-600 p-[8px]"
         >
-          {() => (
-            <Button
-              className={`min-w-[60px] rounded-none border bg-gray-300 text-black hover:opacity-80 ${
-                Object.keys(rowSelection).length > 0 &&
-                'pointer-events-auto opacity-100'
-              }`}
-              size="sm"
-            >
-              {Object.keys(rowSelection).length > 0
-                ? `${t('table:pdf')}: ${Object.keys(rowSelection).length}`
-                : t('table:pdf')}
-            </Button>
-          )}
-        </PDFDownloadLink>
-      )}
-      <Button
-        className="min-w-[60px] rounded-none border bg-gray-300 text-black hover:opacity-80"
-        size="sm"
-        onClick={handlePrint}
-      >
-        {t('table:print')}
-      </Button>
+          <div
+            onClick={handleCSV}
+            className="flex h-[38px] cursor-pointer items-center justify-start px-[8px] py-[16px] hover:bg-primary-100 hover:text-primary-400"
+          >
+            {Object.keys(rowSelection).length > 0
+              ? `${t('table:export_csv')}: ${Object.keys(rowSelection).length}`
+              : t('table:export_csv')}
+          </div>
+          <div
+            onClick={handleExcel}
+            className="flex h-[38px] cursor-pointer items-center justify-start px-[8px] py-[16px] hover:bg-primary-100 hover:text-primary-400"
+          >
+            {Object.keys(rowSelection).length > 0
+              ? `${t('table:export_excel')}: ${Object.keys(rowSelection).length}`
+              : t('table:export_excel')}
+          </div>
+          <div className="flex h-[38px] cursor-pointer items-center justify-start px-[8px] py-[16px] hover:bg-primary-100 hover:text-primary-400">
+            {pdfHeader.length > 0 && (
+              <PDFDownloadLink
+                document={<PdfComponent />}
+                fileName="InnowayTable.pdf"
+              >
+                {() => (
+                  <div>
+                    {Object.keys(rowSelection).length > 0
+                      ? `${t('table:export_pdf')}: ${Object.keys(rowSelection).length}`
+                      : t('table:export_pdf')}
+                  </div>
+                )}
+              </PDFDownloadLink>
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   )
 }

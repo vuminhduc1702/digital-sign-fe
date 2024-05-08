@@ -92,6 +92,7 @@ import {
 } from '@/components/ui/tooltip'
 import BD_09 from '@/assets/images/landingpage/BD_09.png'
 import { queryClient } from '@/lib/react-query'
+import { DashboardTooltip } from './DashboardTooltip'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -655,12 +656,12 @@ export function DashboardDetail() {
                       {t('cloud:dashboard.detail_dashboard.add_widget.create')}
                     </SheetTitle>
                   </SheetHeader>
-                  <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-                    <div className="flex w-full gap-x-8">
-                      <div className="w-full space-y-6">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                  <TooltipProvider delayDuration={100}>
+                    <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
+                      <div className="flex w-full gap-x-8">
+                        <div className="w-full space-y-6">
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -686,18 +687,14 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={BD_01} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={BD_06} alt="" className="w-full" />
+                            }
+                          />
 
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -723,19 +720,14 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={DB_03} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={DB_03} alt="" className="w-full" />
+                            }
+                          />
 
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
-                              {' '}
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -761,18 +753,14 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={BD_04} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={BD_04} alt="" className="w-full" />
+                            }
+                          />
 
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -795,18 +783,14 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={BD_05} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={BD_05} alt="" className="w-full" />
+                            }
+                          />
 
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -832,19 +816,15 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={BD_09} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      <div className="w-full space-y-6">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                            }
+                            image={
+                              <img src={BD_09} alt="" className="w-full" />
+                            }
+                          />
+                        </div>
+                        <div className="w-full space-y-6">
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -870,18 +850,14 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={BD_02} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={BD_02} alt="" className="w-full" />
+                            }
+                          />
 
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -907,18 +883,14 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="p-[8px]">
-                                <img src={BD_06} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={BD_06} alt="" className="w-full" />
+                            }
+                          />
 
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -944,18 +916,14 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={BD_07} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={BD_07} alt="" className="w-full" />
+                            }
+                          />
 
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger>
+                          <DashboardTooltip
+                            content={
                               <Button
                                 type="button"
                                 size="square"
@@ -981,17 +949,15 @@ export function DashboardDetail() {
                                   )}
                                 </span>
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <div className="">
-                                <img src={BD_08} alt="" className="w-[200px]" />
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                            }
+                            image={
+                              <img src={BD_08} alt="" className="w-full" />
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </TooltipProvider>
 
                   <SheetFooter>
                     <>
