@@ -5,7 +5,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   FieldWrapper,
   InputField,
@@ -13,7 +13,7 @@ import {
   TextAreaField,
 } from '@/components/Form'
 
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import storage from '@/utils/storage'
 import {
   useUpdateService,

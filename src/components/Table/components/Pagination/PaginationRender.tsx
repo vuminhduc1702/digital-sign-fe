@@ -1,5 +1,5 @@
 import Pagination from './Pagination'
-import { Button } from '../../../Button'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/utils/misc'
 import { useTranslation } from 'react-i18next'
 

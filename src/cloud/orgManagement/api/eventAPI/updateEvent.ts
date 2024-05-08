@@ -22,6 +22,8 @@ export const updateEvent = ({ data, eventId }: UpdateEventDTO) => {
   const typeEvent = data?.type
   if (typeEvent === 'event') {
     delete data?.schedule
+  } else {
+    delete data?.interval
   }
   delete data?.type
 

@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField } from '@/components/Form'
 import {
   type CreateDashboardDTO,

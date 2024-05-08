@@ -10,7 +10,7 @@ import {
   useGetEntityThings,
 } from '@/cloud/customProtocol/api/entityThing'
 import { thingTypeList } from '@/cloud/customProtocol/components'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, SelectDropdown, SelectField } from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
 import storage from '@/utils/storage'

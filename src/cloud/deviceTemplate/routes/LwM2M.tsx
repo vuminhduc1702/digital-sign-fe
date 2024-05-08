@@ -11,7 +11,7 @@ import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
 import { SearchField } from '@/components/Input'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 export function LwM2M() {
   const { t } = useTranslation()

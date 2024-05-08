@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 
 import bg_pack_of_data from '@/assets/images/landingpage/bg_pack_of_data.png'
 import { useGetPackofdata } from '../api/getPackofdata'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useDisclosure } from '@/utils/hooks'

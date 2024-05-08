@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Link } from '@/components/Link'
 import { InputField } from '@/components/Form'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { PATHS } from '@/routes/PATHS'
 import { sentOTP } from '../api/otp'
 import i18n from '@/i18n'

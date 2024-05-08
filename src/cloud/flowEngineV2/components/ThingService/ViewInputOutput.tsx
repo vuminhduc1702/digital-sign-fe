@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { useEffect, useState } from 'react'
 import { CodeEditor } from '@/cloud/customProtocol/components'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { type BodyEventService } from '../../types'
 
 type ViewInputOutputProps = {

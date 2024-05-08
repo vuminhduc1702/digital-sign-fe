@@ -7,8 +7,8 @@ import {
 } from 'react'
 
 import { useDisclosure } from '@/utils/hooks'
-import { Dialog, DialogTitle } from '../Dialog'
-import { Button } from '../Button'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import { HiOutlineXMark } from 'react-icons/hi2'

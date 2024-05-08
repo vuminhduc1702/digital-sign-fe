@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
 
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import {
   FieldWrapper,
   InputField,
@@ -51,7 +51,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
-import { queryClient } from '@/lib/react-query'
 import { TimePicker } from '@/components/ui/time-picker'
 import { toast } from 'sonner'
 

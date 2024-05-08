@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import i18n from '@/i18n'
 import * as z from 'zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, SelectField } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useCreateDataBase, type CreateDataBaseDTO } from '../api'
