@@ -59,7 +59,7 @@ jobs:
   
   # Job2: Edit image tag in gitlab repo
   update-config:
-    runs-on: worker-mongo
+    runs-on: worker-poc
     needs: build
     steps:
     - name: Checkout code
