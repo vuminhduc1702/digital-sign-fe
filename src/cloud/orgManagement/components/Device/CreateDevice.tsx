@@ -47,6 +47,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
+import { Input } from '@/components/ui/input'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -142,10 +144,32 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
               })}
             >
               <>
-                <InputField
+                {/* <InputField
                   label={t('cloud:org_manage.device_manage.add_device.name')}
                   error={formState.errors['name']}
                   registration={register('name')}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.device_manage.add_device.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.device_manage.add_device.input_require_err',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <FormField
                   control={form.control}
@@ -197,7 +221,7 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                     </FormItem>
                   )}
                 />
-                <SelectDropdown
+                {/* <SelectDropdown
                   error={formState?.errors?.template_id}
                   label={t('cloud:firmware.add_firmware.template')}
                   name="template_id"
@@ -210,12 +234,61 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                   noOptionsMessage={() => t('table:no_template')}
                   loadingMessage={() => t('loading:template')}
                   isLoading={templateIsLoading}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="template_id"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:firmware.add_firmware.template')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <NewSelectDropdown
+                            options={templateSelectOptions}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:template') ||
+                              option.label === t('table:no_template')
+                            }
+                            noOptionsMessage={() => t('table:no_template')}
+                            loadingMessage={() => t('loading:template')}
+                            isLoading={templateIsLoading}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
 
-                <InputField
+                {/* <InputField
                   label={t('cloud:org_manage.device_manage.add_device.key')}
                   error={formState.errors['key']}
                   registration={register('key')}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="key"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.device_manage.add_device.key')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.device_manage.add_device.input_require_err',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
               </>
             </form>
