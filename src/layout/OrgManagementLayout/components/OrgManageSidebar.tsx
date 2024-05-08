@@ -189,7 +189,6 @@ function OrgManageSidebar() {
     open()
     setSelectedUpdateOrg(data)
   }
-  console.log('orgIdURL', orgIdURL)
 
   return (
     <>

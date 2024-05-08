@@ -117,10 +117,10 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
   }
 
   useEffect(() => {
-    if (isSuccessUpdateOrg && close) {
-      close()
+    if (isSuccessCreateOrg) {
+      close?.()
     }
-  }, [isSuccessUpdateOrg])
+  }, [isSuccessCreateOrg])
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>

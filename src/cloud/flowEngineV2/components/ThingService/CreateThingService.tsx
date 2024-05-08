@@ -115,7 +115,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const {
     mutate: mutateService,
     isLoading: isLoadingService,
-    isSuccess,
+    isSuccess: isSuccessService,
   } = useCreateServiceThing()
   const codeEditorRef = useRef<ImperativePanelHandle>(null)
   const resultEditorRef = useRef<ImperativePanelHandle>(null)
@@ -234,6 +234,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     <FormDialog
       className="thing-service-popup"
       title={t('cloud:custom_protocol.service.create')}
+      isDone={isSuccessService}
       id="create-service-screen"
       isFullScreen={fullScreen}
       resetData={clearData}
