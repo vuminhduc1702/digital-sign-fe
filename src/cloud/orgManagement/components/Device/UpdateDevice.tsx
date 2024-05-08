@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import { z } from 'zod'
 import { type SelectInstance } from 'react-select'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   InputField,
   SelectDropdown,

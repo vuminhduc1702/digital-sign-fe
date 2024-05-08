@@ -5,7 +5,32 @@ import { X } from 'lucide-react'
 import { cn } from '@/utils/misc'
 import { buttonVariants } from './button'
 
-const Dialog = DialogPrimitive.Root
+type DialogProps = {
+  isOpen: boolean
+  onClose: () => void
+  children: React.ReactNode
+  initialFocus?: React.MutableRefObject<null>
+}
+
+const Dialog = ({ isOpen, onClose, children, initialFocus }: DialogProps) => {
+  return (
+    <>
+      <DialogPrimitive.Root modal={false} open={isOpen}>
+        <DialogContent>
+          <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
+            <span
+              className="hidden sm:inline-block sm:h-screen sm:align-middle"
+              aria-hidden="true"
+            >
+              &#8203;
+            </span>
+            {children}
+          </div>
+        </DialogContent>
+      </DialogPrimitive.Root>
+    </>
+  )
+}
 
 const DialogTrigger = DialogPrimitive.Trigger
 
@@ -39,7 +64,7 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-0 left-[50%] top-[50%] z-50 h-screen w-screen translate-x-[-50%] translate-y-[-50%] overflow-y-auto shadow-lg duration-100 data-[state=open]:bg-gray-500 data-[state=open]:bg-opacity-75 data-[state=open]:transition-opacity data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-[50%] data-[state=open]:slide-in-from-top-[50%]',
+        'fixed inset-0 left-1/2 top-1/2 z-50 h-screen w-screen -translate-x-1/2 -translate-y-1/2 overflow-y-auto shadow-lg duration-100 data-[state=open]:bg-gray-500 data-[state=open]:bg-opacity-75 data-[state=open]:transition-opacity data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-[50%] data-[state=open]:slide-in-from-top-[50%]',
         className,
       )}
       {...props}

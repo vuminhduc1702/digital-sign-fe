@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import i18n from '@/i18n'
 import * as z from 'zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, SelectDropdown } from '@/components/Form'
 import TitleBar from '@/components/Head/TitleBar'
 import storage from '@/utils/storage'

@@ -1,7 +1,7 @@
 import { type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import Group45 from '@/assets/images/landingpage/Group_45.png'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { CheckboxCircleLine, ArrowRightUpLine } from '@/components/SVGIcons'
 import { scrollToIntro } from '@/utils/misc'
 

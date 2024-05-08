@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import btnAddIcon from '@/assets/icons/btn-add.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnEdit from '@/assets/icons/edit.svg'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import {
   FormMultipleFields,

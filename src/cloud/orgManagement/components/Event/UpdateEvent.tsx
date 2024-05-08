@@ -7,7 +7,7 @@ import { useCreateAttrChart } from '@/cloud/dashboard/api'
 import { useSpinDelay } from 'spin-delay'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   FieldWrapper,
   InputField,
@@ -116,7 +116,7 @@ export const updateEventSchema = z
     name: nameSchema,
     action: eventActionSchema,
     status: z.boolean().optional(),
-    retry: z.coerce.number().optional(),
+    retry: z.number().optional(),
     onClick: z.boolean(),
     cmd: updateCmdSchema.optional(),
   })
@@ -459,7 +459,7 @@ export function UpdateEvent({
                                       <Button
                                         id="org_id"
                                         className={cn(
-                                          'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+                                          'block w-full rounded-md border border-secondary-600 bg-white px-3 py-2 !text-body-sm text-black placeholder-secondary-700 shadow-sm *:appearance-none focus:border-[#2684FF] disabled:cursor-not-allowed disabled:bg-secondary-500',
                                           {
                                             'text-gray-500':
                                               !value && value !== '',
@@ -726,7 +726,13 @@ export function UpdateEvent({
                             </FormLabel>
                             <div>
                               <FormControl>
-                                <Input type="number" {...field} />
+                                <Input
+                                  type="number"
+                                  {...field}
+                                  {...register('retry', {
+                                    valueAsNumber: true,
+                                  })}
+                                />
                               </FormControl>
                               <FormMessage />
                             </div>

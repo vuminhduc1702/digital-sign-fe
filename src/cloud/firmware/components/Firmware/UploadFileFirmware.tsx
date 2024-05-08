@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { cn } from '@/utils/misc'
 import {
   type UploadFileFirmWareDTO,

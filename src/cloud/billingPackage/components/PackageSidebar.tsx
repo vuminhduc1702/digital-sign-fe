@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { PATHS } from '@/routes/PATHS'
 import storage from '@/utils/storage'
 

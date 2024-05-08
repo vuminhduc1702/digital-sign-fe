@@ -1,7 +1,7 @@
 {
   "name": "iot-react",
   "private": true,
-  "version": "0.5.12",
+  "version": "0.5.13",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

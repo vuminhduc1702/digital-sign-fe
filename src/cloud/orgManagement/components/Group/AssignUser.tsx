@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { Button } from '@/components/Button'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { SelectField } from '@/components/Form'
 import {
   useAssignUser,

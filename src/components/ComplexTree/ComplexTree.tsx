@@ -26,7 +26,7 @@ import {
 import { cn } from '@/utils/misc'
 import { type ControllerPassThroughProps } from '@/types'
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
-import { Button } from '../Button'
+import { Button } from '@/components/ui/button'
 import btnRemoveIcon from '@/assets/icons/btn-remove.svg'
 import storage from '@/utils/storage'
 import { useGetOrgs } from '@/layout/MainLayout/api'
