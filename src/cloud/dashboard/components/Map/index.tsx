@@ -19,6 +19,7 @@ import { type MapData } from '../ComboBoxSelectDeviceDashboard'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { ComboBoxSelectDeviceDashboard } from '../ComboBoxSelectDeviceDashboard'
 import { MapSetting } from './MapSetting'
+import { MapSettingType } from './MapSettingType'
 
 export function MapChart({
   data,
@@ -43,10 +44,14 @@ export function MapChart({
 
   // open street map
   const OPEN_STREET_MAP = 'https://{s}.tile.osm.org/{z}/{x}/{y}.png'
+  // open street map satellite
+  const OPEN_STREET_MAP_SATELLITE = 'https://{s}.tile.osm.org/{z}/{x}/{y}.png'
 
   const { t } = useTranslation()
   const [dragMode, setDragMode] = useState(true)
   // 0 - google map, 1 - open street map
+  const [mapBrand, setMapBrand] = useState(0)
+  // 0 - streets map, 1 - satellite map
   const [mapType, setMapType] = useState(0)
   const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
   const [deviceDetailInfo, setDeviceDetailInfo] = useState<EntityId[]>([])
@@ -197,7 +202,17 @@ export function MapChart({
         maxBoundsViscosity={1.0}
         maxBounds={L.latLngBounds(L.latLng(-90, -180), L.latLng(90, 150))}
       >
-        <TileLayer url={mapType === 0 ? STREETS_MAP : OPEN_STREET_MAP} />
+        <TileLayer
+          url={
+            mapBrand === 0
+              ? mapType === 0
+                ? STREETS_MAP
+                : SATELLITE_MAP
+              : mapType === 0
+                ? OPEN_STREET_MAP
+                : OPEN_STREET_MAP_SATELLITE
+          }
+        />
         <MarkerClusterGroup disabledCusteringAtZoom={18}>
           {dataForMap.map((coor, index) => {
             const [lat, lng] = coor
@@ -239,12 +254,8 @@ export function MapChart({
           })}
         </MarkerClusterGroup>
       </MapContainer>
-      <MapSetting
-        isMapLabel={true}
-        setIsMapLabel={() => {}}
-        mapType={mapType}
-        setMapType={setMapType}
-      />
+      <MapSetting mapType={mapBrand} setMapType={setMapBrand} />
+      <MapSettingType mapType={mapType} setMapType={setMapType} />
     </>
   )
 }

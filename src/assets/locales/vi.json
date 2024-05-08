@@ -741,7 +741,9 @@
       "map": {
         "device_not_found": "Không tìm thấy thiết bị nào",
         "googleMap": "Google Map",
-        "openStreetMap": "Open Street Map"
+        "openStreetMap": "Open Street Map",
+        "street": "Đường",
+        "satellite": "Vệ tinh"
       },
       "card": {
         "no_log_attr": "Không có bản tin thuộc tính"
