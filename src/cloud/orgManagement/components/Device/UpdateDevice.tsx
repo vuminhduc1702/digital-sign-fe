@@ -54,6 +54,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { Input } from '@/components/ui/input'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -194,10 +196,32 @@ export function UpdateDevice({
                 })}
               >
                 <>
-                  <InputField
+                  {/* <InputField
                     label={t('cloud:org_manage.device_manage.add_device.name')}
                     error={formState.errors['name']}
                     registration={register('name')}
+                  /> */}
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:org_manage.device_manage.add_device.name')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder={t(
+                                'cloud:org_manage.device_manage.add_device.input_require_err',
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
                   <FormField
                     control={form.control}
@@ -252,7 +276,7 @@ export function UpdateDevice({
                     )}
                   />
 
-                  <SelectDropdown
+                  {/* <SelectDropdown
                     refSelect={selectDropdownGroupId}
                     isClearable={false}
                     label={t('cloud:org_manage.device_manage.add_device.group')}
@@ -272,9 +296,43 @@ export function UpdateDevice({
                       ) ?? ''
                     }
                     error={formState?.errors?.group_id}
+                  /> */}
+                  <FormField
+                    control={form.control}
+                    name="group_id"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:org_manage.device_manage.add_device.group')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              refSelect={selectDropdownGroupId}
+                              isClearable={false}
+                              options={groupSelectOptions}
+                              isOptionDisabled={option =>
+                                option.label === t('loading:group') ||
+                                option.label === t('table:no_group')
+                              }
+                              noOptionsMessage={() => t('table:no_group')}
+                              loadingMessage={() => t('loading:group')}
+                              isLoading={groupIsLoading}
+                              defaultValue={
+                                groupSelectOptions?.find(
+                                  group => group.value === group_id,
+                                ) ?? ''
+                              }
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
 
-                  <SelectDropdown
+                  {/* <SelectDropdown
                     isClearable={false}
                     label={t('cloud:firmware.add_firmware.template')}
                     name="template_id"
@@ -291,12 +349,65 @@ export function UpdateDevice({
                       template => template.value === template_id,
                     )}
                     error={formState?.errors?.template_id}
+                  /> */}
+                  <FormField
+                    control={form.control}
+                    name="template_id"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:firmware.add_firmware.template')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable={false}
+                              options={templateSelectOptions}
+                              isOptionDisabled={option =>
+                                option.label === t('loading:template') ||
+                                option.label === t('table:no_template')
+                              }
+                              noOptionsMessage={() => t('table:no_template')}
+                              loadingMessage={() => t('loading:template')}
+                              isLoading={templateIsLoading}
+                              defaultValue={templateSelectOptions?.find(
+                                template => template.value === template_id,
+                              )}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
 
-                  <InputField
+                  {/* <InputField
                     label={t('cloud:org_manage.device_manage.add_device.key')}
                     error={formState.errors['key']}
                     registration={register('key')}
+                  /> */}
+                  <FormField
+                    control={form.control}
+                    name="key"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:org_manage.device_manage.add_device.key')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder={t(
+                                'cloud:org_manage.device_manage.add_device.input_require_err',
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
                 </>
               </form>
@@ -315,11 +426,11 @@ export function UpdateDevice({
                   })
                 })}
               >
-                <p className="mx-1 my-2">
+                <FormLabel className="mx-1 my-2">
                   {t('cloud:org_manage.device_manage.add_device.heartbeat')}
-                </p>
+                </FormLabel>
                 <div className="flex rounded-lg border border-solid p-2">
-                  <InputField
+                  {/* <InputField
                     registration={registerHeartBeat('interval', {
                       valueAsNumber: true,
                     })}
@@ -330,8 +441,37 @@ export function UpdateDevice({
                     classlabel="mx-1"
                     classchild="mx-1"
                     defaultValue={additional_info?.heartbeat_interval || 0}
+                  /> */}
+                  <FormField
+                    control={heartbeatForm.control}
+                    name="interval"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center">
+                        <FormLabel className="mx-1">
+                          Heartbeat Interval
+                        </FormLabel>
+                        <div className="mx-1">
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              defaultValue={
+                                additional_info?.heartbeat_interval || 0
+                              }
+                              {...registerHeartBeat('interval', {
+                                valueAsNumber: true,
+                              })}
+                              placeholder={t(
+                                'cloud:org_manage.device_manage.add_device.input_require_err',
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
-                  <InputField
+                  {/* <InputField
                     registration={registerHeartBeat('timeout', {
                       valueAsNumber: true,
                     })}
@@ -342,6 +482,33 @@ export function UpdateDevice({
                     classlabel="mx-1"
                     classchild="mx-1"
                     defaultValue={additional_info?.timeout_lifecycle || 0}
+                  /> */}
+                  <FormField
+                    control={heartbeatForm.control}
+                    name="timeout"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center">
+                        <FormLabel className="mx-1">Life circle</FormLabel>
+                        <div className="mx-1">
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              defaultValue={
+                                additional_info?.timeout_lifecycle || 0
+                              }
+                              {...registerHeartBeat('interval', {
+                                valueAsNumber: true,
+                              })}
+                              placeholder={t(
+                                'cloud:org_manage.device_manage.add_device.input_require_err',
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
                 </div>
                 <div className="mt-2 flex justify-end pt-1">
