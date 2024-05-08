@@ -35,13 +35,13 @@ export type MapData = {
 type ComboBoxSelectDeviceDashboardProps = {
   data: MapData[]
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<MapData[]>>
-  offset?: number
+  setSearchWidget?: React.Dispatch<React.SetStateAction<string>>
 } & FieldWrapperPassThroughProps
 
 export function ComboBoxSelectDeviceDashboard({
   data,
   setFilteredComboboxData,
-  offset,
+  setSearchWidget,
   ...props
 }: ComboBoxSelectDeviceDashboardProps) {
   const { close, open, isOpen } = useDisclosure()
@@ -49,10 +49,14 @@ export function ComboBoxSelectDeviceDashboard({
   const [query, setQuery] = useState('')
   const [filterData, setFilterData] = useState<MapData[]>(data)
 
+  useEffect(() => {
+    setFilterData(data)
+  }, [data])
+
   return (
     <Popover defaultOpen={isOpen} onOpenChange={open}>
-      <PopoverTrigger asChild>
-        <div className="flex h-full w-[200px] items-center justify-center">
+      <PopoverTrigger asChild className="outline-none">
+        <div className="flex h-full w-[200px] items-center justify-center hover:border-none">
           <Input
             type="text"
             placeholder={t('combobox:select_device')}

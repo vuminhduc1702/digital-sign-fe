@@ -28,16 +28,19 @@ export const getEntityThings = ({
   search_str,
   search_field,
 }: GetEntityThings): Promise<GetEntityThingsRes> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    type: type || '',
+    offset: String(offset),
+    limit: String(limit),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/fe/thing`, {
-    params: {
-      project_id: projectId,
-      type,
-      share: true,
-      offset,
-      limit,
-      search_str,
-      search_field,
-    },
+    params,
   })
 }
 

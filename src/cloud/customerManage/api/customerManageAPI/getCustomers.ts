@@ -25,12 +25,21 @@ export const getCustomers = ({
   search_field,
   search_str,
 }: GetCustomers): Promise<GetCustomertonRes> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/users`, {
-    params: {
-      project_id: projectId,
-      search_field,
-      search_str,
-    },
+    params,
+    // : {
+    //   project_id: projectId,
+    //   search_field,
+    //   search_str,
+    // },
   })
 }
 

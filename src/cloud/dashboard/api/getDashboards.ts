@@ -42,14 +42,25 @@ export const getDashboards = ({
   search_field,
   search_str,
 }: GetDashboards): Promise<DashboardList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    offset: String(offset),
+    limit: String(limit),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/vtdashboard`, {
-    params: {
-      project_id: projectId,
-      offset,
-      limit,
-      search_field,
-      search_str,
-    },
+    params,
+    // : {
+    //   project_id: projectId,
+    //   offset,
+    //   limit,
+    //   search_field,
+    //   search_str,
+    // },
   })
 }
 

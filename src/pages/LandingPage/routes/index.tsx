@@ -34,7 +34,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenu,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 
 import VietNam from '@/assets/images/landingpage/vietnam-flag.png'
 import English from '@/assets/images/landingpage/uk-flag.png'
