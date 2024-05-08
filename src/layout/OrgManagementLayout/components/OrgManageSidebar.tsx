@@ -189,6 +189,7 @@ function OrgManageSidebar() {
     open()
     setSelectedUpdateOrg(data)
   }
+  console.log('orgIdURL', orgIdURL)
 
   return (
     <>
@@ -218,7 +219,7 @@ function OrgManageSidebar() {
         <div className="space-y-3">
           <Button
             className={clsx('rounded-md border-none', {
-              'text-primary-400': orgIdURL == null,
+              'text-primary-400': orgIdURL === '' || orgIdURL === '%20',
             })}
             variant="muted"
             onClick={() => {
@@ -227,17 +228,17 @@ function OrgManageSidebar() {
               }
               switch (entityTypeURL) {
                 case 'org':
-                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}`)
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/`)
                 case 'event':
-                  return navigate(`${PATHS.EVENT_MANAGE}/${projectId}`)
+                  return navigate(`${PATHS.EVENT_MANAGE}/${projectId}/`)
                 case 'group':
-                  return navigate(`${PATHS.GROUP_MANAGE}/${projectId}`)
+                  return navigate(`${PATHS.GROUP_MANAGE}/${projectId}/`)
                 case 'user':
-                  return navigate(`${PATHS.USER_MANAGE}/${projectId}`)
+                  return navigate(`${PATHS.USER_MANAGE}/${projectId}/`)
                 case 'device':
-                  return navigate(`${PATHS.DEVICE_MANAGE}/${projectId}`)
+                  return navigate(`${PATHS.DEVICE_MANAGE}/${projectId}/`)
                 default:
-                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}`)
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/`)
               }
             }}
           >

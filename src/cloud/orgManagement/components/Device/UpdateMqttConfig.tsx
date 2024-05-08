@@ -11,7 +11,7 @@ import {
 } from '../../api/deviceAPI/updateMqttConfig'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 
 import { type DeviceAdditionalInfo } from '../../types'
 import {

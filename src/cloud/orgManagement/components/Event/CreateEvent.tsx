@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { useParams } from 'react-router-dom'
 import { useCreateAttrChart } from '@/cloud/dashboard/api'
 import { Button } from '@/components/Button'
-import { Checkbox } from '@/components/Checkbox'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,
   InputField,
@@ -234,61 +234,47 @@ const eventIntervalSchema = z.object({
     .min(1, { message: i18n.t('ws:filter.choose_startTime') }),
   end_time: z.string().min(1, { message: i18n.t('ws:filter.choose_endTime') }),
 })
-export const eventActionSchema = z
-  .array(
-    z
-      .object({
-        action_type: z.enum(['eventactive', 'delay'] as const),
-        message: z.string().optional(),
-        subject: z.string().min(1, {
-          message: i18n
-            .t('placeholder:input_text_value')
-            .replace(
-              '{{VALUE}}',
-              i18n.t('cloud:org_manage.event_manage.add_event.action.subject'),
-            ),
-        }),
-        receiver: z.string(),
-      })
-      .or(
-        z.object({
-          action_type: z.enum([
-            'sms',
-            'mqtt',
-            'fcm',
-            'event',
-            'email',
-          ] as const),
-          message: z.string().min(1, {
-            message: i18n
-              .t('placeholder:input_text_value')
-              .replace(
-                '{{VALUE}}',
-                i18n.t(
-                  'cloud:org_manage.event_manage.add_event.action.message',
-                ),
-              ),
-          }),
-          subject: z.string().min(1, {
-            message: i18n
-              .t('placeholder:input_text_value')
-              .replace(
-                '{{VALUE}}',
-                i18n.t(
-                  'cloud:org_manage.event_manage.add_event.action.subject',
-                ),
-              ),
-          }),
-          receiver: z.string(),
-        }),
-      )
-      .or(
-        z.object({
-          action_type: z.enum(['report'] as const),
-        }),
-      ),
-  )
-  .optional()
+export const eventActionSchema = z.array(
+  z.discriminatedUnion('action_type', [
+    z.object({
+      action_type: z.enum(['sms', 'mqtt', 'fcm', 'event', 'email'] as const),
+      message: z.string().min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+          ),
+      }),
+      subject: z.string().min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t('cloud:org_manage.event_manage.add_event.action.subject'),
+          ),
+      }),
+      receiver: z.string(),
+    }),
+    z.object({
+      action_type: z.enum(['report'] as const),
+    }),
+    z.object({
+      action_type: z.enum(['eventactive', 'delay'] as const),
+      message: z.string().optional(),
+      subject: z.string().min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t('cloud:org_manage.event_manage.add_event.action.subject'),
+          ),
+      }),
+      receiver: z.string(),
+    }),
+  ]),
+)
+
 export const cmdSchema = z.object({
   thing_id: z
     .string()
@@ -326,6 +312,7 @@ export const eventTypeSchema = z.discriminatedUnion('type', [
       .and(z.object({ end_time: z.string().optional() })),
   }),
 ])
+
 export const createEventSchema = z
   .object({
     project_id: z.string().optional(),
@@ -494,15 +481,17 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     null,
   )
 
-  useEffect(() => {
-    setActionType(watch(`action.${0}.action_type`))
-  }, [watch(`action.${0}.action_type`)])
+  // useEffect(() => {
+  //   setActionType(watch(`action.${0}.action_type`))
+  // }, [watch(`action.${0}.action_type`)])
 
   useEffect(() => {
     if (isSuccess && close) {
       close()
     }
   }, [isSuccess])
+
+  console.log(getValues('type'))
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -740,7 +729,12 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                               <Checkbox
                                 {...field}
                                 checked={value}
-                                onCheckedChange={onChange}
+                                onCheckedChange={e => {
+                                  onChange(e)
+                                  if (e) {
+                                    setValue('type', 'event')
+                                  }
+                                }}
                               />
                             </FormControl>
                             <FormMessage />
@@ -751,7 +745,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                     <FormField
                       control={form.control}
                       name="type"
-                      disabled={watch('onClick')}
+                      // disabled={watch('onClick')}
                       render={({ field: { onChange, value, ...field } }) => (
                         <FormItem>
                           <FormLabel>
@@ -762,11 +756,16 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           <div>
                             <Select
                               {...field}
-                              onValueChange={onChange}
+                              onValueChange={e => {
+                                onChange(e)
+                                if (e === 'schedule') {
+                                  setValue('interval.end_time', '')
+                                }
+                              }}
                               value={value}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger disabled={watch('onClick')}>
                                   <SelectValue
                                     placeholder={t(
                                       'cloud:org_manage.event_manage.add_event.input_placeholder',
@@ -876,7 +875,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                     <FormField
                       control={control}
                       name="interval.end_time"
-                      disabled={watch('type') === 'schedule'}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
@@ -884,7 +882,11 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           </FormLabel>
                           <div>
                             <FormControl>
-                              <Input type="time" {...field} />
+                              <Input
+                                type="time"
+                                {...field}
+                                disabled={watch('type') === 'schedule'}
+                              />
                             </FormControl>
                             <FormMessage />
                           </div>
@@ -1103,7 +1105,11 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   </FormLabel>
                                   <div>
                                     <FormControl>
-                                      <Input type="number" {...field} />
+                                      <Input
+                                        type="number"
+                                        {...field}
+                                        autoFocus={false}
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </div>
@@ -1214,7 +1220,10 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                               <div>
                                 <Select
                                   {...field}
-                                  onValueChange={onChange}
+                                  onValueChange={e => {
+                                    onChange(e)
+                                    setActionType(e)
+                                  }}
                                   value={value}
                                 >
                                   <FormControl>

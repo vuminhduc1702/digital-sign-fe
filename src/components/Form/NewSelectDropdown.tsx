@@ -100,7 +100,7 @@ export function NewSelectDropdown<
             borderColor: isErr ? 'red' : '#b4b5b6',
             boxShadow: isErr ? 'red' : '',
             ':hover': {
-              borderColor: isErr ? 'red' : '',
+              borderColor: isErr ? 'red' : '#2684FF',
               boxShadow: isErr ? '0 0 0 1px red' : '0 0 0 1px #2684FF',
             },
           }

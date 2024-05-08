@@ -24,7 +24,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
@@ -76,6 +76,12 @@ function FireWareTableContextMenu({
           <LuFiles
             className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
             onClick={() => handleCopyId(id)}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <UploadIcon
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={openUpload}
           />
         </div>
         <div className="flex cursor-pointer justify-center p-3">

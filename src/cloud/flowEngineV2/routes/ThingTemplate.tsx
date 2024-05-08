@@ -38,8 +38,8 @@ export function ThingTemplate() {
     projectId,
     type: 'thing',
     offset,
-    search_field: searchField.current,
     search_str: searchQuery,
+    search_field: searchField.current,
   })
 
   const {
@@ -96,6 +96,10 @@ export function ThingTemplate() {
               setSearchValue={setSearchQuery}
               searchField={searchField}
               fieldOptions={[
+                {
+                  value: 'name,id',
+                  label: t('search:all'),
+                },
                 {
                   value: 'name',
                   label: t('cloud:custom_protocol.thing.name'),

@@ -1,7 +1,7 @@
 {
   "name": "iot-react",
   "private": true,
-  "version": "0.5.8",
+  "version": "0.5.12",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -81,6 +81,7 @@
     "react-i18next": "^12.2.0",
     "react-iframe": "^1.8.5",
     "react-leaflet": "^4.2.1",
+    "react-leaflet-cluster": "^2.1.0",
     "react-pick-color": "^2.0.0",
     "react-query-auth": "^2.2.0",
     "react-resizable-panels": "^1.0.9",

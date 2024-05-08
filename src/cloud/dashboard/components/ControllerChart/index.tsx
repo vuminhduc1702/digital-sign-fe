@@ -1,23 +1,14 @@
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-
 import storage from '@/utils/storage'
-import { toast } from 'sonner'
 
 import { type SendMessage } from 'react-use-websocket/dist/lib/types'
-import { type DashboardWS } from '../../types'
 
 export function ControllerButton({
   data,
   sendMessage,
-  lastJsonMessage,
 }: {
   data: string
   sendMessage: SendMessage
-  lastJsonMessage: DashboardWS
 }) {
-  const { t } = useTranslation()
-
   const projectId = storage.getProject()?.id
 
   const { input, service_name, thing_id } = JSON.parse(data).executorCmds[0]
@@ -36,21 +27,6 @@ export function ControllerButton({
       }),
     )
   }
-
-  useEffect(() => {
-    if (lastJsonMessage != null) {
-      if (
-        lastJsonMessage?.errorCode === 0 &&
-        !Array.isArray(lastJsonMessage.data)
-      ) {
-        toast.success(
-          t('cloud:dashboard.detail_dashboard.add_widget.controller.success')
-            .replace('{{SERVICE_NAME}}', service_name)
-            .replace('{{DATA}}', lastJsonMessage.data.data),
-        )
-      }
-    }
-  }, [lastJsonMessage])
 
   return (
     <div className="relative h-full">

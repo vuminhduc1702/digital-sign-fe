@@ -98,6 +98,10 @@ export function EventManage() {
               searchField={searchField}
               fieldOptions={[
                 {
+                  value: 'name,id',
+                  label: t('search:all'),
+                },
+                {
                   value: 'name',
                   label: t('cloud:org_manage.event_manage.table.name'),
                 },

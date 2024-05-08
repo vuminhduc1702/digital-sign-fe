@@ -4,12 +4,6 @@ import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { useSpinDelay } from 'spin-delay'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/Tooltip'
 import { Button } from '@/components/Button/Button'
 import TitleBar from '@/components/Head/TitleBar'
 import { Spinner } from '@/components/Spinner'
@@ -47,7 +41,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
+import {
+  ComboBoxSelectDeviceDashboard,
+  type MapData,
+} from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import lightOnICon from '@/assets/icons/light-on.svg'
 
@@ -60,7 +57,7 @@ import {
   type WidgetType,
 } from '../types'
 import { type Device } from '@/cloud/orgManagement'
-import { type EntityId } from '../types'
+import { type EntityId, type MapSeries } from '../types'
 
 import { StarFilledIcon } from '@radix-ui/react-icons'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
@@ -87,7 +84,14 @@ import BD_05 from '@/assets/images/landingpage/BD_05.png'
 import BD_06 from '@/assets/images/landingpage/BD_06.png'
 import BD_07 from '@/assets/images/landingpage/BD_07.png'
 import BD_08 from '@/assets/images/landingpage/BD_08.png'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import BD_09 from '@/assets/images/landingpage/BD_09.png'
+import { queryClient } from '@/lib/react-query'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -120,7 +124,6 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -176,16 +179,17 @@ export function DashboardDetail() {
     return result
   }
 
+  const findOrgsVar = findOrgs()
+
   const { data: deviceData, isPreviousData: isPreviousDeviceData } =
     useGetDevices({
-      orgIds: findOrgs(),
+      orgIds: findOrgsVar,
       projectId,
       config: {
         retry: 5,
         retryDelay: 5000,
       },
     })
-  useEffect(() => {}, [isPreviousDeviceData])
 
   function triggerRerenderLayout() {
     setRerenderLayout(true)
@@ -211,6 +215,15 @@ export function DashboardDetail() {
     if (lastJsonMessage != null) {
       if (lastJsonMessage?.errorCode !== 0) {
         toast.error(lastJsonMessage.errorMsg)
+      }
+
+      if (
+        lastJsonMessage?.errorCode === 0 &&
+        !Array.isArray(lastJsonMessage.data)
+      ) {
+        toast.success(
+          t('cloud:dashboard.detail_dashboard.add_widget.controller.success'),
+        )
       }
     }
   }, [lastJsonMessage])
@@ -267,7 +280,7 @@ export function DashboardDetail() {
   }, [widgetList, lastJsonMessage])
 
   function combinedObject(data: any[]) {
-    let combinedObject: TimeSeries = {}
+    let combinedObject: any = {}
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
         for (const key in obj) {
@@ -299,38 +312,11 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
-  const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
-    Device[]
-  >([])
-
   function getDeviceInfo(deviceId: string) {
     const deviceInfo = deviceData?.devices.find(
       device => device.id === deviceId,
     )
     return deviceInfo
-  }
-
-  // get device search list
-  function getMapDeviceList(widgetInfo: any) {
-    const result: EntityId[] = []
-    widgetInfo?.attribute_config?.map((item: any) => {
-      const entityName = item.deviceName
-      const id = item.label
-      if (
-        result.findIndex(
-          entity => entity.id === id && entity.entityName === entityName,
-        ) === -1 &&
-        id &&
-        entityName
-      ) {
-        result.push({
-          entityName: entityName,
-          entityType: 'DEVICE',
-          id: id,
-        })
-      }
-    })
-    return result
   }
 
   return (
@@ -380,10 +366,15 @@ export function DashboardDetail() {
             {(Object.keys(widgetDetailDB).length !== 0 ||
               Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
-                const widgetInfo = { ...widgetList?.[widgetId] }
-                widgetInfo?.attribute_config?.map(item => {
-                  item.deviceName = getDeviceInfo(item.label)?.name
-                })
+                const widgetInfo = {
+                  ...widgetList?.[widgetId],
+                  attribute_config: widgetList?.[
+                    widgetId
+                  ]?.attribute_config?.map(item => ({
+                    ...item,
+                    deviceName: getDeviceInfo(item.label)?.name,
+                  })),
+                }
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -409,7 +400,7 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const lastestValues: DataSeries =
+                const lastestValues: MapSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
                         lastJsonMessage?.data?.map(device => ({
@@ -433,6 +424,8 @@ export function DashboardDetail() {
                             // x: index % 2 === 0 ? 0 : 4,
                             x: index % 2 === 0 ? 0 : 6,
                             y: 0,
+                            // w: 1,
+                            // h: 1,
                             w: widgetInfo?.description === 'CARD' ? 3 : 6,
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
@@ -474,11 +467,6 @@ export function DashboardDetail() {
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
-                        filter={
-                          filteredComboboxDataMap.length >= 1
-                            ? filteredComboboxDataMap
-                            : []
-                        }
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
@@ -507,21 +495,12 @@ export function DashboardDetail() {
                           widgetInfo?.datasource?.controller_message as string
                         }
                         sendMessage={sendMessage}
-                        lastJsonMessage={lastJsonMessage}
                       />
                     ) : widgetInfo?.description === 'LIGHT' ? (
                       <LightChart
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                       />
-                    ) : null}
-                    {widgetInfo?.description === 'MAP' ? (
-                      <div className="absolute right-[10%] top-0 mr-8 mt-3 flex gap-x-2">
-                        <ComboBoxSelectDeviceDashboard
-                          setFilteredComboboxData={setFilteredComboboxDataMap}
-                          data={getMapDeviceList(widgetInfo)}
-                        />
-                      </div>
                     ) : null}
                     {isEditMode ? (
                       <div

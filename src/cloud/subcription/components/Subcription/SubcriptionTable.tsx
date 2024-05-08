@@ -11,7 +11,11 @@ import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { cn, getVNDateFormat } from '@/utils/misc'
 import { type Subcription } from '../../types'
 import { UpdateSubcription } from './UpdateSubcription'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Button } from '@/components/Button'
 import btnFilterIcon from '@/assets/icons/btn-filter.svg'
 import {
@@ -19,7 +23,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {

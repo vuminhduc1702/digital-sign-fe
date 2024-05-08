@@ -21,7 +21,7 @@ import { cn } from '@/utils/misc'
 import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
 import { FormDialog } from '@/components/FormDialog'
 import { PlusIcon } from '@/components/SVGIcons'
-import { Switch } from '@/components/Switch'
+import { Switch } from '@/components/ui/switch'
 import storage from '@/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
@@ -30,8 +30,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/Tooltip'
-import { Checkbox } from '@/components/Checkbox'
+} from '@/components/ui/tooltip'
+import { Checkbox } from '@/components/ui/checkbox'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 import btnAddIcon from '@/assets/icons/btn-add.svg'
@@ -45,13 +45,13 @@ import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@/components/Resizable'
+} from '@/components/ui/resizable'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/Dropdowns'
+} from '@/components/ui/dropdown-menu'
 
 export const inputSchema = z.object({
   name: z
@@ -115,7 +115,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const {
     mutate: mutateService,
     isLoading: isLoadingService,
-    isSuccess,
+    isSuccess: isSuccessService,
   } = useCreateServiceThing()
   const codeEditorRef = useRef<ImperativePanelHandle>(null)
   const resultEditorRef = useRef<ImperativePanelHandle>(null)
@@ -234,6 +234,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     <FormDialog
       className="thing-service-popup"
       title={t('cloud:custom_protocol.service.create')}
+      isDone={isSuccessService}
       id="create-service-screen"
       isFullScreen={fullScreen}
       resetData={clearData}

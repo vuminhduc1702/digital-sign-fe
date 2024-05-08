@@ -26,16 +26,29 @@ export const getDevices = ({
   search_str,
   search_field,
 }: GetDevices): Promise<DeviceList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    org_id: orgId || '',
+    project_id: projectId,
+    get_attributes: String(get_attributes),
+    offset: String(offset),
+    limit: String(limit),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/devices`, {
-    params: {
-      org_id: orgId,
-      project_id: projectId,
-      offset,
-      limit,
-      get_attributes,
-      search_str,
-      search_field,
-    },
+    params,
+    // : {
+    //   org_id: orgId,
+    //   project_id: projectId,
+    //   offset,
+    //   limit,
+    //   get_attributes,
+    //   search_str,
+    //   search_field,
+    // },
   })
 }
 
@@ -69,30 +82,6 @@ export const useGetDevices = ({
       search_field,
     ],
     queryFn: () => {
-      const res = {
-        devices: [] as Device[],
-        limit: 0,
-        offset: 0,
-        total: 0,
-      }
-      if (orgIds && orgIds.length > 0) {
-        orgIds?.forEach(async orgId => {
-          const orgDevice = await getDevices({
-            orgId,
-            projectId,
-            get_attributes,
-            offset,
-            limit,
-          })
-          res.devices = [...res.devices, ...orgDevice.devices]
-          res.limit = orgDevice.limit
-          res.offset = orgDevice.offset
-          res.total += orgDevice.total
-        })
-
-        return res
-      }
-
       return getDevices({
         orgId,
         projectId,
