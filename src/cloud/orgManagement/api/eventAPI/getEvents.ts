@@ -19,14 +19,25 @@ export const getEvents = ({
   search_str,
   search_field,
 }: GetEvents): Promise<EventList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    org_id: orgId || '',
+    group_id: groupId || '',
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/events`, {
-    params: {
-      org_id: orgId,
-      project_id: projectId,
-      group_id: groupId,
-      search_str,
-      search_field,
-    },
+    params,
+    // : {
+    //   org_id: orgId,
+    //   project_id: projectId,
+    //   group_id: groupId,
+    //   search_str,
+    //   search_field,
+    // },
   })
 }
 

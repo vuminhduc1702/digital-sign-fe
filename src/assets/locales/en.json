@@ -667,6 +667,7 @@
         "update_pie": "Edit Pie Chart",
         "update_gauge": "Edit Gauge",
         "update_card": "Edit Data Chart",
+        "update_map": "Edit Map",
         "name": "Chart Name",
         "device": "Device",
         "attr": "Attribute",

@@ -77,6 +77,7 @@ export function CustomerManageTemplate() {
             searchField={searchField}
             setSearchValue={setSearchQuery}
             fieldOptions={[
+              { label: t('search:all'), value: 'name, customer_code, phone' },
               { label: t('schema:customer_name'), value: 'name' },
               { label: t('schema:customer_code'), value: 'customer_code' },
               { label: t('schema:customer_phone'), value: 'phone' },

@@ -10,7 +10,7 @@ import * as z from 'zod'
 
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import { Button } from '@/components/Button'
-import { Calendar, TimePicker } from '@/components/Calendar'
+import { Calendar } from '@/components/ui/calendar'
 import { Dialog, DialogTitle } from '@/components/Dialog'
 import {
   FieldWrapper,
@@ -51,6 +51,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
+import { queryClient } from '@/lib/react-query'
+import { TimePicker } from '@/components/ui/time-picker'
+import { toast } from 'sonner'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -449,7 +452,7 @@ export function CreateWidget({
 
   const getDeviceInfo = (id: string) => {
     let device = null
-    for (const d of deviceData?.devices || []) {
+    for (const d of deviceData?.devices ?? []) {
       if (d.id === id) {
         device = d
         break
@@ -462,7 +465,13 @@ export function CreateWidget({
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
-  } = useCreateAttrChart()
+  } = useCreateAttrChart({
+    config: {
+      onSuccess: () => {
+        queryClient.prefetchQuery(['devices'])
+      },
+    },
+  })
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
     const result = item.attr_keys.map(attr => ({
       label: attr,
@@ -520,15 +529,10 @@ export function CreateWidget({
     attrChartData?.entities?.map(item => {
       item?.attr_keys?.map(attr => {
         if (attr === attribute) {
-          // filter all item in deviceData that have id = item.entity_id
-          const devices = deviceData?.devices.filter(device => {
-            device?.attributes && console.log(device.attributes)
-            device.id === item.entity_id &&
-              device.attributes?.filter(
-                attr =>
-                  attr.attribute_key === attribute && attr.value_type === 'DBL',
-              )
-          })
+          const devices = deviceData?.devices.filter(
+            device => device.id === item.entity_id,
+          )
+
           devices?.map(device => {
             const deviceInfo = getDeviceInfo(device.id)
             if (deviceInfo.includes('undefined')) return
@@ -645,6 +649,43 @@ export function CreateWidget({
                   type: 'TIME_SERIES',
                   key: item.attribute_key,
                 }))
+
+                // missing latitude/longitude in map widget
+                let stopExecution = false
+                values.attributeConfig.map(item => {
+                  if (item.attribute_key === 'latitude') {
+                    if (
+                      !values.attributeConfig.find(
+                        i =>
+                          i.label === item.label &&
+                          i.attribute_key === 'longitude',
+                      )
+                    ) {
+                      stopExecution = true
+                      return
+                    }
+                  } else if (item.attribute_key === 'longitude') {
+                    if (
+                      !values.attributeConfig.find(
+                        i =>
+                          i.label === item.label &&
+                          i.attribute_key === 'latitude',
+                      )
+                    ) {
+                      stopExecution = true
+                      return
+                    }
+                  }
+                })
+                if (stopExecution) {
+                  toast.error(
+                    t(
+                      'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
+                    ),
+                  )
+                  return
+                }
+
                 const initMessage = {
                   entityDataCmds: [
                     {
@@ -1152,15 +1193,18 @@ export function CreateWidget({
                               </FieldWrapper>
                             </div>
                           ) : null}
-                          <InputField
-                            label={t('cloud:dashboard.config_chart.unit')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]?.unit
-                            }
-                            registration={register(
-                              `attributeConfig.${index}.unit` as const,
-                            )}
-                          />
+                          {widgetCategory === 'MAP' ? null : (
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.unit')}
+                              error={
+                                formState?.errors?.attributeConfig?.[index]
+                                  ?.unit
+                              }
+                              registration={register(
+                                `attributeConfig.${index}.unit` as const,
+                              )}
+                            />
+                          )}
                           {widgetCategory === 'GAUGE' && (
                             <>
                               <InputField

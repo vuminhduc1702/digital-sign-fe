@@ -24,15 +24,27 @@ export const getRoles = ({
   search_str,
   search_field,
 }: GetRoles): Promise<RoleList> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    project_id: projectId,
+    offset: String(offset),
+    limit: String(limit),
+    applicable_to: applicable_to || '',
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/roles`, {
-    params: {
-      project_id: projectId,
-      offset,
-      limit,
-      applicable_to,
-      search_str,
-      search_field,
-    },
+    params,
+    // : {
+    //   project_id: projectId,
+    //   offset,
+    //   limit,
+    //   applicable_to,
+    //   search_str,
+    //   search_field,
+    // },
   })
 }
 

@@ -138,6 +138,10 @@ export function SubcriptionTemplate() {
               setIsSearchData={setIsSearchData}
               fieldOptions={[
                 {
+                  label: t('search:all'),
+                  value: 'subscription,customer_code,name',
+                },
+                {
                   label: t('schema:registration_code'),
                   value: 'subscription',
                 },

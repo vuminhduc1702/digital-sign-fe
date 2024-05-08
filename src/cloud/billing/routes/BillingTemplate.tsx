@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { searchSubcriptionSchema } from '@/cloud/subcription/routes/SubcriptionTemplate'
 import { Button } from '@/components/Button'
-import { Calendar } from '@/components/Calendar'
+import { Calendar } from '@/components/ui/calendar'
 import { InputField, SelectDropdown } from '@/components/Form'
 import {
   Popover,

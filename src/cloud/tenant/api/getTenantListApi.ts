@@ -16,13 +16,23 @@ export const getCustomerList = ({
   search_field,
   search_str,
 }: CustomerList): Promise<any> => {
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+    search_str: search_str || '',
+  })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
   return axios.get(`/api/tenant`, {
-    params: {
-      limit,
-      offset,
-      search_field,
-      search_str,
-    },
+    params,
+    // : {
+    //   limit,
+    //   offset,
+    //   search_field,
+    //   search_str,
+    // },
   })
   // if (search_str) {
   //   return axios.get(
