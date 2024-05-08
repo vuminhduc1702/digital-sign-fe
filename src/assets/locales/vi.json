@@ -1129,7 +1129,9 @@
     "all": "Tất cả",
     "title": "Tìm kiếm",
     "no_org": "Không trực thuộc tổ chức",
-    "no_group": "Không trực thuộc nhóm"
+    "no_group": "Không trực thuộc nhóm",
+    "no_search_field": "Chưa nhập trường tìm kiếm",
+    "no_search_name": "Chưa nhập thông tin tìm kiếm"
   },
   "user": {
     "login": "Đăng nhập",

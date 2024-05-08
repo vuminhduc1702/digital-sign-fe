@@ -176,6 +176,7 @@ export function Default() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleAttrs}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {

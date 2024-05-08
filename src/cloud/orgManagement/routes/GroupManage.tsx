@@ -161,6 +161,7 @@ export function GroupManage() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleGroups}
           handleSubmit={() =>
             mutateDeleteMultipleGroups(
               {

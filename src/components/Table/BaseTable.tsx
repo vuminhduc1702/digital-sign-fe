@@ -211,10 +211,7 @@ export function BaseTable<T extends Record<string, any>>({
 
   return (
     <div className={cn('', className)}>
-      <div
-        ref={ref}
-        className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-between"
-      >
+      <div className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-between">
         <div className="flex flex-row gap-4">
           <ExportTable
             refComponent={ref}
@@ -298,15 +295,14 @@ export function BaseTable<T extends Record<string, any>>({
         {isPreviousData && offset == 0 ? null : (
           <>
             <Table
+              ref={ref}
               className={cn({
                 'h-[90%]': totalAttributes === 0,
               })}
               id="table-ref"
             >
               <Progress isLoading={showProgress} />
-              <TableHeader
-              // className="sticky top-0 z-50"
-              >
+              <TableHeader className="sticky top-px z-50 shadow-table-header">
                 {table.getHeaderGroups().map(headerGroup => {
                   return (
                     <TableRow key={headerGroup.id}>
@@ -378,11 +374,11 @@ export function BaseTable<T extends Record<string, any>>({
                     </TableCell>
                   </TableRow>
                 )}
-                <ScrollBar orientation="horizontal" />
               </TableBody>
             </Table>
           </>
         )}
+        <ScrollBar orientation="horizontal" />
       </ScrollArea>
 
       {totalAttributes >= 0 && (

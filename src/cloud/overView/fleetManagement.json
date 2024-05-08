@@ -1,531 +1,531 @@
 {
-    "organizations": null,
-    "groups": null,
-    "roles": null,
-    "users": null,
-    "templates": [
+  "organizations": null,
+  "groups": null,
+  "roles": null,
+  "users": null,
+  "templates": [
+    {
+      "id": "e75e37a5-d05d-4ee9-950d-851a5786f9ab",
+      "name": "Sample",
+      "rule_chain_id": "",
+      "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+      "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+      "attributes": [
         {
-            "id": "e75e37a5-d05d-4ee9-950d-851a5786f9ab",
-            "name": "Sample",
-            "rule_chain_id": "",
-            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
-            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
-            "attributes": [
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "accuracy",
-                    "logged": true,
-                    "value": 0,
-                    "value_as_string": "0",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "DBL"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "name",
-                    "logged": false,
-                    "value": "Tracking",
-                    "value_as_string": "Tracking",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "owner",
-                    "logged": false,
-                    "value": "",
-                    "value_as_string": "",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "connection",
-                    "logged": false,
-                    "value": "",
-                    "value_as_string": "",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "firmware_version",
-                    "logged": false,
-                    "value": "",
-                    "value_as_string": "",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "last_update",
-                    "logged": false,
-                    "value": 0,
-                    "value_as_string": "0",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "DBL"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "longtitude",
-                    "logged": true,
-                    "value": 0,
-                    "value_as_string": "0",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "DBL"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "logging",
-                    "logged": true,
-                    "value": null,
-                    "value_as_string": "null",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "JSON"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "message",
-                    "logged": true,
-                    "value": null,
-                    "value_as_string": "null",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "JSON"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "geofence",
-                    "logged": false,
-                    "value": null,
-                    "value_as_string": "null",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "JSON"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "latitude",
-                    "logged": true,
-                    "value": 0,
-                    "value_as_string": "0",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "DBL"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "battery",
-                    "logged": true,
-                    "value": 0,
-                    "value_as_string": "0",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "DBL"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "config",
-                    "logged": false,
-                    "value": {
-                        "M": 1,
-                        "N": 1,
-                        "P": 30
-                    },
-                    "value_as_string": "{\"M\":1,\"N\":1,\"P\":30}",
-                    "last_update_ts": 1699892527728,
-                    "value_type": "JSON"
-                }
-            ]
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "accuracy",
+          "logged": true,
+          "value": 0,
+          "value_as_string": "0",
+          "last_update_ts": 1699892527728,
+          "value_type": "DBL"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "name",
+          "logged": false,
+          "value": "Tracking",
+          "value_as_string": "Tracking",
+          "last_update_ts": 1699892527728,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "owner",
+          "logged": false,
+          "value": "",
+          "value_as_string": "",
+          "last_update_ts": 1699892527728,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "connection",
+          "logged": false,
+          "value": "",
+          "value_as_string": "",
+          "last_update_ts": 1699892527728,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "firmware_version",
+          "logged": false,
+          "value": "",
+          "value_as_string": "",
+          "last_update_ts": 1699892527728,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "last_update",
+          "logged": false,
+          "value": 0,
+          "value_as_string": "0",
+          "last_update_ts": 1699892527728,
+          "value_type": "DBL"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "longtitude",
+          "logged": true,
+          "value": 0,
+          "value_as_string": "0",
+          "last_update_ts": 1699892527728,
+          "value_type": "DBL"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "logging",
+          "logged": true,
+          "value": null,
+          "value_as_string": "null",
+          "last_update_ts": 1699892527728,
+          "value_type": "JSON"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "message",
+          "logged": true,
+          "value": null,
+          "value_as_string": "null",
+          "last_update_ts": 1699892527728,
+          "value_type": "JSON"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "geofence",
+          "logged": false,
+          "value": null,
+          "value_as_string": "null",
+          "last_update_ts": 1699892527728,
+          "value_type": "JSON"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "latitude",
+          "logged": true,
+          "value": 0,
+          "value_as_string": "0",
+          "last_update_ts": 1699892527728,
+          "value_type": "DBL"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "battery",
+          "logged": true,
+          "value": 0,
+          "value_as_string": "0",
+          "last_update_ts": 1699892527728,
+          "value_type": "DBL"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "config",
+          "logged": false,
+          "value": {
+            "M": 1,
+            "N": 1,
+            "P": 30
+          },
+          "value_as_string": "{\"M\":1,\"N\":1,\"P\":30}",
+          "last_update_ts": 1699892527728,
+          "value_type": "JSON"
         }
-    ],
-    "devices": [
+      ]
+    }
+  ],
+  "devices": [
+    {
+      "id": "b02e87da-e1b9-4818-bb2f-707d0971006b",
+      "key": "b02e87da-e1b9-4818-bb2f-707d0971006b",
+      "template_id": "",
+      "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+      "created_by": "20a86126-37d8-4102-85c2-da1642f049dd",
+      "name": "vtag-01",
+      "group_id": "",
+      "type": "",
+      "org_id": "",
+      "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+      "status": "offline",
+      "created_time": 0,
+      "metadata": {},
+      "additional_info": {
+        "device_id": "",
+        "imei": "",
+        "device_manufacture": "",
+        "protocol": "",
+        "heartbeat_interval": 0,
+        "last_heartbeat": 0,
+        "timeout_lifecycle": 0,
+        "device_model": "",
+        "mqtt_config": null,
+        "firmware_version": ""
+      },
+      "attributes": [
         {
-            "id": "b02e87da-e1b9-4818-bb2f-707d0971006b",
-            "key": "b02e87da-e1b9-4818-bb2f-707d0971006b",
-            "template_id": "",
-            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
-            "created_by": "20a86126-37d8-4102-85c2-da1642f049dd",
-            "name": "vtag-01",
-            "group_id": "",
-            "type": "",
-            "org_id": "",
-            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
-            "status": "offline",
-            "created_time": 0,
-            "metadata": {},
-            "additional_info": {
-                "device_id": "",
-                "imei": "",
-                "device_manufacture": "",
-                "protocol": "",
-                "heartbeat_interval": 0,
-                "last_heartbeat": 0,
-                "timeout_lifecycle": 0,
-                "device_model": "",
-                "mqtt_config": null,
-                "firmware_version": ""
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "latitude",
+          "logged": true,
+          "value": "latitude",
+          "value_as_string": "latitude",
+          "last_update_ts": 1700116114371,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "battery",
+          "logged": true,
+          "value": "battery",
+          "value_as_string": "battery",
+          "last_update_ts": 1700116769436,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "message",
+          "logged": true,
+          "value": "message",
+          "value_as_string": "message",
+          "last_update_ts": 1700116714107,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "longtitude",
+          "logged": true,
+          "value": "longtitude",
+          "value_as_string": "longtitude",
+          "last_update_ts": 1700116114371,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "firmware_version",
+          "logged": true,
+          "value": "firmware_version",
+          "value_as_string": "firmware_version",
+          "last_update_ts": 1700116714107,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "accuracy",
+          "logged": true,
+          "value": "accuracy",
+          "value_as_string": "accuracy",
+          "last_update_ts": 1700116769436,
+          "value_type": "STR"
+        },
+        {
+          "attribute_type": "SCOPE_CLIENT",
+          "attribute_key": "connection",
+          "logged": true,
+          "value": "connection",
+          "value_as_string": "connection",
+          "last_update_ts": 1700116769436,
+          "value_type": "STR"
+        }
+      ]
+    }
+  ],
+  "events": null,
+  "rule_chains": null,
+  "dashboard": [
+    {
+      "id": "3e515445-a7b7-4bdf-be40-d3bb5cc2eb84",
+      "project_id": "",
+      "name": "Quản lý Fleet dashboard",
+      "created_time": 1700116151,
+      "title": "Quản lý Fleet dashboard",
+      "tenant_id": "20a86126-37d8-4102-85c2-da1642f049dd",
+      "configuration": {
+        "description": "",
+        "widgets": {
+          "3504e097-d3d7-47f9-ab7a-417441250d4f": {
+            "type": "TIMESERIES",
+            "title": "widget2",
+            "description": "TABLE",
+            "datasource": {
+              "history_message": "",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"message\"}]},\"id\":\"3504e097-d3d7-47f9-ab7a-417441250d4f\"}]}",
+              "lastest_message": "",
+              "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"message\"],\"startTs\":1699203600000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"3504e097-d3d7-47f9-ab7a-417441250d4f\"}]}"
             },
-            "attributes": [
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "latitude",
-                    "logged": true,
-                    "value": "latitude",
-                    "value_as_string": "latitude",
-                    "last_update_ts": 1700116114371,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "battery",
-                    "logged": true,
-                    "value": "battery",
-                    "value_as_string": "battery",
-                    "last_update_ts": 1700116769436,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "message",
-                    "logged": true,
-                    "value": "message",
-                    "value_as_string": "message",
-                    "last_update_ts": 1700116714107,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "longitude",
-                    "logged": true,
-                    "value": "longitude",
-                    "value_as_string": "longitude",
-                    "last_update_ts": 1700116114371,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "firmware_version",
-                    "logged": true,
-                    "value": "firmware_version",
-                    "value_as_string": "firmware_version",
-                    "last_update_ts": 1700116714107,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "accuracy",
-                    "logged": true,
-                    "value": "accuracy",
-                    "value_as_string": "accuracy",
-                    "last_update_ts": 1700116769436,
-                    "value_type": "STR"
-                },
-                {
-                    "attribute_type": "SCOPE_CLIENT",
-                    "attribute_key": "connection",
-                    "logged": true,
-                    "value": "connection",
-                    "value_as_string": "connection",
-                    "last_update_ts": 1700116769436,
-                    "value_type": "STR"
-                }
-            ]
-        }
-    ],
-    "events": null,
-    "rule_chains": null,
-    "dashboard": [
-        {
-            "id": "3e515445-a7b7-4bdf-be40-d3bb5cc2eb84",
-            "project_id": "",
-            "name": "Quản lý Fleet dashboard",
-            "created_time": 1700116151,
-            "title": "Quản lý Fleet dashboard",
-            "tenant_id": "20a86126-37d8-4102-85c2-da1642f049dd",
-            "configuration": {
-                "description": "",
-                "widgets": {
-                    "3504e097-d3d7-47f9-ab7a-417441250d4f": {
-                        "type": "TIMESERIES",
-                        "title": "widget2",
-                        "description": "TABLE",
-                        "datasource": {
-                            "history_message": "",
-                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"message\"}]},\"id\":\"3504e097-d3d7-47f9-ab7a-417441250d4f\"}]}",
-                            "lastest_message": "",
-                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"message\"],\"startTs\":1699203600000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"3504e097-d3d7-47f9-ab7a-417441250d4f\"}]}"
-                        },
-                        "config": {
-                            "timewindow": {
-                                "interval": 60000
-                            },
-                            "aggregation": "NONE",
-                            "chartsetting": {
-                                "data_type": "REALTIME",
-                                "end_date": null,
-                                "start_date": 1699203600000
-                            }
-                        },
-                        "id": "",
-                        "attribute_config": [
-                            {
-                                "attribute_key": "message",
-                                "label": "",
-                                "color": "rgba(194, 87, 87, 1)",
-                                "unit": "",
-                                "decimal": ""
-                            }
-                        ]
-                    },
-                    "56667a1e-4df9-4714-98a7-6d6b02908b8c": {
-                        "type": "LASTEST",
-                        "title": "widget6",
-                        "description": "CARD",
-                        "datasource": {
-                            "history_message": "",
-                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"56667a1e-4df9-4714-98a7-6d6b02908b8c\"}]}",
-                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"56667a1e-4df9-4714-98a7-6d6b02908b8c\"}]}",
-                            "realtime_message": ""
-                        },
-                        "config": {
-                            "timewindow": {
-                                "interval": 0
-                            },
-                            "aggregation": "",
-                            "chartsetting": null
-                        },
-                        "id": "",
-                        "attribute_config": [
-                            {
-                                "attribute_key": "battery",
-                                "label": "battery",
-                                "color": "rgba(221, 66, 66, 1)",
-                                "unit": "2",
-                                "decimal": "1"
-                            }
-                        ]
-                    },
-                    "865f48e3-9603-422b-b2bf-a998da0e88bd": {
-                        "type": "LASTEST",
-                        "title": "widget4",
-                        "description": "CARD",
-                        "datasource": {
-                            "history_message": "",
-                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"firmware_version\"}]},\"id\":\"865f48e3-9603-422b-b2bf-a998da0e88bd\"}]}",
-                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"firmware_version\"}]},\"id\":\"865f48e3-9603-422b-b2bf-a998da0e88bd\"}]}",
-                            "realtime_message": ""
-                        },
-                        "config": {
-                            "timewindow": {
-                                "interval": 0
-                            },
-                            "aggregation": "",
-                            "chartsetting": null
-                        },
-                        "id": "",
-                        "attribute_config": [
-                            {
-                                "attribute_key": "firmware_version",
-                                "label": "firmware",
-                                "color": "rgba(211, 117, 117, 1)",
-                                "unit": "1",
-                                "decimal": "2"
-                            }
-                        ]
-                    },
-                    "9636ab24-3378-443b-a68d-b45699f8ffae": {
-                        "type": "LASTEST",
-                        "title": "widget5",
-                        "description": "CARD",
-                        "datasource": {
-                            "history_message": "",
-                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"connection\"}]},\"id\":\"9636ab24-3378-443b-a68d-b45699f8ffae\"}]}",
-                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"connection\"}]},\"id\":\"9636ab24-3378-443b-a68d-b45699f8ffae\"}]}",
-                            "realtime_message": ""
-                        },
-                        "config": {
-                            "timewindow": {
-                                "interval": 0
-                            },
-                            "aggregation": "",
-                            "chartsetting": null
-                        },
-                        "id": "",
-                        "attribute_config": [
-                            {
-                                "attribute_key": "connection",
-                                "label": "connection",
-                                "color": "rgba(180, 50, 50, 1)",
-                                "unit": "2",
-                                "decimal": "1"
-                            }
-                        ]
-                    },
-                    "a2f9a528-9ef9-47e7-8c0b-ab811a5a133f": {
-                        "type": "TIMESERIES",
-                        "title": "widget3",
-                        "description": "LINE",
-                        "datasource": {
-                            "history_message": "",
-                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"a2f9a528-9ef9-47e7-8c0b-ab811a5a133f\"}]}",
-                            "lastest_message": "",
-                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"battery\"],\"startTs\":1699203600000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"a2f9a528-9ef9-47e7-8c0b-ab811a5a133f\"}]}"
-                        },
-                        "config": {
-                            "timewindow": {
-                                "interval": 60000
-                            },
-                            "aggregation": "NONE",
-                            "chartsetting": {
-                                "data_type": "REALTIME",
-                                "end_date": null,
-                                "start_date": 1699203600000
-                            }
-                        },
-                        "id": "",
-                        "attribute_config": [
-                            {
-                                "attribute_key": "battery",
-                                "label": "",
-                                "color": "rgba(198, 124, 124, 1)",
-                                "unit": "",
-                                "decimal": ""
-                            }
-                        ]
-                    },
-                    "b13c4736-9ce4-4540-9300-b9f4e27860e2": {
-                        "type": "LASTEST",
-                        "title": "widget1",
-                        "description": "MAP",
-                        "datasource": {
-                            "history_message": "",
-                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
-                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
-                            "realtime_message": ""
-                        },
-                        "config": {
-                            "timewindow": {
-                                "interval": 0
-                            },
-                            "aggregation": "",
-                            "chartsetting": null
-                        },
-                        "id": "",
-                        "attribute_config": [
-                            {
-                                "attribute_key": "latitude",
-                                "label": "",
-                                "color": "",
-                                "unit": "",
-                                "decimal": ""
-                            },
-                            {
-                                "attribute_key": "longitude",
-                                "label": "",
-                                "color": "",
-                                "unit": "",
-                                "decimal": ""
-                            }
-                        ]
-                    },
-                    "be5449d4-ed19-407e-bef7-f6b339fc1610": {
-                        "type": "LASTEST",
-                        "title": "widget7",
-                        "description": "CARD",
-                        "datasource": {
-                            "history_message": "",
-                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"accuracy\"}]},\"id\":\"be5449d4-ed19-407e-bef7-f6b339fc1610\"}]}",
-                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"accuracy\"}]},\"id\":\"be5449d4-ed19-407e-bef7-f6b339fc1610\"}]}",
-                            "realtime_message": ""
-                        },
-                        "config": {
-                            "timewindow": {
-                                "interval": 0
-                            },
-                            "aggregation": "",
-                            "chartsetting": null
-                        },
-                        "id": "",
-                        "attribute_config": [
-                            {
-                                "attribute_key": "accuracy",
-                                "label": "accuracy",
-                                "color": "rgba(241, 55, 55, 1)",
-                                "unit": "2",
-                                "decimal": "1"
-                            }
-                        ]
-                    }
-                }
+            "config": {
+              "timewindow": {
+                "interval": 60000
+              },
+              "aggregation": "NONE",
+              "chartsetting": {
+                "data_type": "REALTIME",
+                "end_date": null,
+                "start_date": 1699203600000
+              }
             },
-            "dashboard_setting": {
-                "last_viewed": "2023-11-16T06:47:31.168Z",
-                "layout": [
-                    {
-                        "h": 3,
-                        "i": "b13c4736-9ce4-4540-9300-b9f4e27860e2",
-                        "moved": false,
-                        "static": false,
-                        "w": 6,
-                        "x": 0,
-                        "y": 0
-                    },
-                    {
-                        "h": 3,
-                        "i": "3504e097-d3d7-47f9-ab7a-417441250d4f",
-                        "moved": false,
-                        "static": false,
-                        "w": 6,
-                        "x": 4,
-                        "y": 6
-                    },
-                    {
-                        "h": 3,
-                        "i": "a2f9a528-9ef9-47e7-8c0b-ab811a5a133f",
-                        "moved": false,
-                        "static": false,
-                        "w": 6,
-                        "x": 0,
-                        "y": 3
-                    },
-                    {
-                        "h": 1,
-                        "i": "865f48e3-9603-422b-b2bf-a998da0e88bd",
-                        "moved": false,
-                        "static": false,
-                        "w": 3,
-                        "x": 6,
-                        "y": 0
-                    },
-                    {
-                        "h": 1,
-                        "i": "9636ab24-3378-443b-a68d-b45699f8ffae",
-                        "moved": false,
-                        "static": false,
-                        "w": 3,
-                        "x": 0,
-                        "y": 6
-                    },
-                    {
-                        "h": 1,
-                        "i": "56667a1e-4df9-4714-98a7-6d6b02908b8c",
-                        "moved": false,
-                        "static": false,
-                        "w": 3,
-                        "x": 6,
-                        "y": 1
-                    },
-                    {
-                        "h": 1,
-                        "i": "be5449d4-ed19-407e-bef7-f6b339fc1610",
-                        "moved": false,
-                        "static": false,
-                        "w": 3,
-                        "x": 0,
-                        "y": 7
-                    }
-                ]
-            }
+            "id": "",
+            "attribute_config": [
+              {
+                "attribute_key": "message",
+                "label": "",
+                "color": "rgba(194, 87, 87, 1)",
+                "unit": "",
+                "decimal": ""
+              }
+            ]
+          },
+          "56667a1e-4df9-4714-98a7-6d6b02908b8c": {
+            "type": "LASTEST",
+            "title": "widget6",
+            "description": "CARD",
+            "datasource": {
+              "history_message": "",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"56667a1e-4df9-4714-98a7-6d6b02908b8c\"}]}",
+              "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"56667a1e-4df9-4714-98a7-6d6b02908b8c\"}]}",
+              "realtime_message": ""
+            },
+            "config": {
+              "timewindow": {
+                "interval": 0
+              },
+              "aggregation": "",
+              "chartsetting": null
+            },
+            "id": "",
+            "attribute_config": [
+              {
+                "attribute_key": "battery",
+                "label": "battery",
+                "color": "rgba(221, 66, 66, 1)",
+                "unit": "2",
+                "decimal": "1"
+              }
+            ]
+          },
+          "865f48e3-9603-422b-b2bf-a998da0e88bd": {
+            "type": "LASTEST",
+            "title": "widget4",
+            "description": "CARD",
+            "datasource": {
+              "history_message": "",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"firmware_version\"}]},\"id\":\"865f48e3-9603-422b-b2bf-a998da0e88bd\"}]}",
+              "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"firmware_version\"}]},\"id\":\"865f48e3-9603-422b-b2bf-a998da0e88bd\"}]}",
+              "realtime_message": ""
+            },
+            "config": {
+              "timewindow": {
+                "interval": 0
+              },
+              "aggregation": "",
+              "chartsetting": null
+            },
+            "id": "",
+            "attribute_config": [
+              {
+                "attribute_key": "firmware_version",
+                "label": "firmware",
+                "color": "rgba(211, 117, 117, 1)",
+                "unit": "1",
+                "decimal": "2"
+              }
+            ]
+          },
+          "9636ab24-3378-443b-a68d-b45699f8ffae": {
+            "type": "LASTEST",
+            "title": "widget5",
+            "description": "CARD",
+            "datasource": {
+              "history_message": "",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"connection\"}]},\"id\":\"9636ab24-3378-443b-a68d-b45699f8ffae\"}]}",
+              "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"connection\"}]},\"id\":\"9636ab24-3378-443b-a68d-b45699f8ffae\"}]}",
+              "realtime_message": ""
+            },
+            "config": {
+              "timewindow": {
+                "interval": 0
+              },
+              "aggregation": "",
+              "chartsetting": null
+            },
+            "id": "",
+            "attribute_config": [
+              {
+                "attribute_key": "connection",
+                "label": "connection",
+                "color": "rgba(180, 50, 50, 1)",
+                "unit": "2",
+                "decimal": "1"
+              }
+            ]
+          },
+          "a2f9a528-9ef9-47e7-8c0b-ab811a5a133f": {
+            "type": "TIMESERIES",
+            "title": "widget3",
+            "description": "LINE",
+            "datasource": {
+              "history_message": "",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"a2f9a528-9ef9-47e7-8c0b-ab811a5a133f\"}]}",
+              "lastest_message": "",
+              "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"battery\"],\"startTs\":1699203600000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"a2f9a528-9ef9-47e7-8c0b-ab811a5a133f\"}]}"
+            },
+            "config": {
+              "timewindow": {
+                "interval": 60000
+              },
+              "aggregation": "NONE",
+              "chartsetting": {
+                "data_type": "REALTIME",
+                "end_date": null,
+                "start_date": 1699203600000
+              }
+            },
+            "id": "",
+            "attribute_config": [
+              {
+                "attribute_key": "battery",
+                "label": "",
+                "color": "rgba(198, 124, 124, 1)",
+                "unit": "",
+                "decimal": ""
+              }
+            ]
+          },
+          "b13c4736-9ce4-4540-9300-b9f4e27860e2": {
+            "type": "LASTEST",
+            "title": "widget1",
+            "description": "MAP",
+            "datasource": {
+              "history_message": "",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longtitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
+              "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longtitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
+              "realtime_message": ""
+            },
+            "config": {
+              "timewindow": {
+                "interval": 0
+              },
+              "aggregation": "",
+              "chartsetting": null
+            },
+            "id": "",
+            "attribute_config": [
+              {
+                "attribute_key": "latitude",
+                "label": "",
+                "color": "",
+                "unit": "",
+                "decimal": ""
+              },
+              {
+                "attribute_key": "longtitude",
+                "label": "",
+                "color": "",
+                "unit": "",
+                "decimal": ""
+              }
+            ]
+          },
+          "be5449d4-ed19-407e-bef7-f6b339fc1610": {
+            "type": "LASTEST",
+            "title": "widget7",
+            "description": "CARD",
+            "datasource": {
+              "history_message": "",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"accuracy\"}]},\"id\":\"be5449d4-ed19-407e-bef7-f6b339fc1610\"}]}",
+              "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"accuracy\"}]},\"id\":\"be5449d4-ed19-407e-bef7-f6b339fc1610\"}]}",
+              "realtime_message": ""
+            },
+            "config": {
+              "timewindow": {
+                "interval": 0
+              },
+              "aggregation": "",
+              "chartsetting": null
+            },
+            "id": "",
+            "attribute_config": [
+              {
+                "attribute_key": "accuracy",
+                "label": "accuracy",
+                "color": "rgba(241, 55, 55, 1)",
+                "unit": "2",
+                "decimal": "1"
+              }
+            ]
+          }
         }
-    ],
-    "fota": null,
-    "thing": null,
-    "service": null
+      },
+      "dashboard_setting": {
+        "last_viewed": "2023-11-16T06:47:31.168Z",
+        "layout": [
+          {
+            "h": 3,
+            "i": "b13c4736-9ce4-4540-9300-b9f4e27860e2",
+            "moved": false,
+            "static": false,
+            "w": 6,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "h": 3,
+            "i": "3504e097-d3d7-47f9-ab7a-417441250d4f",
+            "moved": false,
+            "static": false,
+            "w": 6,
+            "x": 4,
+            "y": 6
+          },
+          {
+            "h": 3,
+            "i": "a2f9a528-9ef9-47e7-8c0b-ab811a5a133f",
+            "moved": false,
+            "static": false,
+            "w": 6,
+            "x": 0,
+            "y": 3
+          },
+          {
+            "h": 1,
+            "i": "865f48e3-9603-422b-b2bf-a998da0e88bd",
+            "moved": false,
+            "static": false,
+            "w": 3,
+            "x": 6,
+            "y": 0
+          },
+          {
+            "h": 1,
+            "i": "9636ab24-3378-443b-a68d-b45699f8ffae",
+            "moved": false,
+            "static": false,
+            "w": 3,
+            "x": 0,
+            "y": 6
+          },
+          {
+            "h": 1,
+            "i": "56667a1e-4df9-4714-98a7-6d6b02908b8c",
+            "moved": false,
+            "static": false,
+            "w": 3,
+            "x": 6,
+            "y": 1
+          },
+          {
+            "h": 1,
+            "i": "be5449d4-ed19-407e-bef7-f6b339fc1610",
+            "moved": false,
+            "static": false,
+            "w": 3,
+            "x": 0,
+            "y": 7
+          }
+        ]
+      }
+    }
+  ],
+  "fota": null,
+  "thing": null,
+  "service": null
 }
