@@ -67,7 +67,7 @@ jobs:
     - name: edit image tag
       run: |
         cd ${{env.repo-folder}}/${{env.chart-name}}
-        sed -i "s/tag: .*/tag: ${{ env.tags }}/g" values.yaml
+        sed -i "s/tag: .*/tag: ${{github.ref_name}}/g" values.yaml
         git config user.email "minhhk1@viettel.com.vn"
         git config user.name "minhhk1"
         git add .
