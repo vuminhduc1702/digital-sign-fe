@@ -99,7 +99,7 @@ export function UpdateWidget({
 
   const attrSelectDataForMap = [
     { value: 'latitude', label: 'latitude' },
-    { value: 'longitude', label: 'longitude' },
+    { value: 'longtitude', label: 'longtitude' },
   ]
 
   // map schema
@@ -376,7 +376,7 @@ export function UpdateWidget({
                 type: 'TIME_SERIES',
                 key: item.attribute_key,
               }))
-              // missing latitude/longitude in map widget
+              // missing latitude/longtitude in map widget
               let stopExecution = false
               values.attributeConfig.map(item => {
                 if (item.attribute_key === 'latitude') {
@@ -384,13 +384,13 @@ export function UpdateWidget({
                     !values.attributeConfig.find(
                       i =>
                         i.label === item.label &&
-                        i.attribute_key === 'longitude',
+                        i.attribute_key === 'longtitude',
                     )
                   ) {
                     stopExecution = true
                     return
                   }
-                } else if (item.attribute_key === 'longitude') {
+                } else if (item.attribute_key === 'longtitude') {
                   if (
                     !values.attributeConfig.find(
                       i =>

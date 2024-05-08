@@ -123,6 +123,7 @@ function AttrTableContextMenu({
           ).replace('{{ATTRNAME}}', attribute_key)}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() =>
             mutate({
               entityId,
