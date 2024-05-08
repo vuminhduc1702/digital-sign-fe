@@ -39,6 +39,14 @@ import {
 } from '@/components/ui/sheet'
 import { cn, flattenOrgs } from '@/utils/misc'
 import { useEffect } from 'react'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
@@ -122,18 +130,79 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
               })}
             >
               <>
-                <InputField
+                {/* <InputField
                   label={t('cloud:org_manage.group_manage.add_group.name')}
                   error={formState.errors['name']}
                   registration={register('name')}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.group_manage.add_group.name')}{' '}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-                <SelectField
+                {/* <SelectField
                   label={t(
                     'cloud:org_manage.group_manage.add_group.entity_type',
                   )}
                   error={formState.errors['entity_type']}
                   registration={register('entity_type')}
                   options={entityTypeOptions}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="entity_type"
+                  // disabled={watch('onClick')}
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t(
+                          'cloud:org_manage.group_manage.add_group.entity_type',
+                        )}
+                      </FormLabel>
+                      <div>
+                        <Select
+                          {...field}
+                          onValueChange={onChange}
+                          value={value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t(
+                                  'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                )}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {entityTypeOptions?.map(type => (
+                              <SelectItem key={type.value} value={type.value}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <FormField
                   control={form.control}
