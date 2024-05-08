@@ -158,6 +158,7 @@ export function EventManage() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleEvents}
           handleSubmit={() =>
             mutateDeleteMultipleEvents(
               {

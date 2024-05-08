@@ -514,6 +514,7 @@ export function LayoutOverView() {
           body={bodyContent}
           close={close}
           isOpen={isOpen}
+          isSuccessDelete={isSuccessProject}
           handleSubmit={() =>
             mutateAsyncUploadProjectFile({
               projectId,

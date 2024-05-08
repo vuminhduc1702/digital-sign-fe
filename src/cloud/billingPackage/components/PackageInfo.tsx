@@ -951,7 +951,10 @@ export function PackageInfo() {
           )}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDelete({ id: packageId })}
+          isSuccessDelete={isSuccessDelete}
+          handleSubmit={() => {
+            mutateDelete({ id: packageId })
+          }}
           isLoading={isLoading}
         />
       ) : null}

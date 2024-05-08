@@ -8,13 +8,6 @@ import { type Device, type DeviceList } from '@/cloud/orgManagement'
 import { SearchIcon } from '@/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command'
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,

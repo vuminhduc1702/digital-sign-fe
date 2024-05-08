@@ -336,6 +336,7 @@ export function UpdateSubcription({
           )}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccessDelete}
           handleSubmit={() => mutateDelete({ id })}
           isLoading={isLoadingDelete}
         />

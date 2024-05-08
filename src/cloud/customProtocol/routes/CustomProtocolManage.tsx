@@ -172,6 +172,7 @@ export function CustomProtocolManage() {
             body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
             close={closeDeleteMulti}
             isOpen={isOpenDeleteMulti}
+            isSuccessDelete={isSuccessDeleteMultipleAdapters}
             handleSubmit={() =>
               mutateDeleteMultipleAdapters(
                 {

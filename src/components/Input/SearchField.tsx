@@ -13,6 +13,8 @@ import { useTranslation } from 'react-i18next'
 import { LuSearch, LuX } from 'react-icons/lu'
 import { cn } from '@/utils/misc'
 import React from 'react'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 type SearchFieldProps = {
   setSearchValue?: React.Dispatch<React.SetStateAction<string>>
@@ -36,26 +38,44 @@ export function SearchField({
   className,
 }: SearchFieldProps) {
   const { t } = useTranslation()
+  const searchSchema = z.object({
+    searchByField: z.string().min(1, {
+      message: t('search:no_search_field'),
+    }),
+    searchByName: z.string().min(1, {
+      message: t('search:no_search_name'),
+    }),
+  })
   const form = useForm({
+    resolver: searchSchema && zodResolver(searchSchema),
     defaultValues: {
       searchByName: '',
-      searchByField: [],
+      searchByField: '',
     },
   })
 
+  const {
+    handleSubmit,
+    formState: { errors },
+  } = form
+
+  console.log(errors)
+
+  function onSubmit() {
+    if (searchField) {
+      searchField.current = form.watch('searchByField')
+    }
+    setSearchValue && setSearchValue(form.watch('searchByName'))
+    setIsSearchData && setIsSearchData(true)
+    setTimeout(() => {
+      setIsSearchData && setIsSearchData(false)
+    }, 1000)
+    // e.preventDefault()
+  }
+
   return (
     <Form {...form}>
-      <form
-        className={cn(className)}
-        onSubmit={e => {
-          setSearchValue && setSearchValue(form.watch('searchByName'))
-          setIsSearchData && setIsSearchData(true)
-          setTimeout(() => {
-            setIsSearchData && setIsSearchData(false)
-          }, 1000)
-          e.preventDefault()
-        }}
-      >
+      <form className={cn(className)} onSubmit={handleSubmit(onSubmit)}>
         <div className="flex h-full flex-row items-center gap-[14px] 2xl:items-center">
           <div className="flex flex-col items-center gap-[14px] 2xl:flex-row">
             {title && <div className="hidden text-sm 2xl:flex">{title}</div>}
@@ -66,10 +86,12 @@ export function SearchField({
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <div>
+                      <div className="relative">
                         <Select
+                          {...field}
                           onValueChange={value => {
-                            searchField.current = value
+                            form.setValue('searchByField', value)
+                            form.clearErrors('searchByField')
                           }}
                         >
                           <SelectTrigger
@@ -94,6 +116,11 @@ export function SearchField({
                             )}
                           </SelectContent>
                         </Select>
+                        {form.formState.errors.searchByField?.message && (
+                          <div className="mt-1 text-xs text-red-500 2xl:absolute 2xl:bottom-[-15px]">
+                            {form.formState.errors.searchByField?.message}
+                          </div>
+                        )}
                       </div>
                     </FormControl>
                   </FormItem>
@@ -128,6 +155,11 @@ export function SearchField({
                           ) : undefined
                         }
                       />
+                      {form.formState.errors.searchByName?.message && (
+                        <div className="mt-1 text-xs text-red-500 2xl:absolute 2xl:bottom-[-15px]">
+                          {form.formState.errors.searchByName?.message}
+                        </div>
+                      )}
                     </div>
                   </FormControl>
                 </FormItem>

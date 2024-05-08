@@ -173,6 +173,7 @@ export function DeviceManage() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleDevices}
           handleSubmit={() =>
             mutateDeleteMultipleDevices(
               {

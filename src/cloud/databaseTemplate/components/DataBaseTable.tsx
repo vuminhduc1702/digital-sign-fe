@@ -96,6 +96,7 @@ function DataBaseTableContextMenu({
           body={t('cloud:db_template.add_db.delete_row_confirm')}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => {
             let keys = Object.keys(row)
             const dataFilter = keys.map(item => ({

@@ -165,6 +165,7 @@ export function UserManage() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleUsers}
           handleSubmit={() =>
             mutateDeleteMultipleUsers(
               {

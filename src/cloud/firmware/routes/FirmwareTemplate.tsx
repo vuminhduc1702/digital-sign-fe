@@ -152,6 +152,7 @@ export function FirmwareTemplate() {
           body={t('cloud:firmware.table.delete_multiple_firmware_confirm')}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleFirmware}
           handleSubmit={() =>
             mutateDeleteMultipleFirmware(
               {

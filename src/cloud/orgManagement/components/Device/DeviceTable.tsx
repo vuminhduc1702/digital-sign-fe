@@ -237,6 +237,7 @@ function DeviceTableContextMenu({
           ).replace('{{DEVICENAME}}', name)}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

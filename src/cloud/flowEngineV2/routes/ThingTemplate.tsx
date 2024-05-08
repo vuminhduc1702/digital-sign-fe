@@ -150,6 +150,7 @@ export function ThingTemplate() {
           body={t('cloud:custom_protocol.thing.delete_multiple_thing_confirm')}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleThings}
           handleSubmit={() =>
             mutateDeleteMultipleThings(
               {

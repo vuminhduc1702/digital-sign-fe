@@ -14,6 +14,7 @@ export type ConfirmDialogProps = {
   close: () => void
   isOpen: boolean
   isLoading?: boolean
+  isSuccessDelete?: boolean
   handleSubmit: () => void
 }
 
@@ -24,9 +25,16 @@ export const ConfirmDialog = ({
   close,
   isOpen,
   isLoading,
+  isSuccessDelete,
   handleSubmit,
 }: ConfirmDialogProps) => {
   const cancelButtonRef = useRef(null)
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      close()
+    }
+  }, [isSuccessDelete])
 
   return (
     <>

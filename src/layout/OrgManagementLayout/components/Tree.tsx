@@ -213,6 +213,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
           )}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ orgId: data.id })}
           isLoading={isLoading}
         />

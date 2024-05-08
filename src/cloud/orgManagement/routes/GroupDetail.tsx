@@ -137,6 +137,7 @@ export function GroupDetail() {
           )}
           close={close}
           isOpen={isOpen}
+          isSuccessDelete={isSuccessDeleteMultipleAttrs}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {
