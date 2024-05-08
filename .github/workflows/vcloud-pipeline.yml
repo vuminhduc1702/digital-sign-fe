@@ -36,7 +36,7 @@ jobs:
           docker build -t ${{env.image}}:${{env.tags}} .
         else 
           echo "Tag: ${{env.tags}}"
-          cp .env.test.example .env
+          cp .env.production.example .env
           docker build --cache-from ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest -t ${{env.image}}:${{env.tags}} .
         fi
 
