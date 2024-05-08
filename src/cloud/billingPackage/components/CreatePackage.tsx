@@ -5,7 +5,7 @@ import { useState } from 'react'
 import btnAddIcon from '@/assets/icons/btn-add.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   FormMultipleFields,
   InputField,

@@ -1,8 +1,8 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { HiExclamationCircle, HiInformationCircle } from 'react-icons/hi2'
 
-import { Dialog, DialogTitle } from '../Dialog'
-import { Button } from '../Button'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'

@@ -11,7 +11,7 @@ import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '@/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import { Spinner } from '@/components/Spinner'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,

@@ -2,7 +2,7 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import React, { useEffect, useMemo, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { useCopyId, useDisclosure } from '@/utils/hooks'

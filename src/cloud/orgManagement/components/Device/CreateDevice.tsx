@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   InputField,
   SelectDropdown,

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField } from '@/components/Form'
 import {
   useDeleteSubcription,
@@ -16,7 +16,7 @@ import { HiOutlineXMark } from 'react-icons/hi2'
 import * as z from 'zod'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { getVNDateFormat } from '@/utils/misc'
 import storage from '@/utils/storage'
 import { ConfirmDialog } from '@/components/ConfirmDialog'

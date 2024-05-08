@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'

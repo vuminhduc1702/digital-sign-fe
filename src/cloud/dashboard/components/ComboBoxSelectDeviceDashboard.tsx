@@ -1,11 +1,4 @@
 import { useEffect, useState } from 'react'
-
-import { flattenData } from '@/utils/misc'
-
-import { type FieldWrapperPassThroughProps } from '@/components/Form'
-import { type Device, type DeviceList } from '@/cloud/orgManagement'
-
-import { SearchIcon } from '@/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
 import {
   Popover,
@@ -13,10 +6,10 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/Button'
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
-import { cn } from '@/utils/misc'
 import { useDisclosure } from '@/utils/hooks'
+
+import { type FieldWrapperPassThroughProps } from '@/components/Form'
+
 import { LuX, LuSearch } from 'react-icons/lu'
 
 export type MapData = {

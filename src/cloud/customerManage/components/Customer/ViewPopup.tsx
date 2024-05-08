@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { useGetBillings } from '@/cloud/billing/api/billingAPI'
 import { useGetSubcriptons } from '@/cloud/subcription/api/subcriptionAPI'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import storage from '@/utils/storage'
 import { PaymentHistoryTable } from './PaymentHistoryTable'
 import { SignHistoryTable } from './SignHistoryTable'

@@ -12,7 +12,7 @@ import {
 import { cn, flattenOrgs } from '@/utils/misc'
 import { type ControllerPassThroughProps } from '@/types'
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
-import { Button } from '../Button'
+import { Button } from '@/components/ui/button'
 import storage from '@/utils/storage'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import { useParams } from 'react-router-dom'

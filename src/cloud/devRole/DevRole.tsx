@@ -15,7 +15,7 @@ import { SearchField } from '@/components/Input'
 import { type Project } from '../project/routes/ProjectManage'
 
 import narrowLeft from '@/assets/icons/narrow-left.svg'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { useDisclosure } from '@/utils/hooks'
 
 export default function DevRole() {

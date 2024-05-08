@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type * as z from 'zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { FieldWrapper, InputField, SelectField } from '@/components/Form'
 import { booleanSelectOption, numberInput, valueTypeList } from './CreateAttr'
 import { type EntityType, useUpdateAttr } from '../../api/attrAPI'

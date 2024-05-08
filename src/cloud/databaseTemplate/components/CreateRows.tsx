@@ -3,7 +3,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useAddColumn, useCreateDataBase, type AddColumnDTO } from '../api'
