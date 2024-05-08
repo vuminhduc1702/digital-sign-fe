@@ -18,7 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps & IconProps>(
     const { error } = useFormField()
 
     return (
-      <>
+      <div className="relative">
         {startIcon}
         <input
           type={type}
@@ -38,7 +38,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps & IconProps>(
         {endText && (
           <span className="ml-2 text-xs font-medium text-black">{endText}</span>
         )}
-      </>
+      </div>
     )
   },
 )
