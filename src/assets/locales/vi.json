@@ -741,7 +741,9 @@
       "map": {
         "device_not_found": "Không tìm thấy thiết bị nào",
         "googleMap": "Google Map",
-        "openStreetMap": "Open Street Map"
+        "openStreetMap": "Open Street Map",
+        "street": "Đường",
+        "satellite": "Vệ tinh"
       },
       "card": {
         "no_log_attr": "Không có bản tin thuộc tính"
@@ -994,6 +996,7 @@
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
     "no": "STT",
+    "action": "Hành động",
     "tenant": "Tenant",
     "id": "ID",
     "name": "Tên",
@@ -1005,8 +1008,10 @@
     "email": "Email",
     "last_updated": "Cập nhật",
     "starred": "Yêu thích",
-    "excel": "Excel",
-    "pdf": "PDF",
+    "export": "Xuất dữ liệu",
+    "export_csv": "Xuất dữ liệu dạng CSV",
+    "export_excel": "Xuất dữ liệu dạng XLSX",
+    "export_pdf": "Xuất dữ liệu dạng PDF",
     "print": "In",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",

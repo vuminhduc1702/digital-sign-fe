@@ -211,17 +211,15 @@ export function BaseTable<T extends Record<string, any>>({
 
   return (
     <div className={cn('', className)}>
-      <div className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-between">
+      <div className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-end">
         <div className="flex flex-row gap-4">
+          {utilityButton}
           <ExportTable
             refComponent={ref}
             rowSelection={rowSelection}
             formatExcel={formatExcel}
             pdfHeader={pdfHeader}
           />
-          {utilityButton}
-        </div>
-        <div>
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none">
               <LuSettings className="h-[25px] w-[25px] cursor-pointer" />
@@ -311,20 +309,27 @@ export function BaseTable<T extends Record<string, any>>({
                           <TableHead
                             key={header.id}
                             className={cn(
-                              '',
+                              'bg-[#FAFAFC] text-[#2F2B3D]',
                               header.id === 'select'
-                                ? 'bg-white py-0 pl-[8px]'
-                                : header.id === 'edit' ||
-                                    header.id === 'view' ||
-                                    header.id === 'delete'
-                                  ? 'h-9 w-10'
-                                  : 'min-w-[80px] truncate overflow-ellipsis whitespace-nowrap break-words bg-white px-2 text-left text-sm text-black',
+                                ? 'py-0 pl-[20px]'
+                                : header.id === 'contextMenu'
+                                  ? 'px-[32px]'
+                                  : 'min-w-[80px] truncate overflow-ellipsis whitespace-nowrap break-words px-0 text-left text-sm',
                             )}
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            {header.id === 'contextMenu' && t('table:action')}
+                            <div
+                              className={cn(
+                                header.id !== 'contextMenu' &&
+                                  header.id !== 'select' &&
+                                  'border-l border-[#2F2B3D] px-5 font-bold',
+                              )}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                            </div>
                           </TableHead>
                         )
                       })}
@@ -334,12 +339,17 @@ export function BaseTable<T extends Record<string, any>>({
               </TableHeader>
               <TableBody>
                 {totalAttributes > 0 ? (
-                  table.getRowModel().rows.map(row => {
+                  table.getRowModel().rows.map((row, index) => {
                     const linkId = row.original.id
                     return (
                       <TableRow
                         key={row.id}
-                        className="box-border hover:bg-red-200 hover:text-red-700"
+                        className={cn(
+                          `box-border cursor-none`,
+                          index % 2 === 1 ? 'bg-[#F9F9F9]' : 'bg-white',
+                          viewDetailOnClick &&
+                            'cursor-pointer hover:bg-primary-100 hover:text-primary-400',
+                        )}
                       >
                         {row.getVisibleCells().map((cell, index) => {
                           const cellContent = flexRender(
@@ -349,7 +359,7 @@ export function BaseTable<T extends Record<string, any>>({
                           return (
                             <TableCell
                               key={index}
-                              className="h-[30px] max-h-[30px] min-w-[80px] truncate whitespace-nowrap break-words px-2 py-0 text-left"
+                              className="h-[30px] max-h-[30px] min-w-[80px] truncate whitespace-nowrap break-words px-5 py-0 text-left"
                               onClick={
                                 cell.column.id !== 'contextMenu' &&
                                 cell.column.id !== 'select'
