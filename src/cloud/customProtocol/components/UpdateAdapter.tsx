@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { HiOutlineXMark } from 'react-icons/hi2'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   InputField,
   SelectDropdown,

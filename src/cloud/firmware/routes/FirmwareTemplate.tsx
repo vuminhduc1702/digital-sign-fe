@@ -3,7 +3,7 @@ import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import storage from '@/utils/storage'
 
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import TitleBar from '@/components/Head/TitleBar'
 import { ExportTable } from '@/components/Table/components/ExportTable'
@@ -152,6 +152,7 @@ export function FirmwareTemplate() {
           body={t('cloud:firmware.table.delete_multiple_firmware_confirm')}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleFirmware}
           handleSubmit={() =>
             mutateDeleteMultipleFirmware(
               {

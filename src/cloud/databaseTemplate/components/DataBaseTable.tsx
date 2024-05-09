@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 import { BaseTable } from '@/components/Table'
@@ -96,6 +96,7 @@ function DataBaseTableContextMenu({
           body={t('cloud:db_template.add_db.delete_row_confirm')}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => {
             let keys = Object.keys(row)
             const dataFilter = keys.map(item => ({

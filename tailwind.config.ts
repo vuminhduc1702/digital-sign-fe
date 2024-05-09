@@ -165,6 +165,9 @@ export default {
       zIndex: {
         '100': '100',
       },
+      boxShadow: {
+        'table-header': '0px 2px 5px #e5e7eb, 0px -1px #e5e7eb',
+      },
     },
   },
 } satisfies Config

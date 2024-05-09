@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { PATHS } from '@/routes/PATHS'
@@ -202,6 +202,7 @@ export function TemplateLwM2M() {
           ).replace('{{TEMPLATENAME}}', name)}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

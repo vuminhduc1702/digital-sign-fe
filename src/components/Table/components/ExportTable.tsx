@@ -2,7 +2,7 @@ import { type MutableRefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 import * as XLSX from 'xlsx'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   Page,
   Document,

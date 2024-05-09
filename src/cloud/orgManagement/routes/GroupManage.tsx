@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import TitleBar from '@/components/Head/TitleBar'
 import storage from '@/utils/storage'
 import { uppercaseTheFirstLetter } from '@/utils/transformFunc'
@@ -161,6 +161,7 @@ export function GroupManage() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleGroups}
           handleSubmit={() =>
             mutateDeleteMultipleGroups(
               {

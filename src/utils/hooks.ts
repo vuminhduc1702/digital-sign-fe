@@ -123,31 +123,6 @@ export function useCopyId() {
   return handleCopyId
 }
 
-export function useDefaultCombobox(comboboxType: 'org' | 'device' | 'group') {
-  const { t } = useTranslation()
-
-  switch (comboboxType) {
-    case 'org':
-      return {
-        id: '',
-        level: '1',
-        name: t('search:no_org'),
-        description: '',
-        parent_name: '',
-        children: [],
-        image: '',
-        org_id: '',
-      }
-    case 'group':
-      return {
-        id: '',
-        name: t('search:no_group'),
-      }
-    default:
-      return
-  }
-}
-
 export const MAX_FILE_SIZE = 5000000
 export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 const uploadImageSchema = z.object({

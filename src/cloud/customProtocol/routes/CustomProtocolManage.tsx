@@ -8,15 +8,13 @@ import { AdapterTable, CreateAdapter } from '../components'
 import { ContentLayout } from '@/layout/ContentLayout'
 
 import { type Adapter } from '../types'
-import { flattenData } from '@/utils/misc'
 import { ExportTable } from '@/components/Table/components/ExportTable'
 import { useDeleteMultipleAdapters } from '../api/adapter/deleteMultipleAdapter'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField } from '@/components/Form'
-import { SearchIcon } from '@/components/SVGIcons'
-import { SearchField } from '@/components/Input'
 import { useDisclosure } from '@/utils/hooks'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
 
 export function CustomProtocolManage() {
   const { t } = useTranslation()
@@ -172,6 +170,7 @@ export function CustomProtocolManage() {
             body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
             close={closeDeleteMulti}
             isOpen={isOpenDeleteMulti}
+            isSuccessDelete={isSuccessDeleteMultipleAdapters}
             handleSubmit={() =>
               mutateDeleteMultipleAdapters(
                 {

@@ -1,8 +1,8 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { HiExclamationCircle, HiInformationCircle } from 'react-icons/hi2'
 
-import { Dialog, DialogTitle } from '../Dialog'
-import { Button } from '../Button'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
@@ -14,6 +14,7 @@ export type ConfirmDialogProps = {
   close: () => void
   isOpen: boolean
   isLoading?: boolean
+  isSuccessDelete?: boolean
   handleSubmit: () => void
 }
 
@@ -24,9 +25,16 @@ export const ConfirmDialog = ({
   close,
   isOpen,
   isLoading,
+  isSuccessDelete,
   handleSubmit,
 }: ConfirmDialogProps) => {
   const cancelButtonRef = useRef(null)
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      close()
+    }
+  }, [isSuccessDelete])
 
   return (
     <>

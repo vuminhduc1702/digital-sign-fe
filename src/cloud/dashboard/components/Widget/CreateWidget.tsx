@@ -9,9 +9,9 @@ import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
 
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import {
   FieldWrapper,
   InputField,
@@ -51,9 +51,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn, flattenOrgs } from '@/utils/misc'
-import { queryClient } from '@/lib/react-query'
 import { TimePicker } from '@/components/ui/time-picker'
 import { toast } from 'sonner'
+import { queryClient } from '@/lib/react-query'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -498,7 +498,7 @@ export function CreateWidget({
 
   const attrSelectDataForMap = [
     { value: 'latitude', label: 'latitude' },
-    { value: 'longitude', label: 'longitude' },
+    { value: 'longtitude', label: 'longtitude' },
   ]
 
   const setDeviceOption = (attribute: string) => {
@@ -650,7 +650,7 @@ export function CreateWidget({
                   key: item.attribute_key,
                 }))
 
-                // missing latitude/longitude in map widget
+                // missing latitude/longtitude in map widget
                 let stopExecution = false
                 values.attributeConfig.map(item => {
                   if (item.attribute_key === 'latitude') {
@@ -658,13 +658,13 @@ export function CreateWidget({
                       !values.attributeConfig.find(
                         i =>
                           i.label === item.label &&
-                          i.attribute_key === 'longitude',
+                          i.attribute_key === 'longtitude',
                       )
                     ) {
                       stopExecution = true
                       return
                     }
-                  } else if (item.attribute_key === 'longitude') {
+                  } else if (item.attribute_key === 'longtitude') {
                     if (
                       !values.attributeConfig.find(
                         i =>

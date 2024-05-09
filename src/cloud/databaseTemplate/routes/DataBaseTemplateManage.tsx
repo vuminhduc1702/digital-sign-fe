@@ -17,7 +17,7 @@ import {
   SelectDropdown,
   type SelectOption,
 } from '@/components/Form'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { SearchIcon } from '@/components/SVGIcons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'

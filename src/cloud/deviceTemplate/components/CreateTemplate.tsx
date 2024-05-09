@@ -9,7 +9,7 @@ import {
   numberInput,
   valueTypeList,
 } from '@/cloud/orgManagement/components/Attributes'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   FieldWrapper,

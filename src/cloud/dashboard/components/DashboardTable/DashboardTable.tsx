@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useDisclosure } from '@/utils/hooks'
 import { useDeleteDashboard } from '../../api/deleteDashboard'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo, useEffect, useRef, useState } from 'react'
 import { getVNDateFormat } from '@/utils/misc'
@@ -108,6 +108,7 @@ function DashboardTableContextMenu({
           )}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

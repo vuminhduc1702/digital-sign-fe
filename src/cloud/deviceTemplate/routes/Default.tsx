@@ -13,7 +13,7 @@ import { TemplateInfo } from '../components'
 
 import { type Attribute } from '@/types'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '@/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
 import { useGetAttrs } from '@/cloud/orgManagement/api/attrAPI/getAttrs'
@@ -176,6 +176,7 @@ export function Default() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleAttrs}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {

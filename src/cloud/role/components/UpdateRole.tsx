@@ -4,7 +4,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { useGetGroups } from '@/cloud/orgManagement/api/groupAPI'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, SelectDropdown } from '@/components/Form'
 import TitleBar from '@/components/Head/TitleBar'
 import storage from '@/utils/storage'

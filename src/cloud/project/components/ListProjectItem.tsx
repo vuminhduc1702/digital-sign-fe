@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/tooltip'
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 
-import { Button } from '@/components/Button/Button'
+import { Button } from '@/components/ui/button'
 import { useDisclosure } from '@/utils/hooks'
 import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
@@ -212,6 +212,7 @@ export function ListProjectItem({
           )}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() =>
             mutate({
               projectId: id,

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { useDeleteAdapter } from '../api/adapter'
@@ -134,6 +134,7 @@ function AdapterTableContextMenu({
           ).replace('{{ADAPTERNAME}}', name)}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

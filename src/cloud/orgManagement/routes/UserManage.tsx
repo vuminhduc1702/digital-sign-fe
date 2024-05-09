@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import TitleBar from '@/components/Head/TitleBar'
 import { ExportTable } from '@/components/Table/components/ExportTable'
@@ -165,6 +165,7 @@ export function UserManage() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleUsers}
           handleSubmit={() =>
             mutateDeleteMultipleUsers(
               {

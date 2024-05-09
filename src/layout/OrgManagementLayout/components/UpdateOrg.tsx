@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, TextAreaField } from '@/components/Form'
 import {
   type UpdateOrgDTO,

@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import TitleBar from '@/components/Head/TitleBar'
 import { ExportTable } from '@/components/Table/components/ExportTable'
@@ -150,6 +150,7 @@ export function ThingTemplate() {
           body={t('cloud:custom_protocol.thing.delete_multiple_thing_confirm')}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleThings}
           handleSubmit={() =>
             mutateDeleteMultipleThings(
               {

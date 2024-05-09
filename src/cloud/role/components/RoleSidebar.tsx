@@ -7,7 +7,7 @@ import { useGetRoles } from '../api'
 import { CreateRole } from './CreateRole'
 import { RoleTable } from './RoleTable'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { ExportTable } from '@/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
@@ -162,6 +162,7 @@ export function RoleSidebar() {
           body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleRoles}
           handleSubmit={() =>
             mutateDeleteMultipleRoles(
               {

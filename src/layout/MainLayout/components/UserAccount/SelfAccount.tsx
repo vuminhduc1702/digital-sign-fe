@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { InputField, SelectField } from '@/components/Form'
 import {
   emptyInputSchema,

@@ -13,7 +13,7 @@ import { useDeleteMultipleThings } from '../api/thingAPI/deleteMultipleThings'
 import { ExportTable } from '@/components/Table/components/ExportTable'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { useDisclosure } from '@/utils/hooks'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 export function ThingServices() {
   const { t } = useTranslation()
@@ -141,6 +141,7 @@ export function ThingServices() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleThingServices}
           handleSubmit={() =>
             mutateDeleteMultipleThingServices(
               {

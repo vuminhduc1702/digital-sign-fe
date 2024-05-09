@@ -22,7 +22,7 @@ import SmartMetering from '@/assets/images/SolutionMaketplace/SmartMetering.png'
 import SmartTracking from '@/assets/images/SolutionMaketplace/SmartTracking.png'
 import { useGetDashboards, type DashboardRes } from '@/cloud/dashboard/api'
 import { useRestoreProject } from '@/cloud/project/api/restoreProject'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { Link } from '@/components/Link'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -514,6 +514,7 @@ export function LayoutOverView() {
           body={bodyContent}
           close={close}
           isOpen={isOpen}
+          isSuccessDelete={isSuccessProject}
           handleSubmit={() =>
             mutateAsyncUploadProjectFile({
               projectId,

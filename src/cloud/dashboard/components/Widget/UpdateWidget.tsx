@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import ColorPicker from 'react-pick-color'
 
 import { FormDialog } from '@/components/FormDialog'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import {
   type Widget,
   type WidgetCreate,
@@ -26,8 +26,7 @@ import {
   type SelectOption,
 } from '@/components/Form'
 import { useGetOrgs } from '@/layout/MainLayout/api'
-import { cn, flattenData, flattenOrgs } from '@/utils/misc'
-import { useDefaultCombobox } from '@/utils/hooks'
+import { cn, flattenOrgs } from '@/utils/misc'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import storage from '@/utils/storage'
 import { useCreateAttrChart } from '../../api'
@@ -38,6 +37,7 @@ import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
+import { TimePicker } from '@/components/ui/time-picker'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
 import {
@@ -63,7 +63,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { queryClient } from '@/lib/react-query'
-import { TimePicker } from '@/components/ui/time-picker'
 import { toast } from 'sonner'
 
 export function UpdateWidget({
@@ -100,7 +99,7 @@ export function UpdateWidget({
 
   const attrSelectDataForMap = [
     { value: 'latitude', label: 'latitude' },
-    { value: 'longitude', label: 'longitude' },
+    { value: 'longtitude', label: 'longtitude' },
   ]
 
   // map schema
@@ -377,7 +376,7 @@ export function UpdateWidget({
                 type: 'TIME_SERIES',
                 key: item.attribute_key,
               }))
-              // missing latitude/longitude in map widget
+              // missing latitude/longtitude in map widget
               let stopExecution = false
               values.attributeConfig.map(item => {
                 if (item.attribute_key === 'latitude') {
@@ -385,13 +384,13 @@ export function UpdateWidget({
                     !values.attributeConfig.find(
                       i =>
                         i.label === item.label &&
-                        i.attribute_key === 'longitude',
+                        i.attribute_key === 'longtitude',
                     )
                   ) {
                     stopExecution = true
                     return
                   }
-                } else if (item.attribute_key === 'longitude') {
+                } else if (item.attribute_key === 'longtitude') {
                   if (
                     !values.attributeConfig.find(
                       i =>

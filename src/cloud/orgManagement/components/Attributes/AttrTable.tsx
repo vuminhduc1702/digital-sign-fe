@@ -7,7 +7,7 @@ import {
   type EntityType,
 } from '@/cloud/orgManagement/api/attrAPI'
 import { UpdateAttr } from '@/cloud/orgManagement/components/Attributes'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 
 import { Switch } from '@/components/ui/switch'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
@@ -123,6 +123,7 @@ function AttrTableContextMenu({
           ).replace('{{ATTRNAME}}', attribute_key)}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() =>
             mutate({
               entityId,

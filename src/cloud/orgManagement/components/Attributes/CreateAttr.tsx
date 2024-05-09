@@ -3,7 +3,7 @@ import * as z from 'zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { FieldWrapper, InputField, SelectField } from '@/components/Form'
 import {
   type CreateAttrDTO,

@@ -6,8 +6,8 @@ import * as z from 'zod'
 
 import { useProjects } from '@/cloud/project/api'
 import { useGetRoles } from '@/cloud/role/api'
-import { Button } from '@/components/Button'
-import { Dialog, DialogTitle } from '@/components/Dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { InputField, SelectDropdown, SelectField } from '@/components/Form'
 import {
   useUpdateCustomerRole,

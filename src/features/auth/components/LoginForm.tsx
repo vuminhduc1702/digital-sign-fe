@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'

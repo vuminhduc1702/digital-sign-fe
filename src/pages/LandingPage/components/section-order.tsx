@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import SectionOrderBG from '@/assets/images/landingpage/BG_sectionorder.png'
-import { Button } from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import { PATHS } from '@/routes/PATHS'
 import { ArrowRightUpLine } from '@/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
