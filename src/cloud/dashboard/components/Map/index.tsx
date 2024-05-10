@@ -94,7 +94,10 @@ export function MapChart({
       if (longtitude === null || latitude === null) {
         return [999, 999]
       }
-      return [parseFloat(latitude.value), parseFloat(longtitude.value)]
+      return [
+        parseFloat(latitude?.value ?? 0),
+        parseFloat(longtitude?.value ?? 0),
+      ]
     })
     return dataForMapChart
   }
