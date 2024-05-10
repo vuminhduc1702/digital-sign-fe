@@ -43,6 +43,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn, flattenOrgs } from '@/utils/misc'
+import { Input } from '@/components/ui/input'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 
 type UpdateUserProps = {
   userId: string
@@ -194,73 +196,158 @@ export function UpdateUser({
               })}
             >
               <>
-                <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                />
-                <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.phone')}
-                  type="number"
-                  error={formState.errors['phone']}
-                  registration={register('phone')}
-                />
-                <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.email')}
-                  error={formState.errors['email']}
-                  registration={register('email')}
-                />
-                <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.password')}
-                  error={formState.errors['password']}
-                  registration={register('password')}
-                  type={showPassword ? 'text' : 'password'}
-                  endIcon={
-                    showPassword ? (
-                      <EyeShow
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={togglePasswordVisibility}
-                      />
-                    ) : (
-                      <EyeHide
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={togglePasswordVisibility}
-                      />
-                    )
-                  }
-                />
-                <InputField
-                  label={t(
-                    'cloud:org_manage.user_manage.add_user.confirm_password',
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.user_manage.add_user.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
                   )}
-                  error={formState.errors['confirmPassword']}
-                  registration={register('confirmPassword')}
-                  type={showRePassword ? 'text' : 'password'}
-                  endIcon={
-                    showRePassword ? (
-                      <EyeShow
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={toggleRePasswordVisibility}
-                      />
-                    ) : (
-                      <EyeHide
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={toggleRePasswordVisibility}
-                      />
-                    )
-                  }
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.user_manage.add_user.phone')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.user_manage.add_user.email')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.user_manage.add_user.password')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            type={showPassword ? 'text' : 'password'}
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                            endIcon={
+                              showPassword ? (
+                                <EyeShow
+                                  height={30}
+                                  width={30}
+                                  viewBox="0 0 30 30"
+                                  className="absolute bottom-0 right-2 z-20"
+                                  onClick={togglePasswordVisibility}
+                                />
+                              ) : (
+                                <EyeHide
+                                  height={30}
+                                  width={30}
+                                  viewBox="0 0 30 30"
+                                  className="absolute bottom-0 right-2 z-20"
+                                  onClick={togglePasswordVisibility}
+                                />
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t(
+                          'cloud:org_manage.user_manage.add_user.confirm_password',
+                        )}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            type={showRePassword ? 'text' : 'password'}
+                            endIcon={
+                              showRePassword ? (
+                                <EyeShow
+                                  height={30}
+                                  width={30}
+                                  viewBox="0 0 30 30"
+                                  className="absolute bottom-0 right-2 z-20"
+                                  onClick={toggleRePasswordVisibility}
+                                />
+                              ) : (
+                                <EyeHide
+                                  height={30}
+                                  width={30}
+                                  viewBox="0 0 30 30"
+                                  className="absolute bottom-0 right-2 z-20"
+                                  onClick={toggleRePasswordVisibility}
+                                />
+                              )
+                            }
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <FormField
                   control={form.control}
@@ -310,23 +397,38 @@ export function UpdateUser({
                   )}
                 />
 
-                <SelectDropdown
-                  label={t('cloud:org_manage.user_manage.add_user.role')}
+                <FormField
+                  control={form.control}
                   name="role_id"
-                  control={control}
-                  options={roleOptions}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:role') ||
-                    option.label === t('table:no_role')
-                  }
-                  noOptionsMessage={() => t('table:no_role')}
-                  loadingMessage={() => t('loading:role')}
-                  isLoading={roleIsLoading}
-                  placeholder={t('cloud:role_manage.add_role.choose_role')}
-                  defaultValue={roleOptions?.find(
-                    item => item.value === getValues('role_id'),
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.user_manage.add_user.role')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <NewSelectDropdown
+                            options={roleOptions}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:role') ||
+                              option.label === t('table:no_role')
+                            }
+                            noOptionsMessage={() => t('table:no_role')}
+                            loadingMessage={() => t('loading:role')}
+                            isLoading={roleIsLoading}
+                            placeholder={t(
+                              'cloud:role_manage.add_role.choose_role',
+                            )}
+                            defaultValue={roleOptions?.find(
+                              item => item.value === getValues('role_id'),
+                            )}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
                   )}
-                  error={formState?.errors?.role_id}
                 />
 
                 <div className="grid grid-cols-3 gap-x-2">
@@ -359,9 +461,20 @@ export function UpdateUser({
                     )}
                   />
                 </div>
-                <InputField
-                  label={t('form:enter_address')}
-                  registration={register('profile.full_address')}
+                <FormField
+                  control={control}
+                  name="profile.full_address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('form:enter_address')} </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
               </>
             </form>

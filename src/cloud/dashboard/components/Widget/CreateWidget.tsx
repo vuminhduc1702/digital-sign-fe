@@ -498,7 +498,7 @@ export function CreateWidget({
 
   const attrSelectDataForMap = [
     { value: 'latitude', label: 'latitude' },
-    { value: 'longitude', label: 'longitude' },
+    { value: 'longtitude', label: 'longtitude' },
   ]
 
   const setDeviceOption = (attribute: string) => {

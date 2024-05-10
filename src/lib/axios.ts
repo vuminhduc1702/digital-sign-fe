@@ -72,13 +72,13 @@ axios.interceptors.response.use(
       return response.data
     }
   },
-  (error: AxiosError<{ error?: string; message?: string }>) => {
+  (error: AxiosError<{ code?: number; message?: string }>) => {
     console.error('res error: ', error)
 
     let message = ''
     const errRes = error.response
 
-    switch (errRes?.status) {
+    switch (errRes?.data?.code) {
       case 401:
         // if (window.location.pathname === PATHS.HOME) {
         //   break
@@ -90,6 +90,105 @@ axios.interceptors.response.use(
       case 404:
         message = i18n.t('error:server_res.notfound')
         break
+      case 2003:
+        message = i18n.t('error:server_res_status.2003')
+        break
+      case 2005:
+        message = i18n.t('error:server_res_status.2005')
+        break
+      case 2007:
+        message = i18n.t('error:server_res_status.2007')
+        break
+      case 2008:
+        message = i18n.t('error:server_res_status.2008')
+        break
+      case 2009:
+        message = i18n.t('error:server_res_status.2009')
+        break
+      case 2010:
+        message = i18n.t('error:server_res_status.2010')
+        break
+      case 8002:
+        message = i18n.t('error:server_res_status.8002')
+        break
+      case 8001:
+        message = i18n.t('error:server_res_status.8001')
+        break
+      case 2033:
+        message = i18n.t('error:server_res_status.2033')
+        break
+      case 8006:
+        message = i18n.t('error:server_res_status.8006')
+        break
+      case 8007:
+        message = i18n.t('error:server_res_status.8007')
+        break
+      case 8008:
+        message = i18n.t('error:server_res_status.8008')
+        break
+      case 8009:
+        message = i18n.t('error:server_res_status.8009')
+        break
+      case 8010:
+        message = i18n.t('error:server_res_status.8010')
+        break
+      case 4012:
+        message = i18n.t('error:server_res_status.4012')
+        break
+      case 4002:
+        message = i18n.t('error:server_res_status.4002')
+        break
+      case 4003:
+        message = i18n.t('error:server_res_status.4003')
+        break
+      case 2021:
+        message = i18n.t('error:server_res_status.2021')
+        break
+      case 2022:
+        message = i18n.t('error:server_res_status.2022')
+        break
+      case 4010:
+        message = i18n.t('error:server_res_status.4010')
+        break
+      case 4013:
+        message = i18n.t('error:server_res_status.4013')
+        break
+      case 4014:
+        message = i18n.t('error:server_res_status.4014')
+        break
+      case 4016:
+        message = i18n.t('error:server_res_status.4016')
+        break
+      case 4001:
+        message = i18n.t('error:server_res_status.4001')
+        break
+      case 4333:
+        message = i18n.t('error:server_res_status.4333')
+        break
+      case 5001:
+        message = i18n.t('error:server_res_status.5001')
+        break
+      case 5003:
+        message = i18n.t('error:server_res_status.5003')
+        break
+      case 6504:
+        message = i18n.t('error:server_res_status.6504')
+        break
+      case 6505:
+        message = i18n.t('error:server_res_status.6505')
+        break
+      case 6506:
+        message = i18n.t('error:server_res_status.6506')
+        break
+      case 6507:
+        message = i18n.t('error:server_res_status.6507')
+        break
+      case 6501:
+        message = i18n.t('error:server_res_status.6501')
+        break
+      case 2098:
+        message = i18n.t('error:server_res_status.2098')
+        break
       // case 400:
       //   message = i18n.t('error:server_res.malformed_data')
       //   break
@@ -97,10 +196,10 @@ axios.interceptors.response.use(
       //   message = i18n.t('error:server_res.server')
       //   break
       default:
-        message = errRes?.data?.error ?? errRes?.data?.message ?? error.message
+        message = errRes?.data?.message ?? error.message
     }
 
-    if (errRes?.data?.error === 'malformed entity specification') {
+    if (errRes?.data?.message === 'malformed entity specification') {
       message = i18n.t('error:server_res.malformed_data')
     }
 

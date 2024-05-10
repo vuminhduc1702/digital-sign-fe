@@ -99,7 +99,7 @@ export function UpdateWidget({
 
   const attrSelectDataForMap = [
     { value: 'latitude', label: 'latitude' },
-    { value: 'longitude', label: 'longitude' },
+    { value: 'longtitude', label: 'longtitude' },
   ]
 
   // map schema

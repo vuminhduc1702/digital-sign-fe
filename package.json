@@ -1,7 +1,7 @@
 {
   "name": "iot-react",
   "private": true,
-  "version": "0.5.14",
+  "version": "0.5.18",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -56,7 +56,6 @@
     "embla-carousel-react": "^8.0.0-rc22",
     "file-saver": "^2.0.5",
     "framer-motion": "^10.12.16",
-    "fs": "^0.0.1-security",
     "html2canvas": "^1.4.1",
     "i18next": "^22.4.13",
     "i18next-browser-languagedetector": "^7.0.1",
@@ -148,9 +147,6 @@
     "vite-tsconfig-paths": "^4.0.7",
     "vitest": "^0.29.3"
   },
-  "engines": {
-    "node": ">=18"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -163,5 +159,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": "^18"
+  },
+  "volta": {
+    "node": "18.20.2"
   }
 }
