@@ -28,15 +28,7 @@ import { cn } from '@/utils/misc'
 
 export const mqttConfigSchema = z.object({
   clean_session: z.boolean(),
-  dup: z.boolean(),
   keepalive: z.number(),
-  message_type: z.number(),
-  protocol_name: z.string(),
-  protocol_version: z.number(),
-  qos: z.number(),
-  remaining_length: z.number(),
-  retain: z.boolean(),
-  will_flag: z.boolean(),
   will_message: z.string(),
   will_qos: z.number(),
   will_retain: z.boolean(),
@@ -71,15 +63,7 @@ export function UpdateMqttConfig({
     resolver: mqttConfigSchema && zodResolver(mqttConfigSchema),
     defaultValues: {
       clean_session: MqttConfig.clean_session || false,
-      dup: MqttConfig.dup || false,
       keepalive: MqttConfig.keepalive || 0,
-      message_type: MqttConfig.message_type || 0,
-      protocol_name: MqttConfig.protocol_name || '',
-      protocol_version: MqttConfig.protocol_version || 0,
-      qos: MqttConfig.qos || 0,
-      remaining_length: MqttConfig.remaining_length || 0,
-      retain: MqttConfig.retain || false,
-      will_flag: MqttConfig.will_flag || false,
       will_message: MqttConfig.will_message || '',
       will_qos: MqttConfig.will_qos || 0,
       will_retain: MqttConfig.will_retain || false,
@@ -112,15 +96,7 @@ export function UpdateMqttConfig({
               mutate({
                 data: {
                   clean_session: values.clean_session,
-                  dup: values.dup,
                   keepalive: values.keepalive,
-                  message_type: values.message_type,
-                  protocol_name: values.protocol_name,
-                  protocol_version: values.protocol_version,
-                  qos: values.qos,
-                  remaining_length: values.remaining_length,
-                  retain: values.retain,
-                  will_flag: values.will_flag,
                   will_message: values.will_message,
                   will_qos: values.will_qos,
                   will_retain: values.will_retain,
@@ -131,7 +107,7 @@ export function UpdateMqttConfig({
             })}
           >
             <>
-              <div className="flex">
+              <div className="mb-3 flex">
                 <FieldWrapper
                   label={t(
                     'cloud:org_manage.device_manage.mqtt_config.clean_session',
@@ -142,65 +118,6 @@ export function UpdateMqttConfig({
                   <Controller
                     control={control}
                     name={'clean_session'}
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          checked={value}
-                          onCheckedChange={onChange}
-                        />
-                      )
-                    }}
-                  />
-                </FieldWrapper>
-                <FieldWrapper
-                  label={t('cloud:org_manage.device_manage.mqtt_config.dup')}
-                  error={formState?.errors['dup']}
-                  className="w-fit"
-                >
-                  <Controller
-                    control={control}
-                    name={'dup'}
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          checked={value}
-                          onCheckedChange={onChange}
-                        />
-                      )
-                    }}
-                  />
-                </FieldWrapper>
-                <FieldWrapper
-                  label={t('cloud:org_manage.device_manage.mqtt_config.retain')}
-                  error={formState?.errors['retain']}
-                  className="w-fit"
-                >
-                  <Controller
-                    control={control}
-                    name={'retain'}
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          checked={value}
-                          onCheckedChange={onChange}
-                        />
-                      )
-                    }}
-                  />
-                </FieldWrapper>
-                <FieldWrapper
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.will_flag',
-                  )}
-                  error={formState?.errors['will_flag']}
-                  className="w-fit"
-                >
-                  <Controller
-                    control={control}
-                    name={'will_flag'}
                     render={({ field: { onChange, value, ...field } }) => {
                       return (
                         <Checkbox
@@ -234,7 +151,7 @@ export function UpdateMqttConfig({
                   />
                 </FieldWrapper>
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <InputField
                   label={t(
                     'cloud:org_manage.device_manage.mqtt_config.keepalive',
@@ -245,53 +162,6 @@ export function UpdateMqttConfig({
                     valueAsNumber: true,
                   })}
                 />
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.message_type',
-                  )}
-                  type="number"
-                  error={formState.errors['message_type']}
-                  registration={register('message_type', {
-                    valueAsNumber: true,
-                  })}
-                />
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.protocol_name',
-                  )}
-                  error={formState.errors['protocol_name']}
-                  registration={register('protocol_name')}
-                />
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.protocol_version',
-                  )}
-                  type="number"
-                  error={formState.errors['protocol_version']}
-                  registration={register('protocol_version', {
-                    valueAsNumber: true,
-                  })}
-                />
-                <InputField
-                  label={t('cloud:org_manage.device_manage.mqtt_config.qos')}
-                  error={formState.errors['qos']}
-                  registration={register('qos', {
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                />
-
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.remaining_length',
-                  )}
-                  error={formState.errors['remaining_length']}
-                  registration={register('remaining_length', {
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                />
-
                 <InputField
                   label={t(
                     'cloud:org_manage.device_manage.mqtt_config.will_message',
@@ -308,8 +178,9 @@ export function UpdateMqttConfig({
                     valueAsNumber: true,
                   })}
                   type="number"
+                  min={0}
+                  max={2}
                 />
-
                 <InputField
                   label={t(
                     'cloud:org_manage.device_manage.mqtt_config.will_topic',
