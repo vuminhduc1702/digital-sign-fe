@@ -206,6 +206,7 @@ export function OrgManage() {
           )}
           close={closeDeleteMulti}
           isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleAttrs}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {

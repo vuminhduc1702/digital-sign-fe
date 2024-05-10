@@ -1,5 +1,6 @@
 import type { Attribute, BaseEntity, BasePagination } from '@/types'
 import { type EntityType } from '../api/attrAPI'
+import { type MqttConfigDTO } from '../api/deviceAPI/updateMqttConfig'
 
 // Device types
 
@@ -13,6 +14,7 @@ export type DeviceAdditionalInfo = {
   timeout_lifecycle: number
   device_model?: string
   isdn: string
+  mqtt_config: MqttConfigDTO['data']
 }
 
 export type Device = {

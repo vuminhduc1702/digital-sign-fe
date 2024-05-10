@@ -212,6 +212,7 @@ export function ListProjectItem({
           )}
           close={closeDelete}
           isOpen={isOpenDelete}
+          isSuccessDelete={isSuccess}
           handleSubmit={() =>
             mutate({
               projectId: id,

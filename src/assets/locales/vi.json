@@ -741,7 +741,9 @@
       "map": {
         "device_not_found": "Không tìm thấy thiết bị nào",
         "googleMap": "Google Map",
-        "openStreetMap": "Open Street Map"
+        "openStreetMap": "Open Street Map",
+        "street": "Đường",
+        "satellite": "Vệ tinh"
       },
       "card": {
         "no_log_attr": "Không có bản tin thuộc tính"
@@ -994,6 +996,7 @@
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
     "no": "STT",
+    "action": "Hành động",
     "tenant": "Tenant",
     "id": "ID",
     "name": "Tên",
@@ -1005,8 +1008,10 @@
     "email": "Email",
     "last_updated": "Cập nhật",
     "starred": "Yêu thích",
-    "excel": "Excel",
-    "pdf": "PDF",
+    "export": "Xuất dữ liệu",
+    "export_csv": "Xuất dữ liệu dạng CSV",
+    "export_excel": "Xuất dữ liệu dạng XLSX",
+    "export_pdf": "Xuất dữ liệu dạng PDF",
     "print": "In",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
@@ -1097,7 +1102,42 @@
       "number": "Vui lòng nhập số"
     },
     "refresh": "Tải lại trang",
-    "wrong_input": "Nhập sai:"
+    "wrong_input": "Nhập sai:",
+    "server_res_status": {
+      "2003": "Lỗi 2003: Thực thể không tồn tại.",
+      "2005": "Lỗi 2005: Thực thể đã tồn tại.",
+      "2007": "Lỗi 2007: Mật khẩu không hợp lệ.",
+      "2008": "Lỗi 2008: OTP đã hết hạn.",
+      "2009": "Lỗi 2009: OTP không chính xác.",
+      "2010": "Lỗi 2010: Tài khoản hoặc mật khẩu không chính xác.",
+      "8002": "Lỗi 8002: Tạo dự án không thành công.",
+      "8001": "Lỗi 8001: Tạo tổ chức không thành công.",
+      "2033": "Lỗi 2033: Dự án không chính xác.",
+      "8006": "Lỗi 8006: Xóa thuộc tính của tổ chức không thành công.",
+      "8007": "Lỗi 8007: Xóa thiết bị của tổ chức không thành công.",
+      "8008": "Lỗi 8008: Xóa nhóm của tổ chức không thành công.",
+      "8009": "Lỗi 8009: Xóa sự kiện của tổ chức không thành công.",
+      "8010": "Lỗi 8010: Xóa người dùng của tổ chức không thành công.",
+      "4012": "Lỗi 4012: Thuộc tính đã tồn tại hoặc không đúng định dạng.",
+      "4002": "Lỗi 4002: Tạo thiết bị không thành công.",
+      "4003": "Lỗi 4003: Tạo mẫu thiết bị không thành công.",
+      "2021": "Lỗi 2021: Tổ chức không tồn tại.",
+      "2022": "Lỗi 2022: Nhóm không tồn tại.",
+      "4010": "Lỗi 4010: Mẫu thiết bị không tồn tại.",
+      "4013": "Lỗi 4013: Thiết bị đã được cung cấp.",
+      "4014": "Lỗi 4014: Cung cấp thiết bị không thành công.",
+      "4016": "Lỗi 4016: Người dùng không tồn tại.",
+      "4001": "Lỗi 4001: Cập nhật mẫu thiết bị cho thiết bị không thành công.",
+      "4333": "Lỗi 4333: Tạo bảng điều khiển không thành công.",
+      "5001": "Lỗi 5001: Thiết bị không tồn tại.",
+      "5003": "Lỗi 5003: Sự kiện không tồn tại.",
+      "6504": "Lỗi 6504: Xóa thiết bị khỏi nhóm không thành công.",
+      "6505": "Lỗi 6505: Xóa tổ chức khỏi nhóm không thành công.",
+      "6506": "Lỗi 6506: Xóa người dùng khỏi nhóm không thành công.",
+      "6507": "Lỗi 6507: Xóa sự kiện khỏi nhóm không thành công.",
+      "6501": "Lỗi 6501: Tạo nhóm không thành công.",
+      "2098": "Lỗi 2098: Xóa vai trò không thành công."
+    }
   },
   "loading": {
     "base": "Đang tải dữ liệu...",
@@ -1129,7 +1169,9 @@
     "all": "Tất cả",
     "title": "Tìm kiếm",
     "no_org": "Không trực thuộc tổ chức",
-    "no_group": "Không trực thuộc nhóm"
+    "no_group": "Không trực thuộc nhóm",
+    "no_search_field": "Chưa nhập trường tìm kiếm",
+    "no_search_name": "Chưa nhập thông tin tìm kiếm"
   },
   "user": {
     "login": "Đăng nhập",
