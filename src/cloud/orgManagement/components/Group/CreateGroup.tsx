@@ -130,11 +130,6 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
               })}
             >
               <>
-                {/* <InputField
-                  label={t('cloud:org_manage.group_manage.add_group.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -157,18 +152,9 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
                     </FormItem>
                   )}
                 />
-                {/* <SelectField
-                  label={t(
-                    'cloud:org_manage.group_manage.add_group.entity_type',
-                  )}
-                  error={formState.errors['entity_type']}
-                  registration={register('entity_type')}
-                  options={entityTypeOptions}
-                /> */}
                 <FormField
                   control={form.control}
                   name="entity_type"
-                  // disabled={watch('onClick')}
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <FormLabel>

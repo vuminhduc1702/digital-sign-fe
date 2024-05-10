@@ -193,11 +193,6 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
               })}
             >
               <>
-                {/* <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -220,12 +215,6 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                     </FormItem>
                   )}
                 />
-                {/* <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.phone')}
-                  type="number"
-                  error={formState.errors['phone']}
-                  registration={register('phone')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="phone"
@@ -249,11 +238,6 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                     </FormItem>
                   )}
                 />
-                {/* <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.email')}
-                  error={formState.errors['email']}
-                  registration={register('email')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="email"
@@ -276,31 +260,6 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                     </FormItem>
                   )}
                 />
-                {/* <InputField
-                  label={t('cloud:org_manage.user_manage.add_user.password')}
-                  error={formState.errors['password']}
-                  registration={register('password')}
-                  type={showPassword ? 'text' : 'password'}
-                  endIcon={
-                    showPassword ? (
-                      <EyeShow
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={togglePasswordVisibility}
-                      />
-                    ) : (
-                      <EyeHide
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={togglePasswordVisibility}
-                      />
-                    )
-                  }
-                /> */}
                 <FormField
                   control={form.control}
                   name="password"
@@ -343,33 +302,6 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                     </FormItem>
                   )}
                 />
-                {/* <InputField
-                  label={t(
-                    'cloud:org_manage.user_manage.add_user.confirm_password',
-                  )}
-                  error={formState.errors['confirmPassword']}
-                  registration={register('confirmPassword')}
-                  type={showRePassword ? 'text' : 'password'}
-                  endIcon={
-                    showRePassword ? (
-                      <EyeShow
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={toggleRePasswordVisibility}
-                      />
-                    ) : (
-                      <EyeHide
-                        height={30}
-                        width={30}
-                        viewBox="0 0 30 30"
-                        className="absolute bottom-0 right-2 z-20"
-                        onClick={toggleRePasswordVisibility}
-                      />
-                    )
-                  }
-                /> */}
                 <FormField
                   control={form.control}
                   name="confirmPassword"
@@ -462,21 +394,6 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                   )}
                 />
 
-                {/* <SelectDropdown
-                  label={t('cloud:org_manage.user_manage.add_user.role')}
-                  name="role_id"
-                  control={control}
-                  options={roleOptions}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:role') ||
-                    option.label === t('table:no_role')
-                  }
-                  noOptionsMessage={() => t('table:no_role')}
-                  loadingMessage={() => t('loading:role')}
-                  isLoading={roleIsLoading}
-                  placeholder={t('cloud:role_manage.add_role.choose_role')}
-                  error={formState?.errors?.role_id}
-                /> */}
                 <FormField
                   control={form.control}
                   name="role_id"
@@ -538,10 +455,6 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                     )}
                   />
                 </div>
-                {/* <InputField
-                  label={t('form:enter_address')}
-                  registration={register('profile.full_address')}
-                /> */}
                 <FormField
                   control={control}
                   name="profile.full_address"

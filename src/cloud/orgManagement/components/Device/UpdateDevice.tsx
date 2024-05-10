@@ -196,11 +196,6 @@ export function UpdateDevice({
                 })}
               >
                 <>
-                  {/* <InputField
-                    label={t('cloud:org_manage.device_manage.add_device.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  /> */}
                   <FormField
                     control={form.control}
                     name="name"
@@ -276,27 +271,6 @@ export function UpdateDevice({
                     )}
                   />
 
-                  {/* <SelectDropdown
-                    refSelect={selectDropdownGroupId}
-                    isClearable={false}
-                    label={t('cloud:org_manage.device_manage.add_device.group')}
-                    name="group_id"
-                    control={control}
-                    options={groupSelectOptions}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:group') ||
-                      option.label === t('table:no_group')
-                    }
-                    noOptionsMessage={() => t('table:no_group')}
-                    loadingMessage={() => t('loading:group')}
-                    isLoading={groupIsLoading}
-                    defaultValue={
-                      groupSelectOptions?.find(
-                        group => group.value === group_id,
-                      ) ?? ''
-                    }
-                    error={formState?.errors?.group_id}
-                  /> */}
                   <FormField
                     control={form.control}
                     name="group_id"
@@ -332,24 +306,6 @@ export function UpdateDevice({
                     )}
                   />
 
-                  {/* <SelectDropdown
-                    isClearable={false}
-                    label={t('cloud:firmware.add_firmware.template')}
-                    name="template_id"
-                    control={control}
-                    options={templateSelectOptions}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:template') ||
-                      option.label === t('table:no_template')
-                    }
-                    noOptionsMessage={() => t('table:no_template')}
-                    loadingMessage={() => t('loading:template')}
-                    isLoading={templateIsLoading}
-                    defaultValue={templateSelectOptions?.find(
-                      template => template.value === template_id,
-                    )}
-                    error={formState?.errors?.template_id}
-                  /> */}
                   <FormField
                     control={form.control}
                     name="template_id"
@@ -382,11 +338,6 @@ export function UpdateDevice({
                     )}
                   />
 
-                  {/* <InputField
-                    label={t('cloud:org_manage.device_manage.add_device.key')}
-                    error={formState.errors['key']}
-                    registration={register('key')}
-                  /> */}
                   <FormField
                     control={form.control}
                     name="key"
@@ -430,18 +381,6 @@ export function UpdateDevice({
                   {t('cloud:org_manage.device_manage.add_device.heartbeat')}
                 </FormLabel>
                 <div className="flex rounded-lg border border-solid p-2">
-                  {/* <InputField
-                    registration={registerHeartBeat('interval', {
-                      valueAsNumber: true,
-                    })}
-                    error={formStateHeartBeat.errors['interval']}
-                    label="Heartbeat Interval"
-                    type="number"
-                    classnamefieldwrapper="flex items-center"
-                    classlabel="mx-1"
-                    classchild="mx-1"
-                    defaultValue={additional_info?.heartbeat_interval || 0}
-                  /> */}
                   <FormField
                     control={heartbeatForm.control}
                     name="interval"
@@ -471,18 +410,6 @@ export function UpdateDevice({
                       </FormItem>
                     )}
                   />
-                  {/* <InputField
-                    registration={registerHeartBeat('timeout', {
-                      valueAsNumber: true,
-                    })}
-                    error={formStateHeartBeat.errors['timeout']}
-                    label="Life circle"
-                    type="number"
-                    classnamefieldwrapper="flex items-center"
-                    classlabel="mx-1"
-                    classchild="mx-1"
-                    defaultValue={additional_info?.timeout_lifecycle || 0}
-                  /> */}
                   <FormField
                     control={heartbeatForm.control}
                     name="timeout"

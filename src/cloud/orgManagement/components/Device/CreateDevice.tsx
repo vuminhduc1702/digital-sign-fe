@@ -144,11 +144,6 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
               })}
             >
               <>
-                {/* <InputField
-                  label={t('cloud:org_manage.device_manage.add_device.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -221,20 +216,6 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                     </FormItem>
                   )}
                 />
-                {/* <SelectDropdown
-                  error={formState?.errors?.template_id}
-                  label={t('cloud:firmware.add_firmware.template')}
-                  name="template_id"
-                  control={control}
-                  options={templateSelectOptions}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:template') ||
-                    option.label === t('table:no_template')
-                  }
-                  noOptionsMessage={() => t('table:no_template')}
-                  loadingMessage={() => t('loading:template')}
-                  isLoading={templateIsLoading}
-                /> */}
                 <FormField
                   control={form.control}
                   name="template_id"
@@ -263,11 +244,6 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                   )}
                 />
 
-                {/* <InputField
-                  label={t('cloud:org_manage.device_manage.add_device.key')}
-                  error={formState.errors['key']}
-                  registration={register('key')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="key"

@@ -144,14 +144,6 @@ export function UpdateGroup({
               })}
             >
               <>
-                {/* <InputField
-                  label={
-                    t('cloud:org_manage.group_manage.add_group.name') ??
-                    "Group's name"
-                  }
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -175,18 +167,6 @@ export function UpdateGroup({
                     </FormItem>
                   )}
                 />
-                {/* <SelectField
-                  disabled
-                  label={
-                    t('cloud:org_manage.group_manage.add_group.entity_type') ??
-                    'Entity type'
-                  }
-                  value={entity_type.toString()}
-                  options={entityTypeList.map(entityType => ({
-                    label: entityType.name,
-                    value: entityType.type,
-                  }))}
-                /> */}
                 <FormField
                   disabled
                   name=""
