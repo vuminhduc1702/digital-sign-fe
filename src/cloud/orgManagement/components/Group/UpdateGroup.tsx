@@ -41,6 +41,14 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn, flattenOrgs } from '@/utils/misc'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
@@ -68,6 +76,11 @@ export function UpdateGroup({
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
+  const entityTypeOptions = entityTypeList.map(entityType => ({
+    label: entityType.name,
+    value: entityType.type,
+  }))
+
   const projectId = storage.getProject()?.id
   const { data: orgData } = useGetOrgs({ projectId })
   const orgDataFlatten = flattenOrgs(orgData?.organizations ?? [])
@@ -84,7 +97,10 @@ export function UpdateGroup({
 
   const form = useForm<UpdateGroupDTO['data']>({
     resolver: groupUpdateSchema && zodResolver(groupUpdateSchema),
-    defaultValues: { name: name, org_id: organization },
+    defaultValues: {
+      name: name,
+      org_id: organization,
+    },
   })
   const { register, formState, control, getValues, handleSubmit } = form
 
@@ -128,25 +144,66 @@ export function UpdateGroup({
               })}
             >
               <>
-                <InputField
-                  label={
-                    t('cloud:org_manage.group_manage.add_group.name') ??
-                    "Group's name"
-                  }
-                  error={formState.errors['name']}
-                  registration={register('name')}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.group_manage.add_group.name') ??
+                          "Group's name"}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
-                <SelectField
+                <FormField
                   disabled
-                  label={
-                    t('cloud:org_manage.group_manage.add_group.entity_type') ??
-                    'Entity type'
-                  }
-                  value={entity_type.toString()}
-                  options={entityTypeList.map(entityType => ({
-                    label: entityType.name,
-                    value: entityType.type,
-                  }))}
+                  name=""
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t(
+                          'cloud:org_manage.group_manage.add_group.entity_type',
+                        )}
+                      </FormLabel>
+                      <div>
+                        <Select
+                          {...field}
+                          onValueChange={onChange}
+                          value={entity_type.toString()}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t(
+                                  'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                )}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {entityTypeOptions?.map(type => (
+                              <SelectItem key={type.value} value={type.value}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <FormField
                   control={form.control}
