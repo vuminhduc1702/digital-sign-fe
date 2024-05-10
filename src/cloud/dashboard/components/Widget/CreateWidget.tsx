@@ -651,39 +651,41 @@ export function CreateWidget({
                 }))
 
                 // missing latitude/longitude in map widget
-                let stopExecution = false
-                values.attributeConfig.map(item => {
-                  if (item.attribute_key === 'latitude') {
-                    if (
-                      !values.attributeConfig.find(
-                        i =>
-                          i.label === item.label &&
-                          i.attribute_key === 'longitude',
-                      )
-                    ) {
-                      stopExecution = true
-                      return
+                if (widgetCategory === 'MAP') {
+                  let stopExecution = false
+                  values.attributeConfig.map(item => {
+                    if (item.attribute_key === 'latitude') {
+                      if (
+                        !values.attributeConfig.find(
+                          i =>
+                            i.label === item.label &&
+                            i.attribute_key === 'longitude',
+                        )
+                      ) {
+                        stopExecution = true
+                        return
+                      }
+                    } else if (item.attribute_key === 'longitude') {
+                      if (
+                        !values.attributeConfig.find(
+                          i =>
+                            i.label === item.label &&
+                            i.attribute_key === 'latitude',
+                        )
+                      ) {
+                        stopExecution = true
+                        return
+                      }
                     }
-                  } else if (item.attribute_key === 'longitude') {
-                    if (
-                      !values.attributeConfig.find(
-                        i =>
-                          i.label === item.label &&
-                          i.attribute_key === 'latitude',
-                      )
-                    ) {
-                      stopExecution = true
-                      return
-                    }
+                  })
+                  if (stopExecution) {
+                    toast.error(
+                      t(
+                        'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
+                      ),
+                    )
+                    return
                   }
-                })
-                if (stopExecution) {
-                  toast.error(
-                    t(
-                      'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
-                    ),
-                  )
-                  return
                 }
 
                 const initMessage = {
@@ -983,7 +985,7 @@ export function CreateWidget({
                         closeMenuOnSelect={!isMultipleDevice}
                         isWrappedArray
                         customOnChange={option => {
-                          if (option != null) {
+                          if (option[0]) {
                             attrChartMutate({
                               data: {
                                 entity_ids: option,

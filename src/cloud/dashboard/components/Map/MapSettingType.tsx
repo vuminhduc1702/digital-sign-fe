@@ -8,12 +8,16 @@ export function MapSettingType({
   setIsMapLabel,
   mapType,
   setMapType,
+  mapBrand,
+  setMapBrand,
 }: {
   className?: string
   isMapLabel?: boolean
   setIsMapLabel?: React.Dispatch<React.SetStateAction<boolean>>
   mapType?: number
   setMapType?: React.Dispatch<React.SetStateAction<number>>
+  mapBrand?: number
+  setMapBrand?: React.Dispatch<React.SetStateAction<number>>
 }) {
   const { t } = useTranslation()
 
@@ -32,24 +36,28 @@ export function MapSettingType({
         className,
       )}
     >
-      {/* <div
-        className={`${isMapLabel && 'font-bold'} flex basis-full cursor-pointer justify-center`}
-        onClick={() => handleLabel()}
-      >
-        {t('cloud:dashboard.map.label')}
-      </div> */}
+      {mapBrand === 0 && (
+        <div
+          className={`${isMapLabel && 'font-bold'} flex basis-full cursor-pointer justify-center text-[10px]`}
+          onClick={() => handleLabel()}
+        >
+          {t('cloud:dashboard.map.label')}
+        </div>
+      )}
       <div
         className={`${mapType === 0 && 'font-bold'} flex basis-full cursor-pointer justify-center text-[10px]`}
         onClick={() => handleMapType(0)}
       >
         {t('cloud:dashboard.map.street')}
       </div>
-      <div
-        className={`${mapType === 1 && 'font-bold'} flex basis-full cursor-pointer justify-center text-[10px]`}
-        onClick={() => handleMapType(1)}
-      >
-        {t('cloud:dashboard.map.satellite')}
-      </div>
+      {mapBrand === 0 && (
+        <div
+          className={`${mapType === 1 && 'font-bold'} flex basis-full cursor-pointer justify-center text-[10px]`}
+          onClick={() => handleMapType(1)}
+        >
+          {t('cloud:dashboard.map.satellite')}
+        </div>
+      )}
     </div>
   )
 }

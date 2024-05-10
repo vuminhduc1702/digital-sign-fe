@@ -743,7 +743,8 @@
         "googleMap": "Google Map",
         "openStreetMap": "Open Street Map",
         "street": "Đường",
-        "satellite": "Vệ tinh"
+        "satellite": "Vệ tinh",
+        "label": "Nhãn"
       },
       "card": {
         "no_log_attr": "Không có bản tin thuộc tính"
