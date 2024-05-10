@@ -34,3 +34,4 @@ package-lock.json
 .eslintmdcache
 .stylelintcache
 .prettiercache
+.yarn/install-state.gz
