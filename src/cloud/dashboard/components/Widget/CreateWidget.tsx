@@ -650,7 +650,7 @@ export function CreateWidget({
                   key: item.attribute_key,
                 }))
 
-                // missing latitude/longitude in map widget
+                // missing latitude/longtitude in map widget
                 if (widgetCategory === 'MAP') {
                   let stopExecution = false
                   values.attributeConfig.map(item => {
@@ -659,13 +659,13 @@ export function CreateWidget({
                         !values.attributeConfig.find(
                           i =>
                             i.label === item.label &&
-                            i.attribute_key === 'longitude',
+                            i.attribute_key === 'longtitude',
                         )
                       ) {
                         stopExecution = true
                         return
                       }
-                    } else if (item.attribute_key === 'longitude') {
+                    } else if (item.attribute_key === 'longtitude') {
                       if (
                         !values.attributeConfig.find(
                           i =>
