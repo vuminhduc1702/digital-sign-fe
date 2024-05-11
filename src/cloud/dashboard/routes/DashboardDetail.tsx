@@ -119,6 +119,7 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false)
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -370,6 +371,8 @@ export function DashboardDetail() {
                     deviceName: getDeviceInfo(item.label)?.name,
                   })),
                 }
+                console.log(widgetList)
+                console.log(widgetInfo)
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -419,13 +422,16 @@ export function DashboardDetail() {
                             // x: index % 2 === 0 ? 0 : 4,
                             x: index % 2 === 0 ? 0 : 6,
                             y: 0,
-                            // w: 1,
-                            // h: 1,
                             w: widgetInfo?.description === 'CARD' ? 3 : 6,
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn('relative bg-secondary-500')}
+                    className={cn(
+                      'relative bg-secondary-500',
+                      widgetInfo?.description === 'MAP' &&
+                        isMapFullscreen &&
+                        '!fixed left-0 top-0 z-50 !h-screen !w-screen !transform-none bg-white',
+                    )}
                     data-iseditmode={isEditMode}
                   >
                     <p
@@ -462,6 +468,7 @@ export function DashboardDetail() {
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
+                        setIsMapFullscreen={setIsMapFullscreen}
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart

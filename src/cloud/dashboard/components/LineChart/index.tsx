@@ -151,8 +151,6 @@ export function LineChart({
   ])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
-  console.log(data)
-
   useEffect(() => {
     if (i18n.language === 'vi') {
       d3.timeFormatDefaultLocale(VN_TIME)

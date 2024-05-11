@@ -345,10 +345,10 @@ export function BaseTable<T extends Record<string, any>>({
                       <TableRow
                         key={row.id}
                         className={cn(
-                          `box-border cursor-none`,
+                          'box-border',
                           index % 2 === 1 ? 'bg-[#F9F9F9]' : 'bg-white',
                           viewDetailOnClick &&
-                            'cursor-pointer hover:bg-primary-100 hover:text-primary-400',
+                            'cursor-pointer hover:bg-primary-100',
                         )}
                       >
                         {row.getVisibleCells().map((cell, index) => {

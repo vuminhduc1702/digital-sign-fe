@@ -125,7 +125,7 @@ export const updateEventSchema = z
     z.discriminatedUnion('onClick', [
       z.object({
         onClick: z.literal(true),
-        condition: z.tuple([]).nullish(),
+        condition: z.tuple([]),
       }),
       z.object({
         onClick: z.literal(false),
@@ -280,6 +280,18 @@ export function UpdateEvent({
       ),
     )
   }
+
+  useEffect(() => {
+    if (!watch('onClick') && watch('type') === 'event') {
+      if (conditionData && conditionData.length > 0) {
+        setValue('condition', conditionData)
+      } else {
+        conditionAppend([{}])
+      }
+    } else {
+      setValue('condition', [])
+    }
+  }, [watch('onClick'), watch('type')])
 
   useEffect(() => {
     serviceInput?.forEach((element, idx) => {
