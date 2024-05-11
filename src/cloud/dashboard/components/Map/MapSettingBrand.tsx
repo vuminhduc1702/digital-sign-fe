@@ -1,7 +1,7 @@
 import { cn } from '@/utils/misc'
 import { useTranslation } from 'react-i18next'
 
-export function MapSetting({
+export function MapSettingBrand({
   className = '',
   mapType,
   setMapType,
