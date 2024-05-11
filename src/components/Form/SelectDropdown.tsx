@@ -73,7 +73,7 @@ export function SelectDropdown<
               <Select
                 {...field}
                 isMulti={isMulti}
-                className="w-full"
+                className="z-50 w-full"
                 ref={refSelect}
                 isSearchable
                 isClearable

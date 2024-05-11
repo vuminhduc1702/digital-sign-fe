@@ -38,11 +38,13 @@ export default function CreateRows({
   open,
   close,
   isOpen,
+  onClose,
 }: {
   columnsProp: string[]
   open?: () => void
   close?: () => void
   isOpen?: boolean
+  onClose: () => void
 }) {
   const { t } = useTranslation()
 
@@ -75,6 +77,7 @@ export default function CreateRows({
   useEffect(() => {
     if (isSuccess && close) {
       close()
+      onClose?.()
     }
   }, [isSuccess])
 
