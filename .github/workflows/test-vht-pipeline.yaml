@@ -6,6 +6,7 @@ on:
       - main
     
 env:
+  action-workspace: /home/vht/actions-runner/_work/innoway-devportal-fe
   image: ui
   tags: ${{ github.sha }}
   chart-folder: /home/vht/ui
@@ -26,7 +27,9 @@ jobs:
       # clean workspace
     - name: Clean Workspace
       run: |
-        rm -rf ${{env.action-workspace}}
+        rm -rf ${{env.action-workspace}} || true
+        pwd 
+        ls 
       # Checkout code
     - uses: actions/checkout@v4
       # Build image
