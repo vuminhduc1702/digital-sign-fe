@@ -21,7 +21,6 @@ import {
   MapChart,
   PieChart,
   TableChart,
-  LightChart,
 } from '../components'
 import {
   CreateControllerButton,
@@ -46,7 +45,6 @@ import {
   type MapData,
 } from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
-import lightOnICon from '@/assets/icons/light-on.svg'
 
 import { WS_URL } from '@/config'
 import {
@@ -497,11 +495,6 @@ export function DashboardDetail() {
                           widgetInfo?.datasource?.controller_message as string
                         }
                         sendMessage={sendMessage}
-                      />
-                    ) : widgetInfo?.description === 'LIGHT' ? (
-                      <LightChart
-                        data={lastestValues}
-                        widgetInfo={widgetInfo}
                       />
                     ) : null}
                     {isEditMode ? (
