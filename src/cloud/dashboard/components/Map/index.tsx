@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 import { useTranslation } from 'react-i18next'
-
+import { cn } from '@/utils/misc'
 import {
   type WSWidgetMapData,
   type MapSeries,
@@ -18,17 +18,20 @@ import { toast } from 'sonner'
 import { type MapData } from '../ComboBoxSelectDeviceDashboard'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { ComboBoxSelectDeviceDashboard } from '../ComboBoxSelectDeviceDashboard'
-import { MapSetting } from './MapSetting'
+import { MapSettingBrand } from './MapSettingBrand'
 import { MapSettingType } from './MapSettingType'
+import { MapFullscreen } from './MapFullscreen'
 
 export function MapChart({
   data,
   widgetInfo,
   isEditMode,
+  setIsMapFullscreen,
 }: {
   data: MapSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
+  setIsMapFullscreen?: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   // google map
   const STREETS_MAP =
@@ -45,7 +48,8 @@ export function MapChart({
   // open street map
   const OPEN_STREET_MAP = 'https://{s}.tile.osm.org/{z}/{x}/{y}.png'
   // open street map satellite
-  const OPEN_STREET_MAP_SATELLITE = 'https://{s}.tile.osm.org/{z}/{x}/{y}.png'
+  const OPEN_STREET_MAP_SATELLITE =
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
   const { t } = useTranslation()
   const [dragMode, setDragMode] = useState(true)
@@ -53,6 +57,7 @@ export function MapChart({
   const [mapBrand, setMapBrand] = useState(0)
   // 0 - streets map, 1 - satellite map
   const [mapType, setMapType] = useState(0)
+  const [mapLabel, setMapLabel] = useState<boolean>(true)
   const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
   const [deviceDetailInfo, setDeviceDetailInfo] = useState<EntityId[]>([])
   const map = useRef<Map>(null)
@@ -60,6 +65,12 @@ export function MapChart({
   const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
     MapData[]
   >([])
+
+  // fullscreen for map
+  const fullMap = useRef<HTMLDivElement>(null)
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false)
+  const [mapStyle, setMapStyle] = useState<string>()
+  //
 
   useEffect(() => {
     if (isEditMode) {
@@ -90,13 +101,13 @@ export function MapChart({
       }
     }
     const dataForMapChart: LatLngTuple[] = dataList.map((item, index) => {
-      const { longtitude, latitude } = item
-      if (longtitude === null || latitude === null) {
+      const { longitude, latitude } = item
+      if (longitude === null || latitude === null) {
         return [999, 999]
       }
       return [
         parseFloat(latitude?.value ?? 0),
-        parseFloat(longtitude?.value ?? 0),
+        parseFloat(longitude?.value ?? 0),
       ]
     })
     return dataForMapChart
@@ -186,8 +197,16 @@ export function MapChart({
     }
   }, [dataForMap, filteredComboboxDataMap])
 
+  // map fullscreen
+  useEffect(() => {
+    setTimeout(() => {
+      map.current?.invalidateSize()
+    }, 1)
+    setIsMapFullscreen && setIsMapFullscreen(isFullscreen)
+  }, [isFullscreen])
+
   return (
-    <>
+    <div className={cn('h-full', mapStyle ? mapStyle : '')} ref={fullMap}>
       <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
         <ComboBoxSelectDeviceDashboard
           setFilteredComboboxData={setFilteredComboboxDataMap}
@@ -195,7 +214,7 @@ export function MapChart({
         />
       </div>
       <MapContainer
-        className="z-0 mx-2 mt-12 h-[90%]"
+        className={cn(`z-0 mx-2 mt-12 h-[90%]`)}
         zoom={5}
         scrollWheelZoom
         dragging={dragMode}
@@ -209,8 +228,12 @@ export function MapChart({
           url={
             mapBrand === 0
               ? mapType === 0
-                ? STREETS_MAP
-                : SATELLITE_MAP
+                ? mapLabel
+                  ? STREETS_MAP
+                  : STREETS_MAP_WO_LABEL
+                : mapLabel
+                  ? SATELLITE_MAP
+                  : SATELLITE_MAP_WO_LABEL
               : mapType === 0
                 ? OPEN_STREET_MAP
                 : OPEN_STREET_MAP_SATELLITE
@@ -257,8 +280,19 @@ export function MapChart({
           })}
         </MarkerClusterGroup>
       </MapContainer>
-      <MapSetting mapType={mapBrand} setMapType={setMapBrand} />
-      <MapSettingType mapType={mapType} setMapType={setMapType} />
-    </>
+      <MapSettingBrand mapType={mapBrand} setMapType={setMapBrand} />
+      <MapSettingType
+        mapType={mapType}
+        setMapType={setMapType}
+        isMapLabel={mapLabel}
+        setIsMapLabel={setMapLabel}
+        mapBrand={mapBrand}
+        setMapBrand={setMapBrand}
+      />
+      <MapFullscreen
+        isFullscreen={isFullscreen}
+        setFullscreen={setIsFullscreen}
+      />
+    </div>
   )
 }

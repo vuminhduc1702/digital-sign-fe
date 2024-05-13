@@ -21,7 +21,6 @@ import {
   MapChart,
   PieChart,
   TableChart,
-  LightChart,
 } from '../components'
 import {
   CreateControllerButton,
@@ -46,7 +45,6 @@ import {
   type MapData,
 } from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
-import lightOnICon from '@/assets/icons/light-on.svg'
 
 import { WS_URL } from '@/config'
 import {
@@ -119,6 +117,7 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false)
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -370,6 +369,8 @@ export function DashboardDetail() {
                     deviceName: getDeviceInfo(item.label)?.name,
                   })),
                 }
+                console.log(widgetList)
+                console.log(widgetInfo)
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -419,13 +420,16 @@ export function DashboardDetail() {
                             // x: index % 2 === 0 ? 0 : 4,
                             x: index % 2 === 0 ? 0 : 6,
                             y: 0,
-                            // w: 1,
-                            // h: 1,
                             w: widgetInfo?.description === 'CARD' ? 3 : 6,
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn('relative bg-secondary-500')}
+                    className={cn(
+                      'relative bg-secondary-500',
+                      widgetInfo?.description === 'MAP' &&
+                        isMapFullscreen &&
+                        '!fixed left-0 top-0 z-50 !h-screen !w-screen !transform-none bg-white',
+                    )}
                     data-iseditmode={isEditMode}
                   >
                     <p
@@ -462,6 +466,7 @@ export function DashboardDetail() {
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
+                        setIsMapFullscreen={setIsMapFullscreen}
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
@@ -490,11 +495,6 @@ export function DashboardDetail() {
                           widgetInfo?.datasource?.controller_message as string
                         }
                         sendMessage={sendMessage}
-                      />
-                    ) : widgetInfo?.description === 'LIGHT' ? (
-                      <LightChart
-                        data={lastestValues}
-                        widgetInfo={widgetInfo}
                       />
                     ) : null}
                     {isEditMode ? (
@@ -772,37 +772,6 @@ export function DashboardDetail() {
                             </Button>
                           }
                           image={<img src={BD_05} alt="" className="w-full" />}
-                        />
-
-                        <DashboardTooltip
-                          content={
-                            <Button
-                              type="button"
-                              size="square"
-                              className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                              variant="secondaryLight"
-                              onClick={() => {
-                                close()
-                                setIsShowCreateWidget(true)
-                                setWidgetType('LASTEST')
-                                setWidgetCategory('LIGHT')
-                                setIsMultipleAttr(true)
-                                setIsMultipleDevice(true)
-                              }}
-                            >
-                              <img
-                                src={lightOnICon}
-                                alt="light icon"
-                                className="h-[58px] w-[58px]"
-                              />
-                              <span className="flex items-center">
-                                {t(
-                                  'cloud:dashboard.detail_dashboard.add_widget.light',
-                                )}
-                              </span>
-                            </Button>
-                          }
-                          image={<img src={BD_09} alt="" className="w-full" />}
                         />
                       </div>
                       <div className="w-full space-y-6">

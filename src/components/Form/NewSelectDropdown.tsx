@@ -1,25 +1,18 @@
 import Select, { type Props, type GroupBase } from 'react-select'
 import { useTranslation } from 'react-i18next'
-import { Controller, type FieldValues } from 'react-hook-form'
 
-import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
+import { useFormField } from '../ui/form'
 import { cn } from '@/utils/misc'
 
 import { type SelectOption } from './SelectField'
-import { type ControllerPassThroughProps } from '@/types'
-import { useFormField } from '../ui/form'
 
 type SelectProps<
-  TFormValues extends FieldValues,
   Option = unknown,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
 > = {
   placeholder?: string
-  classlabel?: string
-  classchild?: string
-  classnamefieldwrapper?: string
-  onChange?: (e: any) => void
+  classname?: string
   customOnChange?: (e?: any) => void
   customSelect?: (e?: any) => void
   handleClearSelectDropdown?: () => void
@@ -28,23 +21,14 @@ type SelectProps<
   icon?: React.ReactElement
   isWrappedArray?: boolean
   isClearable?: boolean
-} & FieldWrapperPassThroughProps &
-  ControllerPassThroughProps<TFormValues> &
-  Props<Option, IsMulti, Group>
+} & Props<Option, IsMulti, Group>
 
 export function NewSelectDropdown<
-  TFormValues extends FieldValues,
   Option = unknown,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
 >({
-  // name,
-  // control,
-  // label,
-  // error,
-  classlabel,
-  classchild,
-  classnamefieldwrapper,
+  classname,
   placeholder,
   icon,
   isMulti,
@@ -56,15 +40,14 @@ export function NewSelectDropdown<
   refSelect,
   isClearable = true,
   ...props
-}: SelectProps<TFormValues, Option, IsMulti, Group>) {
+}: SelectProps<Option, IsMulti, Group>) {
   const { t } = useTranslation()
   const { error } = useFormField()
 
   return (
     <Select
-      // {...field}
       isMulti={isMulti}
-      className={cn('', classnamefieldwrapper)}
+      className={cn('h-9', classname)}
       ref={refSelect}
       isSearchable
       isClearable={isClearable}

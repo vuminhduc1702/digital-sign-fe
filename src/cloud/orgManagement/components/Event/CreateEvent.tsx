@@ -709,7 +709,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           <div>
                             <FormControl>
                               <NewSelectDropdown
-                                classnamefieldwrapper="h-9"
                                 options={groupSelectOptions}
                                 isOptionDisabled={option =>
                                   option.label === t('loading:group') ||

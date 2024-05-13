@@ -4,15 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { InputField, TextAreaField } from '@/components/Form'
-import {
-  type UpdateOrgDTO,
-  useUpdateOrg,
-  useUploadImage,
-  useOrgById,
-} from '../api'
+import { type UpdateOrgDTO, useUpdateOrg, useUploadImage } from '../api'
 import { orgSchema } from './CreateOrg'
-import FileField from '@/components/Form/FileField'
 import { API_URL } from '@/config'
 import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
 import {
@@ -22,7 +15,6 @@ import {
 } from '@/utils/hooks'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import storage from '@/utils/storage'
-import { type Org } from '@/layout/MainLayout/types'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
@@ -52,6 +44,9 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn, flattenOrgs } from '@/utils/misc'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { type OrgMapType } from './OrgManageSidebar'
 
 const orgUpdateSchema = orgSchema.required({ org_id: true })
 
@@ -62,7 +57,7 @@ export function UpdateOrg({
 }: {
   close: () => void
   isOpen: boolean
-  selectedUpdateOrg: Org
+  selectedUpdateOrg: OrgMapType
 }) {
   const { t } = useTranslation()
 
@@ -71,7 +66,6 @@ export function UpdateOrg({
     avatarRef,
     uploadImageErr,
     setUploadImageErr,
-    controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage, 'default-org.png')
@@ -99,10 +93,8 @@ export function UpdateOrg({
       org_id: selectedUpdateOrg.org_id,
     },
   })
-  const { register, formState, control, setValue, getValues, handleSubmit } =
-    form
+  const { setValue, getValues, handleSubmit } = form
   const selectedOrgBelonged = selectedUpdateOrg.org_id
-  const { data: orgDataById } = useOrgById({ orgId: selectedOrgBelonged })
 
   useEffect(() => {
     if (isSuccess && close) {
@@ -186,10 +178,22 @@ export function UpdateOrg({
               })}
             >
               <>
-                <InputField
-                  label={t('cloud:org_manage.org_manage.add_org.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.org_manage.add_org.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <FormField
                   control={form.control}
@@ -239,48 +243,81 @@ export function UpdateOrg({
                   )}
                 />
 
-                <TextAreaField
-                  label={t('cloud:org_manage.org_manage.add_org.desc')}
-                  error={formState.errors['description']}
-                  registration={register('description')}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.org_manage.add_org.desc')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Textarea {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <div className="mb-3 space-y-1">
-                  <FileField
-                    label={t('cloud:project_manager.add_project.avatar')}
-                    control={controlUploadImage}
-                    name="upload-image"
-                    ref={fileInputRef}
-                    onChange={event => {
-                      setUploadImageErr('')
-                      const file = event.target.files[0]
-                      const formData = new FormData()
-                      formData.append('file', event.target.files[0])
-                      setValueUploadImage(
-                        'file',
-                        formData.get('file') as unknown as { file: File },
-                      )
+                  <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field: { ref, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:project_manager.add_project.avatar')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              className="mt-2 border-none p-0 shadow-none"
+                              ref={fileInputRef}
+                              {...field}
+                              onChange={event => {
+                                setUploadImageErr('')
+                                const file = event.target.files[0]
+                                const formData = new FormData()
+                                formData.append('file', event.target.files[0])
+                                setValueUploadImage(
+                                  'file',
+                                  formData.get('file') as unknown as {
+                                    file: File
+                                  },
+                                )
 
-                      if (file.size > MAX_FILE_SIZE) {
-                        setUploadImageErr(t('validate:image_max_size'))
-                        return false
-                      }
-                      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-                        setUploadImageErr(t('validate:image_type'))
-                        return false
-                      }
+                                if (file.size > MAX_FILE_SIZE) {
+                                  setUploadImageErr(
+                                    t('validate:image_max_size'),
+                                  )
+                                  return false
+                                }
+                                if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                                  setUploadImageErr(t('validate:image_type'))
+                                  return false
+                                }
 
-                      const reader = new FileReader()
-                      reader.readAsDataURL(file)
-                      reader.onload = e => {
-                        if (
-                          avatarRef.current != null &&
-                          e.target != null &&
-                          reader.readyState === 2
-                        ) {
-                          avatarRef.current.src = e.target.result as string
-                        }
-                      }
-                    }}
+                                const reader = new FileReader()
+                                reader.readAsDataURL(file)
+                                reader.onload = e => {
+                                  if (
+                                    avatarRef.current != null &&
+                                    e.target != null &&
+                                    reader.readyState === 2
+                                  ) {
+                                    avatarRef.current.src = e.target
+                                      .result as string
+                                  }
+                                }
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
                   <p className="text-body-sm text-primary-400">
                     {uploadImageErr}

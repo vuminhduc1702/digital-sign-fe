@@ -57,6 +57,7 @@ function OrgManageSidebar() {
     projectId,
     config: { enabled: !!projectId },
   })
+  const [selected, setSelected] = useState<any>({})
   const [selectedUpdateOrg, setSelectedUpdateOrg] = useState<OrgMapType>({
     id: '',
     name: '',
@@ -70,34 +71,36 @@ function OrgManageSidebar() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
+
   const { data: orgData } = useGetOrgs({
     projectId,
-  })
-  const { data: orgDataWoExpand } = useGetOrgsWoExpand({
-    projectId,
-    search_str: searchQuery,
-    search_field: 'name',
   })
   const { acc: orgFlattenData, extractedPropertyKeys } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name', 'org_id', 'image'],
     'sub_orgs',
   )
-  const [selected, setSelected] = useState<any>({})
-
-  useEffect(() => {
-    const listId: string[] = []
-    orgDataWoExpand?.organizations?.forEach(item => {
-      listId.push(item.id)
-    })
-    setFilteredComboboxData?.(
-      orgFlattenData.filter(item => listId.includes(item.id)),
-    )
-  }, [orgDataWoExpand])
-
   useEffect(() => {
     setFilteredComboboxData?.(orgFlattenData)
   }, [orgData])
+
+  // const { data: orgDataWoExpand } = useGetOrgsWoExpand({
+  //   projectId,
+  //   search_str: searchQuery,
+  //   search_field: 'name',
+  //   config: {
+  //     enabled: !!orgFlattenData,
+  //   },
+  // })
+  // useEffect(() => {
+  //   const listId: string[] = []
+  //   orgDataWoExpand?.organizations?.forEach(item => {
+  //     listId.push(item.id)
+  //   })
+  //   setFilteredComboboxData?.(
+  //     orgFlattenData.filter(item => listId.includes(item.id)),
+  //   )
+  // }, [orgDataWoExpand])
 
   const getInt = (x: string) => Number.parseInt(x)
   const convertData = (data: OrgMapType[]) => {

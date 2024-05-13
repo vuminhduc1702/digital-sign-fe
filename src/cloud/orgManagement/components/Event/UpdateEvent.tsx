@@ -430,13 +430,6 @@ export function UpdateEvent({
                       className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     <div className="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-4">
-                      {/* <InputField
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.name',
-                        )}
-                        error={formState.errors['name']}
-                        registration={register('name')}
-                      /> */}
                       <FormField
                         control={form.control}
                         name="name"
@@ -512,25 +505,6 @@ export function UpdateEvent({
                         )}
                       />
 
-                      {/* <SelectDropdown
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.group',
-                        )}
-                        name="group_id"
-                        control={control}
-                        options={groupSelectOptions}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:group') ||
-                          option.label === t('table:no_group')
-                        }
-                        noOptionsMessage={() => t('table:no_group')}
-                        loadingMessage={() => t('loading:group')}
-                        isLoading={groupIsLoading}
-                        defaultValue={groupSelectOptions?.find(
-                          item => item.value === getValues('group_id'),
-                        )}
-                        error={formState?.errors?.group_id}
-                      /> */}
                       <FormField
                         control={form.control}
                         name="group_id"
@@ -544,7 +518,6 @@ export function UpdateEvent({
                             <div>
                               <FormControl>
                                 <NewSelectDropdown
-                                  classnamefieldwrapper="h-9"
                                   options={groupSelectOptions}
                                   isOptionDisabled={option =>
                                     option.label === t('loading:group') ||
@@ -567,29 +540,6 @@ export function UpdateEvent({
                         )}
                       />
 
-                      {/* <FieldWrapper
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.status',
-                        )}
-                        error={formState?.errors['status']}
-                        className="w-fit"
-                      >
-                        <Controller
-                          control={control}
-                          name={'status'}
-                          render={({
-                            field: { onChange, value, ...field },
-                          }) => {
-                            return (
-                              <Checkbox
-                                {...field}
-                                checked={value}
-                                onCheckedChange={onChange}
-                              />
-                            )
-                          }}
-                        />
-                      </FieldWrapper> */}
                       <FormField
                         control={control}
                         name="status"
@@ -613,34 +563,6 @@ export function UpdateEvent({
                           </FormItem>
                         )}
                       />
-                      {/* <FieldWrapper
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.condition.onClick',
-                        )}
-                        error={formState?.errors['onClick']}
-                        className="w-fit"
-                      >
-                        <Controller
-                          control={control}
-                          name={'onClick'}
-                          render={({
-                            field: { onChange, value, ...field },
-                          }) => {
-                            return (
-                              <Checkbox
-                                {...field}
-                                checked={value}
-                                onCheckedChange={e => {
-                                  onChange(e)
-                                  if (e) {
-                                    setValue('type', 'event')
-                                  }
-                                }}
-                              />
-                            )
-                          }}
-                        />
-                      </FieldWrapper> */}
                       <FormField
                         control={control}
                         name="onClick"
@@ -669,15 +591,6 @@ export function UpdateEvent({
                           </FormItem>
                         )}
                       />
-                      {/* <SelectField
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.type_event',
-                        )}
-                        error={formState.errors['type']}
-                        registration={register('type')}
-                        options={eventTypeOptions}
-                        disabled={watch('onClick')}
-                      /> */}
                       <FormField
                         control={form.control}
                         name="type"
@@ -725,15 +638,6 @@ export function UpdateEvent({
                           </FormItem>
                         )}
                       />
-                      {/* <InputField
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.retry',
-                        )}
-                        registration={register('retry', {
-                          valueAsNumber: true,
-                        })}
-                        type="number"
-                      /> */}
                       <FormField
                         control={control}
                         name="retry"
@@ -825,14 +729,6 @@ export function UpdateEvent({
                       ))}
                     </div>
                     <div className="mt-6 grid grid-cols-1 gap-x-4 md:grid-cols-2">
-                      {/* <InputField
-                        type="time"
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.start',
-                        )}
-                        error={formState?.errors?.interval?.start_time}
-                        registration={register('interval.start_time')}
-                      /> */}
                       <FormField
                         control={control}
                         name="interval.start_time"
@@ -852,13 +748,6 @@ export function UpdateEvent({
                           </FormItem>
                         )}
                       />
-                      {/* <InputField
-                        type="time"
-                        label={t('cloud:org_manage.event_manage.add_event.end')}
-                        error={formState?.errors?.interval?.end_time}
-                        registration={register('interval.end_time')}
-                        disabled={watch('type') === 'schedule'}
-                      /> */}
                       <FormField
                         control={control}
                         name="interval.end_time"
@@ -1082,44 +971,6 @@ export function UpdateEvent({
                                 />
                               )}
 
-                              {/* <SelectDropdown
-                                label={t(
-                                  'cloud:org_manage.event_manage.add_event.condition.attr',
-                                )}
-                                name={`condition.${index}.attribute_name`}
-                                control={control}
-                                options={attrSelectOptions}
-                                isOptionDisabled={option =>
-                                  option.label === t('loading:attr') ||
-                                  option.label === t('table:no_attr')
-                                }
-                                noOptionsMessage={() => t('table:no_attr')}
-                                loadingMessage={() => t('loading:attr')}
-                                isLoading={attrIsLoading}
-                                onMenuOpen={() => {
-                                  attrMutate({
-                                    data: {
-                                      entity_ids: [
-                                        watch(`condition.${index}.device_id`),
-                                      ],
-
-                                      entity_type: 'DEVICE',
-                                    },
-                                  })
-                                }}
-                                defaultValue={{
-                                  label: getValues(
-                                    `condition.${index}.attribute_name`,
-                                  ),
-                                  value: getValues(
-                                    `condition.${index}.attribute_name`,
-                                  ),
-                                }}
-                                error={
-                                  formState?.errors?.condition?.[index]
-                                    ?.attribute_name
-                                }
-                              /> */}
                               <FormField
                                 control={control}
                                 name={`condition.${index}.attribute_name`}
@@ -1208,19 +1059,6 @@ export function UpdateEvent({
                                 )}
                               />
 
-                              {/* <SelectField
-                                label={t(
-                                  'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
-                                )}
-                                error={
-                                  formState?.errors?.condition?.[index]
-                                    ?.condition_type
-                                }
-                                registration={register(
-                                  `condition.${index}.condition_type`,
-                                )}
-                                options={conditionTypeOptions}
-                              /> */}
                               <FormField
                                 control={form.control}
                                 name={`condition.${index}.condition_type`}
@@ -1260,19 +1098,6 @@ export function UpdateEvent({
                                   </FormItem>
                                 )}
                               />
-                              {/* <SelectField
-                                label={t(
-                                  'cloud:org_manage.event_manage.add_event.condition.operator.title',
-                                )}
-                                error={
-                                  formState?.errors?.condition?.[index]
-                                    ?.operator
-                                }
-                                registration={register(
-                                  `condition.${index}.operator`,
-                                )}
-                                options={operatorOptions}
-                              /> */}
                               <FormField
                                 control={form.control}
                                 name={`condition.${index}.operator`}
@@ -1312,19 +1137,6 @@ export function UpdateEvent({
                                   </FormItem>
                                 )}
                               />
-                              {/* <InputField
-                                label={t(
-                                  'cloud:org_manage.event_manage.add_event.condition.threshold',
-                                )}
-                                error={
-                                  formState?.errors?.condition?.[index]
-                                    ?.threshold
-                                }
-                                registration={register(
-                                  `condition.${index}.threshold`,
-                                )}
-                                type="number"
-                              /> */}
                               <FormField
                                 control={control}
                                 name={`condition.${index}.threshold`}
@@ -1349,19 +1161,6 @@ export function UpdateEvent({
                                 )}
                               />
                               <div className="flex justify-end">
-                                {/* <SelectField
-                                  label={t(
-                                    'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
-                                  )}
-                                  error={
-                                    formState?.errors?.condition?.[index]
-                                      ?.logical_operator
-                                  }
-                                  registration={register(
-                                    `condition.${index}.logical_operator`,
-                                  )}
-                                  options={logicalOperatorOption}
-                                /> */}
                                 <FormField
                                   control={form.control}
                                   name={`condition.${index}.logical_operator`}
@@ -1453,29 +1252,6 @@ export function UpdateEvent({
                     return (
                       <section className="!mt-3 space-y-2" key={field.id}>
                         <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
-                          {/* <SelectField
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.action.action_type.title',
-                            )}
-                            error={
-                              formState?.errors?.action?.[index]?.action_type
-                            }
-                            registration={register(
-                              `action.${index}.action_type`,
-                              {
-                                onChange: e => {
-                                  setActionType(e.target.value)
-                                },
-                              },
-                            )}
-                            options={
-                              actionFields.length < 2
-                                ? actionTypeOptions
-                                : actionTypeOptions.filter(
-                                    item => item.value !== 'report',
-                                  )
-                            }
-                          /> */}
                           <FormField
                             control={form.control}
                             name={`action.${index}.action_type`}
@@ -1524,32 +1300,6 @@ export function UpdateEvent({
                             )}
                           />
                           {actionType === 'report' ? (
-                            // <SelectDropdown
-                            //   label={t('cloud:custom_protocol.thing.id')}
-                            //   name="cmd.thing_id"
-                            //   control={control}
-                            //   options={thingSelectData}
-                            //   isOptionDisabled={option =>
-                            //     option.label === t('loading:entity_thing') ||
-                            //     option.label === t('table:no_thing')
-                            //   }
-                            //   noOptionsMessage={() => t('table:no_thing')}
-                            //   loadingMessage={() => t('loading:entity_thing')}
-                            //   isLoading={isLoadingThing}
-                            //   placeholder={t(
-                            //     'cloud:custom_protocol.thing.choose',
-                            //   )}
-                            //   handleClearSelectDropdown={() =>
-                            //     selectDropdownServiceRef.current?.clearValue()
-                            //   }
-                            //   handleChangeSelect={() =>
-                            //     selectDropdownServiceRef.current?.clearValue()
-                            //   }
-                            //   defaultValue={thingSelectData?.find(
-                            //     ele => ele.value === thingIdOptionProp,
-                            //   )}
-                            //   error={formState?.errors?.cmd?.thing_id}
-                            // />
                             <FormField
                               control={form.control}
                               name="cmd.thing_id"
@@ -1603,17 +1353,6 @@ export function UpdateEvent({
                             />
                           ) : (
                             <div className="space-y-1">
-                              {/* <InputField
-                                label={t(
-                                  'cloud:org_manage.event_manage.add_event.action.address',
-                                )}
-                                registration={register(
-                                  `action.${index}.receiver`,
-                                )}
-                                error={
-                                  formState?.errors?.action?.[index]?.receiver
-                                }
-                              /> */}
                               <FormField
                                 control={control}
                                 name={`action.${index}.receiver`}
@@ -1637,32 +1376,6 @@ export function UpdateEvent({
                           )}
                           {actionType === 'report' ? (
                             isLoadingService ? null : (
-                              // <SelectDropdown
-                              //   refSelect={selectDropdownServiceRef}
-                              //   label={t('cloud:custom_protocol.service.title')}
-                              //   name="cmd.handle_service"
-                              //   control={control}
-                              //   options={serviceSelectData}
-                              //   isOptionDisabled={option =>
-                              //     option.label === t('loading:service_thing') ||
-                              //     option.label === t('table:no_service')
-                              //   }
-                              //   isLoading={isLoadingService}
-                              //   loadingMessage={() =>
-                              //     t('loading:service_thing')
-                              //   }
-                              //   noOptionsMessage={() => t('table:no_service')}
-                              //   placeholder={t(
-                              //     'cloud:custom_protocol.service.choose',
-                              //   )}
-                              //   customOnChange={() =>
-                              //     resetField(`cmd.input.${index}.value`)
-                              //   }
-                              //   defaultValue={serviceSelectData?.find(
-                              //     ele => ele.label === serviceOptionProp,
-                              //   )}
-                              //   error={formState?.errors?.cmd?.handle_service}
-                              // />
                               <FormField
                                 control={form.control}
                                 name="cmd.handle_service"
@@ -1723,17 +1436,6 @@ export function UpdateEvent({
                             )
                           ) : (
                             <div className="space-y-1">
-                              {/* <InputField
-                                label={t(
-                                  'cloud:org_manage.event_manage.add_event.action.subject',
-                                )}
-                                registration={register(
-                                  `action.${index}.subject`,
-                                )}
-                                error={
-                                  formState?.errors?.action?.[index]?.subject
-                                }
-                              /> */}
                               <FormField
                                 control={control}
                                 name={`action.${index}.subject`}
@@ -1764,21 +1466,6 @@ export function UpdateEvent({
                                       key={`key-${index}`}
                                       className="mb-3 space-y-3 border-b-4 pb-3"
                                     >
-                                      {/* <InputField
-                                        disabled
-                                        require={true}
-                                        label={t(
-                                          'cloud:custom_protocol.service.service_input.name',
-                                        )}
-                                        error={
-                                          formState?.errors?.cmd?.input?.[index]
-                                            ?.name
-                                        }
-                                        registration={register(
-                                          `cmd.input.${index}.name` as const,
-                                        )}
-                                        defaultValue={element.name}
-                                      /> */}
                                       <FormField
                                         control={control}
                                         name={`cmd.input.${index}.name`}
@@ -1802,27 +1489,6 @@ export function UpdateEvent({
                                           </FormItem>
                                         )}
                                       />
-                                      {/* <SelectField
-                                        disabled
-                                        label={t(
-                                          'cloud:custom_protocol.service.service_input.type',
-                                        )}
-                                        require={true}
-                                        error={
-                                          formState.errors.cmd?.input?.[index]
-                                            ?.type
-                                        }
-                                        registration={register(
-                                          `cmd.input.${index}.type` as const,
-                                        )}
-                                        options={outputList}
-                                        className="h-9 px-2"
-                                        defaultValue={
-                                          element.type === 'string'
-                                            ? 'str'
-                                            : element.type
-                                        }
-                                      /> */}
                                       <FormField
                                         control={form.control}
                                         name={`cmd.input.${index}.type`}
@@ -1870,39 +1536,6 @@ export function UpdateEvent({
                                       />
                                       {watch(`cmd.input.${index}.type`) ===
                                       'bool' ? (
-                                        // <FieldWrapper
-                                        //   label={t(
-                                        //     'cloud:custom_protocol.service.service_input.value',
-                                        //   )}
-                                        //   error={
-                                        //     formState?.errors?.cmd?.input?.[
-                                        //       index
-                                        //     ]?.value
-                                        //   }
-                                        //   className="w-fit"
-                                        // >
-                                        //   <Controller
-                                        //     control={control}
-                                        //     name={`cmd.input.${index}.value`}
-                                        //     render={({
-                                        //       field: {
-                                        //         onChange,
-                                        //         value,
-                                        //         ...field
-                                        //       },
-                                        //     }) => {
-                                        //       return (
-                                        //         <Checkbox
-                                        //           {...field}
-                                        //           checked={value as boolean}
-                                        //           onCheckedChange={onChange}
-                                        //           defaultChecked
-                                        //         />
-                                        //       )
-                                        //     }}
-                                        //   />
-                                        //   <span className="pl-3">True</span>
-                                        // </FieldWrapper>
                                         <FormField
                                           control={control}
                                           name={`cmd.input.${index}.value`}
@@ -1934,29 +1567,6 @@ export function UpdateEvent({
                                           )}
                                         />
                                       ) : (
-                                        // <InputField
-                                        //   defaultValue={
-                                        //     inputDataProp?.[element.name]
-                                        //   }
-                                        //   label={t(
-                                        //     'cloud:custom_protocol.service.service_input.value',
-                                        //   )}
-                                        //   error={
-                                        //     formState?.errors?.cmd?.input?.[
-                                        //       index
-                                        //     ]?.value
-                                        //   }
-                                        //   registration={register(
-                                        //     `cmd.input.${index}.value` as const,
-                                        //   )}
-                                        //   type={
-                                        //     ['json', 'str'].includes(
-                                        //       watch(`cmd.input.${index}.type`),
-                                        //     )
-                                        //       ? 'text'
-                                        //       : 'number'
-                                        //   }
-                                        // />
                                         <FormField
                                           control={control}
                                           name={`cmd.input.${index}.value`}
@@ -1998,17 +1608,6 @@ export function UpdateEvent({
                                 })}
                               </div>
                             ) : (
-                              // <InputField
-                              //   label={t(
-                              //     'cloud:org_manage.event_manage.add_event.action.message',
-                              //   )}
-                              //   registration={register(
-                              //     `action.${index}.message`,
-                              //   )}
-                              //   error={
-                              //     formState?.errors?.action?.[index]?.message
-                              //   }
-                              // />
                               <FormField
                                 control={control}
                                 name={`action.${index}.message`}

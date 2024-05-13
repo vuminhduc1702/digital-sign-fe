@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
 import * as z from 'zod'
 
 import {
@@ -25,8 +24,9 @@ import { PlusIcon } from '@/components/SVGIcons'
 export const entityThingSchema = z
   .object({
     name: nameSchema,
-    project_id: z.string().optional(),
+    // project_id: z.string().optional(),
     description: z.string(),
+    share: z.literal(true).optional(),
   })
   .and(
     z.discriminatedUnion('type', [
@@ -59,6 +59,7 @@ export function CreateThing({
     useForm<CreateEntityThingDTO['data']>({
       resolver: entityThingSchema && zodResolver(entityThingSchema),
     })
+  console.log('formState.errors', formState.errors)
 
   const {
     mutate: mutateThing,
@@ -95,10 +96,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
                   base_template: values.base_template,
+                  share: true,
                 },
               })
             }
@@ -106,10 +108,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
-                  base_shapes: [values.base_shapes],
+                  base_shapes: values.base_shapes,
+                  share: true,
                 },
               })
             }
@@ -117,9 +120,10 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
+                  share: true,
                 },
               })
             }
@@ -174,16 +178,12 @@ export function CreateThing({
         </form>
       }
       triggerButton={
-        // <Button
-        //   variant="trans"
-        //   className={cn('rounded-md', classNameTriggerBtn)}
-        //   size="square"
-        //   // disabled={!thingId}
-        //   startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        // />
-        <Button className="h-[38px] rounded border-none">
-          {t('cloud:custom_protocol.thing.button')}
-        </Button>
+        <Button
+          variant="trans"
+          className={cn('rounded-md', classNameTriggerBtn)}
+          size="square"
+          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+        />
       }
       confirmButton={
         <Button
