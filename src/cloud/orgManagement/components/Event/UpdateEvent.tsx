@@ -195,7 +195,6 @@ export function UpdateEvent({
     },
   })
 
-  console.log(conditionData, 'conditionDataconditionDataconditionData')
   const {
     register,
     formState,
@@ -384,7 +383,7 @@ export function UpdateEvent({
                   ('condition' in values &&
                     values.condition.map(item => ({
                       device_id: item.device_id,
-                      device_name: item.device_name,
+                      device_name: item.device_name ?? '',
                       attribute_name: item.attribute_name,
                       condition_type: item.condition_type,
                       operator: item.operator,
@@ -970,12 +969,21 @@ export function UpdateEvent({
                                               <NewSelectDropdown
                                                 classnamefieldwrapper="h-9"
                                                 options={deviceSelectOptions}
-                                                customOnChange={value =>
+                                                customOnChange={value => {
+                                                  const filter =
+                                                    deviceSelectData?.filter(
+                                                      item =>
+                                                        item.value === value,
+                                                    )
                                                   setValue(
                                                     `condition.${index}.device_id`,
                                                     value,
                                                   )
-                                                }
+                                                  setValue(
+                                                    `condition.${index}.device_name`,
+                                                    filter?.[0]?.label ?? '',
+                                                  )
+                                                }}
                                                 // customOnChange={onChange}
                                                 isOptionDisabled={option =>
                                                   option.label ===

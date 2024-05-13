@@ -80,15 +80,15 @@ export const conditionEventOptions = [
 
 export const deviceNameOptions = [
   {
-    label: 'Hà Nội',
+    label: i18n.t('cloud:org_manage.event_manage.add_event.HN'),
     value: '158119',
   },
   {
-    label: 'Đà Nẵng',
+    label: i18n.t('cloud:org_manage.event_manage.add_event.DN'),
     value: '1905468',
   },
   {
-    label: 'Hồ Chí Minh',
+    label: i18n.t('cloud:org_manage.event_manage.add_event.HCM'),
     value: '1580578',
   },
 ]
@@ -207,7 +207,11 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
-    device_name: z.string().optional(),
+    device_name: z.string({
+      required_error: i18n.t(
+        'cloud:org_manage.device_manage.add_device.choose_device',
+      ),
+    }),
     attribute_name: z.string({
       required_error: i18n.t(
         'cloud:org_manage.org_manage.add_attr.choose_attr',
@@ -1017,12 +1021,20 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                         <NewSelectDropdown
                                           classnamefieldwrapper="h-9"
                                           options={deviceSelectData}
-                                          customOnChange={value =>
+                                          customOnChange={value => {
+                                            const filter =
+                                              deviceSelectData?.filter(
+                                                item => item.value === value,
+                                              )
                                             setValue(
                                               `condition.${index}.device_id`,
                                               value,
                                             )
-                                          }
+                                            setValue(
+                                              `condition.${index}.device_name`,
+                                              filter?.[0]?.label ?? '',
+                                            )
+                                          }}
                                           // customOnChange={onChange}
                                           isOptionDisabled={option =>
                                             option.label ===

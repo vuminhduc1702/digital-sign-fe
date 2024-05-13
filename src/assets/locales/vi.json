@@ -340,6 +340,9 @@
           "condition_event_type": "Điều kiện kích hoạt",
           "device_condition": "Điều kiện thiết bị",
           "weather_condition": "Điều kiện thời tiết",
+          "HN": "Hà Nội",
+          "DN": "Đà Nẵng",
+          "HCM": "Hồ Chí Minh",
           "condition": {
             "title": "Điều kiện kích hoạt",
             "onClick": "Onclick",
