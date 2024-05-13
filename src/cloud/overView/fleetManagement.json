@@ -67,7 +67,7 @@
         },
         {
           "attribute_type": "SCOPE_CLIENT",
-          "attribute_key": "longtitude",
+          "attribute_key": "longitude",
           "logged": true,
           "value": 0,
           "value_as_string": "0",
@@ -192,10 +192,10 @@
         },
         {
           "attribute_type": "SCOPE_CLIENT",
-          "attribute_key": "longtitude",
+          "attribute_key": "longitude",
           "logged": true,
-          "value": "longtitude",
-          "value_as_string": "longtitude",
+          "value": "longitude",
+          "value_as_string": "longitude",
           "last_update_ts": 1700116114371,
           "value_type": "STR"
         },
@@ -396,8 +396,8 @@
             "description": "MAP",
             "datasource": {
               "history_message": "",
-              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longtitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
-              "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longtitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
+              "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"b02e87da-e1b9-4818-bb2f-707d0971006b\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
+              "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"latitude\"},{\"type\":\"TIME_SERIES\",\"key\":\"longitude\"}]},\"id\":\"b13c4736-9ce4-4540-9300-b9f4e27860e2\"}]}",
               "realtime_message": ""
             },
             "config": {
@@ -417,7 +417,7 @@
                 "decimal": ""
               },
               {
-                "attribute_key": "longtitude",
+                "attribute_key": "longitude",
                 "label": "",
                 "color": "",
                 "unit": "",
