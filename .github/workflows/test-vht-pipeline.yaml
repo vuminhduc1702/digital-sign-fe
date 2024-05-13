@@ -23,6 +23,8 @@ jobs:
     runs-on: worker-mongo
     if: github.actor == 'hkm15022001' || github.actor == 'nguyenleccss361'
     steps:
+      # clean workspace
+    - uses: AutoModality/action-clean@v1
       # Checkout code
     - uses: actions/checkout@v4
       # Build image
