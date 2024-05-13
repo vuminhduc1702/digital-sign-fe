@@ -44,6 +44,8 @@ import {
   cmdSchema,
   eventTypeSchema,
   eventConditionSchema,
+  conditionEventOptions,
+  deviceNameOptions,
 } from './CreateEvent'
 import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
@@ -119,6 +121,7 @@ export const updateEventSchema = z
     retry: z.number().optional(),
     onClick: z.boolean(),
     cmd: updateCmdSchema.optional(),
+    condition_event_type: z.string().optional(),
   })
   .and(eventTypeSchema)
   .and(
@@ -185,8 +188,13 @@ export function UpdateEvent({
         handle_service: serviceOptionProp ?? '',
         input: inputDataProp ?? {},
       },
+      condition_event_type:
+        conditionData?.length && conditionData?.[0]?.device_id === 'weather'
+          ? 'weather_condition'
+          : 'device_condition',
     },
   })
+
   const {
     register,
     formState,
@@ -375,7 +383,7 @@ export function UpdateEvent({
                   ('condition' in values &&
                     values.condition.map(item => ({
                       device_id: item.device_id,
-                      device_name: item.device_name,
+                      device_name: item.device_name ?? '',
                       attribute_name: item.attribute_name,
                       condition_type: item.condition_type,
                       operator: item.operator,
@@ -655,6 +663,47 @@ export function UpdateEvent({
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="condition_event_type"
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t(
+                                'cloud:org_manage.event_manage.add_event.condition_event_type',
+                              )}
+                            </FormLabel>
+                            <div>
+                              <Select
+                                {...field}
+                                onValueChange={onChange}
+                                value={value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue
+                                      placeholder={t(
+                                        'cloud:org_manage.event_manage.add_event.condition_event_type',
+                                      )}
+                                    />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {conditionEventOptions?.map(type => (
+                                    <SelectItem
+                                      key={type.value}
+                                      value={type.value}
+                                    >
+                                      {type.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </div>
                   <div>
@@ -750,67 +799,177 @@ export function UpdateEvent({
                         return (
                           <section className="!mt-3 space-y-2" key={field.id}>
                             <div className="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                              <FormField
-                                control={control}
-                                name={`condition.${index}.device_id`}
-                                render={({
-                                  field: { value, onChange, ...field },
-                                }) => (
-                                  <FormItem>
-                                    <FormLabel>
-                                      {t(
-                                        'cloud:org_manage.event_manage.add_event.condition.device',
-                                      )}
-                                    </FormLabel>
-                                    <div>
-                                      <FormControl>
-                                        <NewSelectDropdown
-                                          options={deviceSelectOptions}
-                                          customOnChange={value =>
-                                            setValue(
-                                              `condition.${index}.device_id`,
-                                              value,
-                                            )
-                                          }
-                                          // customOnChange={onChange}
-                                          isOptionDisabled={option =>
-                                            option.label ===
-                                              t('loading:device') ||
-                                            option.label ===
-                                              t('table:no_device')
-                                          }
-                                          noOptionsMessage={() =>
-                                            t('table:no_device')
-                                          }
-                                          loadingMessage={() =>
-                                            t('loading:device')
-                                          }
-                                          isLoading={deviceIsLoading}
-                                          defaultValue={deviceSelectOptions?.find(
-                                            item =>
-                                              item.value ===
-                                              getValues(
-                                                `condition.${index}.device_id`,
-                                              ),
-                                          )}
-                                          onChange={event => {
-                                            setValue(
-                                              `condition.${index}.device_id`,
-                                              event.value,
-                                            )
-                                            setValue(
-                                              `condition.${index}.device_name`,
-                                              event.label,
-                                            )
-                                          }}
-                                          {...field}
-                                        />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </div>
-                                  </FormItem>
+                              {/* <SelectDropdown
+                                label={t(
+                                  'cloud:org_manage.event_manage.add_event.condition.device',
                                 )}
-                              />
+                                name={`condition.${index}.device_id`}
+                                control={control}
+                                options={deviceSelectOptions}
+                                isOptionDisabled={option =>
+                                  option.label === t('loading:device') ||
+                                  option.label === t('table:no_device')
+                                }
+                                noOptionsMessage={() => t('table:no_device')}
+                                loadingMessage={() => t('loading:device')}
+                                isLoading={deviceIsLoading}
+                                defaultValue={deviceSelectOptions?.find(
+                                  item =>
+                                    item.value ===
+                                    getValues(`condition.${index}.device_id`),
+                                )}
+                                onChange={event => {
+                                  setValue(
+                                    `condition.${index}.device_id`,
+                                    event.value,
+                                  )
+                                  setValue(
+                                    `condition.${index}.device_name`,
+                                    event.label,
+                                  )
+                                }}
+                                error={
+                                  formState?.errors?.condition?.[index]
+                                    ?.device_id
+                                }
+                              /> */}
+                              {watch('condition_event_type') ===
+                              'device_condition' ? (
+                                <FormField
+                                  control={control}
+                                  name={`condition.${index}.device_id`}
+                                  render={({
+                                    field: { value, onChange, ...field },
+                                  }) => (
+                                    <FormField
+                                      control={control}
+                                      name={`condition.${index}.device_id`}
+                                      render={({
+                                        field: { value, onChange, ...field },
+                                      }) => (
+                                        <FormItem>
+                                          <FormLabel>
+                                            {t(
+                                              'cloud:org_manage.event_manage.add_event.condition.device',
+                                            )}
+                                          </FormLabel>
+                                          <div>
+                                            <FormControl>
+                                              <NewSelectDropdown
+                                                classnamefieldwrapper="h-9"
+                                                options={deviceSelectOptions}
+                                                customOnChange={value => {
+                                                  const filter =
+                                                    deviceSelectData?.filter(
+                                                      item =>
+                                                        item.value === value,
+                                                    )
+                                                  setValue(
+                                                    `condition.${index}.device_id`,
+                                                    value,
+                                                  )
+                                                  setValue(
+                                                    `condition.${index}.device_name`,
+                                                    filter?.[0]?.label ?? '',
+                                                  )
+                                                }}
+                                                // customOnChange={onChange}
+                                                isOptionDisabled={option =>
+                                                  option.label ===
+                                                    t('loading:device') ||
+                                                  option.label ===
+                                                    t('table:no_device')
+                                                }
+                                                noOptionsMessage={() =>
+                                                  t('table:no_device')
+                                                }
+                                                loadingMessage={() =>
+                                                  t('loading:device')
+                                                }
+                                                isLoading={deviceIsLoading}
+                                                defaultValue={deviceSelectOptions?.find(
+                                                  item =>
+                                                    item.value ===
+                                                    getValues(
+                                                      `condition.${index}.device_id`,
+                                                    ),
+                                                )}
+                                                onChange={event => {
+                                                  setValue(
+                                                    `condition.${index}.device_id`,
+                                                    event.value,
+                                                  )
+                                                  setValue(
+                                                    `condition.${index}.device_name`,
+                                                    event.label,
+                                                  )
+                                                }}
+                                                {...field}
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </div>
+                                        </FormItem>
+                                      )}
+                                    />
+                                  )}
+                                />
+                              ) : (
+                                <FormField
+                                  control={control}
+                                  name={`condition.${index}.device_name`}
+                                  render={({
+                                    field: { value, onChange, ...field },
+                                  }) => (
+                                    <FormItem>
+                                      <FormLabel>
+                                        {t(
+                                          'cloud:org_manage.event_manage.add_event.condition.device',
+                                        )}
+                                      </FormLabel>
+                                      <div>
+                                        <FormControl>
+                                          <NewSelectDropdown
+                                            classnamefieldwrapper="h-9"
+                                            options={deviceNameOptions}
+                                            customOnChange={value => {
+                                              setValue(
+                                                `condition.${index}.device_name`,
+                                                value,
+                                              )
+                                              setValue(
+                                                `condition.${index}.device_id`,
+                                                'weather',
+                                              )
+                                            }}
+                                            defaultValue={deviceNameOptions?.find(
+                                              item =>
+                                                item.value ===
+                                                getValues(
+                                                  `condition.${index}.device_name`,
+                                                ),
+                                            )}
+                                            isOptionDisabled={option =>
+                                              option.label ===
+                                                t('loading:device') ||
+                                              option.label ===
+                                                t('table:no_device')
+                                            }
+                                            noOptionsMessage={() =>
+                                              t('table:no_device')
+                                            }
+                                            loadingMessage={() =>
+                                              t('loading:device')
+                                            }
+                                            {...field}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </div>
+                                    </FormItem>
+                                  )}
+                                />
+                              )}
 
                               <FormField
                                 control={control}
@@ -827,7 +986,20 @@ export function UpdateEvent({
                                     <div>
                                       <FormControl>
                                         <NewSelectDropdown
-                                          options={attrSelectOptions}
+                                          classnamefieldwrapper="h-9"
+                                          options={
+                                            watch('condition_event_type') ===
+                                            'device_condition'
+                                              ? attrSelectOptions
+                                              : [
+                                                  {
+                                                    label: t(
+                                                      'cloud:org_manage.event_manage.add_event.condition.temp',
+                                                    ),
+                                                    value: 'temp',
+                                                  },
+                                                ]
+                                          }
                                           customOnChange={value =>
                                             setValue(
                                               `condition.${index}.attribute_name`,
@@ -847,25 +1019,37 @@ export function UpdateEvent({
                                           }
                                           isLoading={attrIsLoading}
                                           onMenuOpen={() => {
-                                            attrMutate({
-                                              data: {
-                                                entity_ids: [
-                                                  watch(
-                                                    `condition.${index}.device_id`,
+                                            watch('condition_event_type') ===
+                                              'device_condition' &&
+                                              attrMutate({
+                                                data: {
+                                                  entity_ids: [
+                                                    watch(
+                                                      `condition.${index}.device_id`,
+                                                    ),
+                                                  ],
+                                                  entity_type: 'DEVICE',
+                                                },
+                                              })
+                                          }}
+                                          defaultValue={
+                                            watch('condition_event_type') ===
+                                            'device_condition'
+                                              ? {
+                                                  label: getValues(
+                                                    `condition.${index}.attribute_name`,
                                                   ),
-                                                ],
-                                                entity_type: 'DEVICE',
-                                              },
-                                            })
-                                          }}
-                                          defaultValue={{
-                                            label: getValues(
-                                              `condition.${index}.attribute_name`,
-                                            ),
-                                            value: getValues(
-                                              `condition.${index}.attribute_name`,
-                                            ),
-                                          }}
+                                                  value: getValues(
+                                                    `condition.${index}.attribute_name`,
+                                                  ),
+                                                }
+                                              : {
+                                                  label: t(
+                                                    'cloud:org_manage.event_manage.add_event.condition.temp',
+                                                  ),
+                                                  value: 'temp',
+                                                }
+                                          }
                                           {...field}
                                         />
                                       </FormControl>

@@ -19,6 +19,7 @@ type SelectProps<
   refSelect?: any
   icon?: React.ReactElement
   isWrappedArray?: boolean
+  isClearable?: boolean
 } & Props<Option, IsMulti, Group>
 
 export function NewSelectDropdown<
@@ -35,6 +36,7 @@ export function NewSelectDropdown<
   handleChangeSelect,
   isWrappedArray,
   refSelect,
+  isClearable = true,
   ...props
 }: SelectProps<Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -46,7 +48,7 @@ export function NewSelectDropdown<
       className={cn('h-9', classname)}
       ref={refSelect}
       isSearchable
-      isClearable
+      isClearable={isClearable}
       placeholder={placeholder ?? t('placeholder:select')}
       onChange={(e, { action }) => {
         const option =

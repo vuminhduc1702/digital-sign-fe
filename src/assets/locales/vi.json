@@ -337,11 +337,18 @@
           "start": "Bắt đầu",
           "end": "Kết thúc",
           "group": "Nhóm",
+          "condition_event_type": "Điều kiện kích hoạt",
+          "device_condition": "Điều kiện thiết bị",
+          "weather_condition": "Điều kiện thời tiết",
+          "HN": "Hà Nội",
+          "DN": "Đà Nẵng",
+          "HCM": "Hồ Chí Minh",
           "condition": {
             "title": "Điều kiện kích hoạt",
             "onClick": "Onclick",
             "device": "Thiết bị",
             "attr": "Thuộc tính",
+            "temp": "Thời tiết",
             "condition_type": {
               "title": "Kiểu điều kiện",
               "normal": "Normal",
