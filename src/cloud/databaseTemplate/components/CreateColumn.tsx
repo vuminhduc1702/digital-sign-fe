@@ -47,12 +47,14 @@ export default function CreateColumn({
   open,
   close,
   isOpen,
+  onClose,
 }: {
   isSearch?: boolean
   isValidate?: string
   open?: () => void
   close?: () => void
   isOpen?: boolean
+  onClose?: () => void
 }) {
   const { t } = useTranslation()
 
@@ -78,6 +80,7 @@ export default function CreateColumn({
   useEffect(() => {
     if (isSuccess && close) {
       close()
+      onClose?.()
     }
   }, [isSuccess])
 

@@ -624,9 +624,7 @@ export function CreateWidget({
                           ? t('cloud:dashboard.config_chart.title_card')
                           : widgetCategory === 'MAP'
                             ? t('cloud:dashboard.config_chart.title_map')
-                            : widgetCategory === 'LIGHT'
-                              ? t('cloud:dashboard.config_chart.title_light')
-                              : null}
+                            : null}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
@@ -651,39 +649,41 @@ export function CreateWidget({
                 }))
 
                 // missing latitude/longtitude in map widget
-                let stopExecution = false
-                values.attributeConfig.map(item => {
-                  if (item.attribute_key === 'latitude') {
-                    if (
-                      !values.attributeConfig.find(
-                        i =>
-                          i.label === item.label &&
-                          i.attribute_key === 'longtitude',
-                      )
-                    ) {
-                      stopExecution = true
-                      return
+                if (widgetCategory === 'MAP') {
+                  let stopExecution = false
+                  values.attributeConfig.map(item => {
+                    if (item.attribute_key === 'latitude') {
+                      if (
+                        !values.attributeConfig.find(
+                          i =>
+                            i.label === item.label &&
+                            i.attribute_key === 'longtitude',
+                        )
+                      ) {
+                        stopExecution = true
+                        return
+                      }
+                    } else if (item.attribute_key === 'longtitude') {
+                      if (
+                        !values.attributeConfig.find(
+                          i =>
+                            i.label === item.label &&
+                            i.attribute_key === 'latitude',
+                        )
+                      ) {
+                        stopExecution = true
+                        return
+                      }
                     }
-                  } else if (item.attribute_key === 'longtitude') {
-                    if (
-                      !values.attributeConfig.find(
-                        i =>
-                          i.label === item.label &&
-                          i.attribute_key === 'latitude',
-                      )
-                    ) {
-                      stopExecution = true
-                      return
-                    }
+                  })
+                  if (stopExecution) {
+                    toast.error(
+                      t(
+                        'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
+                      ),
+                    )
+                    return
                   }
-                })
-                if (stopExecution) {
-                  toast.error(
-                    t(
-                      'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
-                    ),
-                  )
-                  return
                 }
 
                 const initMessage = {
@@ -983,7 +983,7 @@ export function CreateWidget({
                         closeMenuOnSelect={!isMultipleDevice}
                         isWrappedArray
                         customOnChange={option => {
-                          if (option != null) {
+                          if (option[0]) {
                             attrChartMutate({
                               data: {
                                 entity_ids: option,

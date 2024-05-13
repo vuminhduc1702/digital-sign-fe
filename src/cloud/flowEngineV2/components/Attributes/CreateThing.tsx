@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
 import * as z from 'zod'
 
 import {
@@ -174,16 +173,12 @@ export function CreateThing({
         </form>
       }
       triggerButton={
-        // <Button
-        //   variant="trans"
-        //   className={cn('rounded-md', classNameTriggerBtn)}
-        //   size="square"
-        //   // disabled={!thingId}
-        //   startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        // />
-        <Button className="h-[38px] rounded border-none">
-          {t('cloud:custom_protocol.thing.button')}
-        </Button>
+        <Button
+          variant="trans"
+          className={cn('rounded-md', classNameTriggerBtn)}
+          size="square"
+          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+        />
       }
       confirmButton={
         <Button

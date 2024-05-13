@@ -270,16 +270,16 @@ export function UpdateWidget({
     return result
   })
 
-  useEffect(() => {
-    if (!fetchData) return
-    attrChartMutate({
-      data: {
-        entity_ids: watch('device') || [],
-        entity_type: 'DEVICE',
-        version_two: true,
-      },
-    })
-  }, [fetchData])
+  // useEffect(() => {
+  //   if (!fetchData) return
+  //   attrChartMutate({
+  //     data: {
+  //       entity_ids: watch('device') || [],
+  //       entity_type: 'DEVICE',
+  //       version_two: true,
+  //     },
+  //   })
+  // }, [fetchData])
 
   // remove duplicate in attrSelectData
   function removeDup(
@@ -376,40 +376,42 @@ export function UpdateWidget({
                 type: 'TIME_SERIES',
                 key: item.attribute_key,
               }))
-              // missing latitude/longtitude in map widget
-              let stopExecution = false
-              values.attributeConfig.map(item => {
-                if (item.attribute_key === 'latitude') {
-                  if (
-                    !values.attributeConfig.find(
-                      i =>
-                        i.label === item.label &&
-                        i.attribute_key === 'longtitude',
-                    )
-                  ) {
-                    stopExecution = true
-                    return
+              if (widgetInfoMemo?.description === 'MAP') {
+                // missing latitude/longtitude in map widget
+                let stopExecution = false
+                values.attributeConfig.map(item => {
+                  if (item.attribute_key === 'latitude') {
+                    if (
+                      !values.attributeConfig.find(
+                        i =>
+                          i.label === item.label &&
+                          i.attribute_key === 'longtitude',
+                      )
+                    ) {
+                      stopExecution = true
+                      return
+                    }
+                  } else if (item.attribute_key === 'longtitude') {
+                    if (
+                      !values.attributeConfig.find(
+                        i =>
+                          i.label === item.label &&
+                          i.attribute_key === 'latitude',
+                      )
+                    ) {
+                      stopExecution = true
+                      return
+                    }
                   }
-                } else if (item.attribute_key === 'longtitude') {
-                  if (
-                    !values.attributeConfig.find(
-                      i =>
-                        i.label === item.label &&
-                        i.attribute_key === 'latitude',
-                    )
-                  ) {
-                    stopExecution = true
-                    return
-                  }
+                })
+                if (stopExecution) {
+                  toast.error(
+                    t(
+                      'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
+                    ),
+                  )
+                  return
                 }
-              })
-              if (stopExecution) {
-                toast.error(
-                  t(
-                    'cloud:dashboard.detail_dashboard.add_widget.choose_latlng',
-                  ),
-                )
-                return
               }
 
               const initMessage = {
@@ -708,7 +710,8 @@ export function UpdateWidget({
                         }
                         isWrappedArray
                         customOnChange={option => {
-                          if (option != null) {
+                          console.log(option[0])
+                          if (option[0]) {
                             attrChartMutate({
                               data: {
                                 entity_ids: option,

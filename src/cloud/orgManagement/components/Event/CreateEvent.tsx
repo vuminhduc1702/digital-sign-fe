@@ -321,7 +321,7 @@ export const createEventSchema = z
     name: nameSchema,
     action: eventActionSchema,
     status: z.boolean().optional(),
-    retry: z.coerce.number().optional(),
+    retry: z.number().optional(),
     onClick: z.boolean(),
     cmd: cmdSchema.optional(),
   })
@@ -450,6 +450,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
   const serviceInput = serviceData?.data?.find(
     item => item.name === watch('cmd.handle_service'),
   )?.input
+
   const clearData = () => {
     reset()
     setTodos(initialTodos)
@@ -462,6 +463,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
       setValue('condition', [])
     }
   }, [watch('onClick'), watch('type')])
+
   const todoClicked = (e: any) => {
     setTodos(
       todos.map(todo =>
@@ -673,7 +675,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           <div>
                             <FormControl>
                               <NewSelectDropdown
-                                classnamefieldwrapper="h-9"
                                 options={groupSelectOptions}
                                 isOptionDisabled={option =>
                                   option.label === t('loading:group') ||
@@ -799,7 +800,13 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           </FormLabel>
                           <div>
                             <FormControl>
-                              <Input type="number" {...field} />
+                              <Input
+                                type="number"
+                                {...field}
+                                {...register('retry', {
+                                  valueAsNumber: true,
+                                })}
+                              />
                             </FormControl>
                             <FormMessage />
                           </div>
@@ -934,7 +941,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <FormControl>
                                       <NewSelectDropdown
-                                        classnamefieldwrapper="h-9"
                                         options={deviceSelectData}
                                         customOnChange={value =>
                                           setValue(
@@ -978,7 +984,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <FormControl>
                                       <NewSelectDropdown
-                                        classnamefieldwrapper="h-9"
                                         options={attrSelectData}
                                         customOnChange={value =>
                                           setValue(

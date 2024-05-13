@@ -359,10 +359,12 @@ export function DataBaseTemplateManage() {
                   close={closeCreateColumn}
                   open={openCreateColumn}
                   isOpen={isOpenCreateColumn}
+                  onClose={refetchData}
                 />
               )}
               {isOpenCreateRow && (
                 <CreateRows
+                  onClose={refetchData}
                   columnsProp={data?.data?.columns || []}
                   close={closeCreateRow}
                   open={openCreateRow}

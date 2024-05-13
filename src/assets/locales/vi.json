@@ -574,7 +574,7 @@
         "success_update": "Sửa thing thành công",
         "success_delete": "Xoá thing thành công",
         "name": "Tên thing",
-        "id": "ID",
+        "id": "Thing ID",
         "type": "Kiểu thing",
         "thing": "Thing",
         "template": "Template",
@@ -722,10 +722,6 @@
           "pie_chart": "Biểu đồ tròn",
           "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
-          "light": "Đèn đường",
-          "light_on": "Đèn sáng",
-          "light_off": "Đèn tắt",
-          "light_blinking": "Đèn nhấp nháy",
           "data_chart": "Dữ liệu",
           "data_table": "Bảng dữ liệu",
           "choose_latlng": "Vui lòng chọn thuộc tính tọa độ còn lại",
@@ -743,7 +739,8 @@
         "googleMap": "Google Map",
         "openStreetMap": "Open Street Map",
         "street": "Đường",
-        "satellite": "Vệ tinh"
+        "satellite": "Vệ tinh",
+        "label": "Nhãn"
       },
       "card": {
         "no_log_attr": "Không có bản tin thuộc tính"
