@@ -35,6 +35,7 @@ export const getEntityThings = ({
     offset: String(offset),
     limit: String(limit),
     search_str: search_str || '',
+    share: 'true',
   })
   searchFieldArray?.forEach(field => {
     params.append('search_field', field)
