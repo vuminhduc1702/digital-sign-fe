@@ -23,6 +23,10 @@ jobs:
     runs-on: worker-poc
     if: github.actor == 'hkm15022001' || github.actor == 'nguyenleccss361'
     steps:
+      # clean workspace
+    - name: Clean Workspace
+      run: |
+        rm -rf * 
       # Checkout code
     - uses: actions/checkout@v4
       # Build image
