@@ -7,7 +7,6 @@ import {
   type EntityType,
 } from '@/cloud/orgManagement/api/attrAPI'
 import { UpdateAttr } from '@/cloud/orgManagement/components/Attributes'
-import { Button } from '@/components/ui/button'
 
 import { Switch } from '@/components/ui/switch'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
@@ -18,19 +17,8 @@ import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { type Attribute } from '@/types'
 
-import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import { useGetAttrs } from '../../api/attrAPI/getAttrs'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { LuPen, LuTrash2 } from 'react-icons/lu'
 import {
   Tooltip,
   TooltipProvider,
@@ -81,27 +69,6 @@ function AttrTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={open}>
-              <img src={btnEditIcon} alt="Edit attribute" className="h-5 w-5" />
-              {t('cloud:org_manage.org_manage.add_attr.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img
-                src={btnDeleteIcon}
-                alt="Delete attribute"
-                className="h-5 w-5"
-              />
-              {t('cloud:org_manage.org_manage.table.delete_attr')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
       {isOpen ? (
         <UpdateAttr

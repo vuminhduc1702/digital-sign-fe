@@ -1,8 +1,14 @@
-import { useMemo, useRef, useEffect, useState } from 'react'
+import { useMemo, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getVNDateFormat } from '@/utils/misc'
 import { BaseTable } from '@/components/Table'
+import {
+  Tooltip,
+  TooltipProvider,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type DeviceAttrLog, type EntityType } from '../../api/attrAPI'
@@ -67,7 +73,24 @@ export function AttrLogTable({
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.value')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const value = JSON.stringify(info.getValue())
+          const valueTrigger =
+            value?.length > 10 ? value.slice(0, 10) + '...' : value
+
+          if (JSON.parse(value) === '') return undefined
+
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>{valueTrigger}</TooltipTrigger>
+                <TooltipContent>
+                  <p>{value}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )
+        },
         footer: info => info.column.id,
       }),
     ],
