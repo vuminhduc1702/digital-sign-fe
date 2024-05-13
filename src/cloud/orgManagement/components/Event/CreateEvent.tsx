@@ -675,7 +675,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           <div>
                             <FormControl>
                               <NewSelectDropdown
-                                classnamefieldwrapper="h-9"
                                 options={groupSelectOptions}
                                 isOptionDisabled={option =>
                                   option.label === t('loading:group') ||
@@ -942,7 +941,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <FormControl>
                                       <NewSelectDropdown
-                                        classnamefieldwrapper="h-9"
                                         options={deviceSelectData}
                                         customOnChange={value =>
                                           setValue(
@@ -986,7 +984,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <FormControl>
                                       <NewSelectDropdown
-                                        classnamefieldwrapper="h-9"
                                         options={attrSelectData}
                                         customOnChange={value =>
                                           setValue(
