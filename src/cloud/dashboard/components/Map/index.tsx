@@ -101,13 +101,13 @@ export function MapChart({
       }
     }
     const dataForMapChart: LatLngTuple[] = dataList.map((item, index) => {
-      const { longtitude, latitude } = item
-      if (longtitude === null || latitude === null) {
+      const { longitude, latitude } = item
+      if (longitude === null || latitude === null) {
         return [999, 999]
       }
       return [
         parseFloat(latitude?.value ?? 0),
-        parseFloat(longtitude?.value ?? 0),
+        parseFloat(longitude?.value ?? 0),
       ]
     })
     return dataForMapChart

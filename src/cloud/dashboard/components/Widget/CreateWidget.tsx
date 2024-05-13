@@ -498,7 +498,7 @@ export function CreateWidget({
 
   const attrSelectDataForMap = [
     { value: 'latitude', label: 'latitude' },
-    { value: 'longtitude', label: 'longtitude' },
+    { value: 'longitude', label: 'longitude' },
   ]
 
   const setDeviceOption = (attribute: string) => {
@@ -648,7 +648,7 @@ export function CreateWidget({
                   key: item.attribute_key,
                 }))
 
-                // missing latitude/longtitude in map widget
+                // missing latitude/longitude in map widget
                 if (widgetCategory === 'MAP') {
                   let stopExecution = false
                   values.attributeConfig.map(item => {
@@ -657,13 +657,13 @@ export function CreateWidget({
                         !values.attributeConfig.find(
                           i =>
                             i.label === item.label &&
-                            i.attribute_key === 'longtitude',
+                            i.attribute_key === 'longitude',
                         )
                       ) {
                         stopExecution = true
                         return
                       }
-                    } else if (item.attribute_key === 'longtitude') {
+                    } else if (item.attribute_key === 'longitude') {
                       if (
                         !values.attributeConfig.find(
                           i =>
