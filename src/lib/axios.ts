@@ -93,7 +93,7 @@ axios.interceptors.response.use(
       case 2003:
         message = i18n.t('error:server_res_status.2003')
         break
-      case 2005:
+      case 2004:
         message = i18n.t('error:server_res_status.2005')
         break
       case 2007:
@@ -188,6 +188,12 @@ axios.interceptors.response.use(
         break
       case 2098:
         message = i18n.t('error:server_res_status.2098')
+        break
+      case 2001:
+        message = i18n.t('error:server_res_status.2001')
+        break
+      case 5004:
+        message = i18n.t('error:server_res_status.5004')
         break
       // case 400:
       //   message = i18n.t('error:server_res.malformed_data')

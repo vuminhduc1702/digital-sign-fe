@@ -337,11 +337,18 @@
           "start": "Bắt đầu",
           "end": "Kết thúc",
           "group": "Nhóm",
+          "condition_event_type": "Điều kiện kích hoạt",
+          "device_condition": "Điều kiện thiết bị",
+          "weather_condition": "Điều kiện thời tiết",
+          "HN": "Hà Nội",
+          "DN": "Đà Nẵng",
+          "HCM": "Hồ Chí Minh",
           "condition": {
             "title": "Điều kiện kích hoạt",
             "onClick": "Onclick",
             "device": "Thiết bị",
             "attr": "Thuộc tính",
+            "temp": "Thời tiết",
             "condition_type": {
               "title": "Kiểu điều kiện",
               "normal": "Normal",
@@ -1133,7 +1140,9 @@
       "6506": "Lỗi 6506: Xóa người dùng khỏi nhóm không thành công.",
       "6507": "Lỗi 6507: Xóa sự kiện khỏi nhóm không thành công.",
       "6501": "Lỗi 6501: Tạo nhóm không thành công.",
-      "2098": "Lỗi 2098: Xóa vai trò không thành công."
+      "2098": "Lỗi 2098: Xóa vai trò không thành công.",
+      "2001": "Dữ liệu đầu vào của thực thể không đúng định dạng.",
+      "5004": "Tạo thuộc tính cho thiết bị thất bại."
     }
   },
   "loading": {

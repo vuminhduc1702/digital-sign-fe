@@ -405,6 +405,7 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                       <div>
                         <FormControl>
                           <NewSelectDropdown
+                            customOnChange={onChange}
                             options={roleOptions}
                             isOptionDisabled={option =>
                               option.label === t('loading:role') ||
