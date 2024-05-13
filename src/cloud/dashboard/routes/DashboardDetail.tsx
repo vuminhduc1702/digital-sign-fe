@@ -21,7 +21,6 @@ import {
   MapChart,
   PieChart,
   TableChart,
-  LightChart,
 } from '../components'
 import {
   CreateControllerButton,
@@ -46,7 +45,6 @@ import {
   type MapData,
 } from '../components/ComboBoxSelectDeviceDashboard'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
-import lightOnICon from '@/assets/icons/light-on.svg'
 
 import { WS_URL } from '@/config'
 import {
@@ -498,11 +496,6 @@ export function DashboardDetail() {
                         }
                         sendMessage={sendMessage}
                       />
-                    ) : widgetInfo?.description === 'LIGHT' ? (
-                      <LightChart
-                        data={lastestValues}
-                        widgetInfo={widgetInfo}
-                      />
                     ) : null}
                     {isEditMode ? (
                       <div
@@ -779,37 +772,6 @@ export function DashboardDetail() {
                             </Button>
                           }
                           image={<img src={BD_05} alt="" className="w-full" />}
-                        />
-
-                        <DashboardTooltip
-                          content={
-                            <Button
-                              type="button"
-                              size="square"
-                              className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
-                              variant="secondaryLight"
-                              onClick={() => {
-                                close()
-                                setIsShowCreateWidget(true)
-                                setWidgetType('LASTEST')
-                                setWidgetCategory('LIGHT')
-                                setIsMultipleAttr(true)
-                                setIsMultipleDevice(true)
-                              }}
-                            >
-                              <img
-                                src={lightOnICon}
-                                alt="light icon"
-                                className="h-[58px] w-[58px]"
-                              />
-                              <span className="flex items-center">
-                                {t(
-                                  'cloud:dashboard.detail_dashboard.add_widget.light',
-                                )}
-                              </span>
-                            </Button>
-                          }
-                          image={<img src={BD_09} alt="" className="w-full" />}
                         />
                       </div>
                       <div className="w-full space-y-6">

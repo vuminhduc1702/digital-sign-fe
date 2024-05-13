@@ -624,9 +624,7 @@ export function CreateWidget({
                           ? t('cloud:dashboard.config_chart.title_card')
                           : widgetCategory === 'MAP'
                             ? t('cloud:dashboard.config_chart.title_map')
-                            : widgetCategory === 'LIGHT'
-                              ? t('cloud:dashboard.config_chart.title_light')
-                              : null}
+                            : null}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
