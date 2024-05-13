@@ -194,14 +194,15 @@ export function CreateProject() {
                   name="upload-image"
                   render={({ field: { ref, ...field } }) => (
                     <FormItem>
-                      <FormLabel>
+                      <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
                         {t('cloud:project_manager.add_project.avatar')}
                       </FormLabel>
                       <div>
                         <FormControl>
                           <Input
+                            text={t('cloud:project_manager.add_project.avatar')}
                             type="file"
-                            className="mt-2 border-none p-0 shadow-none"
+                            className="mt-2  border-none p-2 shadow-none"
                             ref={fileInputRef}
                             {...field}
                             onChange={event => {
@@ -272,7 +273,7 @@ export function CreateProject() {
                   name="restore-project"
                   render={({ field: { ref, ...field } }) => (
                     <FormItem>
-                      <FormLabel>
+                      <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
                         {t('cloud:project_manager.add_project.restore_project')}
                       </FormLabel>
                       <div>
