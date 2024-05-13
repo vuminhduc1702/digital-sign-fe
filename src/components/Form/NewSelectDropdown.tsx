@@ -27,6 +27,7 @@ type SelectProps<
   refSelect?: any
   icon?: React.ReactElement
   isWrappedArray?: boolean
+  isClearable?: boolean
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
@@ -53,6 +54,7 @@ export function NewSelectDropdown<
   handleChangeSelect,
   isWrappedArray,
   refSelect,
+  isClearable = true,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -65,7 +67,7 @@ export function NewSelectDropdown<
       className={cn('', classnamefieldwrapper)}
       ref={refSelect}
       isSearchable
-      isClearable
+      isClearable={isClearable}
       placeholder={placeholder ?? t('placeholder:select')}
       onChange={(e, { action }) => {
         const option =
