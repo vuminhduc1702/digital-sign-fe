@@ -13,9 +13,7 @@ import {
   restoreProjectSchema,
   ACCEPTED_RESTORE_FILE,
 } from '../api/createProject'
-import { InputField, TextAreaField } from '@/components/Form'
 import { useUploadImage } from '@/layout/OrgManagementLayout/api'
-import FileField from '@/components/Form/FileField'
 import { useUpdateProject } from '../api'
 import {
   ACCEPTED_IMAGE_TYPES,

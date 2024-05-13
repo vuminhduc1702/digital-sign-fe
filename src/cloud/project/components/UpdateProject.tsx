@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { HiOutlineXMark } from 'react-icons/hi2'
 
-import { InputField, TextAreaField } from '@/components/Form'
 import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
 import {
   CreateProjectSchema,
@@ -13,7 +12,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTitle } from '@/components/ui/dialog'
 import { useEffect, useRef, useState } from 'react'
-import FileField from '@/components/Form/FileField'
 import { useUploadImage } from '@/layout/OrgManagementLayout/api'
 import {
   ACCEPTED_IMAGE_TYPES,
