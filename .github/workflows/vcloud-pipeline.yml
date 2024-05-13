@@ -1,4 +1,4 @@
-name: CICD Pineline for Innoway Demo FE - Vcloud
+name: CICD Pineline for Innoway Devportal FE - Vcloud
 
 on:
   push:
@@ -11,6 +11,10 @@ env:
   chart-folder: /home/vht/ui
   chart-name: ui
   namespace: ui
+  repo-infra-user: minhhk1
+  repo-infra-name: gitlabvht.innoway.vn/minhhk1/viot-app-chart.git
+  repo-infra-branch: main
+  repo-folder: viot-app-chart
 
 jobs:
   # Job 1: build && test
@@ -25,9 +29,16 @@ jobs:
     - name: Build Image
       id: build-image
       run: |
-        echo "Tag: ${{env.tags}}"
-        cp .env.production.example .env
-        docker build -t ${{env.image}}:${{env.tags}} .
+        output=$(docker pull ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest 2>&1|| true)
+
+        if [[ "$output" == *"not found"* ]]; then
+          echo " Latest image not found !! "
+          docker build -t ${{env.image}}:${{env.tags}} .
+        else 
+          echo "Tag: ${{env.tags}}"
+          cp .env.production.example .env
+          docker build --cache-from ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest -t ${{env.image}}:${{env.tags}} .
+        fi
 
   # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
   # in which case 'username' and 'password' can be omitted.
@@ -38,23 +49,47 @@ jobs:
       run: |
         docker tag ${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
         docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
+        docker tag ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}} ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest
+        docker push ${{secrets.REGISTRY_HOST}}/${{env.image}}:latest
     - name: Clean image after push
       run: |
-        echo "Image pushed to ${{ steps.push-to-harbor.outputs.registry-paths }}"
-        docker rmi -f  ${{secrets.REGISTRY_HOST}}/${{env.image}}:${{env.tags}}
-  deploy:
-    name: Deploy to kubernetes
-    needs: build
+          docker image ls | grep  ${{env.image}} | awk {'print $3 '} | xargs -I delete-images docker rmi delete-images || true
+          docker rmi $(docker images -f "dangling=true" -q) || true
+
+  
+  # Job2: Edit image tag in gitlab repo
+  update-config:
     runs-on: worker-poc
+    needs: build
     steps:
-    - name: SSH and deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        password: ${{ secrets.SERVER_PASSWORD }}
-        timeout: 500s
-        script: |
-          cd ${{env.chart-folder}}
-          sed -i "s/tag: .*/tag: ${{github.ref_name}}/g" values.yaml
-          helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
+    - name: Checkout code
+      run: git clone https://${{env.repo-infra-user}}:${{secrets.GITLAB_TOKEN}}@${{env.repo-infra-name}}
+    - name: edit image tag
+      run: |
+        cd ${{env.repo-folder}}/${{env.chart-name}}
+        sed -i "s/tag: .*/tag: ${{github.ref_name}}/g" values.yaml
+        git config user.email "minhhk1@viettel.com.vn"
+        git config user.name "minhhk1"
+        git add . || true
+        git commit -m "edit tag name by cicd" || true
+        git push origin main || true
+        rm -rf ${{env.repo-folder}} || true
+
+    
+  # # Job3: helm upgrade set image 
+  # deploy:
+  #   name: Deploy to kubernetes 
+  #   needs: build
+  #   runs-on: worker-poc
+  #   steps:
+  #   - name: using kubeconfig 
+  #     uses: appleboy/ssh-action@master
+  #     with:
+  #       host: ${{ secrets.SERVER_HOST }}
+  #       username: ${{ secrets.SERVER_USER }}
+  #       password: ${{ secrets.SERVER_PASSWORD }}
+  #       timeout: 500s
+  #       script: |
+  #         cd ${{env.chart-folder}}
+  #         sed -i "s/tag: .*/tag: ${{github.ref_name}}/g" values.yaml
+  #         helm upgrade ${{env.chart-name}} -f values.yaml . -n ${{env.namespace}}
