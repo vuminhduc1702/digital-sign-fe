@@ -31,6 +31,15 @@ import defaultProjectImage from '@/assets/images/default-project.png'
 import { PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import btnRemoveIcon from '@/assets/icons/btn-remove.svg'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 export const uploadImageResSchema = z.object({
   link: z.string(),
@@ -52,11 +61,11 @@ export function CreateProject() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const { register, formState, handleSubmit, reset } = useForm<
-    CreateProjectDTO['data']
-  >({
+  const form = useForm<CreateProjectDTO['data']>({
     resolver: CreateProjectSchema && zodResolver(CreateProjectSchema),
   })
+
+  const { register, formState, handleSubmit, reset } = form
 
   const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
 
@@ -142,56 +151,100 @@ export function CreateProject() {
         >
           <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
             <div className="space-y-3">
-              <InputField
-                label={t('cloud:project_manager.add_project.name')}
-                error={formState.errors['name']}
-                registration={register('name')}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:project_manager.add_project.name')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
               />
-              <TextAreaField
-                label={t('cloud:project_manager.add_project.description')}
-                error={formState.errors['description']}
-                registration={register('description')}
-                rows={11}
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:project_manager.add_project.description')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Textarea {...field} rows={11} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
               />
             </div>
             <div className="pl-5">
               <div className="mb-3 space-y-1">
-                <FileField
-                  label={t('cloud:project_manager.add_project.avatar')}
+                <FormField
                   control={controlUploadImage}
                   name="upload-image"
-                  ref={fileInputRef}
-                  onChange={event => {
-                    setUploadImageErr('')
-                    const file = event.target.files[0]
-                    const formData = new FormData()
-                    formData.append('file', event.target.files[0])
-                    setValueUploadImage(
-                      'file',
-                      formData.get('file') as unknown as { file: File },
-                    )
+                  render={({ field: { ref, ...field } }) => (
+                    <FormItem>
+                      <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
+                        {t('cloud:project_manager.add_project.avatar')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            text={t('cloud:project_manager.add_project.avatar')}
+                            type="file"
+                            className="mt-2  border-none p-2 shadow-none"
+                            ref={fileInputRef}
+                            {...field}
+                            onChange={event => {
+                              setUploadImageErr('')
+                              const file = event.target.files[0]
+                              const formData = new FormData()
+                              formData.append('file', event.target.files[0])
+                              setValueUploadImage(
+                                'file',
+                                formData.get('file') as unknown as {
+                                  file: File
+                                },
+                              )
 
-                    if (file.size > MAX_FILE_SIZE) {
-                      setUploadImageErr(t('validate:image_max_size'))
-                      return false
-                    }
-                    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-                      setUploadImageErr(t('validate:image_type'))
-                      return false
-                    }
+                              if (file.size > MAX_FILE_SIZE) {
+                                setUploadImageErr(t('validate:image_max_size'))
+                                return false
+                              }
+                              if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                                setUploadImageErr(t('validate:image_type'))
+                                return false
+                              }
 
-                    const reader = new FileReader()
-                    reader.readAsDataURL(file)
-                    reader.onload = e => {
-                      if (
-                        avatarRef.current != null &&
-                        e.target != null &&
-                        reader.readyState === 2
-                      ) {
-                        avatarRef.current.src = e.target.result as string
-                      }
-                    }
-                  }}
+                              const reader = new FileReader()
+                              reader.readAsDataURL(file)
+                              reader.onload = e => {
+                                if (
+                                  avatarRef.current != null &&
+                                  e.target != null &&
+                                  reader.readyState === 2
+                                ) {
+                                  avatarRef.current.src = e.target
+                                    .result as string
+                                }
+                              }
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <p className="text-body-sm text-primary-400">
                   {uploadImageErr}
@@ -215,34 +268,54 @@ export function CreateProject() {
                 {t('cloud:project_manager.add_project.upload_instruction')}
               </div>
               <div className="mb-3 space-y-1">
-                <FileField
-                  label={t('cloud:project_manager.add_project.restore_project')}
+                <FormField
                   control={controlUploadRestoreProject}
                   name="restore-project"
-                  ref={fileInputRef}
-                  onChange={event => {
-                    setUploadRestoreProjectErr('')
-                    const file = event.target.files[0]
-                    setRestoreProjectFileName(file.name)
-                    const reader = new FileReader()
-                    reader.readAsText(file)
-                    reader.onload = e => {
-                      const formData = new FormData()
-                      formData.append(
-                        'backup',
-                        e.target?.result as unknown as string,
-                      )
-                      setValueUploadRestoreProject(
-                        'backup',
-                        formData.get('backup') as unknown as string,
-                      )
+                  render={({ field: { ref, ...field } }) => (
+                    <FormItem>
+                      <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
+                        {t('cloud:project_manager.add_project.restore_project')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            type="file"
+                            className="mt-2 border-none p-0 shadow-none"
+                            ref={fileInputRef}
+                            {...field}
+                            onChange={event => {
+                              setUploadRestoreProjectErr('')
+                              const file = event.target.files[0]
+                              setRestoreProjectFileName(file.name)
+                              const reader = new FileReader()
+                              reader.readAsText(file)
+                              reader.onload = e => {
+                                const formData = new FormData()
+                                formData.append(
+                                  'backup',
+                                  e.target?.result as unknown as string,
+                                )
+                                setValueUploadRestoreProject(
+                                  'backup',
+                                  formData.get('backup') as unknown as string,
+                                )
 
-                      if (!ACCEPTED_RESTORE_FILE.includes(file.type)) {
-                        setUploadRestoreProjectErr(t('validate:json_type'))
-                        return false
-                      }
-                    }
-                  }}
+                                if (
+                                  !ACCEPTED_RESTORE_FILE.includes(file.type)
+                                ) {
+                                  setUploadRestoreProjectErr(
+                                    t('validate:json_type'),
+                                  )
+                                  return false
+                                }
+                              }
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
                 <div className="flex items-center text-body-sm">
                   {restoreProjectFileName}

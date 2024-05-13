@@ -173,7 +173,7 @@ export function UpdateDevice({
       >
         <SheetHeader>
           <SheetTitle>
-            {t('cloud:custom_protocol.adapter.table.edit')}
+            {t('cloud:org_manage.device_manage.add_device.edit')}
           </SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
@@ -424,7 +424,7 @@ export function UpdateDevice({
                               defaultValue={
                                 additional_info?.timeout_lifecycle || 0
                               }
-                              {...registerHeartBeat('interval', {
+                              {...registerHeartBeat('timeout', {
                                 valueAsNumber: true,
                               })}
                               placeholder={t(
