@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { InputField, TextAreaField } from '@/components/Form'
 import {
   type UpdateOrgDTO,
   useUpdateOrg,
@@ -12,7 +11,6 @@ import {
   useOrgById,
 } from '../api'
 import { orgSchema } from './CreateOrg'
-import FileField from '@/components/Form/FileField'
 import { API_URL } from '@/config'
 import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
 import {
@@ -73,7 +71,6 @@ export function UpdateOrg({
     avatarRef,
     uploadImageErr,
     setUploadImageErr,
-    controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage, 'default-org.png')
@@ -101,10 +98,8 @@ export function UpdateOrg({
       org_id: selectedUpdateOrg.org_id,
     },
   })
-  const { register, formState, control, setValue, getValues, handleSubmit } =
-    form
+  const { setValue, getValues, handleSubmit } = form
   const selectedOrgBelonged = selectedUpdateOrg.org_id
-  const { data: orgDataById } = useOrgById({ orgId: selectedOrgBelonged })
 
   useEffect(() => {
     if (isSuccess && close) {
