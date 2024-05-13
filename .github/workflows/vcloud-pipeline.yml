@@ -6,6 +6,7 @@ on:
       - 'vcloud_[0-9]+.[0-9]+.[0-9]+'
 
 env:
+  action-workspace: /home/vht/actions-runner/_work/innoway-devportal-fe
   image: ui
   tags: ${GITHUB_REF#refs/tags/}
   chart-folder: /home/vht/ui
@@ -24,7 +25,11 @@ jobs:
     if: github.actor == 'hkm15022001' || github.actor == 'nguyenleccss361'
     steps:
       # clean workspace
-    - uses: AutoModality/action-clean@v1
+    - name: Clean Workspace
+      run: |
+        rm -rf ${{env.action-workspace}} || true
+        pwd 
+        ls 
       # Checkout code
     - uses: actions/checkout@v4
       # Build image

@@ -24,7 +24,9 @@ jobs:
     if: github.actor == 'hkm15022001' || github.actor == 'nguyenleccss361'
     steps:
       # clean workspace
-    - uses: AutoModality/action-clean@v1
+    - name: Clean Workspace
+      run: |
+        rm -rf ${{env.action-workspace}}
       # Checkout code
     - uses: actions/checkout@v4
       # Build image
