@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField, TextAreaField } from '@/components/Form'
-import FileField from '@/components/Form/FileField'
 import {
   useCreateOrg,
   useUploadImage,
@@ -21,7 +19,6 @@ import {
 } from '@/utils/hooks'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 
-import { PlusIcon } from '@/components/SVGIcons'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import defaultOrgImage from '@/assets/images/default-org.png'
@@ -110,13 +107,7 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
   const form = useForm<CreateOrgDTO['data']>({
     resolver: orgSchema && zodResolver(orgSchema),
   })
-  const { register, formState, handleSubmit, reset } = form
-
-  const clearData = () => {
-    setUploadImageErr('')
-    handleResetDefaultImage()
-    reset()
-  }
+  const { handleSubmit, reset } = form
 
   useEffect(() => {
     if (isSuccessCreateOrg) {
