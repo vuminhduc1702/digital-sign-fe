@@ -6,7 +6,7 @@ on:
       - main
     
 env:
-  action-workspace: /home/vht/actions-runner/_work/innoway-devportal-fe
+  action-workspace: /home/vht/actions-runner/_work/innoway-devportal-fe/.git
   image: ui
   tags: ${{ github.sha }}
   chart-folder: /home/vht/ui
