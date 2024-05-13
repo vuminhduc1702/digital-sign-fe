@@ -282,6 +282,7 @@ export function UpdateDevice({
                         <div>
                           <FormControl>
                             <NewSelectDropdown
+                              customOnChange={onChange}
                               refSelect={selectDropdownGroupId}
                               isClearable={false}
                               options={groupSelectOptions}
@@ -317,6 +318,7 @@ export function UpdateDevice({
                         <div>
                           <FormControl>
                             <NewSelectDropdown
+                              customOnChange={onChange}
                               isClearable={false}
                               options={templateSelectOptions}
                               isOptionDisabled={option =>

@@ -1133,7 +1133,9 @@
       "6506": "Lỗi 6506: Xóa người dùng khỏi nhóm không thành công.",
       "6507": "Lỗi 6507: Xóa sự kiện khỏi nhóm không thành công.",
       "6501": "Lỗi 6501: Tạo nhóm không thành công.",
-      "2098": "Lỗi 2098: Xóa vai trò không thành công."
+      "2098": "Lỗi 2098: Xóa vai trò không thành công.",
+      "2001": "Dữ liệu đầu vào của thực thể không đúng định dạng.",
+      "5004": "Tạo thuộc tính cho thiết bị thất bại."
     }
   },
   "loading": {

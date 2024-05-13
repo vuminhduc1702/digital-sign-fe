@@ -14,7 +14,6 @@ type SelectProps<
   placeholder?: string
   classname?: string
   customOnChange?: (e?: any) => void
-  customSelect?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   handleChangeSelect?: () => void
   refSelect?: any
@@ -32,7 +31,6 @@ export function NewSelectDropdown<
   icon,
   isMulti,
   customOnChange,
-  customSelect,
   handleClearSelectDropdown,
   handleChangeSelect,
   isWrappedArray,
@@ -60,7 +58,6 @@ export function NewSelectDropdown<
               ? [(e as unknown as SelectOption)?.value]
               : (e as unknown as SelectOption)?.value
         customOnChange?.(option)
-        customSelect?.(e)
         if (action === 'clear') {
           handleClearSelectDropdown?.()
         }

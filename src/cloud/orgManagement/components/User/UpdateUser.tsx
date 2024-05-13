@@ -408,6 +408,7 @@ export function UpdateUser({
                       <div>
                         <FormControl>
                           <NewSelectDropdown
+                            customOnChange={onChange}
                             options={roleOptions}
                             isOptionDisabled={option =>
                               option.label === t('loading:role') ||
