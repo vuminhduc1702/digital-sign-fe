@@ -25,8 +25,8 @@ export type TransportConfigInfo = {
 
 export type TransportConfig = {
   protocol: string
-  config: { [key: string]: string | null }
-  info: TransportConfigInfo
+  config?: { [key: string]: string | null }
+  info?: TransportConfigInfo
 }
 
 export type TemplateLwM2M = {

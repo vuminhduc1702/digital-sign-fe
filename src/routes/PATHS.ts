@@ -31,7 +31,7 @@ export const PATHS = {
 
   DEVICE_TEMPLATE: `${BASE_PATH_CLOUD}device-template`,
   TEMPLATE_DEFAULT: `${BASE_PATH_CLOUD}device-template/default`,
-  TEMPLATE_LWM2M: `${BASE_PATH_CLOUD}device-template/lwm2m`,
+  TEMPLATE_OTHER: `${BASE_PATH_CLOUD}device-template/other`,
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,

@@ -8,7 +8,7 @@ import storage from '@/utils/storage'
 export function TemplateSidebar() {
   const [type, setType] = useState('Default')
   const projectId = storage.getProject()?.id
-  const DeviceType = ['Default', 'LwM2M']
+  const DeviceType = ['Default', 'Other']
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
@@ -18,7 +18,7 @@ export function TemplateSidebar() {
               to={
                 item === 'Default'
                   ? PATHS.TEMPLATE_DEFAULT + '/' + projectId
-                  : PATHS.TEMPLATE_LWM2M + '/' + projectId
+                  : PATHS.TEMPLATE_OTHER + '/' + projectId
               }
               key={item}
             >
