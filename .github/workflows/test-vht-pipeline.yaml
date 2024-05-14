@@ -79,7 +79,7 @@ jobs:
           git add . || true
           git commit -m "edit tag name by cicd" || true
           git push origin main || true
-          cd ..
+          cd ../..
           rm -rf ${{env.repo-folder}} || true
   # Job3: ssh to master node and run helm upgrade
   deploy:
