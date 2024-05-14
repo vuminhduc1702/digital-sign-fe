@@ -1188,7 +1188,7 @@
   "auth": {
     "footer_text_1": "© {{YEAR}} Developed by Technical Technology Center - TCT CNC VHT",
     "footer_text_2": "Copyright by VIETTEL GROUP",
-    "checkbox": "Remember me",
+    "checkbox": "Remember login info",
     "from_login_to_register": "Register ",
     "forgot_password": "Forgot your password?",
     "no_account": "Don't have an account?",
