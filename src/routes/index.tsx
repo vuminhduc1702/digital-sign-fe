@@ -4,13 +4,11 @@ import {
   Route,
   type RouteObject,
   RouterProvider,
-  useLocation,
-  useRoutes,
 } from 'react-router-dom'
 import { useEffect } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 
-import { BASE_PATH, PATHS } from './PATHS'
+import { PATHS } from './PATHS'
 import { useUser } from '@/lib/auth'
 import { lazyImport } from '@/utils/lazyImport'
 import { protectedRoutes } from './protected'
@@ -18,6 +16,8 @@ import { publicRoutes } from './public'
 import { ErrorFallback } from '@/pages/ErrorPage'
 import { PDFViewer } from '@/pages/LandingPage/components/PdfViewer'
 import { endProgress, startProgress } from '@/components/Progress'
+import { useProjectIdStore } from '@/stores/project'
+import storage from '@/utils/storage'
 
 const { LandingPage } = lazyImport(
   () => import('@/pages/LandingPage'),
@@ -37,6 +37,11 @@ const { VersionPage } = lazyImport(
 )
 
 export const AppRoutes = () => {
+  const projectIdFromURL = window.location.pathname.split('/').at(-1)
+  const projectIdFromZustand = useProjectIdStore(state => state.projectId)
+  const projectId =
+    projectIdFromURL ?? projectIdFromZustand ?? storage.getProject()?.id
+
   const { data: userDataFromStorage } = useUser()
 
   const commonRoutes = [
@@ -100,6 +105,7 @@ export const AppRoutes = () => {
     window.location.pathname === PATHS.REGISTER ||
     window.location.pathname === PATHS.LOGIN
 
+  // Auto redirect to login page when token is null
   useEffect(() => {
     if (
       userDataFromStorage == null &&
@@ -108,11 +114,17 @@ export const AppRoutes = () => {
     ) {
       window.location.href = PATHS.LOGIN
     }
+  }, [commonRoutes, isNotAuthRoutes, userDataFromStorage])
 
-    if (userDataFromStorage != null && isAuthRoutes) {
+  // Auto redirect to project manage page when token is available or when projectId is null
+  useEffect(() => {
+    if (
+      (userDataFromStorage != null && isAuthRoutes) ||
+      (userDataFromStorage != null && projectId == null)
+    ) {
       window.location.href = PATHS.PROJECT_MANAGE
     }
-  }, [window.location.pathname, userDataFromStorage, isAuthRoutes])
+  }, [isAuthRoutes, projectId, userDataFromStorage])
 
   const routes = userDataFromStorage ? protectedRoutes : publicRoutes
 
@@ -131,7 +143,6 @@ export const AppRoutes = () => {
 
   return (
     <RouterProvider
-      // router={createBrowserRouter([...ROUTES, ...COMMON_ROUTES])}
       router={createBrowserRouter(
         createRoutesFromElements(mapRoutes([...routes, ...commonRoutes])),
       )}

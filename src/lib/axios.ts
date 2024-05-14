@@ -78,6 +78,15 @@ axios.interceptors.response.use(
     let message = ''
     const errRes = error.response
 
+    if (errRes?.status === 401) {
+      message = i18n.t('error:server_res.authorization')
+      return logoutFn()
+    }
+
+    if (errRes?.data?.message === 'malformed entity specification') {
+      message = i18n.t('error:server_res.malformed_data')
+    }
+
     switch (errRes?.data?.code) {
       case 401:
         // if (window.location.pathname === PATHS.HOME) {
@@ -203,10 +212,6 @@ axios.interceptors.response.use(
       //   break
       default:
         message = errRes?.data?.message ?? error.message
-    }
-
-    if (errRes?.data?.message === 'malformed entity specification') {
-      message = i18n.t('error:server_res.malformed_data')
     }
 
     const customError = { ...error, message }
