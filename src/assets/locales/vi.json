@@ -404,6 +404,9 @@
       "title": "Mẫu thiết bị",
       "default": "Default",
       "lwm2m": "LwM2M",
+      "other": "Tất cả",
+      "coap": "CoAP",
+      "lorawan": "Lorawan",
       "info": {
         "title": "Thông tin mẫu thiết bị",
         "listattr": "Danh sách nhóm thuộc tính",

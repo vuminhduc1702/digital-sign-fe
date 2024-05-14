@@ -60,12 +60,14 @@ type CreateTemplateProps = {
   open?: () => void
   close?: () => void
   isOpen?: boolean
+  protocol?: string
 }
 
 export default function CreateTemplate({
   open,
   close,
   isOpen,
+  protocol,
 }: CreateTemplateProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
@@ -170,6 +172,9 @@ export default function CreateTemplate({
                   attributes: values.attributes,
                   thing_id: values.thing_id,
                   handle_msg_svc: values.handle_msg_svc,
+                  transport_config: {
+                    protocol: protocol ?? '',
+                  },
                 },
               })
               mutateUpdateTemplate({

@@ -41,7 +41,7 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
   const templateId = params.templateId as string
 
   function moveToLink(id: string) {
-    navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}/${templateId}/${id}`)
+    navigate(`${PATHS.TEMPLATE_OTHER}/${projectId}/${templateId}/${id}`)
   }
   const columnHelper = createColumnHelper<ModuleConfig>()
   const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(
@@ -86,7 +86,7 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
       popoverClassName="absolute right-0 top-1 block"
       data={moduleConfig}
       columns={columns}
-      path={PATHS.TEMPLATE_LWM2M}
+      path={PATHS.TEMPLATE_OTHER}
       projectId={projectId}
       orgId={templateId}
       viewDetailOnClick={moveToLink}

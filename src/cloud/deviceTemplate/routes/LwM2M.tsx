@@ -12,6 +12,14 @@ import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
 import { SearchField } from '@/components/Input'
 import { Button } from '@/components/ui/button'
+import { useGetAttrs } from '@/cloud/orgManagement/api/attrAPI'
+import {
+  AttrTable,
+  CreateAttr,
+} from '@/cloud/orgManagement/components/Attributes'
+import { useDisclosure } from '@/utils/hooks'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { useDeleteMultipleAttrs } from '@/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
 
 export function LwM2M() {
   const { t } = useTranslation()
@@ -36,10 +44,32 @@ export function LwM2M() {
     templateId,
   })
 
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
+
+  const {
+    close: closeAttrs,
+    open: openAttrs,
+    isOpen: isOpenAttrs,
+  } = useDisclosure()
+
+  const {
+    data: attrsData,
+    isLoading: isLoadingAttrs,
+    isPreviousData: isPreviousDataAttrs,
+  } = useGetAttrs({
+    entityType: 'TEMPLATE',
+    entityId: templateId,
+    key_search: searchQuery,
+  })
+
   const selectedModule =
-    LwM2MDataById?.transport_config?.info.module_config.find(
+    LwM2MDataById?.transport_config?.info?.module_config?.find(
       module => module.id === selectedModuleId,
-    )
+    ) || []
   const selectedAttributes = selectedModule?.attribute_info || []
 
   const [rowSelection, setRowSelection] = useState({})
@@ -102,6 +132,19 @@ export function LwM2M() {
       [] as Array<{ [key: string]: unknown }>,
     )
 
+  const {
+    mutate: mutateDeleteMultipleAttrs,
+    isLoading,
+    isSuccess: isSuccessDeleteMultipleAttrs,
+  } = useDeleteMultipleAttrs()
+
+  const attrKeys = attrsData?.attributes.reduce((acc, curr, index) => {
+    if (rowSelectionKey.includes(index.toString())) {
+      acc.push(curr.attribute_key)
+    }
+    return acc
+  }, [])
+
   return (
     <div ref={ref} className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && !selectedModuleId ? (
@@ -121,20 +164,56 @@ export function LwM2M() {
                   setIsSearchData={setIsSearchData}
                   closeSearch={true}
                 />
+                {attrsData?.attributes?.length ? (
+                  <Button
+                    className="h-[38px] rounded border-none"
+                    onClick={openAttrs}
+                  >
+                    {t('cloud:org_manage.org_manage.add_attr.button')}
+                  </Button>
+                ) : null}
               </div>
             </div>
-            <LwM2MTable
-              moduleConfig={
-                LwM2MDataById?.transport_config?.info?.module_config ?? []
-              }
-              rowSelection={rowSelection}
-              setRowSelection={setRowSelection}
-              isPreviousData={isPreviousLwM2MDataById}
-              isLoading={isLoadingLwM2MDataById}
-              pdfHeader={pdfHeader}
-              formatExcel={formatExcel}
-              isSearchData={searchQuery.length > 0 && isSearchData}
-            />
+            {attrsData?.attributes?.length ? (
+              <AttrTable
+                data={attrsData?.attributes ?? []}
+                entityId={templateId}
+                entityType="TEMPLATE"
+                rowSelection={rowSelection}
+                setRowSelection={setRowSelection}
+                isPreviousData={isPreviousDataAttrs}
+                isLoading={isLoadingAttrs}
+                pdfHeader={pdfHeader}
+                formatExcel={formatExcel}
+                utilityButton={
+                  Object.keys(rowSelection).length > 0 && (
+                    <div className="flex items-center">
+                      <Button
+                        size="sm"
+                        onClick={openDeleteMulti}
+                        className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                      >
+                        <div>{t('btn:delete')}:</div>
+                        <div>{Object.keys(rowSelection).length}</div>
+                      </Button>
+                    </div>
+                  )
+                }
+              />
+            ) : (
+              <LwM2MTable
+                moduleConfig={
+                  LwM2MDataById?.transport_config?.info?.module_config ?? []
+                }
+                rowSelection={rowSelection}
+                setRowSelection={setRowSelection}
+                isPreviousData={isPreviousLwM2MDataById}
+                isLoading={isLoadingLwM2MDataById}
+                pdfHeader={pdfHeader}
+                formatExcel={formatExcel}
+                isSearchData={searchQuery.length > 0 && isSearchData}
+              />
+            )}
           </div>
         </div>
       ) : null}
@@ -169,6 +248,42 @@ export function LwM2M() {
             />
           </div>
         </div>
+      ) : null}
+
+      {isOpenAttrs && (
+        <CreateAttr
+          entityId={templateId}
+          entityType="TEMPLATE"
+          close={closeAttrs}
+          open={openAttrs}
+          isOpen={isOpenAttrs}
+        />
+      )}
+
+      {isOpenDeleteMulti ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+          body={t(
+            'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
+          )}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleAttrs}
+          handleSubmit={() =>
+            mutateDeleteMultipleAttrs(
+              {
+                data: {
+                  keys: attrKeys,
+                  entity_type: 'TEMPLATE',
+                  entity_id: templateId,
+                },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
+          isLoading={isLoading}
+        />
       ) : null}
     </div>
   )
