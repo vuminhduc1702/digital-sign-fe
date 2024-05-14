@@ -59,8 +59,6 @@ export function SearchField({
     formState: { errors },
   } = form
 
-  console.log(errors)
-
   function onSubmit() {
     if (searchField) {
       searchField.current = form.watch('searchByField')

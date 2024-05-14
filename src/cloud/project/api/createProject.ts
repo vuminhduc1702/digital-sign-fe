@@ -23,10 +23,10 @@ type CreateProjectRes = {
 
 export const CreateProjectSchema = ProjectSchema.pick({
   name: true,
-  description: true,
 }).merge(
   ProjectSchema.pick({
     image: true,
+    description: true,
   }).partial(),
 )
 

@@ -1266,7 +1266,8 @@
   "auth": {
     "footer_text_1": "© {{YEAR}} Developed by Technical Technology Center - TCT CNC VHT",
     "footer_text_2": "Copyright by VIETTEL GROUP",
-    "checkbox": "Ghi nhớ",
+    "checkbox": "Lưu thông tin đăng nhập",
+    "persist_login": "Ghi nhớ đăng nhập",
     "from_login_to_register": "Đăng ký ",
     "forgot_password": "Bạn quên mật khẩu?",
     "no_account": "Bạn chưa có tài khoản?",
