@@ -24,8 +24,9 @@ import { PlusIcon } from '@/components/SVGIcons'
 export const entityThingSchema = z
   .object({
     name: nameSchema,
-    project_id: z.string().optional(),
+    // project_id: z.string().optional(),
     description: z.string(),
+    share: z.literal(true).optional(),
   })
   .and(
     z.discriminatedUnion('type', [
@@ -58,6 +59,7 @@ export function CreateThing({
     useForm<CreateEntityThingDTO['data']>({
       resolver: entityThingSchema && zodResolver(entityThingSchema),
     })
+  console.log('formState.errors', formState.errors)
 
   const {
     mutate: mutateThing,
@@ -94,10 +96,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
                   base_template: values.base_template,
+                  share: true,
                 },
               })
             }
@@ -105,10 +108,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
-                  base_shapes: [values.base_shapes],
+                  base_shapes: values.base_shapes,
+                  share: true,
                 },
               })
             }
@@ -116,9 +120,10 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
+                  share: true,
                 },
               })
             }

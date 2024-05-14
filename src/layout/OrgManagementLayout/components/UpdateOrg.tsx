@@ -4,12 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import {
-  type UpdateOrgDTO,
-  useUpdateOrg,
-  useUploadImage,
-  useOrgById,
-} from '../api'
+import { type UpdateOrgDTO, useUpdateOrg, useUploadImage } from '../api'
 import { orgSchema } from './CreateOrg'
 import { API_URL } from '@/config'
 import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
@@ -20,7 +15,6 @@ import {
 } from '@/utils/hooks'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import storage from '@/utils/storage'
-import { type Org } from '@/layout/MainLayout/types'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
@@ -52,6 +46,7 @@ import {
 import { cn, flattenOrgs } from '@/utils/misc'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { type OrgMapType } from './OrgManageSidebar'
 
 const orgUpdateSchema = orgSchema.required({ org_id: true })
 
@@ -62,7 +57,7 @@ export function UpdateOrg({
 }: {
   close: () => void
   isOpen: boolean
-  selectedUpdateOrg: Org
+  selectedUpdateOrg: OrgMapType
 }) {
   const { t } = useTranslation()
 

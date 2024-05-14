@@ -14,12 +14,12 @@ type SelectProps<
   placeholder?: string
   classname?: string
   customOnChange?: (e?: any) => void
-  customSelect?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   handleChangeSelect?: () => void
   refSelect?: any
   icon?: React.ReactElement
   isWrappedArray?: boolean
+  isClearable?: boolean
 } & Props<Option, IsMulti, Group>
 
 export function NewSelectDropdown<
@@ -32,11 +32,11 @@ export function NewSelectDropdown<
   icon,
   isMulti,
   customOnChange,
-  customSelect,
   handleClearSelectDropdown,
   handleChangeSelect,
   isWrappedArray,
   refSelect,
+  isClearable = true,
   ...props
 }: SelectProps<Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -48,7 +48,7 @@ export function NewSelectDropdown<
       className={cn('h-9', classname)}
       ref={refSelect}
       isSearchable
-      isClearable
+      isClearable={isClearable}
       placeholder={placeholder ?? t('placeholder:select')}
       onChange={(e, { action }) => {
         const option =
@@ -60,7 +60,6 @@ export function NewSelectDropdown<
               ? [(e as unknown as SelectOption)?.value]
               : (e as unknown as SelectOption)?.value
         customOnChange?.(option)
-        customSelect?.(e)
         if (action === 'clear') {
           handleClearSelectDropdown?.()
         }

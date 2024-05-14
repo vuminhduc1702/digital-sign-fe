@@ -5,11 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOption,
-} from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import { nameSchema } from '@/utils/schemaValidation'
 import storage from '@/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
@@ -18,7 +14,6 @@ import { useEffect, useRef, useState } from 'react'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { useGetTemplates } from '@/cloud/deviceTemplate/api'
-import { PlusIcon } from '@/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '@/layout/MainLayout/api'
 import { type SelectInstance } from 'react-select'
@@ -216,6 +211,38 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="group_id"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:org_manage.device_manage.add_device.group')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <NewSelectDropdown
+                            customOnChange={onChange}
+                            refSelect={selectDropdownGroupId}
+                            isClearable={false}
+                            options={groupSelectOptions}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:group') ||
+                              option.label === t('table:no_group')
+                            }
+                            noOptionsMessage={() => t('table:no_group')}
+                            loadingMessage={() => t('loading:group')}
+                            isLoading={groupIsLoading}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="template_id"
@@ -227,6 +254,7 @@ export function CreateDevice({ open, close, isOpen }: CreateDeviceProps) {
                       <div>
                         <FormControl>
                           <NewSelectDropdown
+                            customOnChange={onChange}
                             options={templateSelectOptions}
                             isOptionDisabled={option =>
                               option.label === t('loading:template') ||
