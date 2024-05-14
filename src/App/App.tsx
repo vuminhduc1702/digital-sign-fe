@@ -1,5 +1,4 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { BrowserRouter as Router } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { lazy, Suspense, useState, useEffect } from 'react'
@@ -9,11 +8,9 @@ import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 
 import '@/i18n'
-import storage from '@/utils/storage'
 import { lazyImport } from '@/utils/lazyImport'
 import { queryClient } from '@/lib/react-query'
-import { Spinner } from '@/components/Spinner'
-import { AuthLoader, logoutFn } from '@/lib/auth'
+import { AuthLoader } from '@/lib/auth'
 import { AppRoutes } from '@/routes'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -43,18 +40,6 @@ function App() {
   if (import.meta.env.PROD) {
     disableReactDevTools()
   }
-
-  // Auto sign out after 24 hours
-  useEffect(() => {
-    const userStorage = storage.getToken()
-    if (
-      userStorage &&
-      new Date().getTime() - new Date(userStorage?.timestamp).getTime() >
-        24 * 60 * 60 * 1000
-    ) {
-      logoutFn()
-    }
-  }, [])
 
   // Global error messages
   const customErrorMap: z.ZodErrorMap = (error, ctx) => {
