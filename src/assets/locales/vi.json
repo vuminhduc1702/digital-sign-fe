@@ -404,6 +404,9 @@
       "title": "Mẫu thiết bị",
       "default": "Default",
       "lwm2m": "LwM2M",
+      "other": "Tất cả",
+      "coap": "CoAP",
+      "lorawan": "Lorawan",
       "info": {
         "title": "Thông tin mẫu thiết bị",
         "listattr": "Danh sách nhóm thuộc tính",
@@ -1109,7 +1112,7 @@
     "wrong_input": "Nhập sai:",
     "server_res_status": {
       "2003": "Lỗi 2003: Thực thể không tồn tại.",
-      "2005": "Lỗi 2005: Thực thể đã tồn tại.",
+      "2004": "Lỗi 2004: Thực thể đã tồn tại.",
       "2007": "Lỗi 2007: Mật khẩu không hợp lệ.",
       "2008": "Lỗi 2008: OTP đã hết hạn.",
       "2009": "Lỗi 2009: OTP không chính xác.",
@@ -1141,8 +1144,8 @@
       "6507": "Lỗi 6507: Xóa sự kiện khỏi nhóm không thành công.",
       "6501": "Lỗi 6501: Tạo nhóm không thành công.",
       "2098": "Lỗi 2098: Xóa vai trò không thành công.",
-      "2001": "Dữ liệu đầu vào của thực thể không đúng định dạng.",
-      "5004": "Tạo thuộc tính cho thiết bị thất bại."
+      "2001": "Lỗi 2001: Dữ liệu đầu vào của thực thể không đúng định dạng.",
+      "5004": "Lỗi 5004: Tạo thuộc tính cho thiết bị thất bại."
     }
   },
   "loading": {

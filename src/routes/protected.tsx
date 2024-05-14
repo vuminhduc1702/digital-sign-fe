@@ -133,7 +133,7 @@ export const protectedRoutes = [
             ],
           },
           {
-            path: PATHS.TEMPLATE_LWM2M,
+            path: PATHS.TEMPLATE_OTHER,
             children: [
               {
                 path: ':projectId',

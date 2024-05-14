@@ -1038,7 +1038,7 @@
     "refresh": "Page refresh",
     "server_res_status": {
       "2003": "Error 2003: Non-existent entity.",
-      "2005": "Error 2005: Entity already exists.",
+      "2004": "Error 2004: Entity already exists.",
       "2007": "Error 2007: Password is invalid.",
       "2008": "Error 2008: OTP is expired.",
       "2009": "Error 2009: OTP is incorrect.",
@@ -1069,7 +1069,9 @@
       "6506": "Error 6506: Error remove user of this group.",
       "6507": "Error 6507: Error remove event of this group.",
       "6501": "Error 6501: Create group failed.",
-      "2098": "Error 2098: Delete role failed."
+      "2098": "Error 2098: Delete role failed.",
+      "2001": "Lỗi 2001: Malformed entity specification.",
+      "5004": "Lỗi 5004: Create device attributes failed."
     }
   },
   "loading": {
@@ -1189,6 +1191,7 @@
     "footer_text_1": "© {{YEAR}} Developed by Technical Technology Center - TCT CNC VHT",
     "footer_text_2": "Copyright by VIETTEL GROUP",
     "checkbox": "Remember login info",
+    "persist_login": "Remember this device",
     "from_login_to_register": "Register ",
     "forgot_password": "Forgot your password?",
     "no_account": "Don't have an account?",
