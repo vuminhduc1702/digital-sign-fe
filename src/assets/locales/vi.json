@@ -645,6 +645,8 @@
     },
     "dashboard": {
       "title": "Bảng điều khiển",
+      "value": "Giá trị",
+      "time": "Thời gian",
       "table": {
         "id": "ID",
         "name": "Tên bảng điều khiển",
