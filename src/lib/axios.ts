@@ -67,24 +67,37 @@ axios.interceptors.response.use(
     let message = ''
     const errRes = error.response
 
-    if (errRes?.status === 401) {
-      const refreshToken = storage.getToken()?.refresh_token
-      if (storage.getIsPersistLogin() === 'true' && refreshToken != null) {
-        const {
-          data: { token: newAccessToken },
-        } = await useRefreshToken(refreshToken)
-        console.log('newAccessToken', newAccessToken)
+    switch (errRes?.status) {
+      case 401:
+        const refreshToken = storage.getToken()?.refresh_token
         const prevRequest = error?.config as AxiosRequestConfig
-        console.log('prevRequest', prevRequest)
-        if (newAccessToken != null && !prevRequest?.sent) {
-          console.log('prevRequest?.sent', prevRequest?.sent)
+        if (
+          storage.getIsPersistLogin() === 'true' &&
+          refreshToken != null &&
+          !prevRequest?.sent
+        ) {
           prevRequest.sent = true
-          prevRequest.headers.set('Authorization', `Bearer ${newAccessToken}`)
-          authRequestInterceptor(prevRequest)
+          const {
+            data: { token: newAccessToken },
+          } = await useRefreshToken(refreshToken)
+          console.log('newAccessToken', newAccessToken)
+          console.log('prevRequest', prevRequest)
+          if (newAccessToken != null) {
+            prevRequest.headers.set('Authorization', `Bearer ${newAccessToken}`)
+            axios(prevRequest)
+          }
+          break
+        } else {
+          return logoutFn()
         }
-      } else {
-        return logoutFn()
-      }
+      case 403:
+        message = i18n.t('error:server_res.authorization')
+        break
+      case 404:
+        message = i18n.t('error:server_res.notfound')
+        break
+      default:
+        message = errRes?.data?.message ?? error.message
     }
 
     if (errRes?.data?.message === 'malformed entity specification') {
@@ -92,17 +105,6 @@ axios.interceptors.response.use(
     }
 
     switch (errRes?.data?.code) {
-      case 401:
-        // if (window.location.pathname === PATHS.HOME) {
-        //   break
-        // }
-        return logoutFn()
-      case 403:
-        message = i18n.t('error:server_res.authorization')
-        break
-      case 404:
-        message = i18n.t('error:server_res.notfound')
-        break
       case 2003:
         message = i18n.t('error:server_res_status.2003')
         break
@@ -211,12 +213,6 @@ axios.interceptors.response.use(
       case 5004:
         message = i18n.t('error:server_res_status.5004')
         break
-      // case 400:
-      //   message = i18n.t('error:server_res.malformed_data')
-      //   break
-      // case 500:
-      //   message = i18n.t('error:server_res.server')
-      //   break
       default:
         message = errRes?.data?.message ?? error.message
     }
