@@ -369,8 +369,6 @@ export function DashboardDetail() {
                     deviceName: getDeviceInfo(item.label)?.name,
                   })),
                 }
-                console.log(widgetList)
-                console.log(widgetInfo)
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
