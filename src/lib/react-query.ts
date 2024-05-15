@@ -22,7 +22,8 @@ const queryConfig: DefaultOptions = {
         `Response Code: ${error.response?.status} failureCount: ${failureCount}`,
       )
       const shouldRetry =
-        (error.response?.status !== 403 || error.response?.status !== 401) &&
+        error.response?.status !== 403 &&
+        error.response?.status !== 401 &&
         error.response?.status != null &&
         failureCount < 3
       return shouldRetry

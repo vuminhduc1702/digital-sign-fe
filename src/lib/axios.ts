@@ -1,30 +1,19 @@
-import Axios, {
-  type AxiosError,
-  type AxiosHeaders,
-  type InternalAxiosRequestConfig,
-} from 'axios'
+import Axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 
 import { API_URL } from '@/config'
 import storage from '@/utils/storage'
 import { logoutFn } from './auth'
-import { PATHS } from '@/routes/PATHS'
 import i18n from '@/i18n'
-import { toast } from 'sonner'
 
-function authRequestInterceptor(config: InternalAxiosRequestConfig) {
+type AxiosRequestConfig = InternalAxiosRequestConfig & { sent?: boolean }
+
+function authRequestInterceptor(config: AxiosRequestConfig) {
   const controller = new AbortController()
-
-  // setTimeout(() => {
-  //   controller.abort()
-  // toast.error(i18n.t('error:server_res.title'), {
-  //   description: 'aborttttttttttttttt'
-  // })
-  // }, 200)
 
   const userStorage = storage.getToken()
   const token = userStorage?.token
   if (token) {
-    ;(config.headers as AxiosHeaders).set('Authorization', `Bearer ${token}`)
+    config.headers.set('Authorization', `Bearer ${token}`)
   }
 
   return {
@@ -38,8 +27,6 @@ export const axios = Axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // timeout: 100,
-  // timeoutErrorMessage: 'hahahahahahahahhaha',
 })
 
 export const axiosUploadFile = Axios.create({
@@ -72,16 +59,11 @@ axios.interceptors.response.use(
       return response.data
     }
   },
-  (error: AxiosError<{ code?: number; message?: string }>) => {
+  async (error: AxiosError<{ code?: number; message?: string }>) => {
     console.error('res error: ', error)
 
     let message = ''
     const errRes = error.response
-
-    if (errRes?.status === 401) {
-      message = i18n.t('error:server_res.authorization')
-      return logoutFn()
-    }
 
     if (errRes?.data?.message === 'malformed entity specification') {
       message = i18n.t('error:server_res.malformed_data')
@@ -89,9 +71,6 @@ axios.interceptors.response.use(
 
     switch (errRes?.data?.code) {
       case 401:
-        // if (window.location.pathname === PATHS.HOME) {
-        //   break
-        // }
         return logoutFn()
       case 403:
         message = i18n.t('error:server_res.authorization')
@@ -99,11 +78,16 @@ axios.interceptors.response.use(
       case 404:
         message = i18n.t('error:server_res.notfound')
         break
+      default:
+        message = errRes?.data?.message ?? error.message
+    }
+
+    switch (errRes?.data?.code) {
       case 2003:
         message = i18n.t('error:server_res_status.2003')
         break
       case 2004:
-        message = i18n.t('error:server_res_status.2005')
+        message = i18n.t('error:server_res_status.2004')
         break
       case 2007:
         message = i18n.t('error:server_res_status.2007')
@@ -116,6 +100,9 @@ axios.interceptors.response.use(
         break
       case 2010:
         message = i18n.t('error:server_res_status.2010')
+        break
+      case 2013:
+        message = i18n.t('error:server_res_status.2013')
         break
       case 8002:
         message = i18n.t('error:server_res_status.8002')
@@ -204,12 +191,6 @@ axios.interceptors.response.use(
       case 5004:
         message = i18n.t('error:server_res_status.5004')
         break
-      // case 400:
-      //   message = i18n.t('error:server_res.malformed_data')
-      //   break
-      // case 500:
-      //   message = i18n.t('error:server_res.server')
-      //   break
       default:
         message = errRes?.data?.message ?? error.message
     }
