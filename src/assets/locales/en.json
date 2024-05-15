@@ -1042,7 +1042,8 @@
       "2007": "Error 2007: Password is invalid.",
       "2008": "Error 2008: OTP is expired.",
       "2009": "Error 2009: OTP is incorrect.",
-      "2010": "Error 2010: Identifier/password are incorrect.",
+      "2010": "Error 2010: Identifier or password is incorrect.",
+      "2013": "Error 2013: Password is incorrect.",
       "8002": "Error 8002: Create project failed.",
       "8001": "Error 8001: Create organization failed.",
       "2033": "Error 2033: Failed to identify project.",
@@ -1070,8 +1071,8 @@
       "6507": "Error 6507: Error remove event of this group.",
       "6501": "Error 6501: Create group failed.",
       "2098": "Error 2098: Delete role failed.",
-      "2001": "Lỗi 2001: Malformed entity specification.",
-      "5004": "Lỗi 5004: Create device attributes failed."
+      "2001": "Error 2001: Malformed entity specification.",
+      "5004": "Error 5004: Create device attributes failed."
     }
   },
   "loading": {
