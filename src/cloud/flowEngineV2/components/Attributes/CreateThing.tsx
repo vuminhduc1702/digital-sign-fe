@@ -96,11 +96,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
                   base_template: values.base_template,
-                  // share: true,
+                  share: true,
                 },
               })
             }
@@ -108,11 +108,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
                   base_shapes: values.base_shapes,
-                  // share: true,
+                  share: true,
                 },
               })
             }
@@ -120,10 +120,10 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  project_id: projectId,
+                  // project_id: projectId,
                   description: values.description,
                   type: values.type,
-                  // share: true,
+                  share: true,
                 },
               })
             }

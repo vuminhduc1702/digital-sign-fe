@@ -26,7 +26,7 @@ export const getServiceThings = ({
 }: GetServiceThings): Promise<GetServiceThingsRes> => {
   return axios.get(`/api/fe/thing/${thingId}/service`, {
     params: {
-      // share: true,
+      share: true,
       search_str: search_str,
       search_field: search_field,
     },
