@@ -1,31 +1,22 @@
-import Axios, {
-  type AxiosError,
-  type AxiosHeaders,
-  type InternalAxiosRequestConfig,
-} from 'axios'
+import Axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 
 import { API_URL } from '@/config'
 import storage from '@/utils/storage'
 import { logoutFn } from './auth'
-import { PATHS } from '@/routes/PATHS'
 import i18n from '@/i18n'
-import { toast } from 'sonner'
+import { useRefreshToken } from '@/features/auth/api/refresh'
 
-function authRequestInterceptor(config: InternalAxiosRequestConfig) {
+type AxiosRequestConfig = InternalAxiosRequestConfig & { sent?: boolean }
+
+function authRequestInterceptor(config: AxiosRequestConfig) {
   const controller = new AbortController()
-
-  // setTimeout(() => {
-  //   controller.abort()
-  // toast.error(i18n.t('error:server_res.title'), {
-  //   description: 'aborttttttttttttttt'
-  // })
-  // }, 200)
 
   const userStorage = storage.getToken()
   const token = userStorage?.token
-  if (token) {
-    ;(config.headers as AxiosHeaders).set('Authorization', `Bearer ${token}`)
+  if (token && !config?.sent) {
+    config.headers.set('Authorization', `Bearer ${token}`)
   }
+  console.log('config', config)
 
   return {
     ...config,
@@ -38,8 +29,6 @@ export const axios = Axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // timeout: 100,
-  // timeoutErrorMessage: 'hahahahahahahahhaha',
 })
 
 export const axiosUploadFile = Axios.create({
@@ -72,15 +61,30 @@ axios.interceptors.response.use(
       return response.data
     }
   },
-  (error: AxiosError<{ code?: number; message?: string }>) => {
+  async (error: AxiosError<{ code?: number; message?: string }>) => {
     console.error('res error: ', error)
 
     let message = ''
     const errRes = error.response
 
     if (errRes?.status === 401) {
-      message = i18n.t('error:server_res.authorization')
-      return logoutFn()
+      const refreshToken = storage.getToken()?.refresh_token
+      if (storage.getIsPersistLogin() === 'true' && refreshToken != null) {
+        const {
+          data: { token: newAccessToken },
+        } = await useRefreshToken(refreshToken)
+        console.log('newAccessToken', newAccessToken)
+        const prevRequest = error?.config as AxiosRequestConfig
+        console.log('prevRequest', prevRequest)
+        if (newAccessToken != null && !prevRequest?.sent) {
+          console.log('prevRequest?.sent', prevRequest?.sent)
+          prevRequest.sent = true
+          prevRequest.headers.set('Authorization', `Bearer ${newAccessToken}`)
+          authRequestInterceptor(prevRequest)
+        }
+      } else {
+        return logoutFn()
+      }
     }
 
     if (errRes?.data?.message === 'malformed entity specification') {
@@ -103,7 +107,7 @@ axios.interceptors.response.use(
         message = i18n.t('error:server_res_status.2003')
         break
       case 2004:
-        message = i18n.t('error:server_res_status.2005')
+        message = i18n.t('error:server_res_status.2004')
         break
       case 2007:
         message = i18n.t('error:server_res_status.2007')
@@ -116,6 +120,9 @@ axios.interceptors.response.use(
         break
       case 2010:
         message = i18n.t('error:server_res_status.2010')
+        break
+      case 2013:
+        message = i18n.t('error:server_res_status.2013')
         break
       case 8002:
         message = i18n.t('error:server_res_status.8002')
