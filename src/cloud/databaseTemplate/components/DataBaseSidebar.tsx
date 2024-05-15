@@ -167,7 +167,6 @@ export function DataBaseSidebar() {
           )}
           close={closeDelete}
           isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
           handleSubmit={() =>
             mutate({
               table: name,

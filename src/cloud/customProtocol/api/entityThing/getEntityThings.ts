@@ -14,6 +14,7 @@ type GetEntityThings = {
   limit?: number
   search_str?: string
   search_field?: string
+  share?: string
 }
 
 export type GetEntityThingsRes = {
@@ -27,6 +28,7 @@ export const getEntityThings = ({
   limit,
   search_str,
   search_field,
+  share,
 }: GetEntityThings): Promise<GetEntityThingsRes> => {
   const searchFieldArray = search_field?.split(',')
   const params = new URLSearchParams({
@@ -35,7 +37,7 @@ export const getEntityThings = ({
     offset: String(offset),
     limit: String(limit),
     search_str: search_str || '',
-    share: 'true',
+    share: share || '',
   })
   searchFieldArray?.forEach(field => {
     params.append('search_field', field)
@@ -58,6 +60,7 @@ export const useGetEntityThings = ({
   limit = limitPagination,
   search_str,
   search_field,
+  share,
   config,
 }: UseEntityThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
@@ -69,6 +72,7 @@ export const useGetEntityThings = ({
       limit,
       search_str,
       search_field,
+      share,
     ],
     queryFn: () =>
       getEntityThings({
@@ -78,6 +82,7 @@ export const useGetEntityThings = ({
         limit,
         search_str,
         search_field,
+        share,
       }),
     ...config,
   })
