@@ -16,7 +16,6 @@ function authRequestInterceptor(config: AxiosRequestConfig) {
   if (token && !config?.sent) {
     config.headers.set('Authorization', `Bearer ${token}`)
   }
-  console.log('config', config)
 
   return {
     ...config,
@@ -84,11 +83,12 @@ axios.interceptors.response.use(
           const {
             data: { token: newAccessToken },
           } = await useRefreshToken(refreshToken)
-          console.log('newAccessToken', newAccessToken)
-          console.log('prevRequest', prevRequest)
           if (newAccessToken != null) {
-            prevRequest.headers.set('Authorization', `Bearer ${newAccessToken}`)
-            axios(prevRequest)
+            storage.setToken({
+              ...storage.getToken(),
+              token: newAccessToken,
+              refresh_token: refreshToken,
+            })
           }
           break
         } else {
