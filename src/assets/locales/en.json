@@ -1071,8 +1071,8 @@
       "6507": "Error 6507: Error remove event of this group.",
       "6501": "Error 6501: Create group failed.",
       "2098": "Error 2098: Delete role failed.",
-      "2001": "Lỗi 2001: Malformed entity specification.",
-      "5004": "Lỗi 5004: Create device attributes failed."
+      "2001": "Error 2001: Malformed entity specification.",
+      "5004": "Error 5004: Create device attributes failed."
     }
   },
   "loading": {

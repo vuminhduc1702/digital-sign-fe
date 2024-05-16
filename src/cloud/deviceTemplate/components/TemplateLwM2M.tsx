@@ -29,6 +29,17 @@ import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { SearchField } from '@/components/Input'
 import { useGetTemplates } from '../api'
 import { PlusIcon } from '@/components/SVGIcons'
+import CreateTemplate from './CreateTemplate'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useForm } from 'react-hook-form'
+import { UpdateTemplate } from './UpdateTemplate'
 
 export function TemplateLwM2M() {
   const { t } = useTranslation()
@@ -56,22 +67,42 @@ export function TemplateLwM2M() {
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const [selectedUpdateTemplate, setSelectedUpdateTemplate] =
     useState<Template>()
+  const [protocolQuery, setProtocolQuery] = useState('other')
   const { data } = useGetTemplates({
     projectId,
-    protocol: 'lwm2m',
+    protocol: protocolQuery,
 
     search_str: searchQuery,
     search_field: 'name',
   })
+
+  const fieldOptions = [
+    {
+      value: 'other',
+      label: t('cloud:device_template.other'),
+    },
+    {
+      value: 'lwm2m',
+      label: t('cloud:device_template.lwm2m'),
+    },
+    {
+      value: 'coap',
+      label: t('cloud:device_template.coap'),
+    },
+    {
+      value: 'lorawan',
+      label: t('cloud:device_template.lorawan'),
+    },
+  ]
   const handleCopyId = useCopyId()
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowNoTemplateMessage(true)
     }, 500)
     if (data?.templates?.[0]?.id) {
-      navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}/${data?.templates[0].id}`)
+      navigate(`${PATHS.TEMPLATE_OTHER}/${projectId}/${data?.templates[0].id}`)
     } else {
-      navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}`)
+      navigate(`${PATHS.TEMPLATE_OTHER}/${projectId}`)
     }
     return () => clearTimeout(timer)
   }, [data?.templates])
@@ -81,6 +112,15 @@ export function TemplateLwM2M() {
       closeDelete()
     }
   }, [isSuccess])
+
+  const form = useForm({
+    // resolver: searchSchema && zodResolver(searchSchema),
+    defaultValues: {
+      protocol: 'other',
+    },
+  })
+
+  console.log(selectedUpdateTemplate)
 
   return (
     <>
@@ -93,9 +133,44 @@ export function TemplateLwM2M() {
           onClick={openTemplate}
         />
         <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
+        <Form {...form}>
+          <form className="w-full" onSubmit={e => e.preventDefault()}>
+            <FormField
+              control={form.control}
+              name="protocol"
+              render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select
+                      {...field}
+                      onValueChange={e => {
+                        onChange(e)
+                        setProtocolQuery(e)
+                      }}
+                      value={value}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        {fieldOptions?.map(
+                          (option: { value: string; label: string }) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </form>
+        </Form>
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
-        {data?.templates !== null && data?.templates?.length > 0 ? (
+        {data?.templates && data?.templates?.length > 0 ? (
           <div className="space-y-3">
             {data?.templates?.map((template: Template) => (
               <div className="flex" key={template.id}>
@@ -105,7 +180,7 @@ export function TemplateLwM2M() {
                   variant="muted"
                   onClick={() =>
                     navigate(
-                      `${PATHS.TEMPLATE_LWM2M}/${projectId}/${template.id}`,
+                      `${PATHS.TEMPLATE_OTHER}/${projectId}/${template.id}`,
                     )
                   }
                 >
@@ -154,6 +229,7 @@ export function TemplateLwM2M() {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
+                          console.log('haaaaa')
                           openDelete()
                           setId(template.id)
                           setName(template.name)
@@ -178,21 +254,42 @@ export function TemplateLwM2M() {
               t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
-        {isOpen && selectedUpdateTemplate ? (
+        {isOpen &&
+        selectedUpdateTemplate &&
+        selectedUpdateTemplate?.transport_config?.protocol === 'lwm2m' ? (
           <UpdateTemplateLwM2M
             close={close}
             isOpen={isOpen}
             selectedUpdateTemplate={selectedUpdateTemplate}
           />
         ) : null}
+        {isOpen &&
+        selectedUpdateTemplate &&
+        selectedUpdateTemplate?.transport_config?.protocol !== 'lwm2m' ? (
+          <UpdateTemplate
+            close={close}
+            isOpen={isOpen}
+            selectedUpdateTemplate={selectedUpdateTemplate}
+          />
+        ) : null}
       </div>
-      {isOpenTemplate && (
-        <CreateTemplateLwM2M
-          open={openTemplate}
-          close={closeTemplate}
-          isOpen={isOpenTemplate}
-        />
-      )}
+      {isOpenTemplate &&
+        (protocolQuery === 'lwm2m' || protocolQuery === 'other') && (
+          <CreateTemplateLwM2M
+            open={openTemplate}
+            close={closeTemplate}
+            isOpen={isOpenTemplate}
+          />
+        )}
+      {isOpenTemplate &&
+        protocolQuery !== 'lwm2m' &&
+        protocolQuery !== 'other' && (
+          <CreateTemplate
+            close={closeTemplate}
+            protocol={protocolQuery}
+            isOpen={isOpenTemplate}
+          />
+        )}
       {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
@@ -202,7 +299,6 @@ export function TemplateLwM2M() {
           ).replace('{{TEMPLATENAME}}', name)}
           close={closeDelete}
           isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

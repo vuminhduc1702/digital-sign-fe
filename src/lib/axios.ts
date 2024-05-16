@@ -67,6 +67,10 @@ axios.interceptors.response.use(
     let message = ''
     const errRes = error.response
 
+    if (errRes?.data?.message === 'malformed entity specification') {
+      message = i18n.t('error:server_res.malformed_data')
+    }
+
     switch (errRes?.status) {
       case 401:
         const refreshToken = storage.getToken()?.refresh_token
@@ -105,6 +109,8 @@ axios.interceptors.response.use(
     }
 
     switch (errRes?.data?.code) {
+      case 401:
+        return logoutFn()
       case 2003:
         message = i18n.t('error:server_res_status.2003')
         break

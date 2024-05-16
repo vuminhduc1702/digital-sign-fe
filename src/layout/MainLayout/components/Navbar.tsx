@@ -38,7 +38,7 @@ function Navbar() {
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({})
   const { data: userDataFromStorage } = useUser()
 
-  const { checkAccess } = useAuthorization()
+  const { checkAccessHook } = useAuthorization()
 
   const setProjectId = useProjectIdStore(state => state.setProjectId)
 
@@ -239,7 +239,7 @@ function Navbar() {
                   {t('cloud:custom_protocol.adapter.username')}
                 </Link>
               </DropdownMenuItem>
-              {checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+              {checkAccessHook({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
                 <DropdownMenuItem
                   asChild
                   className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
@@ -247,7 +247,7 @@ function Navbar() {
                   <Link to={PATHS.TENANT_MANAGE}>Tenant</Link>
                 </DropdownMenuItem>
               ) : null}
-              {checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+              {checkAccessHook({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
                 <DropdownMenuItem
                   asChild
                   className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
