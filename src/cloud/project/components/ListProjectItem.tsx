@@ -52,6 +52,8 @@ export function ListProjectItem({
 
   const { mutate, isLoading, isSuccess } = useDeleteProject()
 
+  const [projectIdRouter, setProjectIdRouter] = useState('')
+
   const setProjectId = useProjectIdStore(state => state.setProjectId)
 
   const [selectedUpdateProject, setSelectedUpdateProject] = useState<Project>()
@@ -74,6 +76,12 @@ export function ListProjectItem({
     }
   }, [isSuccess])
 
+  useEffect(() => {
+    if (projectIdRouter) {
+      navigate(`${PATHS.ORG_MANAGE}/${projectIdRouter}`)
+    }
+  }, [projectIdRouter])
+
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {listProjectData?.map((project: Project) => {
@@ -91,7 +99,7 @@ export function ListProjectItem({
             onClick={() => {
               storage.setProject(project)
               setProjectId(project.id)
-              navigate(`${PATHS.ORG_MANAGE}/${project.id}`)
+              setProjectIdRouter(project.id)
             }}
           >
             <div

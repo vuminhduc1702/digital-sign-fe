@@ -129,16 +129,18 @@ export const AppRoutes = () => {
   const routes = userDataFromStorage ? protectedRoutes : publicRoutes
 
   const mapRoutes = (routes: Readonly<RouteObject[]>) => {
-    return routes.map(route => (
-      <Route
-        key={route.path}
-        path={route.path}
-        element={route.element}
-        loader={route.loader}
-      >
-        {route.children && mapRoutes(route.children)}
-      </Route>
-    ))
+    return routes.map((route, index) => {
+      return (
+        <Route
+          key={index}
+          path={route.path}
+          element={route.element}
+          loader={route.loader}
+        >
+          {route.children && mapRoutes(route.children)}
+        </Route>
+      )
+    })
   }
 
   return (
