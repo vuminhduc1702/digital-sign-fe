@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
@@ -10,7 +10,12 @@ import {
 } from '@/cloud/customProtocol/api/entityThing'
 import { thingTypeList } from '@/cloud/customProtocol/components'
 import { Button } from '@/components/ui/button'
-import { InputField, SelectDropdown, SelectField } from '@/components/Form'
+import {
+  FieldWrapper,
+  InputField,
+  SelectDropdown,
+  SelectField,
+} from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
 import storage from '@/utils/storage'
 import { cn } from '@/utils/misc'
@@ -20,13 +25,14 @@ import { nameSchema } from '@/utils/schemaValidation'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export const entityThingSchema = z
   .object({
     name: nameSchema,
     // project_id: z.string().optional(),
     description: z.string(),
-    share: z.literal(true).optional(),
+    share: z.boolean().optional(),
   })
   .and(
     z.discriminatedUnion('type', [
@@ -59,7 +65,6 @@ export function CreateThing({
     useForm<CreateEntityThingDTO['data']>({
       resolver: entityThingSchema && zodResolver(entityThingSchema),
     })
-  console.log('formState.errors', formState.errors)
 
   const {
     mutate: mutateThing,
@@ -80,6 +85,7 @@ export function CreateThing({
     setValue('name', '')
     setValue('description', '')
     setValue('type', thingType)
+    setValue('share', false)
   }
 
   return (
@@ -96,11 +102,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  // project_id: projectId,
+                  project_id: values.share ? undefined : projectId,
                   description: values.description,
                   type: values.type,
                   base_template: values.base_template,
-                  share: true,
+                  share: values.share,
                 },
               })
             }
@@ -108,11 +114,11 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  // project_id: projectId,
+                  project_id: values.share ? undefined : projectId,
                   description: values.description,
                   type: values.type,
                   base_shapes: values.base_shapes,
-                  share: true,
+                  share: values.share,
                 },
               })
             }
@@ -120,10 +126,10 @@ export function CreateThing({
               mutateThing({
                 data: {
                   name: values.name,
-                  // project_id: projectId,
+                  project_id: values.share ? undefined : projectId,
                   description: values.description,
                   type: values.type,
-                  share: true,
+                  share: values.share,
                 },
               })
             }
@@ -174,6 +180,25 @@ export function CreateThing({
               error={formState.errors['description']}
               registration={register('description')}
             />
+            <FieldWrapper
+              className="w-fit space-y-2"
+              label={t('cloud:custom_protocol.thing.shared')}
+              error={formState?.errors['share']}
+            >
+              <Controller
+                control={control}
+                name={'share'}
+                render={({ field: { onChange, value, ...field } }) => {
+                  return (
+                    <Checkbox
+                      {...field}
+                      checked={value}
+                      onCheckedChange={onChange}
+                    />
+                  )
+                }}
+              />
+            </FieldWrapper>
           </>
         </form>
       }

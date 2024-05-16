@@ -21,6 +21,7 @@ export const addColumn = ({ data }: AddColumnDTO) => {
       type: 'add',
       field: {
         name: item.name,
+        type: item.type,
       },
     })),
   }

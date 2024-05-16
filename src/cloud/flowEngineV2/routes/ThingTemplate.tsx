@@ -12,6 +12,7 @@ import { CreateThing, ThingTable } from '../components/Attributes'
 import { SearchField } from '@/components/Input'
 import { useDisclosure } from '@/utils/hooks'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { Switch } from '@/components/ui/switch'
 
 export function ThingTemplate() {
   const { t } = useTranslation()
@@ -23,6 +24,7 @@ export function ThingTemplate() {
   const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchData, setIsSearchData] = useState<boolean>(false)
+  const [isShared, setIsShared] = useState<boolean>(true)
   const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
@@ -40,6 +42,7 @@ export function ThingTemplate() {
     offset,
     search_str: searchQuery,
     search_field: searchField.current,
+    share: isShared ? 'true' : 'false',
   })
 
   const {
@@ -92,26 +95,35 @@ export function ThingTemplate() {
       <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <div className="flex w-full items-center justify-between gap-x-3">
-            <SearchField
-              setSearchValue={setSearchQuery}
-              searchField={searchField}
-              fieldOptions={[
-                {
-                  value: 'name,id',
-                  label: t('search:all'),
-                },
-                {
-                  value: 'name',
-                  label: t('cloud:custom_protocol.thing.name'),
-                },
-                {
-                  value: 'id',
-                  label: t('cloud:custom_protocol.thing.id'),
-                },
-              ]}
-              setIsSearchData={setIsSearchData}
-              closeSearch={true}
-            />
+            <div className="flex items-center gap-x-3">
+              <span className="font-medium">
+                {t('cloud:custom_protocol.thing.shared')}:
+              </span>
+              <Switch
+                onCheckedChange={checked => setIsShared(checked)}
+                checked={isShared}
+              />
+              <SearchField
+                setSearchValue={setSearchQuery}
+                searchField={searchField}
+                fieldOptions={[
+                  {
+                    value: 'name,id',
+                    label: t('search:all'),
+                  },
+                  {
+                    value: 'name',
+                    label: t('cloud:custom_protocol.thing.name'),
+                  },
+                  {
+                    value: 'id',
+                    label: t('cloud:custom_protocol.thing.id'),
+                  },
+                ]}
+                setIsSearchData={setIsSearchData}
+                closeSearch={true}
+              />
+            </div>
             <CreateThing thingType="thing" />
           </div>
         </div>

@@ -1156,7 +1156,7 @@ export function CreateWidget({
                                             size="square"
                                           >
                                             <div
-                                              className="w-10"
+                                              className="h-[15px] w-[20px]"
                                               style={{
                                                 backgroundColor: `${value}`,
                                               }}

@@ -270,16 +270,16 @@ export function UpdateWidget({
     return result
   })
 
-  // useEffect(() => {
-  //   if (!fetchData) return
-  //   attrChartMutate({
-  //     data: {
-  //       entity_ids: watch('device') || [],
-  //       entity_type: 'DEVICE',
-  //       version_two: true,
-  //     },
-  //   })
-  // }, [fetchData])
+  useEffect(() => {
+    if (!fetchData) return
+    attrChartMutate({
+      data: {
+        entity_ids: watch('device') || [],
+        entity_type: 'DEVICE',
+        version_two: true,
+      },
+    })
+  }, [fetchData])
 
   // remove duplicate in attrSelectData
   function removeDup(
@@ -710,7 +710,6 @@ export function UpdateWidget({
                         }
                         isWrappedArray
                         customOnChange={option => {
-                          console.log(option[0])
                           if (option[0]) {
                             attrChartMutate({
                               data: {
@@ -903,7 +902,7 @@ export function UpdateWidget({
                                           size="square"
                                         >
                                           <div
-                                            className="w-[10px] "
+                                            className="h-[15px] w-[20px]"
                                             style={{
                                               backgroundColor: `${value}`,
                                             }}

@@ -17,7 +17,7 @@ type CreateEntityThingRes = {
 } & BaseAPIRes
 
 export type CreateEntityThingDTO = {
-  data: z.infer<typeof entityThingSchema>
+  data: z.infer<typeof entityThingSchema> & { project_id?: string }
 }
 
 export const createEntityThing = ({
