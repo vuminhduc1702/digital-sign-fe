@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
+import { InputField, SelectField } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useAddColumn, type AddColumnDTO } from '../api'
 
@@ -32,11 +32,14 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import i18n from '@/i18n'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
 
 export const createColumnSchema = z.object({
   fields: z.array(
     z.object({
       name: nameSchema,
+      type: z.string().min(1, { message: i18n.t('schema:value_type') }),
     }),
   ),
 })
@@ -69,7 +72,7 @@ export default function CreateColumn({
     resolver: createColumnSchema && zodResolver(createColumnSchema),
     defaultValues: {
       table: '',
-      fields: [{ name: '' }],
+      fields: [{ name: '', type: '' }],
     },
   })
   const { fields, append, remove } = useFieldArray({
@@ -100,6 +103,7 @@ export default function CreateColumn({
             className="w-full space-y-5"
             id="create-database"
             onSubmit={handleSubmit(async values => {
+              console.log(values)
               mutateAsync({
                 data: {
                   project_id: projectId,
@@ -120,6 +124,7 @@ export default function CreateColumn({
                 onClick={() =>
                   append({
                     name: '',
+                    type: '',
                   })
                 }
               />
@@ -128,11 +133,18 @@ export default function CreateColumn({
                   key={field.id}
                   className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
                 >
-                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-1">
+                  <div className="flex w-full gap-x-4 gap-y-2">
                     <InputField
                       label={t('cloud:db_template.add_db.column')}
                       error={formState?.errors?.fields?.[index]?.name}
                       registration={register(`fields.${index}.name` as const)}
+                    />
+                    <SelectField
+                      className="h-[36px] py-1"
+                      label={t('cloud:db_template.add_db.type')}
+                      error={formState?.errors?.fields?.[index]?.type}
+                      registration={register(`fields.${index}.type` as const)}
+                      options={outputList}
                     />
                   </div>
                   <Button
