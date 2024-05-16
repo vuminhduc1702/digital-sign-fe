@@ -85,11 +85,6 @@ axios.interceptors.response.use(
       case 404:
         message = i18n.t('error:server_res.notfound')
         break
-      default:
-        message = errRes?.data?.message ?? error.message
-    }
-
-    switch (errRes?.data?.code) {
       case 2003:
         message = i18n.t('error:server_res_status.2003')
         break
