@@ -28,9 +28,18 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 export const createRowsSchema = z.object({
-  fields: z.array(z.record(z.string())),
+  fields: z.array(z.record(z.string().optional())),
 })
 
 export default function CreateRows({
@@ -60,15 +69,14 @@ export default function CreateRows({
     setDefaultValues(result)
   }, [columnsProp])
 
-  const { register, formState, watch, handleSubmit, control, reset } = useForm<
-    AddRowsDTO['dataSendBE']
-  >({
+  const form = useForm<AddRowsDTO['dataSendBE']>({
     resolver: createRowsSchema && zodResolver(createRowsSchema),
     defaultValues: {
       table: '',
       fields: [defaultValues],
     },
   })
+  const { control, handleSubmit } = form
   const { fields, append, remove } = useFieldArray({
     name: 'fields',
     control,
@@ -93,63 +101,78 @@ export default function CreateRows({
           <SheetTitle>{t('cloud:db_template.add_db.add_row')}</SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            className="w-full space-y-5"
-            id="create-database"
-            onSubmit={handleSubmit(async values => {
-              mutateAsync({
-                dataSendBE: {
-                  project_id: projectId,
-                  table: tableName || '',
-                  fields: values.fields,
-                },
-              })
-            })}
-          >
-            <>
-              <Button
-                className="h-9 w-9 rounded-md"
-                variant="trans"
-                size="square"
-                startIcon={
-                  <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-                }
-                onClick={() => append(defaultValues)}
-              />
-              {fields.map((field, index) => (
-                <section
-                  key={field.id}
-                  className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
-                >
-                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                    {columnsProp?.map(item => (
-                      <InputField
-                        label={item}
-                        error={formState?.errors?.fields?.[index]?.item}
-                        registration={register(
-                          `fields.${index}.${item}` as const,
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <Button
-                    type="button"
-                    size="square"
-                    variant="trans"
-                    className="mt-3 border-none"
-                    onClick={() => remove(index)}
-                    startIcon={
-                      <img
-                        src={btnDeleteIcon}
-                        alt="Delete device template"
-                        className="h-8 w-8"
-                      />
-                    }
-                  />
-                </section>
-              ))}
-            </>
-          </form>
+          <Form {...form}>
+            <form
+              className="w-full space-y-5"
+              id="create-database"
+              onSubmit={handleSubmit(async values => {
+                mutateAsync({
+                  dataSendBE: {
+                    project_id: projectId,
+                    table: tableName || '',
+                    fields: values.fields,
+                  },
+                })
+              })}
+            >
+              <>
+                <Button
+                  className="h-9 w-9 rounded-md"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                  }
+                  onClick={() =>
+                    append({
+                      name: '',
+                      type: '',
+                    })
+                  }
+                />
+                {fields.map((field, index) => (
+                  <section
+                    key={field.id}
+                    className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
+                  >
+                    <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
+                      {columnsProp?.map(item => (
+                        <FormField
+                          control={form.control}
+                          name={`fields.${index}.${item}`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{item}</FormLabel>
+                              <div>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      ))}
+                    </div>
+                    <Button
+                      type="button"
+                      size="square"
+                      variant="trans"
+                      className="mt-3 border-none"
+                      onClick={() => remove(index)}
+                      startIcon={
+                        <img
+                          src={btnDeleteIcon}
+                          alt="Delete device template"
+                          className="h-8 w-8"
+                        />
+                      }
+                    />
+                  </section>
+                ))}
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>
