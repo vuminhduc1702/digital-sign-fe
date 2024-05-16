@@ -69,6 +69,13 @@ axios.interceptors.response.use(
       message = i18n.t('error:server_res.malformed_data')
     }
 
+    switch (errRes?.status) {
+      case 401:
+        return logoutFn()
+      default:
+        message = errRes?.statusText ?? error.message
+    }
+
     switch (errRes?.data?.code) {
       case 401:
         return logoutFn()
