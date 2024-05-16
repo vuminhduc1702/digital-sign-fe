@@ -1066,7 +1066,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <FormItem>
                                     <FormLabel>
                                       {t(
-                                        'cloud:org_manage.event_manage.add_event.condition.device',
+                                        'cloud:org_manage.event_manage.add_event.condition.temp',
                                       )}
                                     </FormLabel>
                                     <div>

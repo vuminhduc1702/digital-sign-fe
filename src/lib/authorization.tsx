@@ -1,7 +1,6 @@
-import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 
-import storage from '@/utils/storage'
+import storage, { type UserStorage } from '@/utils/storage'
 
 export const ROLES = {
   SYSTEM_ADMIN: 'SYSTEM_ADMIN',
@@ -11,29 +10,34 @@ export const ROLES = {
 } as const
 export type RoleTypes = (typeof ROLES)[keyof typeof ROLES]
 
-export const useAuthorization = () => {
-  const { t } = useTranslation()
+type CheckAccess = {
+  allowedRoles: Readonly<RoleTypes[]>
+}
 
+export const checkAccess = ({ allowedRoles }: CheckAccess) => {
   const userStorage = storage.getToken()
 
-  // if (!userStorage) {
-  //   throw Error(t('error:no_user'))
-  // }
+  if (!userStorage) return false
 
-  const checkAccess = useCallback(
-    ({ allowedRoles }: { allowedRoles: Readonly<RoleTypes[]> }) => {
-      if (!userStorage) return false
+  if (allowedRoles && allowedRoles.length > 0) {
+    return allowedRoles.includes(userStorage?.system_role)
+  }
 
-      if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles?.includes(userStorage?.system_role)
-      }
+  return true
+}
 
-      return true
-    },
-    [userStorage],
+export const useAuthorization = () => {
+  const userStorage = storage.getToken()
+
+  const checkAccessInternal = useCallback(
+    ({ allowedRoles }: CheckAccess) => checkAccess({ allowedRoles }),
+    [],
   )
 
-  return { checkAccess, role: userStorage?.system_role }
+  return {
+    checkAccessHook: checkAccessInternal,
+    role: userStorage?.system_role,
+  }
 }
 
 type AuthorizationProps = {

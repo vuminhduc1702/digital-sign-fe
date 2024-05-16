@@ -10,6 +10,7 @@ import { ListProjectItem } from './../components/ListProjectItem'
 import { SearchField } from '@/components/Input'
 import { BasePaginationSchema, nameSchema } from '@/utils/schemaValidation'
 import projectBackgroundImage from '@/assets/images/project-background.png'
+import { useAuthorization } from '@/lib/authorization'
 
 export const ProjectSchema = z.object({
   id: z.string(),
@@ -47,6 +48,8 @@ export type ProjectList = z.infer<typeof ProjectListSchema>
 export function ProjectManage() {
   const { t } = useTranslation()
 
+  const { checkAccessHook } = useAuthorization()
+
   const { data: projectsData } = useProjects()
   const [searchQuery, setSearchQuery] = useState('')
   const { data } = useProjects({
@@ -62,7 +65,10 @@ export function ProjectManage() {
           title={t('cloud:project_manager.project')}
         />
         <div className="ml-3 flex items-center gap-x-3">
-          <CreateProject />
+          {checkAccessHook({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+            <CreateProject />
+          ) : null}
+
           <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
         </div>
       </div>
