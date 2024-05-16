@@ -27,6 +27,22 @@ import {
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
 import { useEffect } from 'react'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const dataBaseAttrSchema = z.object({
   table: nameSchema,
@@ -55,15 +71,14 @@ export default function CreateDataBase({
 
   const { mutate, isLoading, isSuccess } = useCreateDataBase()
 
-  const { register, formState, watch, handleSubmit, control, reset } = useForm<
-    CreateDataBaseDTO['data']
-  >({
+  const form = useForm<CreateDataBaseDTO['data']>({
     resolver: dataBaseAttrSchema && zodResolver(dataBaseAttrSchema),
     defaultValues: {
       table: '',
       fields: [{ name: '', type: '' }],
     },
   })
+  const { control, handleSubmit } = form
   const { fields, append, remove } = useFieldArray({
     name: 'fields',
     control,
@@ -87,77 +102,134 @@ export default function CreateDataBase({
           <SheetTitle>{t('cloud:db_template.add_db.title')}</SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            className="w-full space-y-5"
-            id="create-database"
-            onSubmit={handleSubmit(async values => {
-              mutate({
-                data: {
-                  project_id: projectId,
-                  table: values.table,
-                  fields: values.fields,
-                },
-              })
-            })}
-          >
-            <>
-              <Button
-                className="h-9 w-9 rounded-md"
-                variant="trans"
-                size="square"
-                startIcon={
-                  <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-                }
-                onClick={() =>
-                  append({
-                    name: '',
-                    type: '',
-                  })
-                }
-              />
-              <InputField
-                label={t('cloud:db_template.add_db.name')}
-                error={formState.errors['table']}
-                registration={register('table')}
-              />
-
-              {fields.map((field, index) => (
-                <section
-                  key={field.id}
-                  className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
-                >
-                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-                    <InputField
-                      label={t('cloud:db_template.add_db.column')}
-                      error={formState?.errors?.fields?.[index]?.name}
-                      registration={register(`fields.${index}.name` as const)}
-                    />
-                    <SelectField
-                      className="h-[36px] py-1"
-                      label={t('cloud:db_template.add_db.type')}
-                      error={formState?.errors?.fields?.[index]?.type}
-                      registration={register(`fields.${index}.type` as const)}
-                      options={outputList}
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    size="square"
-                    variant="trans"
-                    className="mt-3 border-none"
-                    onClick={() => remove(index)}
-                    startIcon={
-                      <img
-                        src={btnDeleteIcon}
-                        alt="Delete device template"
-                        className="h-8 w-8"
+          <Form {...form}>
+            <form
+              className="w-full space-y-5"
+              id="create-database"
+              onSubmit={handleSubmit(async values => {
+                mutate({
+                  data: {
+                    project_id: projectId,
+                    table: values.table,
+                    fields: values.fields,
+                  },
+                })
+              })}
+            >
+              <>
+                <Button
+                  className="h-9 w-9 rounded-md"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                  }
+                  onClick={() =>
+                    append({
+                      name: '',
+                      type: '',
+                    })
+                  }
+                />
+                <FormField
+                  control={form.control}
+                  name="table"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:db_template.add_db.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                {fields.map((field, index) => (
+                  <section
+                    key={field.id}
+                    className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
+                  >
+                    <div className="flex w-full gap-x-4 gap-y-2">
+                      <FormField
+                        control={form.control}
+                        name={`fields.${index}.name`}
+                        render={({ field }) => (
+                          <FormItem className="w-1/2">
+                            <FormLabel>
+                              {t('cloud:db_template.add_db.column')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
                       />
-                    }
-                  />
-                </section>
-              ))}
-            </>
-          </form>
+                      <FormField
+                        control={form.control}
+                        name={`fields.${index}.type`}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem className="w-1/2">
+                            <FormLabel>
+                              {t('cloud:db_template.add_db.type')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Select
+                                  {...field}
+                                  onValueChange={onChange}
+                                  value={value}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-white">
+                                    {outputList?.map(
+                                      (option: {
+                                        value: string
+                                        label: string
+                                      }) => (
+                                        <SelectItem
+                                          key={option.value}
+                                          value={option.value}
+                                        >
+                                          {option.label}
+                                        </SelectItem>
+                                      ),
+                                    )}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      size="square"
+                      variant="trans"
+                      className="mt-3 border-none"
+                      onClick={() => remove(index)}
+                      startIcon={
+                        <img
+                          src={btnDeleteIcon}
+                          alt="Delete device template"
+                          className="h-8 w-8"
+                        />
+                      }
+                    />
+                  </section>
+                ))}
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>
