@@ -594,6 +594,7 @@
         "base_template": "Base template",
         "base_shapes": "Base shape",
         "description": "Mô tả",
+        "shared": "Shared",
         "choose": "Vui lòng chọn Thing",
         "delete": "Xóa Thing",
         "edit": " Sửa Thing",
