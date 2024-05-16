@@ -20,6 +20,7 @@ export type FieldsList = {
 
 export type FieldsColumn = {
   name: string
+  type: string
 }
 
 export type FieldsRows = {
