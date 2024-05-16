@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+
 import { axios } from '@/lib/axios'
+import { checkAccess } from '@/lib/authorization'
 
 import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type OrgList } from '../types'
@@ -67,6 +69,7 @@ export const useGetOrgs = ({
         search_str,
         search_field,
       }),
+    enabled: checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }),
     ...config,
   })
 }

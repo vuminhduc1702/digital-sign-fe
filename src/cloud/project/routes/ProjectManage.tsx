@@ -48,7 +48,7 @@ export type ProjectList = z.infer<typeof ProjectListSchema>
 export function ProjectManage() {
   const { t } = useTranslation()
 
-  const { checkAccess } = useAuthorization()
+  const { checkAccessHook } = useAuthorization()
 
   const { data: projectsData } = useProjects()
   const [searchQuery, setSearchQuery] = useState('')
@@ -65,7 +65,7 @@ export function ProjectManage() {
           title={t('cloud:project_manager.project')}
         />
         <div className="ml-3 flex items-center gap-x-3">
-          {checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+          {checkAccessHook({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
             <CreateProject />
           ) : null}
 
