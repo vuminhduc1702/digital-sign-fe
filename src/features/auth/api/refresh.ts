@@ -16,15 +16,3 @@ export const useRefreshToken = (
 
   return axiosPersistLogin.get('/api/token/refresh')
 }
-
-// import { axios } from '@/lib/axios'
-
-// import { type UserResponse } from '../types'
-
-// export const useRefreshToken = (
-//   refreshToken: string,
-// ): Promise<UserResponse> => {
-//   return axios.get('/api/token/refresh', {
-//     headers: { RefreshToken: refreshToken },
-//   })
-// }
