@@ -6,6 +6,7 @@ const storagePrefix = 'iot_platform_'
 
 export type UserStorage = {
   token: string
+  refresh_token: string
   system_role: RoleTypes
   timestamp: Date
   device_token: string
@@ -53,6 +54,19 @@ const storage = {
   },
   clearProject: () => {
     window.localStorage.removeItem(`${storagePrefix}project`)
+  },
+
+  getIsPersistLogin: () => {
+    return window.localStorage.getItem(`${storagePrefix}is-persist-login`)
+  },
+  setIsPersistLogin: (checked: boolean) => {
+    window.localStorage.setItem(
+      `${storagePrefix}is-persist-login`,
+      JSON.stringify(checked),
+    )
+  },
+  clearIsPersistLogin: () => {
+    window.localStorage.removeItem(`${storagePrefix}is-persist-login`)
   },
 }
 

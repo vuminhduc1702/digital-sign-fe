@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import storage, { type UserStorage } from '@/utils/storage'
+import storage from '@/utils/storage'
 
 export const ROLES = {
   SYSTEM_ADMIN: 'SYSTEM_ADMIN',
@@ -60,12 +60,12 @@ export const Authorization = ({
   forbiddenFallback = null,
   children,
 }: AuthorizationProps) => {
-  const { checkAccess } = useAuthorization()
+  const { checkAccessHook } = useAuthorization()
 
   let canAccess = false
 
   if (allowedRoles) {
-    canAccess = checkAccess({ allowedRoles })
+    canAccess = checkAccessHook({ allowedRoles })
   }
 
   if (typeof policyCheck !== 'undefined') {
