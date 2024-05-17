@@ -5,10 +5,10 @@ import { useDeviceById } from '../../api/deviceAPI'
 import { Link } from '@/components/Link'
 import { PATHS } from '@/routes/PATHS'
 import storage from '@/utils/storage'
-
+import { useEffect } from 'react'
 import { BreadcrumbIcon } from '@/components/SVGIcons'
 
-export function DeviceBreadcrumbs() {
+export function DeviceBreadcrumbs({ onTemplateIdChange }) {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
@@ -17,7 +17,13 @@ export function DeviceBreadcrumbs() {
   const orgId = params.orgId || ''
   const deviceId = params.deviceId as string
   const { data: deviceData } = useDeviceById({ deviceId })
+  const templateId = deviceData?.template_id
 
+  useEffect(() => {
+    if (templateId) {
+      onTemplateIdChange(templateId)
+    }
+  }, [templateId, onTemplateIdChange])
   return (
     <nav className="flex" aria-label="Breadcrumb">
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
