@@ -10,6 +10,7 @@ import {
 import { toast } from 'sonner'
 
 import i18n from '@/i18n'
+import storage from '@/utils/storage'
 
 const queryConfig: DefaultOptions = {
   queries: {
@@ -18,14 +19,20 @@ const queryConfig: DefaultOptions = {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
     retry: (failureCount, error: any) => {
-      console.log(
-        `Response Code: ${error.response?.status} failureCount: ${failureCount}`,
-      )
+      if (
+        storage.getIsPersistLogin() === 'true' &&
+        error.response?.status === 401 &&
+        failureCount < 3
+      ) {
+        return true
+      }
+
       const shouldRetry =
         error.response?.status !== 403 &&
         error.response?.status !== 401 &&
         error.response?.status != null &&
         failureCount < 3
+
       return shouldRetry
     },
     retryDelay: attemptIndex =>
@@ -38,6 +45,9 @@ export const queryClient = new QueryClient({
   defaultOptions: queryConfig,
   queryCache: new QueryCache({
     onError: error => {
+      if (storage.getIsPersistLogin() === 'false') {
+        return
+      }
       toast.error(i18n.t('error:server_res.title'), {
         description: (error as AxiosError).message,
       })
@@ -45,6 +55,9 @@ export const queryClient = new QueryClient({
   }),
   mutationCache: new MutationCache({
     onError: error => {
+      if (storage.getIsPersistLogin() === 'false') {
+        return
+      }
       toast.error(i18n.t('error:server_res.title'), {
         description: (error as AxiosError).message,
       })

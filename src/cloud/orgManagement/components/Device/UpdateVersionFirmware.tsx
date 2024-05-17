@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { SelectDropdown, type SelectOption } from '@/components/Form'
+import { SelectDropdown } from '@/components/Form'
 
 import { useGetFirmwares } from '@/cloud/firmware/api/firmwareAPI'
 import {
@@ -31,6 +31,7 @@ import { cn } from '@/utils/misc'
 
 type UploadFileFirmWareProps = {
   deviceId: string
+  templateId: string
   close: () => void
   isOpen: boolean
 }
@@ -41,19 +42,20 @@ export const updateVersionSchema = z.object({
 
 export function UpdateVersionFirmWare({
   deviceId,
+  templateId,
   close,
   isOpen,
 }: UploadFileFirmWareProps) {
   const { t } = useTranslation()
-  const [fotaValue, setFotaValue] = useState<SelectOption | null>()
 
   const projectId = storage.getProject()?.id
   const { data } = useGetFirmwares({
     projectId,
+    templateId,
   })
 
   const { mutate, isLoading, isSuccess } = useUpdateVersionFirmware()
-  const { formState, setError, control, setValue, handleSubmit } = useForm<
+  const { formState, control, handleSubmit } = useForm<
     UpdateVersionFirmwareDTO['data']
   >({
     resolver: updateVersionSchema && zodResolver(updateVersionSchema),

@@ -2,7 +2,7 @@ import { PATHS } from '@/routes/PATHS'
 import { useProjectIdStore } from '@/stores/project'
 import storage from '@/utils/storage'
 import defaultProjectImage from '@/assets/images/default-project.png'
-import { type Project, type ProjectList } from '../routes/ProjectManage'
+import { type Project } from '../routes/ProjectManage'
 import {
   Tooltip,
   TooltipContent,
@@ -11,11 +11,9 @@ import {
 } from '@/components/ui/tooltip'
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
 
-import { Button } from '@/components/ui/button'
 import { useDisclosure } from '@/utils/hooks'
 import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { useTranslation } from 'react-i18next'
 import { useDeleteProject } from '../api/deleteProject'
 import { UpdateProject } from './UpdateProject'
@@ -35,7 +33,7 @@ import { ConfirmDialog } from '@/components/ConfirmDialog'
 export function ListProjectItem({
   listProjectData,
 }: {
-  listProjectData: ProjectList
+  listProjectData: Project[]
 }) {
   const { t } = useTranslation()
   const [name, setName] = useState('')

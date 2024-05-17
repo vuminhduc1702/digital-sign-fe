@@ -1,12 +1,7 @@
 import { axios } from '@/lib/axios'
 
 import { type UserResponse } from '../types'
-
-export type LoginCredentialsDTO = {
-  identifier: string
-  password: string
-  checked?: boolean
-}
+import { type LoginCredentialsDTO } from '../components/LoginForm'
 
 export const loginWithEmailAndPassword = (
   data: LoginCredentialsDTO,
