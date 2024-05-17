@@ -15,12 +15,15 @@ export const getProjects = ({
   search_field,
   search_str,
 }: GetProjects): Promise<ProjectList> => {
-  return axios.get('/api/projects', {
-    params: {
-      search_field,
-      search_str,
-    },
+  const searchFieldArray = search_field?.split(',')
+  const params = new URLSearchParams({
+    search_str: search_str || '',
   })
+  searchFieldArray?.forEach(field => {
+    params.append('search_field', field)
+  })
+
+  return axios.get('/api/projects', { params })
 }
 
 type QueryFnType = typeof getProjects

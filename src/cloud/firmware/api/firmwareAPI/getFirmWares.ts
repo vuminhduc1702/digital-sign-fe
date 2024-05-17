@@ -8,6 +8,7 @@ import { limitPagination } from '@/utils/const'
 
 type GetFirmWares = {
   projectId: string
+  templateId: string
   offset?: number
   limit?: number
   search_field?: string
@@ -21,6 +22,7 @@ export type GetFirmWareRes = {
 
 export const getFirmwares = ({
   projectId,
+  templateId,
   offset,
   limit,
   search_field,
@@ -29,6 +31,7 @@ export const getFirmwares = ({
   const searchFieldArray = search_field?.split(',')
   const params = new URLSearchParams({
     project_id: projectId,
+    template_id: templateId,
     offset: String(offset),
     limit: String(limit),
     search_str: search_str || '',
@@ -38,13 +41,6 @@ export const getFirmwares = ({
   })
   return axios.get(`/api/ota`, {
     params,
-    // : {
-    //   project_id: projectId,
-    //   offset,
-    //   limit,
-    //   search_field,
-    //   search_str,
-    // },
   })
 }
 
@@ -56,6 +52,7 @@ type UseEntityFirmWareOptions = {
 
 export const useGetFirmwares = ({
   projectId,
+  templateId,
   config,
   offset = 0,
   limit = limitPagination,
@@ -63,9 +60,24 @@ export const useGetFirmwares = ({
   search_str,
 }: UseEntityFirmWareOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['firm-ware', projectId, offset, limit, search_field, search_str],
+    queryKey: [
+      'firm-ware',
+      projectId,
+      templateId,
+      offset,
+      limit,
+      search_field,
+      search_str,
+    ],
     queryFn: () =>
-      getFirmwares({ projectId, offset, limit, search_field, search_str }),
+      getFirmwares({
+        projectId,
+        templateId,
+        offset,
+        limit,
+        search_field,
+        search_str,
+      }),
     ...config,
   })
 }
