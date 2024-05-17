@@ -39,6 +39,8 @@ export const axiosUploadFile = Axios.create({
 
 axios.interceptors.request.use(authRequestInterceptor)
 axiosUploadFile.interceptors.request.use(authRequestInterceptor)
+
+let refreshInProgress = false
 axios.interceptors.response.use(
   response => {
     let message = ''
@@ -72,28 +74,37 @@ axios.interceptors.response.use(
 
     switch (errRes?.status) {
       case 401:
-        const refreshToken = storage.getToken()?.refresh_token
-        const prevRequest = error?.config as AxiosRequestConfig
-        if (
-          storage.getIsPersistLogin() === 'true' &&
-          refreshToken != null &&
-          !prevRequest?.sent
-        ) {
-          prevRequest.sent = true
-          const {
-            data: { token: newAccessToken },
-          } = await useRefreshToken(refreshToken)
-          if (newAccessToken != null) {
-            storage.setToken({
-              ...storage.getToken(),
-              token: newAccessToken,
-              refresh_token: refreshToken,
-            })
+        if (!refreshInProgress) {
+          refreshInProgress = true
+          const refreshToken = storage.getToken()?.refresh_token
+          const prevRequest = error?.config as AxiosRequestConfig
+          if (
+            storage.getIsPersistLogin() === 'true' &&
+            refreshToken != null &&
+            !prevRequest?.sent
+          ) {
+            prevRequest.sent = true
+            try {
+              const {
+                data: { token: newAccessToken },
+              } = await useRefreshToken(refreshToken)
+              if (newAccessToken != null) {
+                storage.setToken({
+                  ...storage.getToken(),
+                  token: newAccessToken,
+                  refresh_token: refreshToken,
+                })
+              }
+            } catch {
+              return logoutFn()
+            } finally {
+              refreshInProgress = false
+            }
+          } else {
+            return logoutFn()
           }
-          break
-        } else {
-          return logoutFn()
         }
+        break
       case 403:
         message = i18n.t('error:server_res.authorization')
         break

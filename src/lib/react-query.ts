@@ -21,7 +21,8 @@ const queryConfig: DefaultOptions = {
     retry: (failureCount, error: any) => {
       if (
         storage.getIsPersistLogin() === 'true' &&
-        error.response?.status === 401
+        error.response?.status === 401 &&
+        failureCount < 3
       ) {
         return true
       }
