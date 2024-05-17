@@ -22,6 +22,8 @@ import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
 import { SearchField } from '@/components/Input'
 import { useDisclosure } from '@/utils/hooks'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { AttrLwM2MTable } from '@/cloud/deviceTemplate/components/AttrLwM2MTable'
+import { useTemplateById } from '@/cloud/deviceTemplate/api/getTemplateById'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -31,9 +33,11 @@ export function DeviceDetail() {
   const deviceId = params.deviceId as string
   const projectId = params.projectId as string
   const entityTypeAttr = 'DEVICE'
+  const [searchQuery, setSearchQuery] = useState('')
   const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
+  const [templateId, setTemplateId] = useState('')
   const {
     close: closeAttrs,
     open: openAttrs,
@@ -44,6 +48,7 @@ export function DeviceDetail() {
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
   } = useDisclosure()
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const [isSearchDataAttrs, setIsSearchDataAttrs] = useState<boolean>(false)
   const [isSearchDataMQTTLog, setIsSearchDataMQTTLog] = useState<boolean>(false)
   const [isSearchDataAttrsLog, setIsSearchDataAttrsLog] =
@@ -59,6 +64,49 @@ export function DeviceDetail() {
     entityId: deviceId,
     key_search: searchQueryAttrs,
   })
+
+  const {
+    data: LwM2MDataById,
+    isPreviousData: isPreviousLwM2MDataById,
+    isLoading: isLoadingLwM2MDataById,
+  } = useTemplateById({
+    templateId: templateId,
+  })
+
+  const moduleConfig = LwM2MDataById?.transport_config?.info?.module_config
+
+  const attrsLwM2MData = moduleConfig?.flatMap(module => module.attribute_info)
+
+  // attrLwM2MData
+  const [rowSelectionAttrLwM2M, setRowSelectionAttrLwM2M] = useState({})
+  const pdfHeaderAttr = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:org_manage.org_manage.table.attr_key'),
+      t('cloud:org_manage.org_manage.table.value_type'),
+      t('cloud:org_manage.org_manage.table.id'),
+    ],
+    [],
+  )
+  const rowSelectionKeyAttr = Object.keys(rowSelectionAttrLwM2M)
+  const formatExcelAttrLwM2M =
+    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
+      (acc, curr, index) => {
+        curr.attribute_info?.forEach((attr, index) => {
+          if (rowSelectionKeyAttr.includes(attr.id)) {
+            const temp = {
+              [t('table:no')]: (index + 1).toString(),
+              [t('cloud:org_manage.org_manage.table.attr_key')]: attr.name,
+              [t('cloud:org_manage.org_manage.table.value_type')]: attr.type,
+              [t('cloud:org_manage.org_manage.table.id')]: attr.id,
+            }
+            acc.push(temp)
+          }
+        })
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeaderAttrs = useMemo(
@@ -199,7 +247,10 @@ export function DeviceDetail() {
 
   return (
     <div ref={ref} className="flex grow flex-col">
-      <TitleBar className="normal-case" title={<DeviceBreadcrumbs />} />
+      <TitleBar
+        className="normal-case"
+        title={<DeviceBreadcrumbs onTemplateIdChange={setTemplateId} />}
+      />
       <Tabs defaultValue="attr_list" className="mt-2 flex grow flex-col">
         <TabsList className="mt-2 w-full bg-secondary-500">
           <TabsTrigger value="attr_list">
@@ -231,47 +282,76 @@ export function DeviceDetail() {
         </TabsList>
         <TabsContent value="attr_list" className="mt-2 flex grow flex-col">
           <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
-            <div className="flex justify-between">
-              <div className="flex w-full items-center justify-between gap-x-3">
-                <SearchField
-                  setSearchValue={setSearchQueryAttrs}
-                  setIsSearchData={setIsSearchDataAttrs}
-                  closeSearch={true}
-                />
-                <Button
-                  className="h-[38px] rounded border-none"
-                  onClick={openAttrs}
-                >
-                  {t('cloud:org_manage.org_manage.add_attr.button')}
-                </Button>
-              </div>
-            </div>
-            <AttrTable
-              data={attrsData?.attributes ?? []}
-              entityId={deviceId}
-              entityType="DEVICE"
-              rowSelection={rowSelection}
-              setRowSelection={setRowSelection}
-              isPreviousData={isPreviousDataAttrs}
-              isLoading={isLoadingAttrs}
-              pdfHeader={pdfHeaderAttrs}
-              formatExcel={formatExcelAttrs}
-              isSearchData={searchQueryAttrs.length > 0 && isSearchDataAttrs}
-              utilityButton={
-                Object.keys(rowSelection).length > 0 && (
-                  <div className="flex items-center">
+            {attrsData && !attrsLwM2MData ? (
+              <div>
+                <div className="flex justify-between">
+                  <div className="flex w-full items-center justify-between gap-x-3">
+                    <SearchField
+                      setSearchValue={setSearchQueryAttrs}
+                      setIsSearchData={setIsSearchDataAttrs}
+                      closeSearch={true}
+                    />
                     <Button
-                      size="sm"
-                      onClick={openDeleteMulti}
-                      className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                      className="h-[38px] rounded border-none"
+                      onClick={openAttrs}
                     >
-                      <div>{t('btn:delete')}:</div>
-                      <div>{Object.keys(rowSelection).length}</div>
+                      {t('cloud:org_manage.org_manage.add_attr.button')}
                     </Button>
                   </div>
-                )
-              }
-            />
+                </div>
+                <AttrTable
+                  data={attrsData?.attributes ?? []}
+                  entityId={deviceId}
+                  entityType="DEVICE"
+                  rowSelection={rowSelection}
+                  setRowSelection={setRowSelection}
+                  isPreviousData={isPreviousDataAttrs}
+                  isLoading={isLoadingAttrs}
+                  pdfHeader={pdfHeaderAttrs}
+                  formatExcel={formatExcelAttrs}
+                  isSearchData={
+                    searchQueryAttrs.length > 0 && isSearchDataAttrs
+                  }
+                  utilityButton={
+                    Object.keys(rowSelection).length > 0 && (
+                      <div className="flex items-center">
+                        <Button
+                          size="sm"
+                          onClick={openDeleteMulti}
+                          className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                        >
+                          <div>{t('btn:delete')}:</div>
+                          <div>{Object.keys(rowSelection).length}</div>
+                        </Button>
+                      </div>
+                    )
+                  }
+                />
+              </div>
+            ) : null}
+            {attrsLwM2MData ? (
+              <div>
+                <div className="flex justify-between">
+                  <div className="flex w-full items-center justify-between gap-x-3">
+                    <SearchField
+                      setSearchValue={setSearchQuery}
+                      setIsSearchData={setIsSearchData}
+                      closeSearch={true}
+                    />
+                  </div>
+                </div>
+                <AttrLwM2MTable
+                  attributeInfo={attrsLwM2MData ?? []}
+                  rowSelection={rowSelectionAttrLwM2M}
+                  setRowSelection={setRowSelectionAttrLwM2M}
+                  isPreviousData={isPreviousLwM2MDataById}
+                  isLoading={isLoadingLwM2MDataById}
+                  pdfHeader={pdfHeaderAttr}
+                  formatExcel={formatExcelAttrLwM2M}
+                  isSearchData={searchQuery.length > 0 && isSearchData}
+                />
+              </div>
+            ) : null}
           </div>
         </TabsContent>
         <TabsContent value="attr_log" className="mt-2 flex grow flex-col">
