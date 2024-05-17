@@ -20,16 +20,14 @@ import {
   EyeShow,
 } from '@/components/SVGIcons'
 
-const schema = z.object({
+const loginSchema = z.object({
   identifier: emailSchema,
   password: passwordSchema,
   checked: z.boolean().optional(),
+  isPersistLogin: z.boolean().optional(),
 })
 
-export type LoginValues = {
-  identifier: string
-  password: string
-}
+export type LoginCredentialsDTO = z.infer<typeof loginSchema>
 
 type LoginFormProps = {
   onSuccess: () => void
@@ -37,17 +35,23 @@ type LoginFormProps = {
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { t } = useTranslation()
-  const UserStorage = storage.getUserLogin() as LoginValues
+  const userStorage = storage.getUserLogin()
 
   const [showPassword, setShowPassword] = useState(false)
   const login = useLogin()
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
-  const { register, formState, handleSubmit, control } = useForm<LoginValues>({
-    resolver: schema && zodResolver(schema),
-    values: UserStorage,
-  })
+  const { register, formState, handleSubmit, control } =
+    useForm<LoginCredentialsDTO>({
+      resolver: loginSchema && zodResolver(loginSchema),
+      values: {
+        password: userStorage?.password,
+        identifier: userStorage?.identifier,
+        checked: userStorage?.checked,
+        isPersistLogin: storage.getIsPersistLogin() === 'true' ? true : false,
+      },
+    })
   return (
     <div>
       <form
@@ -118,11 +122,12 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           >
             <Controller
               control={control}
-              name={'checked'}
+              name="checked"
               render={({ field: { onChange, value, ...field } }) => {
                 return (
                   <Checkbox
                     {...field}
+                    className="h-6 w-6"
                     checked={value}
                     onCheckedChange={onChange}
                   />
@@ -130,6 +135,27 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               }}
             />
           </FieldWrapper>
+
+          <FieldWrapper
+            className="mt-2 flex h-8 w-fit flex-row-reverse items-center justify-end gap-x-2"
+            label={t('auth:persist_login')}
+          >
+            <Controller
+              control={control}
+              name="isPersistLogin"
+              render={({ field: { onChange, value, ...field } }) => {
+                return (
+                  <Checkbox
+                    {...field}
+                    className="h-6 w-6"
+                    checked={value}
+                    onCheckedChange={onChange}
+                  />
+                )
+              }}
+            />
+          </FieldWrapper>
+
           <div>
             <Button
               isLoading={login.isLoading}

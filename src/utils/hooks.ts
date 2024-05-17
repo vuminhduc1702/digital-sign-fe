@@ -8,8 +8,6 @@ import * as z from 'zod'
 import { toast } from 'sonner'
 import i18n from '@/i18n'
 
-import { type JsonValue } from 'react-use-websocket/dist/lib/types'
-
 export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false)
 
@@ -26,15 +24,6 @@ export const useMediaQuery = (query: string) => {
   return matches
 }
 
-export const mediaQueryPoint = {
-  xs: 399.98,
-  sm: 575.98,
-  md: 767.98,
-  lg: 1023.98,
-  xl: 1279.98,
-  '2xl': 1535.98,
-}
-
 export const useDisclosure = (initial = false) => {
   const [isOpen, setIsOpen] = useState(initial)
 
@@ -45,7 +34,7 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T extends JsonValue>(
+export const useWS = <T>(
   url: string,
   sendMessageCallback: () => void,
   rerun?: boolean,

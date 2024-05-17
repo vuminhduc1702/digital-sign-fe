@@ -1,28 +1,27 @@
 import { configureAuth } from 'react-query-auth'
 
 import { type UserResponse } from '@/features/auth'
-import {
-  type LoginCredentialsDTO,
-  loginWithEmailAndPassword,
-} from '@/features/auth/api/login'
+import { loginWithEmailAndPassword } from '@/features/auth/api/login'
 import {
   type RegisterCredentialsDTO,
   registerWithEmailAndPassword,
 } from '@/features/auth/api/register'
 
 import { PATHS } from '@/routes/PATHS'
-
 import storage from '@/utils/storage'
 
-async function handleUserResponse(data: UserResponse) {
-  const user = data
+import { type LoginCredentialsDTO } from '@/features/auth/components/LoginForm'
+
+async function handleUserResponse(user: UserResponse) {
   storage.setToken({
     token: user.token,
+    refresh_token: user.refresh_token,
     system_role: user.system_role,
     timestamp: new Date(),
     device_token: user.device_token,
     user_id: user.user_id,
   })
+
   return user
 }
 
@@ -31,18 +30,20 @@ async function userFn() {
 }
 
 async function loginFn(data: LoginCredentialsDTO) {
+  if (data?.checked) {
+    storage.setUserLogin(data)
+  } else {
+    storage.clearUserLogin()
+  }
+  if (data?.isPersistLogin) {
+    storage.setIsPersistLogin(true)
+  } else {
+    storage.clearIsPersistLogin()
+  }
+
   const response = await loginWithEmailAndPassword(data)
-  if (data?.checked) {
-    storage.setUserLogin(data)
-  } else {
-    storage.clearUserLogin()
-  }
   const user = await handleUserResponse(response)
-  if (data?.checked) {
-    storage.setUserLogin(data)
-  } else {
-    storage.clearUserLogin()
-  }
+
   return user
 }
 
@@ -55,6 +56,7 @@ async function registerFn(data: RegisterCredentialsDTO) {
 export async function logoutFn() {
   const UserStorage = storage.getUserLogin() as LoginCredentialsDTO
   if (!UserStorage?.checked) storage.clearUserLogin()
+  if (!UserStorage?.isPersistLogin) storage.clearIsPersistLogin()
   storage.clearProject()
   storage.clearToken()
   window.location.assign(PATHS.LOGIN)

@@ -1,7 +1,7 @@
 import { useProjects } from '../api'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { ContentLayout } from '@/layout/ContentLayout'
 import TitleBar from '@/components/Head/TitleBar'
@@ -50,11 +50,11 @@ export function ProjectManage() {
 
   const { checkAccessHook } = useAuthorization()
 
-  const { data: projectsData } = useProjects()
+  const searchField = useRef('')
   const [searchQuery, setSearchQuery] = useState('')
-  const { data } = useProjects({
+  const { data: projectsData } = useProjects({
     search_str: searchQuery,
-    search_field: 'name',
+    search_field: searchField.current,
   })
 
   return (
@@ -69,7 +69,25 @@ export function ProjectManage() {
             <CreateProject />
           ) : null}
 
-          <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
+          <SearchField
+            setSearchValue={setSearchQuery}
+            closeSearch={true}
+            fieldOptions={[
+              {
+                value: 'name,id',
+                label: t('search:all'),
+              },
+              {
+                value: 'name',
+                label: t('cloud:custom_protocol.thing.name'),
+              },
+              {
+                value: 'id',
+                label: t('cloud:custom_protocol.thing.id'),
+              },
+            ]}
+            searchField={searchField}
+          />
         </div>
       </div>
 
@@ -90,7 +108,7 @@ export function ProjectManage() {
                 Number(projectsData?.total).toString(),
               )}
             </div>
-            <ListProjectItem listProjectData={data?.projects ?? []} />
+            <ListProjectItem listProjectData={projectsData?.projects ?? []} />
           </>
         ) : (
           <div>{t('cloud:project_manager.no_data')}</div>

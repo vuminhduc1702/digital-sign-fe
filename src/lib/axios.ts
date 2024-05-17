@@ -4,6 +4,7 @@ import { API_URL } from '@/config'
 import storage from '@/utils/storage'
 import { logoutFn } from './auth'
 import i18n from '@/i18n'
+import { useRefreshToken } from '@/features/auth/api/refresh'
 
 type AxiosRequestConfig = InternalAxiosRequestConfig & { sent?: boolean }
 
@@ -12,7 +13,7 @@ function authRequestInterceptor(config: AxiosRequestConfig) {
 
   const userStorage = storage.getToken()
   const token = userStorage?.token
-  if (token) {
+  if (token && !config?.sent) {
     config.headers.set('Authorization', `Bearer ${token}`)
   }
 
@@ -38,6 +39,8 @@ export const axiosUploadFile = Axios.create({
 
 axios.interceptors.request.use(authRequestInterceptor)
 axiosUploadFile.interceptors.request.use(authRequestInterceptor)
+
+let refreshInProgress = false
 axios.interceptors.response.use(
   response => {
     let message = ''
@@ -71,20 +74,54 @@ axios.interceptors.response.use(
 
     switch (errRes?.status) {
       case 401:
-        return logoutFn()
-      default:
-        message = errRes?.statusText ?? error.message
-    }
-
-    switch (errRes?.data?.code) {
-      case 401:
-        return logoutFn()
+        if (!refreshInProgress) {
+          refreshInProgress = true
+          const refreshToken = storage.getToken()?.refresh_token
+          const prevRequest = error?.config as AxiosRequestConfig
+          if (
+            storage.getIsPersistLogin() === 'true' &&
+            refreshToken != null &&
+            !prevRequest?.sent
+          ) {
+            prevRequest.sent = true
+            try {
+              const {
+                data: { token: newAccessToken },
+              } = await useRefreshToken(refreshToken)
+              if (newAccessToken != null) {
+                storage.setToken({
+                  ...storage.getToken(),
+                  token: newAccessToken,
+                  refresh_token: refreshToken,
+                })
+              }
+            } catch {
+              return logoutFn()
+            } finally {
+              refreshInProgress = false
+            }
+          } else {
+            return logoutFn()
+          }
+        }
+        break
       case 403:
         message = i18n.t('error:server_res.authorization')
         break
       case 404:
         message = i18n.t('error:server_res.notfound')
         break
+      default:
+        message = errRes?.data?.message ?? error.message
+    }
+
+    if (errRes?.data?.message === 'malformed entity specification') {
+      message = i18n.t('error:server_res.malformed_data')
+    }
+
+    switch (errRes?.data?.code) {
+      case 401:
+        return logoutFn()
       case 2003:
         message = i18n.t('error:server_res_status.2003')
         break

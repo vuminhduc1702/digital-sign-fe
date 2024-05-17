@@ -96,13 +96,6 @@ export function ThingTemplate() {
         <div className="flex justify-between">
           <div className="flex w-full items-center justify-between gap-x-3">
             <div className="flex items-center gap-x-3">
-              <span className="font-medium">
-                {t('cloud:custom_protocol.thing.shared')}:
-              </span>
-              <Switch
-                onCheckedChange={checked => setIsShared(checked)}
-                checked={isShared}
-              />
               <SearchField
                 setSearchValue={setSearchQuery}
                 searchField={searchField}
@@ -122,6 +115,13 @@ export function ThingTemplate() {
                 ]}
                 setIsSearchData={setIsSearchData}
                 closeSearch={true}
+              />
+              <span className="font-medium">
+                {t('cloud:custom_protocol.thing.shared')}:
+              </span>
+              <Switch
+                onCheckedChange={checked => setIsShared(checked)}
+                checked={isShared}
               />
             </div>
             <CreateThing thingType="thing" />

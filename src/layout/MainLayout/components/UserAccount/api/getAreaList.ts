@@ -9,7 +9,7 @@ type GetAreaListDTO = {
 }
 
 export const getAreaList = ({ parentCode, type }: GetAreaListDTO) => {
-  return axios.get('/api/telco/getListArea', {
+  return axios.get('/api/users/getListArea', {
     params: {
       type: type,
       parentCode: parentCode,

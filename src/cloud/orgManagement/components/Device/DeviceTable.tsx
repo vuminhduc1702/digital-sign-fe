@@ -217,6 +217,7 @@ function DeviceTableContextMenu({
           deviceId={id}
           close={closeUpdateVersion}
           isOpen={isOpenUpdateVersion}
+          templateId={template_id}
         />
       ) : null}
       {isOpenUpdateMqtt && additional_info != null ? (
