@@ -256,9 +256,9 @@ export function UpdateWidget({
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart({
     config: {
-      onSuccess: () => {
-        queryClient.prefetchQuery(['devices'])
-      },
+      // onSuccess: () => {
+      //   queryClient.prefetchQuery(['devices'])
+      // },
     },
   })
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
@@ -345,6 +345,11 @@ export function UpdateWidget({
     }
   }, [watch('widgetSetting.time_period')])
 
+  function resetForm() {
+    setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widgetInfoMemo } }))
+    reset()
+  }
+
   return (
     <FormDialog
       size="max"
@@ -366,6 +371,7 @@ export function UpdateWidget({
                       : t('cloud:dashboard.config_chart.update')
       }
       isDone={isDone}
+      resetForm={resetForm}
       body={
         <Form {...form}>
           <form

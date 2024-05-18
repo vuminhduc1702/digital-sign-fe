@@ -67,6 +67,8 @@
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
       "backup": "Export dự án",
       "restore": "Import dự án",
+      "name": "Tên dự án",
+      "id": "ID dự án",
       "add_project": {
         "title": "Tạo mới dự án",
         "avatar": "Chọn ảnh đại diện",

@@ -32,6 +32,7 @@ export type ConfirmationDialogProps = {
   resetData?: () => void
   size?: keyof typeof formDialogSizes
   isFullScreen?: boolean
+  resetForm?: () => void
 }
 
 export const FormDialog = ({
@@ -45,6 +46,7 @@ export const FormDialog = ({
   isFullScreen,
   size,
   className,
+  resetForm,
 }: ConfirmationDialogProps) => {
   const { close, open, isOpen } = useDisclosure()
 
@@ -119,7 +121,10 @@ export const FormDialog = ({
               type="button"
               variant="secondary"
               className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
-              onClick={close}
+              onClick={() => {
+                resetForm && resetForm()
+                close()
+              }}
               ref={cancelButtonRef}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
