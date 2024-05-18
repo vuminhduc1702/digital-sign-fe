@@ -12,32 +12,38 @@ import { toast } from 'sonner'
 import i18n from '@/i18n'
 import storage from '@/utils/storage'
 
+function retryQuery(failureCount: number, error: any) {
+  if (
+    storage.getIsPersistLogin() === 'true' &&
+    error.response?.status === 401 &&
+    failureCount < 3
+  ) {
+    return true
+  }
+
+  const shouldRetry =
+    error.response?.status !== 403 &&
+    error.response?.status !== 401 &&
+    error.response?.status != null &&
+    failureCount < 3
+
+  return shouldRetry
+}
 const queryConfig: DefaultOptions = {
   queries: {
     useErrorBoundary: false,
     suspense: false,
     refetchOnWindowFocus: false,
     keepPreviousData: true,
-    retry: (failureCount, error: any) => {
-      if (
-        storage.getIsPersistLogin() === 'true' &&
-        error.response?.status === 401 &&
-        failureCount < 3
-      ) {
-        return true
-      }
-
-      const shouldRetry =
-        error.response?.status !== 403 &&
-        error.response?.status !== 401 &&
-        error.response?.status != null &&
-        failureCount < 3
-
-      return shouldRetry
-    },
+    retry: retryQuery,
     retryDelay: attemptIndex =>
       Math.min(Math.pow(2, attemptIndex) * 1000, 10000),
     staleTime: 1000 * 60,
+  },
+  mutations: {
+    retry: retryQuery,
+    retryDelay: attemptIndex =>
+      Math.min(Math.pow(2, attemptIndex) * 1000, 10000),
   },
 }
 

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
-import { axiosUploadFile } from '@/lib/axios'
+import { axios } from '@/lib/axios'
 import { queryClient, type MutationConfig } from '@/lib/react-query'
 import { toast } from 'sonner'
 
@@ -14,7 +14,9 @@ export const uploadFileFirmWare = ({
   file,
   firmwareId,
 }: UploadFileFirmWareDTO) => {
-  return axiosUploadFile.post(`/api/ota/${firmwareId}`, file)
+  return axios.post(`/api/ota/${firmwareId}`, file, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
 }
 
 type UseUploadFileFirmWareOptions = {

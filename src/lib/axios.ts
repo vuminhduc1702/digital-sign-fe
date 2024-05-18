@@ -30,15 +30,7 @@ export const axios = Axios.create({
   },
 })
 
-export const axiosUploadFile = Axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
-})
-
 axios.interceptors.request.use(authRequestInterceptor)
-axiosUploadFile.interceptors.request.use(authRequestInterceptor)
 
 let refreshInProgress = false
 axios.interceptors.response.use(
