@@ -1,7 +1,7 @@
 import type * as z from 'zod'
 import { useMutation } from '@tanstack/react-query'
 
-import { axiosUploadFile } from '@/lib/axios'
+import { axios } from '@/lib/axios'
 import { type MutationConfig, queryClient } from '@/lib/react-query'
 
 import { type uploadImageResSchema } from '../components/CreateOrg'
@@ -12,7 +12,9 @@ type UploadImageRes = z.infer<typeof uploadImageResSchema>
 export const uploadImage = ({
   data,
 }: UploadImageDTO): Promise<UploadImageRes> => {
-  return axiosUploadFile.post(`/api/miniovt/file/upload`, data)
+  return axios.post(`/api/miniovt/file/upload`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
 }
 
 type UseUploadImageOptions = {
