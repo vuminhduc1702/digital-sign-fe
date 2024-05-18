@@ -62,8 +62,8 @@ type ItemNames = {
 export const templateAttrSchema = z.object({
   name: nameSchema,
   // rule_chain_id: z.string().optional(),
-  thing_id: z.string(),
-  handle_msg_svc: z.string(),
+  thing_id: z.string().optional(),
+  handle_msg_svc: z.string().optional(),
 })
 
 const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
@@ -445,7 +445,7 @@ export default function CreateTemplateLwM2M({
                     handleChangeSelect={() =>
                       selectDropdownServiceRef.current?.clearValue()
                     }
-                    error={formState?.errors?.thing_id}
+                    // error={formState?.errors?.thing_id}
                   />
                 </div>
                 <CreateThing
@@ -472,7 +472,7 @@ export default function CreateTemplateLwM2M({
                     loadingMessage={() => t('loading:service_thing')}
                     noOptionsMessage={() => t('table:no_service')}
                     placeholder={t('cloud:custom_protocol.service.choose')}
-                    error={formState?.errors?.handle_msg_svc}
+                    // error={formState?.errors?.handle_msg_svc}
                   />
                 </div>
                 <CreateService

@@ -303,7 +303,10 @@ export function DashboardDetail() {
   })
 
   function refetchData() {
-    setRefetchDataState(prev => !prev)
+    setRefetchDataState(prev => true)
+    setTimeout(() => {
+      setRefetchDataState(prev => false)
+    }, 100)
   }
 
   function getDeviceInfo(deviceId: string) {

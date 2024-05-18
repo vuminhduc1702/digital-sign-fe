@@ -120,8 +120,6 @@ export function TemplateLwM2M() {
     },
   })
 
-  console.log(selectedUpdateTemplate)
-
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">

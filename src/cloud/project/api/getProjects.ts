@@ -36,17 +36,11 @@ export const useProjects = ({
   search_field,
   search_str,
   config,
-}: UseProjectsOptions = {}) => {
+}: UseProjectsOptions) => {
   const projectQuery = useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['projects', search_field, search_str],
     queryFn: () => getProjects({ search_field, search_str }),
     ...config,
   })
-
-  // const result = ProjectListSchema.safeParse(projectQuery.data)
-  // if (!result.success) {
-  //   console.error('error getProjects api: ', result.error.issues)
-  // }
-
   return projectQuery
 }

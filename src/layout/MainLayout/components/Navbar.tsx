@@ -33,7 +33,7 @@ import { SidebarDropDownIcon } from '@/components/SVGIcons'
 
 function Navbar() {
   const { t } = useTranslation()
-  const { data: projectsData } = useProjects()
+  const { data: projectsData } = useProjects({})
 
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({})
   const { data: userDataFromStorage } = useUser()

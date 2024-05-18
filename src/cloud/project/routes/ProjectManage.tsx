@@ -79,11 +79,11 @@ export function ProjectManage() {
               },
               {
                 value: 'name',
-                label: t('cloud:custom_protocol.thing.name'),
+                label: t('cloud:project_manager.name'),
               },
               {
                 value: 'id',
-                label: t('cloud:custom_protocol.thing.id'),
+                label: t('cloud:project_manager.id'),
               },
             ]}
             searchField={searchField}

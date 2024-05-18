@@ -55,6 +55,10 @@ export function LineChart({
   const END_DATE = widgetInfo?.config?.chartsetting?.end_date
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
+  // 0 - init fetch
+  // 1 - init fetch complete
+  // 2 - refetch
+  const fetchDataMode = useRef<0 | 1 | 2>(0)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<Array<{ ts: number; value: string | number }>>
@@ -71,7 +75,11 @@ export function LineChart({
 
   // combine new data with previous data
   useEffect(() => {
-    if (data && Object.keys(data).length > 0) {
+    if (
+      data &&
+      Object.keys(data).length > 0 &&
+      (fetchDataMode.current === 0 || fetchDataMode.current === 2)
+    ) {
       if (prevValuesRef.current === null) {
         prevValuesRef.current = data
       } else {
@@ -93,24 +101,27 @@ export function LineChart({
           })
         }
       }
-    }
-    if (
-      prevValuesRef.current &&
-      widgetInfo?.config?.chartsetting?.data_type === 'REALTIME'
-    ) {
-      realtimeDataManipulation()
-    } else if (
-      prevValuesRef.current &&
-      widgetInfo?.config?.chartsetting?.data_type === 'HISTORY'
-    ) {
-      dataManipulation()
+      if (
+        prevValuesRef.current &&
+        widgetInfo?.config?.chartsetting?.data_type === 'REALTIME'
+      ) {
+        realtimeDataManipulation()
+      } else if (
+        prevValuesRef.current &&
+        widgetInfo?.config?.chartsetting?.data_type === 'HISTORY'
+      ) {
+        dataManipulation()
+
+        // complete init fetch
+        fetchDataMode.current = 1
+      }
     }
   }, [data])
 
   // data manipulation for static chart
   // filter data from START_DATE to END_DATE
   function dataManipulation() {
-    const result = []
+    const result: { ts: number; value: string | number }[][] = []
     Object.entries(prevValuesRef.current || []).forEach(([key, items]) => {
       const tempArr: {
         ts: number
@@ -140,7 +151,7 @@ export function LineChart({
   // data manipulation for realtime chart
   // filter data from now - TIME_PERIOD to now
   function realtimeDataManipulation() {
-    const result = []
+    const result: { ts: number; value: string | number }[][] = []
     Object.entries(prevValuesRef.current || []).forEach(([key, items]) => {
       const tempArr: {
         ts: number
@@ -169,6 +180,7 @@ export function LineChart({
   function refresh() {
     setIsRefresh(true)
     refetchData?.()
+    fetchDataMode.current = 2
     setInterval(() => {
       setIsRefresh(false)
     }, 1000)
@@ -182,7 +194,7 @@ export function LineChart({
           return {
             label: key?.attribute_key,
             borderColor: key?.color,
-            backgroundColor: key?.color.replace(/[^,]+(?=\))/, '0.2'),
+            backgroundColor: key?.color,
             data: dataTransformedFeedToChart[index],
             borderWidth: 1,
           }
@@ -190,7 +202,7 @@ export function LineChart({
           return {
             label: key?.attribute_key,
             borderColor: key?.color,
-            backgroundColor: key?.color.replace(/[^,]+(?=\))/, '0.2'),
+            backgroundColor: key?.color,
             data: [],
             borderWidth: 1,
           }
@@ -218,9 +230,7 @@ export function LineChart({
     },
     limits: {
       x: {
-        minDelay: 0,
-        maxDelay: 4000,
-        minDuration: 10000,
+        minDuration: 5000,
         maxDuration: TIME_PERIOD,
       },
     },
@@ -229,70 +239,82 @@ export function LineChart({
   return (
     <>
       {widgetInfo?.config?.chartsetting.data_type === 'HISTORY' ? (
-        <>
-          {refreshBtn && (
-            <div
-              className="absolute right-[95px] top-[10px] z-20 cursor-pointer"
-              onClick={refresh}
-            >
-              <img src={refreshIcon} alt="" />
-            </div>
-          )}
-          <Line
-            data={{
-              datasets: getDataset(),
-            }}
-            options={{
-              maintainAspectRatio: false,
-              responsive: true,
-              parsing: {
-                xAxisKey: 'ts',
-                yAxisKey: 'value',
-              },
-              scales: {
-                x: {
-                  type: 'time',
-                  title: {
+        isRefresh ? (
+          <div className="flex h-full items-center justify-center">
+            <Spinner size="xl" />
+          </div>
+        ) : (
+          <>
+            {refreshBtn && (
+              <div
+                className="absolute right-[95px] top-[10px] z-20 cursor-pointer"
+                onClick={refresh}
+              >
+                <img src={refreshIcon} alt="" />
+              </div>
+            )}
+            <Line
+              data={{
+                datasets: getDataset(),
+              }}
+              options={{
+                maintainAspectRatio: false,
+                responsive: true,
+                parsing: {
+                  xAxisKey: 'ts',
+                  yAxisKey: 'value',
+                },
+                scales: {
+                  x: {
+                    type: 'time',
+                    title: {
+                      display: true,
+                      text: t('cloud:dashboard.time'),
+                      color: 'black',
+                    },
+                    ticks: {
+                      color: 'black',
+                    },
+                    grid: {
+                      borderColor: 'black',
+                    },
+                  },
+                  y: {
+                    type: 'linear',
                     display: true,
-                    text: t('cloud:dashboard.time'),
-                    color: 'black',
-                  },
-                  ticks: {
-                    color: 'black',
-                  },
-                  grid: {
-                    borderColor: 'black',
+                    position: 'left',
+                    title: {
+                      display: true,
+                      text: t('cloud:dashboard.value'),
+                      color: 'black',
+                    },
+                    ticks: {
+                      color: 'black',
+                    },
+                    grid: {
+                      borderColor: 'black',
+                    },
                   },
                 },
-                y: {
-                  type: 'linear',
-                  display: true,
-                  position: 'left',
-                  title: {
-                    display: true,
-                    text: t('cloud:dashboard.value'),
-                    color: 'black',
-                  },
-                  ticks: {
-                    color: 'black',
-                  },
-                  grid: {
-                    borderColor: 'black',
+                plugins: {
+                  zoom: zoomOptions,
+                },
+                interaction: {
+                  mode: 'nearest',
+                  axis: 'x',
+                  intersect: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0,
+                    hoverRadius: 2,
                   },
                 },
-              },
-              plugins: {
-                zoom: zoomOptions,
-              },
-              interaction: {
-                mode: 'nearest',
-                axis: 'x',
-                intersect: false,
-              },
-            }}
-            className="!h-[98%] !w-[98%] pt-8"
-          />
-        </>
+              }}
+              className="!h-[98%] !w-[98%] pt-8"
+            />
+          </>
+        )
       ) : (
         <Line
           data={{
@@ -306,8 +328,8 @@ export function LineChart({
               yAxisKey: 'value',
             },
             elements: {
-              line: {
-                tension: 0.5,
+              point: {
+                radius: 0,
               },
             },
             scales: {

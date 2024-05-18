@@ -56,6 +56,10 @@ export const BarChart = ({
   const END_DATE = widgetInfo?.config?.chartsetting?.end_date
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
+  // 0 - init fetch
+  // 1 - init fetch complete
+  // 2 - refetch
+  const fetchDataMode = useRef<0 | 1 | 2>(0)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<Array<{ ts: number; value: string | number }>>
@@ -71,7 +75,11 @@ export const BarChart = ({
   // }, [i18n.language])
 
   useEffect(() => {
-    if (data && Object.keys(data).length > 0) {
+    if (
+      data &&
+      Object.keys(data).length > 0 &&
+      (fetchDataMode.current === 0 || fetchDataMode.current === 2)
+    ) {
       if (prevValuesRef.current === null) {
         prevValuesRef.current = data
       } else {
@@ -93,23 +101,26 @@ export const BarChart = ({
           })
         }
       }
-    }
-    if (
-      prevValuesRef.current &&
-      widgetInfo?.config?.chartsetting?.data_type === 'REALTIME'
-    ) {
-      realtimeDataManipulation()
-    } else if (
-      prevValuesRef.current &&
-      widgetInfo?.config?.chartsetting?.data_type === 'HISTORY'
-    ) {
-      dataManipulation()
+      if (
+        prevValuesRef.current &&
+        widgetInfo?.config?.chartsetting?.data_type === 'REALTIME'
+      ) {
+        realtimeDataManipulation()
+      } else if (
+        prevValuesRef.current &&
+        widgetInfo?.config?.chartsetting?.data_type === 'HISTORY'
+      ) {
+        dataManipulation()
+
+        // complete init fetch
+        fetchDataMode.current = 1
+      }
     }
   }, [data])
 
   // data manipulation for static chart
   function dataManipulation() {
-    const result = []
+    const result: { ts: number; value: string | number }[][] = []
     Object.entries(prevValuesRef.current || []).forEach(([key, items]) => {
       const tempArr: {
         ts: number
@@ -138,7 +149,7 @@ export const BarChart = ({
 
   // data manipulation for realtime chart
   function realtimeDataManipulation() {
-    const result = []
+    const result: { ts: number; value: string | number }[][] = []
     Object.entries(prevValuesRef.current || []).forEach(([key, items]) => {
       const tempArr: {
         ts: number
@@ -167,6 +178,7 @@ export const BarChart = ({
   function refresh() {
     setIsRefresh(true)
     refetchData?.()
+    fetchDataMode.current = 2
     setInterval(() => {
       setIsRefresh(false)
     }, 1000)
@@ -214,9 +226,7 @@ export const BarChart = ({
     },
     limits: {
       x: {
-        minDelay: 0,
-        maxDelay: 4000,
-        minDuration: 10000,
+        minDuration: 5000,
         maxDuration: TIME_PERIOD,
       },
     },
@@ -224,7 +234,11 @@ export const BarChart = ({
 
   return (
     <>
-      {widgetInfo?.config?.chartsetting.data_type === 'HISTORY' ? (
+      {isRefresh ? (
+        <div className="flex h-full items-center justify-center">
+          <Spinner size="xl" />
+        </div>
+      ) : widgetInfo?.config?.chartsetting.data_type === 'HISTORY' ? (
         <>
           {refreshBtn && (
             <div
@@ -281,6 +295,7 @@ export const BarChart = ({
                 axis: 'x',
                 intersect: false,
               },
+              barThickness: 15,
             }}
             className="!h-[98%] !w-[98%] pt-8"
           />
@@ -353,6 +368,7 @@ export const BarChart = ({
               axis: 'x',
               intersect: false,
             },
+            barThickness: 15,
           }}
           className="!h-[98%] !w-[98%] pt-8"
         />

@@ -53,9 +53,15 @@ export const entityThingSchema = z
 export function CreateThing({
   thingType,
   classNameTriggerBtn,
+  open,
+  close,
+  isOpen,
 }: {
   thingType: EntityThingType
   classNameTriggerBtn?: string
+  open?: () => void
+  close?: () => void
+  isOpen?: boolean
 }) {
   const { t } = useTranslation()
 
