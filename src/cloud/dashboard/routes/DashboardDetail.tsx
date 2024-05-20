@@ -141,6 +141,11 @@ export function DashboardDetail() {
   const isSendInitMessageRef = useRef(true)
   const isSendMessageSubscribeRef = useRef(true)
 
+  const widgetListRef = useRef<string[]>([])
+  useEffect(() => {
+    widgetListRef.current = Object.keys(widgetList)
+  }, [widgetList])
+
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(
       WEBSOCKET_URL,
@@ -449,6 +454,8 @@ export function DashboardDetail() {
                           widgetInfo?.config?.chartsetting.data_type ===
                           'HISTORY'
                         }
+                        widgetListRef={widgetListRef}
+                        // setReloadList={setReloadList}
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
                       <BarChart
@@ -459,6 +466,8 @@ export function DashboardDetail() {
                           widgetInfo?.config?.chartsetting.data_type ===
                           'HISTORY'
                         }
+                        widgetListRef={widgetListRef}
+                        // setReloadList={setReloadList}
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
@@ -521,6 +530,7 @@ export function DashboardDetail() {
                             widgetInfo={widgetInfo}
                             setWidgetList={setWidgetList}
                             widgetId={widgetId}
+                            widgetListRef={widgetListRef}
                           />
                         )}
                         <DeleteIcon
