@@ -760,8 +760,7 @@ export function CreateWidget({
                               ...tsCmd,
                               startTs:
                                 values.widgetSetting?.dataType === 'REALTIME'
-                                  ? Date.now() -
-                                    values.widgetSetting?.time_period
+                                  ? values.widgetSetting?.time_period
                                   : undefined,
                             },
                             id: widgetId,
@@ -814,6 +813,7 @@ export function CreateWidget({
                       }
 
                 const widget: z.infer<typeof widgetSchema> = {
+                  id: widgetId,
                   title: values.title,
                   description: widgetCategory,
                   type: widgetType,
@@ -869,7 +869,7 @@ export function CreateWidget({
                                 : undefined,
                             time_period:
                               values.widgetSetting?.dataType === 'REALTIME'
-                                ? Date.now() - values.widgetSetting?.time_period
+                                ? values.widgetSetting?.time_period
                                 : undefined,
                           },
                         }
