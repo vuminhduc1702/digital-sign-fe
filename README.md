@@ -2,7 +2,7 @@
 
 - Cài node 18 trở lên
 
-- cp .env.example .env
+- cp .env.test.example .env.test.local
 
 - yarn install
 
