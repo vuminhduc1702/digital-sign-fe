@@ -9,7 +9,11 @@ import { useGetPlans } from '@/cloud/billingPackage/api'
 import { usePlanById } from '@/cloud/billingPackage/api/getPackageById'
 import { useGetUsers } from '@/cloud/orgManagement/api/userAPI'
 import { Button } from '@/components/ui/button'
-import { InputField, SelectDropdown } from '@/components/Form'
+import {
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
 import { PlusIcon } from '@/components/SVGIcons'
 import i18n from '@/i18n'
@@ -19,6 +23,22 @@ import {
   type CreateSubcriptionDTO,
 } from '../../api/subcriptionAPI/createSubcription'
 import { type PlanlvList } from '@/cloud/billingPackage'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const entitySubcriptionSchema = z.object({
   plan_id: z
@@ -27,7 +47,13 @@ export const entitySubcriptionSchema = z.object({
   user_id: z
     .string()
     .min(1, { message: i18n.t('billing:subcription.popup.choose_user') }),
-  register: z.number().optional(),
+  register: z.string().optional(),
+  customer_code: z.string().optional(),
+  customer_name: z.string().optional(),
+  price_method: z.string().optional(),
+  payment_type: z.string().optional(),
+  register_value: z.string().optional(),
+  period: z.string().optional(),
 })
 
 export function CreateSubcription() {
@@ -39,6 +65,12 @@ export function CreateSubcription() {
   const [customerName, setCustomerName] = useState('')
   const [customerCode, setCustomerCode] = useState('')
   const [registerValue, setRegisterValue] = useState('')
+  const [userOption, setUserOption] = useState<SelectOption[]>([
+    { label: '', value: 'empty' },
+  ])
+  const [planOption, setPlanOption] = useState<SelectOption[]>([
+    { label: '', value: 'empty' },
+  ])
 
   const { data: UserData } = useGetUsers({ projectId, expand: true })
 
@@ -49,6 +81,24 @@ export function CreateSubcription() {
     config: { enabled: !!planValue },
   })
 
+  useEffect(() => {
+    setUserOption(
+      UserData?.users?.map(user => ({
+        label: `${user.phone ? user.phone : '(SĐT)'} - ${user.email}`,
+        value: `${user.customer_code} - ${user.user_id} - ${user.name}`,
+      })) || [{ label: '', value: 'empty' }],
+    )
+  }, [UserData])
+
+  useEffect(() => {
+    setPlanOption(
+      PlanData?.data?.map(plan => ({
+        label: plan?.name,
+        value: plan?.id,
+      })) || [{ label: '', value: 'empty' }],
+    )
+  }, [PlanData])
+
   const { mutate, isLoading, isSuccess } = useCreateSubcription()
   const resetData = () => {
     setPlanValue(null)
@@ -56,6 +106,7 @@ export function CreateSubcription() {
     setCustomerName('')
     setRegisterValue('')
     setUserId('')
+    reset()
   }
 
   const parseNumber = (value: any) => {
@@ -63,7 +114,19 @@ export function CreateSubcription() {
   }
 
   useEffect(() => {
-    setTimeout(() => handleOnChange(''), 500)
+    setTimeout(() => {
+      handleOnChange('')
+    }, 500)
+    setValue(
+      'payment_type',
+      PlanDataById?.data?.payment_type
+        ? PlanDataById?.data?.payment_type === 'PREPAY'
+          ? 'Trả trước'
+          : 'Trả sau'
+        : '',
+    )
+    valuePriceMethod()
+    valuePeriod()
   }, [PlanDataById, planValue])
 
   const handleOnChange = (expected_number?: string) => {
@@ -135,6 +198,10 @@ export function CreateSubcription() {
 
       result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
       setRegisterValue(result < 0 ? parseNumber(fix_cost) : result)
+      setValue(
+        'register_value',
+        result < 0 ? parseNumber(fix_cost).toString() : result.toString(),
+      )
     }
   }
 
@@ -161,7 +228,7 @@ export function CreateSubcription() {
           break
       }
     }
-    return result || ''
+    return setValue('price_method', result)
   }
 
   const valuePeriod = () => {
@@ -184,14 +251,17 @@ export function CreateSubcription() {
           break
       }
     }
-    return PlanDataById?.data?.period ? PlanDataById?.data?.period + result : ''
+    return setValue(
+      'period',
+      PlanDataById?.data?.period ? PlanDataById?.data?.period + result : '',
+    )
   }
-  const { register, formState, control, setValue, handleSubmit } = useForm<
-    CreateSubcriptionDTO['data']
-  >({
+
+  const form = useForm<CreateSubcriptionDTO['data']>({
     resolver: entitySubcriptionSchema && zodResolver(entitySubcriptionSchema),
-    defaultValues: { plan_id: '' },
+    defaultValues: { plan_id: '', user_id: '' },
   })
+  const { control, handleSubmit, setValue, formState, register, reset } = form
   return (
     <FormDialog
       resetData={resetData}
@@ -199,144 +269,270 @@ export function CreateSubcription() {
       title={t('billing:subcription.create')}
       size="md"
       body={
-        <form
-          id="create-firm-ware"
-          className="flex w-full flex-col justify-between space-y-6"
-          onSubmit={handleSubmit(values => {
-            mutate({
-              data: {
-                project_id: projectId,
-                plan_id: planValue || '',
-                user_id: userId || '',
-                register: values.register,
-              },
-            })
-          })}
-        >
-          <>
-            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-              <div className="flex gap-3">
-                <p className="text-table-header">
-                  {t('billing:subcription.popup.customer_info')}
-                </p>
+        <Form {...form}>
+          <form
+            id="create-firm-ware"
+            className="flex w-full flex-col justify-between space-y-6"
+            onSubmit={handleSubmit(values => {
+              mutate({
+                data: {
+                  project_id: projectId,
+                  plan_id: planValue || '',
+                  user_id: userId || '',
+                  register: values.register,
+                },
+              })
+            })}
+          >
+            <>
+              <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                <div className="flex gap-3">
+                  <p className="text-table-header">
+                    {t('billing:subcription.popup.customer_info')}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={false}
-                label={t('billing:subcription.popup.search_customer_with')}
-                name="user_id"
-                error={formState?.errors?.user_id}
-                classnamefieldwrapper="flex items-center gap-x-3"
-                classlabel="w-3/12"
-                classchild="w-9/12"
-                control={control}
-                customOnChange={e => {
-                  const arrValue = e.split(' - ')
-                  setValue('user_id', e)
-                  setCustomerName(
-                    arrValue[2] !== 'undefined'
-                      ? arrValue[2]
-                      : 'Tên khách hàng',
-                  )
-                  setCustomerCode(arrValue[0])
-                  setUserId(arrValue[1])
-                }}
-                options={
-                  UserData?.users?.map(user => ({
-                    label: `${user.phone ? user.phone : '(SĐT)'} - ${
-                      user.email
-                    }`,
-                    value: `${user.customer_code} - ${user.user_id} - ${user.name}`,
-                  })) || [{ label: '', value: '' }]
-                }
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
-              <InputField
-                label={t('billing:subcription.popup.customer_name')}
-                value={customerName}
-                disabled
-              />
-              <InputField
-                label={t('billing:subcription.popup.customer_code')}
-                value={customerCode}
-                disabled
-              />
-            </div>
-            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-              <div className="flex gap-3">
-                <p className="text-table-header">
-                  {t('billing:subcription.popup.service_info')}
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <SelectDropdown
-                isClearable={false}
-                label={t('billing:subcription.popup.package')}
-                name="plan_id"
-                error={formState?.errors?.plan_id}
-                control={control}
-                customOnChange={e => {
-                  setValue('plan_id', e)
-                  setPlanValue(e)
-                }}
-                options={
-                  PlanData?.data?.map(plan => ({
-                    label: plan?.name,
-                    value: plan?.id,
-                  })) || [{ label: '', value: '' }]
-                }
-              />
-              <InputField
-                label={t('billing:subcription.popup.price_method')}
-                value={valuePriceMethod()}
-                disabled
-              />
-              {PlanDataById?.data?.estimate !== 'fix' && (
-                <InputField
-                  label={t('billing:subcription.popup.quantity')}
-                  error={formState.errors['register']}
-                  onChange={e => handleOnChange(e.target.value)}
-                  registration={register('register', {
-                    valueAsNumber: true,
-                  })}
+              <div className="space-y-1">
+                <FormField
+                  control={form.control}
+                  name="user_id"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <div className="flex items-center gap-x-3">
+                        <FormLabel className="w-3/12">
+                          {t('billing:subcription.popup.search_customer_with')}
+                        </FormLabel>
+                        <div className="w-9/12">
+                          <FormControl>
+                            <Select
+                              {...field}
+                              onValueChange={e => {
+                                const arrValue = e.split(' - ')
+                                setValue('user_id', e)
+                                setValue(
+                                  'customer_name',
+                                  arrValue[2] !== 'undefined'
+                                    ? arrValue[2]
+                                    : 'Tên khách hàng',
+                                )
+                                setValue('customer_code', arrValue[0])
+                                setUserId(arrValue[1])
+                                onChange(e)
+                              }}
+                              value={value}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                {userOption?.map(option => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </div>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              )}
-              <InputField
-                label={t('billing:subcription.popup.payment_type')}
-                value={
-                  PlanDataById?.data?.payment_type
-                    ? PlanDataById?.data?.payment_type === 'PREPAY'
-                      ? 'Trả trước'
-                      : 'Trả sau'
-                    : ''
-                }
-                disabled
-              />
-            </div>
-            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-              <div className="flex gap-3">
-                <p className="text-table-header">
-                  {t('billing:subcription.popup.billing_info')}
-                </p>
               </div>
-            </div>
-            <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
-              <InputField
-                label={t('billing:subcription.popup.estimated_payment')}
-                value={registerValue}
-                disabled
-              />
-              <InputField
-                label={t('billing:subcription.popup.period')}
-                value={valuePeriod()}
-                disabled
-              />
-            </div>
-          </>
-        </form>
+              <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="customer_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:subcription.popup.customer_name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="customer_code"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:subcription.popup.customer_code')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                <div className="flex gap-3">
+                  <p className="text-table-header">
+                    {t('billing:subcription.popup.service_info')}
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="plan_id"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:subcription.popup.package')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Select
+                            {...field}
+                            onValueChange={e => {
+                              setValue('plan_id', e)
+                              setPlanValue(e)
+                              onChange(e)
+                            }}
+                            value={value}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white">
+                              {planOption?.map(option => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="price_method"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:subcription.popup.price_method')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                {PlanDataById?.data?.estimate !== 'fix' && (
+                  <FormField
+                    control={form.control}
+                    name="register"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.popup.quantity')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input
+                              value={value}
+                              onChange={e => {
+                                onChange(e)
+                                handleOnChange(e.target.value)
+                              }}
+                              type="number"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
+                <FormField
+                  control={form.control}
+                  name="payment_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:subcription.popup.payment_type')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                <div className="flex gap-3">
+                  <p className="text-table-header">
+                    {t('billing:subcription.popup.billing_info')}
+                  </p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="register_value"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:subcription.popup.estimated_payment')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="period"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:subcription.popup.period')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} disabled />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </>
+          </form>
+        </Form>
       }
       triggerButton={
         <Button className="h-[38px] rounded border-none">
