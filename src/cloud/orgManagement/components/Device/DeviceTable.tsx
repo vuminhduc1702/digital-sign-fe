@@ -199,28 +199,24 @@ function DeviceTableContextMenu({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {isOpen ? (
-        <UpdateDevice
-          deviceId={id}
-          org_id={org_id}
-          name={name}
-          keyDevice={key}
-          group_id={group_id}
-          close={close}
-          isOpen={isOpen}
-          template_id={template_id}
-          additional_info={additional_info}
-        />
-      ) : null}
-      {isOpenUpdateVersion ? (
-        <UpdateVersionFirmWare
-          deviceId={id}
-          close={closeUpdateVersion}
-          isOpen={isOpenUpdateVersion}
-          templateId={template_id}
-        />
-      ) : null}
-      {isOpenUpdateMqtt && additional_info != null ? (
+      <UpdateDevice
+        deviceId={id}
+        org_id={org_id}
+        name={name}
+        keyDevice={key}
+        group_id={group_id}
+        close={close}
+        isOpen={isOpen}
+        template_id={template_id}
+        additional_info={additional_info}
+      />
+      <UpdateVersionFirmWare
+        deviceId={id}
+        close={closeUpdateVersion}
+        isOpen={isOpenUpdateVersion}
+        templateId={template_id}
+      />
+      {additional_info != null ? (
         <UpdateMqttConfig
           additional_info={additional_info}
           deviceId={id}
@@ -229,20 +225,18 @@ function DeviceTableContextMenu({
         />
       ) : null}
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.device_manage.table.delete_device_full')}
-          body={t(
-            'cloud:org_manage.device_manage.table.delete_device_confirm',
-          ).replace('{{DEVICENAME}}', name)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.device_manage.table.delete_device_full')}
+        body={t(
+          'cloud:org_manage.device_manage.table.delete_device_confirm',
+        ).replace('{{DEVICENAME}}', name)}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

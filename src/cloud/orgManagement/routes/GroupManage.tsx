@@ -149,30 +149,26 @@ export function GroupManage() {
           }
         />
       </div>
-      {isOpenGroup && (
-        <CreateGroup close={closeGroup} open={openGroup} isOpen={isOpenGroup} />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.group_manage.table.delete_group')}
-          body={t(
-            'cloud:org_manage.group_manage.table.delete_multiple_group_confirm',
-          )}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleGroups}
-          handleSubmit={() =>
-            mutateDeleteMultipleGroups(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <CreateGroup close={closeGroup} open={openGroup} isOpen={isOpenGroup} />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.group_manage.table.delete_group')}
+        body={t(
+          'cloud:org_manage.group_manage.table.delete_multiple_group_confirm',
+        )}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleGroups}
+        handleSubmit={() =>
+          mutateDeleteMultipleGroups(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

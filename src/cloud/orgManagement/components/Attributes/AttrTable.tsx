@@ -70,37 +70,32 @@ function AttrTableContextMenu({
           />
         </div>
       </div>
-      {isOpen ? (
-        <UpdateAttr
-          entityId={entityId}
-          entityType={entityType}
-          attributeKey={attribute_key}
-          close={close}
-          isOpen={isOpen}
-          {...props}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-          body={t(
-            'cloud:org_manage.org_manage.table.delete_attr_confirm',
-          ).replace('{{ATTRNAME}}', attribute_key)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() =>
-            mutate({
-              entityId,
-              entityType,
-              attrKey: attribute_key,
-            })
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <UpdateAttr
+        entityId={entityId}
+        entityType={entityType}
+        attributeKey={attribute_key}
+        close={close}
+        isOpen={isOpen}
+        {...props}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+        body={t(
+          'cloud:org_manage.org_manage.table.delete_attr_confirm',
+        ).replace('{{ATTRNAME}}', attribute_key)}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() =>
+          mutate({
+            entityId,
+            entityType,
+            attrKey: attribute_key,
+          })
+        }
+        isLoading={isLoading}
+      />
     </>
   )
 }

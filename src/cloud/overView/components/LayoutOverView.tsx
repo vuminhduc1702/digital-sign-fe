@@ -515,25 +515,23 @@ export function LayoutOverView() {
           </div>
         </div>
       </div>
-      {isOpen ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('btn:setup')}
-          body={bodyContent}
-          close={close}
-          isOpen={isOpen}
-          isSuccessDelete={isSuccessProject}
-          handleSubmit={() =>
-            mutateAsyncUploadProjectFile({
-              projectId,
-              backup: {
-                backup: backupData,
-              },
-            })
-          }
-          isLoading={isLoadingProject}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('btn:setup')}
+        body={bodyContent}
+        close={close}
+        isOpen={isOpen}
+        isSuccessDelete={isSuccessProject}
+        handleSubmit={() =>
+          mutateAsyncUploadProjectFile({
+            projectId,
+            backup: {
+              backup: backupData,
+            },
+          })
+        }
+        isLoading={isLoadingProject}
+      />
     </>
   )
 }

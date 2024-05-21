@@ -352,25 +352,21 @@ export function DataBaseTemplateManage() {
                   onSearch={onSearch}
                 />
               )}
-              {isOpenCreateColumn && (
-                <CreateColumn
-                  isSearch={isShow}
-                  isValidate={textValidate}
-                  close={closeCreateColumn}
-                  open={openCreateColumn}
-                  isOpen={isOpenCreateColumn}
-                  onClose={refetchData}
-                />
-              )}
-              {isOpenCreateRow && (
-                <CreateRows
-                  onClose={refetchData}
-                  columnsProp={data?.data?.columns || []}
-                  close={closeCreateRow}
-                  open={openCreateRow}
-                  isOpen={isOpenCreateRow}
-                />
-              )}
+              <CreateColumn
+                isSearch={isShow}
+                isValidate={textValidate}
+                close={closeCreateColumn}
+                open={openCreateColumn}
+                isOpen={isOpenCreateColumn}
+                onClose={refetchData}
+              />
+              <CreateRows
+                onClose={refetchData}
+                columnsProp={data?.data?.columns || []}
+                close={closeCreateRow}
+                open={openCreateRow}
+                isOpen={isOpenCreateRow}
+              />
             </div>
           </div>
         ) : null}

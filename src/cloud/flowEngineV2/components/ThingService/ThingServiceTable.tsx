@@ -64,64 +64,30 @@ function ThingServiceTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-              <BtnContextMenuIcon
-                height={20}
-                width={10}
-                viewBox="0 0 1 20"
-                className="text-secondary-700 hover:text-primary-400"
-              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() => {
-                open()
-              }}
-            >
-              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              {t('cloud:custom_protocol.service.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img
-                src={btnDeleteIcon}
-                alt="Delete service"
-                className="h-5 w-5"
-              />
-              {t('cloud:custom_protocol.service.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateThingService
-          name={name}
-          description={description}
-          close={close}
-          isOpen={isOpen}
-          thingServiceDataProps={data}
-          {...props}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:custom_protocol.service.delete')}
-          body={t(
-            'cloud:custom_protocol.service.delete_service_confirm',
-          ).replace('{{SERVICENAME}}', name)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => {
-            mutate({ thingId, name })
-          }}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <UpdateThingService
+        name={name}
+        description={description}
+        close={close}
+        isOpen={isOpen}
+        thingServiceDataProps={data}
+        {...props}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:custom_protocol.service.delete')}
+        body={t('cloud:custom_protocol.service.delete_service_confirm').replace(
+          '{{SERVICENAME}}',
+          name,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => {
+          mutate({ thingId, name })
+        }}
+        isLoading={isLoading}
+      />
     </>
   )
 }

@@ -147,33 +147,29 @@ export function RoleSidebar() {
           }
         />
       </div>
-      {isOpenCreateRole && (
-        <CreateRole
-          project_id={projectId}
-          open={openCreateRole}
-          close={closeCreateRole}
-          isOpen={isOpenCreateRole}
-        />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:role_manage.sidebar.delete_role')}
-          body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleRoles}
-          handleSubmit={() =>
-            mutateDeleteMultipleRoles(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <CreateRole
+        project_id={projectId}
+        open={openCreateRole}
+        close={closeCreateRole}
+        isOpen={isOpenCreateRole}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:role_manage.sidebar.delete_role')}
+        body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleRoles}
+        handleSubmit={() =>
+          mutateDeleteMultipleRoles(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

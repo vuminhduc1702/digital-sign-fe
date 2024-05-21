@@ -73,30 +73,25 @@ function CustomerTableContextMenu({
           />
         </div>
       </div>
-      {isOpen ? (
-        <UpdateCustomer
-          customerId={id}
-          name={name}
-          email={email}
-          phone={phone}
-          close={close}
-          isOpen={isOpen}
-          permissions={permissions}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('form:tenant.delete')}
-          body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <UpdateCustomer
+        customerId={id}
+        name={name}
+        email={email}
+        phone={phone}
+        close={close}
+        isOpen={isOpen}
+        permissions={permissions}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('form:tenant.delete')}
+        body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

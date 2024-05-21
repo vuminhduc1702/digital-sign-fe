@@ -156,33 +156,29 @@ export function DashboardManage() {
           }
         />
       </div>
-      {isOpenDashboard && (
-        <CreateDashboard
-          projectId={projectId}
-          open={openDashboard}
-          close={closeDashboard}
-          isOpen={isOpenDashboard}
-        />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:dashboard.table.delete_dashboard_full')}
-          body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleDashboards}
-          handleSubmit={() =>
-            mutateDeleteMultipleDashboards(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <CreateDashboard
+        projectId={projectId}
+        open={openDashboard}
+        close={closeDashboard}
+        isOpen={isOpenDashboard}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:dashboard.table.delete_dashboard_full')}
+        body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleDashboards}
+        handleSubmit={() =>
+          mutateDeleteMultipleDashboards(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

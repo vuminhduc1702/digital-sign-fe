@@ -108,37 +108,32 @@ function AdapterTableContextMenu({
           </DropdownMenuContent>
         </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateAdapter
-          id={id}
-          name={name}
-          content_type={content_type}
-          protocol={protocol}
-          thing_id={thing_id}
-          handle_service={handle_service}
-          host={host}
-          port={port}
-          configuration={configuration}
-          close={close}
-          isOpen={isOpen}
-          schema={schema}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:custom_protocol.adapter.table.delete_adapter')}
-          body={t(
-            'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
-          ).replace('{{ADAPTERNAME}}', name)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <UpdateAdapter
+        id={id}
+        name={name}
+        content_type={content_type}
+        protocol={protocol}
+        thing_id={thing_id}
+        handle_service={handle_service}
+        host={host}
+        port={port}
+        configuration={configuration}
+        close={close}
+        isOpen={isOpen}
+        schema={schema}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:custom_protocol.adapter.table.delete_adapter')}
+        body={t(
+          'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
+        ).replace('{{ADAPTERNAME}}', name)}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

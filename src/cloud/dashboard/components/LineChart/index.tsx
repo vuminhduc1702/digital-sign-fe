@@ -11,7 +11,9 @@ import * as d3 from 'd3'
 import { useTranslation } from 'react-i18next'
 import 'chartjs-adapter-date-fns'
 import i18n from '@/i18n'
-import moment from 'moment'
+import * as moment from 'moment'
+import 'moment/locale/vi'
+import 'moment/locale/en-gb'
 
 import {
   Chart,
@@ -88,10 +90,7 @@ export function LineChart({
           item => item !== widgetInfo?.id,
         )
       }
-      if (
-        prevValuesRef.current &&
-        widgetInfo?.config?.chartsetting?.data_type === 'HISTORY'
-      ) {
+      if (prevValuesRef.current) {
         dataManipulation()
       }
     }
@@ -122,10 +121,7 @@ export function LineChart({
           })
         }
       }
-      if (
-        prevValuesRef.current &&
-        widgetInfo?.config?.chartsetting?.data_type === 'REALTIME'
-      ) {
+      if (prevValuesRef.current) {
         realtimeDataManipulation()
       }
     }
@@ -335,7 +331,6 @@ export function LineChart({
           }}
           options={{
             maintainAspectRatio: false,
-            responsive: true,
             parsing: {
               xAxisKey: 'ts',
               yAxisKey: 'value',

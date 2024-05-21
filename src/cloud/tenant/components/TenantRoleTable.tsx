@@ -72,60 +72,26 @@ function CustomerTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-              <BtnContextMenuIcon
-                height={20}
-                width={10}
-                viewBox="0 0 1 20"
-                className="text-secondary-700 hover:text-primary-400"
-              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="z-[9999]">
-            <DropdownMenuItem onClick={openEdit}>
-              <img
-                src={btnEditIcon}
-                alt="Edit customer role"
-                className="h-5 w-5"
-              />
-              {t('form:role.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img
-                src={btnDeleteIcon}
-                alt="Delete customer role"
-                className="h-5 w-5"
-              />
-              {t('form:tenant.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {isOpenEdit ? (
-        <UpdateCustomerRole
-          project_id={project_id}
-          roleIdProps={roleIdProps}
-          modalTitle={t('table:edit_role')}
-          isOpenRole={isOpenEdit}
-          customerId={sub_tenant_id}
-          closeRole={closeEdit}
-        />
-      ) : null}
+      <UpdateCustomerRole
+        project_id={project_id}
+        roleIdProps={roleIdProps}
+        modalTitle={t('table:edit_role')}
+        isOpenRole={isOpenEdit}
+        customerId={sub_tenant_id}
+        closeRole={closeEdit}
+      />
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('form:tenant.delete')}
-          body={`${t('cloud:dashboard.table.delete_confirm')}`}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ project_id, sub_tenant_id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('form:tenant.delete')}
+        body={`${t('cloud:dashboard.table.delete_confirm')}`}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ project_id, sub_tenant_id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

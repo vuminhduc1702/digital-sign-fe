@@ -161,16 +161,14 @@ export function InfoCustomer() {
         </div>
       </div>
 
-      {isOpen ? (
-        <ViewPopup
-          type={type}
-          id={customerId}
-          customerCode={userById?.customer_code}
-          customerName={userById?.name}
-          close={close}
-          isOpen={isOpen}
-        />
-      ) : null}
+      <ViewPopup
+        type={type}
+        id={customerId}
+        customerCode={userById?.customer_code}
+        customerName={userById?.name}
+        close={close}
+        isOpen={isOpen}
+      />
     </div>
   )
 }

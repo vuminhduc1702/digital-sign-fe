@@ -79,42 +79,37 @@ function DataBaseTableContextMenu({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpen ? (
-        <UpdateRow
-          close={close}
-          onClose={onClose}
-          isOpen={isOpen}
-          row={row}
-          {...props}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:db_template.add_db.delete_row')}
-          body={t('cloud:db_template.add_db.delete_row_confirm')}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => {
-            let keys = Object.keys(row)
-            const dataFilter = keys.map(item => ({
-              [item]: row[item],
-            }))
-            mutate({
-              table: tableName || '',
-              project_id: projectId,
-              data: {
-                filter: {
-                  $and: dataFilter,
-                },
+      <UpdateRow
+        close={close}
+        onClose={onClose}
+        isOpen={isOpen}
+        row={row}
+        {...props}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:db_template.add_db.delete_row')}
+        body={t('cloud:db_template.add_db.delete_row_confirm')}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => {
+          let keys = Object.keys(row)
+          const dataFilter = keys.map(item => ({
+            [item]: row[item],
+          }))
+          mutate({
+            table: tableName || '',
+            project_id: projectId,
+            data: {
+              filter: {
+                $and: dataFilter,
               },
-            })
-          }}
-          isLoading={isLoading}
-        />
-      ) : null}
+            },
+          })
+        }}
+        isLoading={isLoading}
+      />
     </>
   )
 }

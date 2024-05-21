@@ -76,40 +76,8 @@ function RoleTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical 
-            className="text-lg text-gray-500 hover:text-black hover:scale-125 transition-all duration-200 ease-in-out"
-             />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() => {
-                open()
-                setSelectedUpdateRole(role)
-              }}
-            >
-              <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
-              {t('cloud:role_manage.sidebar.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleCopyId(id)}>
-              <img
-                src={btnCopyIdIcon}
-                alt="Copy role's ID"
-                className="h-5 w-5"
-              />
-              {t('table:copy_id')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img src={btnDeleteIcon} alt="Delete role" className="h-5 w-5" />
-              {t('cloud:role_manage.sidebar.delete_role')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {selectedUpdateRole != null && isOpen ? (
+      {selectedUpdateRole != null ? (
         <UpdateRole
           project_id={project_id}
           close={close}
@@ -121,21 +89,19 @@ function RoleTableContextMenu({
         />
       ) : null}
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:role_manage.sidebar.delete_role')}
-          body={t('cloud:role_manage.sidebar.delete_role_confirm').replace(
-            '{{ROLENAME}}',
-            name,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:role_manage.sidebar.delete_role')}
+        body={t('cloud:role_manage.sidebar.delete_role_confirm').replace(
+          '{{ROLENAME}}',
+          name,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }
