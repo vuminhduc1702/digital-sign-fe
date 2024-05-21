@@ -9,6 +9,7 @@ import {
   ChevronRightIcon,
   RadiobuttonIcon,
   TimerIcon,
+  ClipboardIcon,
 } from '@radix-ui/react-icons'
 import clsx from 'clsx'
 import { type ReactElement, useEffect, useState } from 'react'
@@ -239,7 +240,7 @@ export function LayoutOverView() {
   return (
     <>
       <div className="py-4">
-        <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-5">
+        <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-6">
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">{t('overView:total_devices')}</p>
             <div className="mt-2 flex justify-between">
@@ -272,6 +273,13 @@ export function LayoutOverView() {
             <div className="mt-2 flex justify-between">
               <span>{RequestHandlingTimeData?.avg_latency}</span>
               <TimerIcon className="h-5 w-5 text-primary-400" />
+            </div>
+          </div>
+          <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
+            <p className="text-table-header">{t('overView:total_request')}</p>
+            <div className="mt-2 flex justify-between">
+              <span>{SuccessRateData?.total_request}</span>
+              <ClipboardIcon className="h-5 w-5 text-primary-400" />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
