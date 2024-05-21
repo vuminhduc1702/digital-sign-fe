@@ -96,7 +96,7 @@ export function CustomProtocolManage() {
           [] as Array<{ [key: string]: unknown }>,
         )
       : []
-
+  console.log(isOpenAdapter)
   return (
     <ContentLayout title={t('sidebar:cloud.custom_protocol')}>
       <div className="flex grow flex-col">
@@ -160,28 +160,24 @@ export function CustomProtocolManage() {
             }
           />
         </div>
-        {isOpenAdapter && (
-          <CreateAdapter close={closeAdapter} isOpen={isOpenAdapter} />
-        )}
-        {isOpenDeleteMulti ? (
-          <ConfirmDialog
-            icon="danger"
-            title={t('cloud:dashboard.table.delete_dashboard_full')}
-            body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
-            close={closeDeleteMulti}
-            isOpen={isOpenDeleteMulti}
-            isSuccessDelete={isSuccessDeleteMultipleAdapters}
-            handleSubmit={() =>
-              mutateDeleteMultipleAdapters(
-                {
-                  data: { ids: rowSelectionKey },
-                },
-                { onSuccess: () => setRowSelection({}) },
-              )
-            }
-            isLoading={isLoading}
-          />
-        ) : null}
+        <CreateAdapter close={closeAdapter} isOpen={isOpenAdapter} />
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:dashboard.table.delete_dashboard_full')}
+          body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
+          isSuccessDelete={isSuccessDeleteMultipleAdapters}
+          handleSubmit={() =>
+            mutateDeleteMultipleAdapters(
+              {
+                data: { ids: rowSelectionKey },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
+          isLoading={isLoading}
+        />
       </div>
     </ContentLayout>
   )

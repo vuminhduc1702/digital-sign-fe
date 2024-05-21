@@ -254,14 +254,16 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
       close()
     }
   }, [isSuccessAdapter])
-
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
         }}
-        className={cn('flex h-full max-w-xl flex-col justify-between')}
+        className={cn(
+          'flex h-full max-w-xl flex-col justify-between',
+          !isOpen && ' data-[state=closed]:animate-out ',
+        )}
       >
         <SheetHeader>
           <SheetTitle>{t('cloud:custom_protocol.adapter.create')}</SheetTitle>

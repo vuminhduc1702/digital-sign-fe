@@ -145,25 +145,23 @@ export function FirmwareTemplate() {
           }
         />
       </div>
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:firmware.table.delete_firmware')}
-          body={t('cloud:firmware.table.delete_multiple_firmware_confirm')}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleFirmware}
-          handleSubmit={() =>
-            mutateDeleteMultipleFirmware(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:firmware.table.delete_firmware')}
+        body={t('cloud:firmware.table.delete_multiple_firmware_confirm')}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleFirmware}
+        handleSubmit={() =>
+          mutateDeleteMultipleFirmware(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

@@ -155,25 +155,23 @@ export function ThingTemplate() {
           }
         />
       </div>
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:custom_protocol.thing.delete')}
-          body={t('cloud:custom_protocol.thing.delete_multiple_thing_confirm')}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleThings}
-          handleSubmit={() =>
-            mutateDeleteMultipleThings(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:custom_protocol.thing.delete')}
+        body={t('cloud:custom_protocol.thing.delete_multiple_thing_confirm')}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleThings}
+        handleSubmit={() =>
+          mutateDeleteMultipleThings(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

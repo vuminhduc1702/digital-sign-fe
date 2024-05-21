@@ -428,6 +428,7 @@ export function CreateWidget({
     getValues,
     setValue,
     resetField,
+    reset,
   } = form
 
   const { fields, append, remove } = useFieldArray({
@@ -878,6 +879,7 @@ export function CreateWidget({
 
                 setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
 
+                reset()
                 close()
               })}
             >

@@ -183,7 +183,7 @@ export function TemplateDefault() {
               t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
-        {isOpen && selectedUpdateTemplate ? (
+        {selectedUpdateTemplate ? (
           <UpdateTemplate
             close={close}
             isOpen={isOpen}
@@ -191,10 +191,8 @@ export function TemplateDefault() {
           />
         ) : null}
       </div>
-      {isOpenTemplate && (
-        <CreateTemplate close={closeTemplate} isOpen={isOpenTemplate} />
-      )}
-      {isOpenDelete && id ? (
+      <CreateTemplate close={closeTemplate} isOpen={isOpenTemplate} />
+      {id ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:device_template.sidebar.delete_template_full')}

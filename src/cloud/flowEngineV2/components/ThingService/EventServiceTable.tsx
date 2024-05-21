@@ -37,15 +37,13 @@ function EventServiceTableContextMenu({
         viewBox="0 0 1 20"
         className="cursor-pointer text-secondary-700 hover:text-primary-400"
       />
-      {isOpen ? (
-        <ViewInputOutput
-          type={type}
-          body={body}
-          close={close}
-          isOpen={isOpen}
-          {...props}
-        />
-      ) : null}
+      <ViewInputOutput
+        type={type}
+        body={body}
+        close={close}
+        isOpen={isOpen}
+        {...props}
+      />
     </div>
   )
 }

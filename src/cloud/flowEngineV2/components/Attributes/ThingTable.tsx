@@ -61,51 +61,30 @@ function ThingTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={open}>
-              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              {t('cloud:custom_protocol.thing.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img src={btnDeleteIcon} alt="Delete thing" className="h-5 w-5" />
-              {t('cloud:custom_protocol.thing.delete')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateThing
-          thingId={id}
-          name={name}
-          description={description}
-          close={close}
-          isOpen={isOpen}
-        />
-      ) : null}
+      <UpdateThing
+        thingId={id}
+        name={name}
+        description={description}
+        close={close}
+        isOpen={isOpen}
+      />
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          title={t('cloud:custom_protocol.thing.delete')}
-          body={t('cloud:custom_protocol.thing.delete_thing_confirm').replace(
-            '{{THINGNAME}}',
-            name,
-          )}
-          icon="danger"
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => {
-            mutate({ id })
-          }}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        title={t('cloud:custom_protocol.thing.delete')}
+        body={t('cloud:custom_protocol.thing.delete_thing_confirm').replace(
+          '{{THINGNAME}}',
+          name,
+        )}
+        icon="danger"
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => {
+          mutate({ id })
+        }}
+        isLoading={isLoading}
+      />
     </>
   )
 }

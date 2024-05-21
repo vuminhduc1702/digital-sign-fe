@@ -153,30 +153,26 @@ export function UserManage() {
           }
         />
       </div>
-      {isOpenUser && (
-        <CreateUser close={closeUser} open={openUser} isOpen={isOpenUser} />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.user_manage.table.delete_user_full')}
-          body={t(
-            'cloud:org_manage.user_manage.table.delete_multiple_user_confirm',
-          )}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleUsers}
-          handleSubmit={() =>
-            mutateDeleteMultipleUsers(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <CreateUser close={closeUser} open={openUser} isOpen={isOpenUser} />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.user_manage.table.delete_user_full')}
+        body={t(
+          'cloud:org_manage.user_manage.table.delete_multiple_user_confirm',
+        )}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleUsers}
+        handleSubmit={() =>
+          mutateDeleteMultipleUsers(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

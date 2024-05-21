@@ -71,7 +71,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpen ? <ViewBilling id={id} close={close} isOpen={isOpen} /> : null}
+      <ViewBilling id={id} close={close} isOpen={isOpen} />
     </>
   )
 }

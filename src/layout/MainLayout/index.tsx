@@ -23,7 +23,12 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
           <Sidebar />
         </>
       ) : null}
-      <div className="flex w-full flex-col">
+      <div
+        className={cn(
+          `flex w-full flex-col`,
+          hasSideBar && 'lg:w-[calc(100vw-16rem)]',
+        )}
+      >
         <div className="flex">
           {hasSideBar ? (
             <button

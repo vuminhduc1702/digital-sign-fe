@@ -9,6 +9,8 @@ import { type DeviceAttrLog } from '@/cloud/orgManagement/api/attrAPI'
 import { type TimeSeries } from '../../types'
 import type * as z from 'zod'
 import { type widgetSchema } from '../Widget'
+import refreshIcon from '@/assets/icons/table-refresh.svg'
+import { Spinner } from '@/components/Spinner'
 
 type TableChartDataType = DeviceAttrLog & {
   entity_name: string
@@ -20,12 +22,14 @@ export function TableChart({
   widgetInfo,
   refetchData = () => {},
   refreshBtn,
+  widgetListRef,
   ...props
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
   refetchData?: () => void
   refreshBtn?: boolean
+  widgetListRef?: React.MutableRefObject<string[]>
   className?: string
 }) {
   const { t } = useTranslation()
@@ -44,37 +48,55 @@ export function TableChart({
         >
       >
     >()
+  const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
   useEffect(() => {
-    if (Object.keys(data).length > 0) {
-      prevValuesRef.current = newValuesRef.current || data
-      if (
-        newValuesRef.current != null &&
-        data[Object.keys(data)[0]].length === 1
-      ) {
-        for (const key in data) {
-          if (
-            prevValuesRef.current[key] != null &&
-            (JSON.stringify(prevValuesRef.current[key]) !==
-              JSON.stringify(newValuesRef.current[key]) ||
-              JSON.stringify(prevValuesRef.current[key]) !==
-                JSON.stringify(data[key]))
-          ) {
-            newValuesRef.current[key] = [
-              ...prevValuesRef.current[key],
-              ...data[key],
-            ]
-          } else {
-            prevValuesRef.current = data
-          }
+    if (
+      widgetInfo?.config?.chartsetting?.data_type === 'HISTORY' &&
+      widgetListRef?.current.includes(widgetInfo?.id)
+    ) {
+      if (Object.keys(data).length > 0) {
+        newValuesRef.current = data
+        if (widgetListRef && widgetListRef.current.includes(widgetInfo?.id)) {
+          widgetListRef.current = widgetListRef.current.filter(
+            item => item !== widgetInfo?.id,
+          )
+        }
+        if (newValuesRef.current != null) {
           dataManipulation()
         }
-      } else {
-        newValuesRef.current = data
-        dataManipulation()
       }
-    } else {
-      setDataTransformedFeedToChart([])
+    }
+
+    if (widgetInfo?.config?.chartsetting?.data_type !== 'HISTORY') {
+      if (Object.keys(data).length > 0) {
+        prevValuesRef.current = newValuesRef.current || data
+        if (
+          newValuesRef.current != null &&
+          data[Object.keys(data)[0]].length === 1
+        ) {
+          for (const key in data) {
+            if (
+              prevValuesRef.current[key] != null &&
+              (JSON.stringify(prevValuesRef.current[key]) !==
+                JSON.stringify(newValuesRef.current[key]) ||
+                JSON.stringify(prevValuesRef.current[key]) !==
+                  JSON.stringify(data[key]))
+            ) {
+              newValuesRef.current[key] = [
+                ...prevValuesRef.current[key],
+                ...data[key],
+              ]
+            } else {
+              prevValuesRef.current = data
+            }
+            dataManipulation()
+          }
+        } else {
+          newValuesRef.current = data
+          dataManipulation()
+        }
+      }
     }
   }, [data])
 
@@ -163,15 +185,44 @@ export function TableChart({
     [],
   )
 
+  // refresh table
+  function refresh() {
+    setIsRefresh(true)
+    widgetListRef?.current.push(widgetInfo?.id)
+    refetchData?.()
+    setInterval(() => {
+      setIsRefresh(false)
+    }, 1000)
+  }
+
   return (
-    <BaseTable
-      data={dataTransformedFeedToChart}
-      columns={columns}
-      isAbsoluteBtn={false}
-      onDataText={t('table:no_log_attr')}
-      refreshBtn={refreshBtn}
-      callbackParent={signalParent}
-      {...props}
-    />
+    <>
+      {isRefresh ? (
+        <div className="flex h-full items-center justify-center">
+          <Spinner size="xl" />
+        </div>
+      ) : (
+        <>
+          {refreshBtn && (
+            <div
+              className="absolute right-[95px] top-[10px] z-20 cursor-pointer"
+              onClick={refresh}
+            >
+              <img src={refreshIcon} alt="" />
+            </div>
+          )}
+          <BaseTable
+            data={dataTransformedFeedToChart}
+            columns={columns}
+            isAbsoluteBtn={false}
+            isCheckbox={false}
+            onDataText={t('table:no_log_attr')}
+            refreshBtn={refreshBtn}
+            callbackParent={signalParent}
+            {...props}
+          />
+        </>
+      )}
+    </>
   )
 }

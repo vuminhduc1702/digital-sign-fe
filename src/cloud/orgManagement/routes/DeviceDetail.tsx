@@ -415,39 +415,35 @@ export function DeviceDetail() {
           </div>
         </TabsContent>
       </Tabs>
-      {isOpenAttrs && (
-        <CreateAttr
-          entityId={deviceId}
-          entityType="DEVICE"
-          open={openAttrs}
-          close={closeAttrs}
-          isOpen={isOpenAttrs}
-        />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-          body={t(
-            'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
-          )}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          handleSubmit={() =>
-            mutateDeleteMultipleAttrs(
-              {
-                data: {
-                  keys: attrKeys,
-                  entity_type: 'DEVICE',
-                  entity_id: deviceId,
-                },
+      <CreateAttr
+        entityId={deviceId}
+        entityType="DEVICE"
+        open={openAttrs}
+        close={closeAttrs}
+        isOpen={isOpenAttrs}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+        body={t(
+          'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
+        )}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        handleSubmit={() =>
+          mutateDeleteMultipleAttrs(
+            {
+              data: {
+                keys: attrKeys,
+                entity_type: 'DEVICE',
+                entity_id: deviceId,
               },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

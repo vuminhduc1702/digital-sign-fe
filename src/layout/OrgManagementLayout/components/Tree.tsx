@@ -203,21 +203,19 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
           )
         })}
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.org_map.delete')}
-          body={t('cloud:org_manage.org_map.delete_org_confirm').replace(
-            '{{ORGNAME}}',
-            data.name,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ orgId: data.id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.org_map.delete')}
+        body={t('cloud:org_manage.org_map.delete_org_confirm').replace(
+          '{{ORGNAME}}',
+          data.name,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ orgId: data.id })}
+        isLoading={isLoading}
+      />
     </ul>
   )
 }
