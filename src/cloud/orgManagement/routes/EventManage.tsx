@@ -146,30 +146,26 @@ export function EventManage() {
           }
         />
       </div>
-      {isOpenEvent && (
-        <CreateEvent close={closeEvent} open={openEvent} isOpen={isOpenEvent} />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.event_manage.table.delete_event')}
-          body={t(
-            'cloud:org_manage.event_manage.table.delete_multiple_event_confirm',
-          )}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleEvents}
-          handleSubmit={() =>
-            mutateDeleteMultipleEvents(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <CreateEvent close={closeEvent} open={openEvent} isOpen={isOpenEvent} />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.event_manage.table.delete_event')}
+        body={t(
+          'cloud:org_manage.event_manage.table.delete_multiple_event_confirm',
+        )}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleEvents}
+        handleSubmit={() =>
+          mutateDeleteMultipleEvents(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

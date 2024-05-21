@@ -150,63 +150,31 @@ function EventTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical 
-            className="text-lg text-gray-500 hover:text-black hover:scale-125 transition-all duration-200 ease-in-out"
-             />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={open}>
-              <img src={btnEditIcon} alt="Edit event" className="h-5 w-5" />
-              {t('cloud:org_manage.event_manage.add_event.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleCopyId(id)}>
-              <img
-                src={btnCopyIdIcon}
-                alt="Copy adapter's ID"
-                className="h-5 w-5"
-              />
-              {t('table:copy_id')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img src={btnDeleteIcon} alt="Delete event" className="h-5 w-5" />
-              {t('cloud:org_manage.event_manage.table.delete_event')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateEvent
-          data={dataRow}
-          dateArr={todos}
-          dataAction={dataAction}
-          conditionData={conditionData}
-          type={typeEvent}
-          eventId={id}
-          name={name}
-          close={close}
-          isOpen={isOpen}
-          startTimeProps={startTime}
-          endTimeProps={endTime}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.event_manage.table.delete_event')}
-          body={t(
-            'cloud:org_manage.event_manage.table.delete_event_confirm',
-          ).replace('{{EVENTNAME}}', name)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          handleSubmit={() => mutate({ id, projectId })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <UpdateEvent
+        data={dataRow}
+        dateArr={todos}
+        dataAction={dataAction}
+        conditionData={conditionData}
+        type={typeEvent}
+        eventId={id}
+        name={name}
+        close={close}
+        isOpen={isOpen}
+        startTimeProps={startTime}
+        endTimeProps={endTime}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.event_manage.table.delete_event')}
+        body={t(
+          'cloud:org_manage.event_manage.table.delete_event_confirm',
+        ).replace('{{EVENTNAME}}', name)}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        handleSubmit={() => mutate({ id, projectId })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

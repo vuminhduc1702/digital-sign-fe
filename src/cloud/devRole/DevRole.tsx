@@ -156,14 +156,12 @@ export default function DevRole() {
           )}
         </div>
       </div>
-      {isOpenCreateRole && (
-        <CreateRole
-          project_id={projectId}
-          open={openCreateRole}
-          close={closeCreateRole}
-          isOpen={isOpenCreateRole}
-        />
-      )}
+      <CreateRole
+        project_id={projectId}
+        open={openCreateRole}
+        close={closeCreateRole}
+        isOpen={isOpenCreateRole}
+      />
     </ContentLayout>
   )
 }

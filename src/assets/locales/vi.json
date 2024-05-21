@@ -1000,6 +1000,7 @@
     "total_user": "Tổng số người dùng",
     "total_user_online": "Tổng số user online",
     "request_time": "Thời gian request",
+    "total_request": "Tổng số request",
     "success_rate": "Tỉ lệ thành công",
     "quick_link": "Quick Link",
     "setup_confirm": "Bạn có chắc chắn muốn cài đặt Mẫu thiết bị {{TITLE}}?"

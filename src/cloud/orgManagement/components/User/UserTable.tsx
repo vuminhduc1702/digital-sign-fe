@@ -83,63 +83,31 @@ function UserTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical 
-            className="text-lg text-gray-500 hover:text-black hover:scale-125 transition-all duration-200 ease-in-out"
-             />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={open}>
-              <img src={btnEditIcon} alt="Edit user" className="h-5 w-5" />
-              {t('cloud:org_manage.user_manage.table.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleCopyId(user_id)}>
-              <img
-                src={btnCopyIdIcon}
-                alt="Copy adapter's ID"
-                className="h-5 w-5"
-              />
-              {t('table:copy_id')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img src={btnDeleteIcon} alt="Delete user" className="h-5 w-5" />
-              {t('cloud:org_manage.user_manage.table.delete_user')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateUser
-          userId={user_id}
-          phone={phone}
-          name={name}
-          email={email}
-          org_id={org_id}
-          role_id={role_id}
-          org_name={org_name}
-          role_name={role_name}
-          close={close}
-          isOpen={isOpen}
-          profile={profile}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.user_manage.table.delete_user_full')}
-          body={t(
-            'cloud:org_manage.user_manage.table.delete_user_confirm',
-          ).replace('{{USERNAME}}', name)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          handleSubmit={() => mutate({ user_id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <UpdateUser
+        userId={user_id}
+        phone={phone}
+        name={name}
+        email={email}
+        org_id={org_id}
+        role_id={role_id}
+        org_name={org_name}
+        role_name={role_name}
+        close={close}
+        isOpen={isOpen}
+        profile={profile}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.user_manage.table.delete_user_full')}
+        body={t(
+          'cloud:org_manage.user_manage.table.delete_user_confirm',
+        ).replace('{{USERNAME}}', name)}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        handleSubmit={() => mutate({ user_id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

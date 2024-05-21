@@ -35,7 +35,7 @@ import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { EditBtnIcon, PlusIcon } from '@/components/SVGIcons'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, previousDay } from 'date-fns'
 import { Calendar } from '@/components/ui/calendar'
 import { TimePicker } from '@/components/ui/time-picker'
 import { useParams } from 'react-router-dom'
@@ -69,10 +69,12 @@ export function UpdateWidget({
   widgetInfo,
   setWidgetList,
   widgetId,
+  widgetListRef,
 }: {
   widgetInfo?: z.infer<typeof widgetSchema>
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
   widgetId: string
+  widgetListRef?: React.MutableRefObject<string[]>
 }) {
   const { t } = useTranslation()
 
@@ -83,6 +85,7 @@ export function UpdateWidget({
   const [isDone, setIsDone] = useState(false)
 
   const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
+  const widgetInfoInitRef = useRef(widgetInfoMemo)
 
   const initParse =
     widgetInfoMemo?.datasource?.init_message &&
@@ -346,7 +349,10 @@ export function UpdateWidget({
   }, [watch('widgetSetting.time_period')])
 
   function resetForm() {
-    setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widgetInfoMemo } }))
+    setWidgetList(prev => ({
+      ...prev,
+      ...{ [widgetId]: widgetInfoInitRef.current },
+    }))
     reset()
   }
 
@@ -547,6 +553,7 @@ export function UpdateWidget({
                     }
 
               const widget: z.infer<typeof widgetSchema> = {
+                id: widgetId,
                 title: values.title,
                 description: widgetInfoMemo?.description || 'LINE',
                 type: widgetInfoMemo?.type,
@@ -610,6 +617,8 @@ export function UpdateWidget({
               }
 
               setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
+
+              widgetListRef?.current.push(widgetId)
 
               // close the dialog
               setInterval(() => {

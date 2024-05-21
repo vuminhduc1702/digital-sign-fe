@@ -326,21 +326,19 @@ export function UpdateSubcription({
           )}
         </div>
       </div>
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('billing:subcription.delete')}
-          body={t('billing:subcription.delete_sub_confirm').replace(
-            '{{SUBCRIPTION}}',
-            id,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccessDelete}
-          handleSubmit={() => mutateDelete({ id })}
-          isLoading={isLoadingDelete}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('billing:subcription.delete')}
+        body={t('billing:subcription.delete_sub_confirm').replace(
+          '{{SUBCRIPTION}}',
+          id,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccessDelete}
+        handleSubmit={() => mutateDelete({ id })}
+        isLoading={isLoadingDelete}
+      />
     </Dialog>
   )
 }

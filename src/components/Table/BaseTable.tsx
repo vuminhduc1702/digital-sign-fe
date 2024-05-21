@@ -210,80 +210,82 @@ export function BaseTable<T extends Record<string, any>>({
   })
 
   return (
-    <div className={cn('', className)}>
-      <div className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-end">
-        <div className="flex flex-row gap-4">
-          {utilityButton}
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            formatExcel={formatExcel}
-            pdfHeader={pdfHeader}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger className="outline-none">
-              <LuSettings className="h-[25px] w-[25px] cursor-pointer" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {/* filter all */}
-              <DropdownMenuCheckboxItem
-                id="checkAll"
-                className="cursor-pointer capitalize"
-                checked={table.getIsAllColumnsVisible()}
-                onCheckedChange={table.getToggleAllColumnsVisibilityHandler()}
-              >
-                {t('table:filter.select_all')}
-              </DropdownMenuCheckboxItem>
+    <div className={cn(``, className)}>
+      {isCheckbox && (
+        <div className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-end">
+          <div className="flex flex-row gap-4">
+            {utilityButton}
+            <ExportTable
+              refComponent={ref}
+              rowSelection={rowSelection}
+              formatExcel={formatExcel}
+              pdfHeader={pdfHeader}
+            />
+            <DropdownMenu>
+              <DropdownMenuTrigger className="outline-none">
+                <LuSettings className="h-[25px] w-[25px] cursor-pointer" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {/* filter all */}
+                <DropdownMenuCheckboxItem
+                  id="checkAll"
+                  className="cursor-pointer capitalize"
+                  checked={table.getIsAllColumnsVisible()}
+                  onCheckedChange={table.getToggleAllColumnsVisibilityHandler()}
+                >
+                  {t('table:filter.select_all')}
+                </DropdownMenuCheckboxItem>
 
-              {table
-                .getAllColumns()
-                .filter(col => {
-                  if (
-                    col.id !== 'stt' &&
-                    col.id !== 'contextMenu' &&
-                    col.id !== 'select'
-                  ) {
-                    return col
-                  }
-                })
-                .map(column => {
-                  let title_column
-                  if (
-                    column.columnDef &&
-                    typeof column.columnDef.header === 'function'
-                  ) {
-                    const headerResult = column.columnDef.header()
-                    if (typeof headerResult?.props?.children === 'string') {
-                      title_column = headerResult?.props?.children
-                    } else if (
-                      typeof headerResult?.props?.children === 'object'
+                {table
+                  .getAllColumns()
+                  .filter(col => {
+                    if (
+                      col.id !== 'stt' &&
+                      col.id !== 'contextMenu' &&
+                      col.id !== 'select'
                     ) {
-                      title_column =
-                        headerResult?.props?.children[0].props?.children
+                      return col
+                    }
+                  })
+                  .map(column => {
+                    let title_column
+                    if (
+                      column.columnDef &&
+                      typeof column.columnDef.header === 'function'
+                    ) {
+                      const headerResult = column.columnDef.header()
+                      if (typeof headerResult?.props?.children === 'string') {
+                        title_column = headerResult?.props?.children
+                      } else if (
+                        typeof headerResult?.props?.children === 'object'
+                      ) {
+                        title_column =
+                          headerResult?.props?.children[0].props?.children
+                      } else {
+                        title_column = ''
+                      }
                     } else {
                       title_column = ''
                     }
-                  } else {
-                    title_column = ''
-                  }
 
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="cursor-pointer capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={value =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {title_column}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="cursor-pointer capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={value =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {title_column}
+                      </DropdownMenuCheckboxItem>
+                    )
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
+      )}
       <ScrollArea
         className={cn(
           'relative z-30 mt-2 flex h-[calc(100vh_-_370px)] grow flex-col justify-between',
@@ -320,9 +322,11 @@ export function BaseTable<T extends Record<string, any>>({
                             {header.id === 'contextMenu' && t('table:action')}
                             <div
                               className={cn(
-                                header.id !== 'contextMenu' &&
-                                  header.id !== 'select' &&
-                                  'border-l border-[#2F2B3D] px-5 font-bold',
+                                !isCheckbox && header.id !== 'stt'
+                                  ? header.id !== 'contextMenu' &&
+                                      header.id !== 'select' &&
+                                      'border-l border-[#2F2B3D] px-5 font-bold'
+                                  : 'px-5 font-bold',
                               )}
                             >
                               {flexRender(

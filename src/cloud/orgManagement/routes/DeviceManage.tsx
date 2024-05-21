@@ -156,34 +156,30 @@ export function DeviceManage() {
           }
         />
       </div>
-      {isOpenDevice && (
-        <CreateDevice
-          close={closeDevice}
-          open={openDevice}
-          isOpen={isOpenDevice}
-        />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.device_manage.table.delete_device_full')}
-          body={t(
-            'cloud:org_manage.device_manage.table.delete_multiple_device_confirm',
-          )}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleDevices}
-          handleSubmit={() =>
-            mutateDeleteMultipleDevices(
-              {
-                data: { ids: rowSelectionKey },
-              },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <CreateDevice
+        close={closeDevice}
+        open={openDevice}
+        isOpen={isOpenDevice}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.device_manage.table.delete_device_full')}
+        body={t(
+          'cloud:org_manage.device_manage.table.delete_multiple_device_confirm',
+        )}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleDevices}
+        handleSubmit={() =>
+          mutateDeleteMultipleDevices(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

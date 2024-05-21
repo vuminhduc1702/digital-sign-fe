@@ -155,7 +155,7 @@ export function ListProjectItem({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              {isOpen && selectedUpdateProject?.id === project.id ? (
+              {selectedUpdateProject?.id === project.id ? (
                 <UpdateProject
                   close={close}
                   isOpen={isOpen}
@@ -208,25 +208,23 @@ export function ListProjectItem({
         )
       })}
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:project_manager.add_project.delete_project')}
-          body={t('cloud:project_manager.add_project.confirm_delete').replace(
-            '{{PROJECT}}',
-            name,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() =>
-            mutate({
-              projectId: id,
-            })
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:project_manager.add_project.delete_project')}
+        body={t('cloud:project_manager.add_project.confirm_delete').replace(
+          '{{PROJECT}}',
+          name,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() =>
+          mutate({
+            projectId: id,
+          })
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }

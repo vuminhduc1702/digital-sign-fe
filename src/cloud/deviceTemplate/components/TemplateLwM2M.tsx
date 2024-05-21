@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 
 import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { PATHS } from '@/routes/PATHS'
-import CreateTemplateLwM2M from './CreateTemplateLwM2M'
+import { CreateTemplateLwM2M } from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
 import storage from '@/utils/storage'
 
@@ -252,8 +252,7 @@ export function TemplateLwM2M() {
               t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
-        {isOpen &&
-        selectedUpdateTemplate &&
+        {selectedUpdateTemplate &&
         selectedUpdateTemplate?.transport_config?.protocol === 'lwm2m' ? (
           <UpdateTemplateLwM2M
             close={close}
@@ -261,8 +260,7 @@ export function TemplateLwM2M() {
             selectedUpdateTemplate={selectedUpdateTemplate}
           />
         ) : null}
-        {isOpen &&
-        selectedUpdateTemplate &&
+        {selectedUpdateTemplate &&
         selectedUpdateTemplate?.transport_config?.protocol !== 'lwm2m' ? (
           <UpdateTemplate
             close={close}
@@ -271,36 +269,31 @@ export function TemplateLwM2M() {
           />
         ) : null}
       </div>
-      {isOpenTemplate &&
-        (protocolQuery === 'lwm2m' || protocolQuery === 'other') && (
-          <CreateTemplateLwM2M
-            open={openTemplate}
-            close={closeTemplate}
-            isOpen={isOpenTemplate}
-          />
-        )}
-      {isOpenTemplate &&
-        protocolQuery !== 'lwm2m' &&
-        protocolQuery !== 'other' && (
-          <CreateTemplate
-            close={closeTemplate}
-            protocol={protocolQuery}
-            isOpen={isOpenTemplate}
-          />
-        )}
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:device_template.sidebar.delete_template_full')}
-          body={t(
-            'cloud:device_template.sidebar.delete_template_confirm',
-          ).replace('{{TEMPLATENAME}}', name)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          handleSubmit={() => mutate({ id })}
-          isLoading={isLoading}
+      {(protocolQuery === 'lwm2m' || protocolQuery === 'other') && (
+        <CreateTemplateLwM2M
+          open={openTemplate}
+          close={closeTemplate}
+          isOpen={isOpenTemplate}
         />
-      ) : null}
+      )}
+      {protocolQuery !== 'lwm2m' && protocolQuery !== 'other' && (
+        <CreateTemplate
+          close={closeTemplate}
+          protocol={protocolQuery}
+          isOpen={isOpenTemplate}
+        />
+      )}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:device_template.sidebar.delete_template_full')}
+        body={t(
+          'cloud:device_template.sidebar.delete_template_confirm',
+        ).replace('{{TEMPLATENAME}}', name)}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        handleSubmit={() => mutate({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

@@ -941,23 +941,21 @@ export function PackageInfo() {
         </div>
       )}
 
-      {isOpen ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('billing:package_manage.delete_plan')}
-          body={t('billing:package_manage.delete_plan_confirm').replace(
-            '{{PLAN_NAME}}',
-            data?.data?.name || '',
-          )}
-          close={close}
-          isOpen={isOpen}
-          isSuccessDelete={isSuccessDelete}
-          handleSubmit={() => {
-            mutateDelete({ id: packageId })
-          }}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('billing:package_manage.delete_plan')}
+        body={t('billing:package_manage.delete_plan_confirm').replace(
+          '{{PLAN_NAME}}',
+          data?.data?.name || '',
+        )}
+        close={close}
+        isOpen={isOpen}
+        isSuccessDelete={isSuccessDelete}
+        handleSubmit={() => {
+          mutateDelete({ id: packageId })
+        }}
+        isLoading={isLoading}
+      />
     </>
   )
 }

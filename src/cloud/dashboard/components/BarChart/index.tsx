@@ -43,11 +43,13 @@ export const BarChart = ({
   widgetInfo,
   refetchData,
   refreshBtn,
+  widgetListRef,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
   refetchData?: () => void
   refreshBtn?: boolean
+  widgetListRef?: React.MutableRefObject<string[]>
 }) => {
   const { t } = useTranslation()
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
@@ -56,10 +58,6 @@ export const BarChart = ({
   const END_DATE = widgetInfo?.config?.chartsetting?.end_date
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
-  // 0 - init fetch
-  // 1 - init fetch complete
-  // 2 - refetch
-  const fetchDataMode = useRef<0 | 1 | 2>(0)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<Array<{ ts: number; value: string | number }>>
@@ -74,46 +72,49 @@ export const BarChart = ({
   //   }
   // }, [i18n.language])
 
+  // combine new data with previous data
   useEffect(() => {
-    if (
-      data &&
-      Object.keys(data).length > 0 &&
-      (fetchDataMode.current === 0 || fetchDataMode.current === 2)
-    ) {
-      if (prevValuesRef.current === null) {
+    if (data && Object.keys(data).length > 0) {
+      if (
+        widgetInfo?.config?.chartsetting?.data_type === 'HISTORY' &&
+        widgetListRef?.current.includes(widgetInfo?.id)
+      ) {
         prevValuesRef.current = data
-      } else {
-        newValuesRef.current = data
-        if (newValuesRef.current && prevValuesRef.current) {
-          Object.entries(prevValuesRef.current).forEach(([key, items]) => {
-            Object.entries(newValuesRef.current).forEach(
-              ([newKey, newItems]) => {
-                if (newKey === key) {
-                  prevValuesRef.current[key] = [
-                    ...prevValuesRef.current[key],
-                    ...newItems.filter(
-                      newItem => !items.find(item => item.ts === newItem.ts),
-                    ),
-                  ]
-                }
-              },
-            )
-          })
+        if (widgetListRef && widgetListRef?.current.includes(widgetInfo?.id)) {
+          widgetListRef.current = widgetListRef.current.filter(
+            item => item !== widgetInfo?.id,
+          )
+        }
+        if (prevValuesRef.current) {
+          dataManipulation()
         }
       }
-      if (
-        prevValuesRef.current &&
-        widgetInfo?.config?.chartsetting?.data_type === 'REALTIME'
-      ) {
-        realtimeDataManipulation()
-      } else if (
-        prevValuesRef.current &&
-        widgetInfo?.config?.chartsetting?.data_type === 'HISTORY'
-      ) {
-        dataManipulation()
 
-        // complete init fetch
-        fetchDataMode.current = 1
+      if (widgetInfo?.config?.chartsetting?.data_type === 'REALTIME') {
+        if (!prevValuesRef.current) {
+          prevValuesRef.current = data
+        } else {
+          newValuesRef.current = data
+          if (newValuesRef.current && prevValuesRef.current) {
+            Object.entries(prevValuesRef.current).forEach(([key, items]) => {
+              Object.entries(newValuesRef.current).forEach(
+                ([newKey, newItems]) => {
+                  if (newKey === key) {
+                    prevValuesRef.current[key] = [
+                      ...prevValuesRef.current[key],
+                      ...newItems.filter(
+                        newItem => !items.find(item => item.ts === newItem.ts),
+                      ),
+                    ]
+                  }
+                },
+              )
+            })
+          }
+        }
+        if (prevValuesRef.current) {
+          realtimeDataManipulation()
+        }
       }
     }
   }, [data])
@@ -177,8 +178,8 @@ export const BarChart = ({
   // refresh static chart
   function refresh() {
     setIsRefresh(true)
+    widgetListRef?.current.push(widgetInfo?.id)
     refetchData?.()
-    fetchDataMode.current = 2
     setInterval(() => {
       setIsRefresh(false)
     }, 1000)
@@ -226,8 +227,12 @@ export const BarChart = ({
     },
     limits: {
       x: {
-        minDuration: 5000,
+        minDelay: 0,
+        maxDelay: 4000,
+        minDuration: 10000,
         maxDuration: TIME_PERIOD,
+        min: START_DATE || 0,
+        max: END_DATE || Date.now(),
       },
     },
   }
@@ -255,7 +260,6 @@ export const BarChart = ({
             options={{
               barPercentage: 0.5,
               maintainAspectRatio: false,
-              responsive: true,
               parsing: {
                 xAxisKey: 'ts',
                 yAxisKey: 'value',
@@ -273,6 +277,8 @@ export const BarChart = ({
                   grid: {
                     borderColor: 'black',
                   },
+                  min: START_DATE || 0,
+                  max: END_DATE || Date.now(),
                 },
                 y: {
                   title: {

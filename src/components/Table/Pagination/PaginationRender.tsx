@@ -47,7 +47,7 @@ export function PaginationRender({
   }, [isSearchData])
 
   return (
-    <div className="flex w-full flex-col justify-between gap-4 overflow-auto px-2 py-1 sm:flex-row sm:items-center sm:gap-8">
+    <div className="flex w-full flex-col justify-between gap-4 overflow-x-auto overflow-y-hidden px-2 py-1 sm:flex-row sm:items-center sm:gap-8">
       <div className="flex w-[100px] items-center justify-center whitespace-nowrap text-sm text-muted-foreground">
         {t('table:pagination')}
       </div>

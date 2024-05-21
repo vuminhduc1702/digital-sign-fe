@@ -62,57 +62,28 @@ function DashboardTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical              />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() => {
-                open()
-              }}
-            >
-              <img src={btnEditIcon} alt="Edit Dashboard" className="h-5 w-5" />
-              {t('cloud:dashboard.add_dashboard.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img
-                src={btnDeleteIcon}
-                alt="Delete Dashboard"
-                className="h-5 w-5"
-              />
-              {t('cloud:dashboard.table.delete_dashboard')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateDashboard
-          id={id}
-          close={close}
-          isOpen={isOpen}
-          title={title}
-          {...props}
-        />
-      ) : null}
+      <UpdateDashboard
+        id={id}
+        close={close}
+        isOpen={isOpen}
+        title={title}
+        {...props}
+      />
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:dashboard.table.delete_dashboard_full')}
-          body={t('cloud:dashboard.table.delete_dashboard_confirm').replace(
-            '{{DBNAME}}',
-            title,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:dashboard.table.delete_dashboard_full')}
+        body={t('cloud:dashboard.table.delete_dashboard_confirm').replace(
+          '{{DBNAME}}',
+          title,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

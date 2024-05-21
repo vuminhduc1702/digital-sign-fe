@@ -9,6 +9,11 @@ import refreshIcon from '@/assets/icons/table-refresh.svg'
 
 import * as d3 from 'd3'
 import { useTranslation } from 'react-i18next'
+import 'chartjs-adapter-date-fns'
+import i18n from '@/i18n'
+import * as moment from 'moment'
+import 'moment/locale/vi'
+import 'moment/locale/en-gb'
 
 import {
   Chart,
@@ -42,11 +47,13 @@ export function LineChart({
   widgetInfo,
   refetchData,
   refreshBtn,
+  widgetListRef,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
   refetchData?: () => void
   refreshBtn?: boolean
+  widgetListRef?: React.MutableRefObject<string[]>
 }) {
   const { t } = useTranslation()
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
@@ -55,10 +62,6 @@ export function LineChart({
   const END_DATE = widgetInfo?.config?.chartsetting?.end_date
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
-  // 0 - init fetch
-  // 1 - init fetch complete
-  // 2 - refetch
-  const fetchDataMode = useRef<0 | 1 | 2>(0)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<Array<{ ts: number; value: string | number }>>
@@ -67,9 +70,9 @@ export function LineChart({
 
   // useEffect(() => {
   //   if (i18n.language === 'vi') {
-  //     d3.timeFormatDefaultLocale(VN_TIME)
+  //     moment.locale('vi')
   //   } else {
-  //     d3.timeFormatDefaultLocale(EN_TIME)
+  //     moment.locale('en')
   //   }
   // }, [i18n.language])
 
@@ -78,9 +81,26 @@ export function LineChart({
     if (
       data &&
       Object.keys(data).length > 0 &&
-      (fetchDataMode.current === 0 || fetchDataMode.current === 2)
+      widgetInfo?.config?.chartsetting?.data_type === 'HISTORY' &&
+      widgetListRef?.current.includes(widgetInfo?.id)
     ) {
-      if (prevValuesRef.current === null) {
+      prevValuesRef.current = data
+      if (widgetListRef && widgetListRef?.current.includes(widgetInfo?.id)) {
+        widgetListRef.current = widgetListRef.current.filter(
+          item => item !== widgetInfo?.id,
+        )
+      }
+      if (prevValuesRef.current) {
+        dataManipulation()
+      }
+    }
+
+    if (
+      data &&
+      Object.keys(data).length > 0 &&
+      widgetInfo?.config?.chartsetting?.data_type !== 'HISTORY'
+    ) {
+      if (!prevValuesRef.current) {
         prevValuesRef.current = data
       } else {
         newValuesRef.current = data
@@ -101,19 +121,8 @@ export function LineChart({
           })
         }
       }
-      if (
-        prevValuesRef.current &&
-        widgetInfo?.config?.chartsetting?.data_type === 'REALTIME'
-      ) {
+      if (prevValuesRef.current) {
         realtimeDataManipulation()
-      } else if (
-        prevValuesRef.current &&
-        widgetInfo?.config?.chartsetting?.data_type === 'HISTORY'
-      ) {
-        dataManipulation()
-
-        // complete init fetch
-        fetchDataMode.current = 1
       }
     }
   }, [data])
@@ -179,8 +188,8 @@ export function LineChart({
   // refresh static chart
   function refresh() {
     setIsRefresh(true)
+    widgetListRef?.current.push(widgetInfo?.id)
     refetchData?.()
-    fetchDataMode.current = 2
     setInterval(() => {
       setIsRefresh(false)
     }, 1000)
@@ -224,14 +233,15 @@ export function LineChart({
         enabled: true,
       },
       mode: 'x',
-      // drag: {
-      //   enabled: true,
-      // }
     },
     limits: {
       x: {
-        minDuration: 5000,
+        minDelay: 0,
+        maxDelay: 4000,
+        minDuration: 10000,
         maxDuration: TIME_PERIOD,
+        min: START_DATE || Date.now() - TIME_PERIOD,
+        max: END_DATE || Date.now(),
       },
     },
   }
@@ -259,7 +269,6 @@ export function LineChart({
               }}
               options={{
                 maintainAspectRatio: false,
-                responsive: true,
                 parsing: {
                   xAxisKey: 'ts',
                   yAxisKey: 'value',
@@ -322,14 +331,13 @@ export function LineChart({
           }}
           options={{
             maintainAspectRatio: false,
-            responsive: true,
             parsing: {
               xAxisKey: 'ts',
               yAxisKey: 'value',
             },
             elements: {
               point: {
-                radius: 0,
+                radius: 3,
               },
             },
             scales: {
