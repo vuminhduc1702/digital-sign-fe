@@ -20,6 +20,25 @@ import storage from '@/utils/storage'
 import { useCreatePlan, type CreatePlanDTO } from '../api'
 import { type PlanlvList } from '../types'
 import i18n from '@/i18n'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export const numericString = (schema: z.ZodTypeAny) =>
   z.preprocess(a => {
@@ -47,7 +66,7 @@ export const entityPlanSchema = z
     name: nameSchema,
     type: z.string(),
     status: z.string(),
-    description: z.string(),
+    description: z.string().optional(),
     payment_type: z.string(),
     type_period: z.string(),
     cal_unit: z.string(),
@@ -117,6 +136,7 @@ export function CreatePackage() {
     setExpectedPayment('')
     setExpectedNumber('')
     setStatus('')
+    reset()
   }
 
   const parseNumber = (value: any) => {
@@ -230,6 +250,42 @@ export function CreatePackage() {
     setExpectedPayment(result <= 0 ? 0 : result)
   }
 
+  const form = useForm<CreatePlanDTO['data']>({
+    resolver: entityPlanSchema && zodResolver(entityPlanSchema),
+    defaultValues: {
+      name: '',
+      type: 'official',
+      tax: '10',
+      period: '1',
+      cal_unit: 'month',
+      plan_lv: [
+        {
+          level: '',
+          price: 0,
+          free: 0,
+        },
+      ],
+    },
+  })
+  const {
+    register,
+    formState,
+    getValues,
+    setValue,
+    setError,
+    watch,
+    handleSubmit,
+    control,
+    reset,
+    clearErrors,
+  } = form
+  const { fields, append, remove } = useFieldArray({
+    name: 'plan_lv',
+    control,
+  })
+
+  console.log(formState, 'formStateformStateformState')
+
   return (
     <FormDialog
       isDone={isSuccess}
@@ -237,240 +293,1202 @@ export function CreatePackage() {
       resetData={resetData}
       size="lg"
       body={
-        <FormMultipleFields<CreatePlanDTO['data'], typeof entityPlanSchema>
-          id="create-plan"
-          className="flex flex-col justify-between"
-          onSubmit={values => {
-            let plan_lvBE: PlanlvList[] = []
-            if (
-              estimates === 'mass' ||
-              estimates === 'accumulated' ||
-              estimates === 'step'
-            ) {
-              plan_lvBE = values.plan_lv?.map(item => ({
-                level: (item.level && parseInt(item.level)) || null,
-                price: (item.price && parseInt(item.price)) || null,
-                free: (item.free && parseInt(item.free)) || null,
-                estimate: values.estimate,
-              }))
-            }
-            const expiryNumber =
-              values?.expiry && parseInt(values?.expiry) * 24 * 60 * 60
-            mutate({
-              data: {
-                ...values,
-                project_id: projectId,
-                plan_lv: plan_lvBE,
-                tax: (values.tax && parseInt(values.tax)) || null,
-                fix_cost:
-                  (values.fix_cost && parseInt(values.fix_cost)) || null,
-                period: (values.period && parseInt(values.period)) || null,
-                quantity_free:
-                  (values.quantity_free && parseInt(values.quantity_free)) ||
-                  null,
-                price: (values.price && parseInt(values.price)) || null,
-                expiry: expiryNumber || null,
-              },
-            })
-          }}
-          schema={entityPlanSchema}
-          name={['plan_lv']}
-          options={{
-            defaultValues: {
-              tax: '10',
-              period: '1',
-              cal_unit: 'month',
-              plan_lv: [
-                {
-                  level: '',
-                  price: 0,
-                  free: 0,
+        // <FormMultipleFields<CreatePlanDTO['data'], typeof entityPlanSchema>
+        //   id="create-plan"
+        //   className="flex flex-col justify-between"
+        //   onSubmit={values => {
+        //     let plan_lvBE: PlanlvList[] = []
+        //     if (
+        //       estimates === 'mass' ||
+        //       estimates === 'accumulated' ||
+        //       estimates === 'step'
+        //     ) {
+        //       plan_lvBE = values.plan_lv?.map(item => ({
+        //         level: (item.level && parseInt(item.level)) || null,
+        //         price: (item.price && parseInt(item.price)) || null,
+        //         free: (item.free && parseInt(item.free)) || null,
+        //         estimate: values.estimate,
+        //       }))
+        //     }
+        //     const expiryNumber =
+        //       values?.expiry && parseInt(values?.expiry) * 24 * 60 * 60
+        //     mutate({
+        //       data: {
+        //         ...values,
+        //         project_id: projectId,
+        //         plan_lv: plan_lvBE,
+        //         tax: (values.tax && parseInt(values.tax)) || null,
+        //         fix_cost:
+        //           (values.fix_cost && parseInt(values.fix_cost)) || null,
+        //         period: (values.period && parseInt(values.period)) || null,
+        //         quantity_free:
+        //           (values.quantity_free && parseInt(values.quantity_free)) ||
+        //           null,
+        //         price: (values.price && parseInt(values.price)) || null,
+        //         expiry: expiryNumber || null,
+        //       },
+        //     })
+        //   }}
+        //   schema={entityPlanSchema}
+        //   name={['plan_lv']}
+        //   options={{
+        //     defaultValues: {
+        //       tax: '10',
+        //       period: '1',
+        //       cal_unit: 'month',
+        //       plan_lv: [
+        //         {
+        //           level: '',
+        //           price: 0,
+        //           free: 0,
+        //         },
+        //       ],
+        //     },
+        //   }}
+        // >
+        //   {(
+        //     { register, formState, getValues, setValue, setError, watch },
+        //     {
+        //       append: planlvAppend,
+        //       fields: planlvFields,
+        //       remove: planlvRemove,
+        //     },
+        //   ) => {
+        //     return (
+        //       <>
+        //         <p className="flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
+        //           {t('billing:package_manage.title')}
+        //         </p>
+        //         <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
+        //           <InputField
+        //             label={t('billing:package_manage.popup.name')}
+        //             error={formState.errors['name']}
+        //             registration={register('name')}
+        //             classnamefieldwrapper=""
+        //             classlabel="w-full"
+        //             classchild="w-full"
+        //             placeholder={t('billing:package_manage.input.iname')}
+        //           />
+        //           <SelectField
+        //             label={t('billing:package_manage.popup.type')}
+        //             error={formState.errors['type']}
+        //             registration={register('type', {
+        //               onChange: e => {
+        //                 setType(e.target.value)
+        //                 setPaymentType('PREPAY')
+        //               },
+        //             })}
+        //             options={[
+        //               {
+        //                 label: t('billing:package_manage.input.lofficial'),
+        //                 value: 'official',
+        //               },
+        //               {
+        //                 label: t('billing:package_manage.input.ltrial'),
+        //                 value: 'trial',
+        //               },
+        //             ]}
+        //             classlabel="w-full"
+        //             classchild="w-full"
+        //             classnamefieldwrapper=""
+        //           />
+        //           <TextAreaField
+        //             label={t('billing:package_manage.popup.description')}
+        //             error={formState.errors['description']}
+        //             registration={register('description')}
+        //             classnamefieldwrapper=""
+        //             classlabel="w-full"
+        //             classchild="w-full"
+        //             placeholder={t('billing:package_manage.input.tdescribe')}
+        //           />
+        //           <div className="relative w-full">
+        //             <label>{t('billing:package_manage.popup.status')}</label>
+        //             <div className="mt-1 items-center">
+        //               {[
+        //                 {
+        //                   label: t('billing:package_manage.input.ldisplay'),
+        //                   value: 'present',
+        //                 },
+        //                 {
+        //                   label: t('billing:package_manage.input.lhide'),
+        //                   value: 'hidden',
+        //                 },
+        //               ].map((option, idx) => (
+        //                 <div key={idx} className="my-2 mr-4 flex items-center">
+        //                   <input
+        //                     type="radio"
+        //                     id={`radio-${option.value}`}
+        //                     {...register('status', {
+        //                       onChange: e => {
+        //                         setStatus(e.target.value)
+        //                       },
+        //                     })}
+        //                     value={option.value}
+        //                     className="mr-3 h-4 w-4 cursor-pointer"
+        //                     checked={status === option.value}
+        //                   />
+        //                   <label
+        //                     htmlFor={`radio-${option.value}`}
+        //                     className="cursor-pointer"
+        //                   >
+        //                     {option.label}
+        //                   </label>
+        //                 </div>
+        //               ))}
+        //             </div>
+        //           </div>
+        //         </div>
+        //         <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
+        //           {t('billing:package_manage.popup.data_plan')}
+        //         </p>
+        //         <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
+        //           <SelectField
+        //             label={t('billing:package_manage.popup.payment_type')}
+        //             error={formState.errors['payment_type']}
+        //             registration={register('payment_type', {
+        //               onChange: e => {
+        //                 setPaymentType(e.target.value)
+        //                 setPeriodType('PERIODIC')
+        //               },
+        //             })}
+        //             options={
+        //               type === 'trial'
+        //                 ? [
+        //                     {
+        //                       label: t('billing:package_manage.popup.pre_pay'),
+        //                       value: 'PREPAY',
+        //                     },
+        //                   ]
+        //                 : [
+        //                     {
+        //                       label: t('billing:package_manage.popup.pre_pay'),
+        //                       value: 'PREPAY',
+        //                     },
+        //                     {
+        //                       label: t(
+        //                         'billing:package_manage.popup.post_paid',
+        //                       ),
+        //                       value: 'POSTPAID',
+        //                     },
+        //                   ]
+        //             }
+        //             classlabel="w-full"
+        //             classchild="w-full"
+        //             classnamefieldwrapper=""
+        //           />
+        //           <div className="flex items-center">
+        //             {paymentType === 'POSTPAID' && (
+        //               <InputField
+        //                 label={t('billing:package_manage.popup.expiry')}
+        //                 error={formState.errors['expiry']}
+        //                 registration={register('expiry', {
+        //                   onChange: e => {
+        //                     if (
+        //                       parseNumber(e.target.value) >
+        //                       parseNumberCalUnit(
+        //                         getValues('period'),
+        //                         getValues('cal_unit'),
+        //                       )
+        //                     ) {
+        //                       setError('expiry', {
+        //                         message: t(
+        //                           'billing:package_manage.popup.choose_expiry',
+        //                         ),
+        //                       })
+        //                     } else setError('expiry', { message: '' })
+        //                   },
+        //                 })}
+        //                 type="number"
+        //                 classnamefieldwrapper=""
+        //                 classlabel="w-full"
+        //                 classchild="w-full"
+        //               />
+        //             )}
+        //           </div>
+        //           <SelectField
+        //             label={t('billing:package_manage.popup.type_period')}
+        //             error={formState.errors['type_period']}
+        //             registration={register('type_period', {
+        //               onChange: e => setPeriodType(e.target.value),
+        //             })}
+        //             options={
+        //               type === 'official' && paymentType === 'PREPAY'
+        //                 ? [
+        //                     {
+        //                       label: t('billing:package_manage.popup.periodic'),
+        //                       value: 'PERIODIC',
+        //                     },
+        //                     {
+        //                       label: t('billing:package_manage.popup.once'),
+        //                       value: 'ONCE',
+        //                     },
+        //                   ]
+        //                 : [
+        //                     {
+        //                       label: t('billing:package_manage.popup.periodic'),
+        //                       value: 'PERIODIC',
+        //                     },
+        //                   ]
+        //             }
+        //             classlabel="w-full"
+        //             classchild="w-full"
+        //             classnamefieldwrapper=""
+        //           />
+        //           {periodType === 'PERIODIC' ? (
+        //             <div
+        //               className={cn('', {
+        //                 'flex items-center':
+        //                   !formState?.errors?.period?.message,
+        //               })}
+        //             >
+        //               <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
+        //                 <div className="flex flex-col gap-2 md:col-span-1">
+        //                   <InputField
+        //                     label={t('billing:package_manage.popup.period')}
+        //                     classlabel="w-full"
+        //                     classchild="w-full"
+        //                     registration={register('period')}
+        //                     type="number"
+        //                     min="1"
+        //                     classnamefieldwrapper=""
+        //                   />
+        //                 </div>
+        //                 <div className="mt-4 flex flex-col gap-2 md:col-span-1">
+        //                   <SelectField
+        //                     error={formState.errors['cal_unit']}
+        //                     registration={register('cal_unit')}
+        //                     options={[
+        //                       {
+        //                         label: t('billing:package_manage.popup.day'),
+        //                         value: 'day',
+        //                       },
+        //                       {
+        //                         label: t('billing:package_manage.popup.week'),
+        //                         value: 'week',
+        //                       },
+        //                       {
+        //                         label: t('billing:package_manage.popup.month'),
+        //                         value: 'month',
+        //                       },
+        //                       {
+        //                         label: t('billing:package_manage.popup.year'),
+        //                         value: 'year',
+        //                       },
+        //                     ]}
+        //                     className="px-2"
+        //                   />
+        //                 </div>
+        //               </div>
+        //               <p className="text-body-sm text-primary-400">
+        //                 {formState?.errors?.period?.message}
+        //               </p>
+        //             </div>
+        //           ) : (
+        //             <div></div>
+        //           )}
+        //           <InputField
+        //             label={t('billing:package_manage.popup.fix_cost')}
+        //             error={formState.errors['fix_cost']}
+        //             registration={register('fix_cost', {
+        //               onChange: e => {
+        //                 setExpectedNumber('')
+        //                 setExpectedPayment('')
+        //               },
+        //             })}
+        //             classlabel="w-full"
+        //             classchild="w-full"
+        //             type="number"
+        //             classnamefieldwrapper=""
+        //             placeholder="200"
+        //           />
+        //           <SelectField
+        //             label={t('billing:package_manage.popup.charging_unit')}
+        //             error={formState.errors['charging_unit']}
+        //             registration={register('charging_unit')}
+        //             options={[
+        //               {
+        //                 label: t('billing:package_manage.popup.connect'),
+        //                 value: 'message',
+        //               },
+        //               {
+        //                 label: t('billing:package_manage.popup.device'),
+        //                 value: 'device',
+        //               },
+        //               { label: 'API', value: 'api' },
+        //             ]}
+        //             className="!mt-0"
+        //             classlabel="w-full"
+        //             classchild="w-full"
+        //             classnamefieldwrapper=""
+        //           />
+        //         </div>
+        //         <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
+        //           {t('billing:package_manage.popup.estimate')}
+        //         </p>
+        //         <div className="!mt-3 grid grow	grid-cols-1 gap-y-1">
+        //           <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
+        //             <SelectField
+        //               label={t('billing:package_manage.popup.estimate')}
+        //               error={formState.errors['estimate']}
+        //               registration={register('estimate', {
+        //                 onChange: e => {
+        //                   setEstimates(e.target.value)
+        //                   setValue('plan_lv', [
+        //                     {
+        //                       level: '',
+        //                       price: 0,
+        //                       free: 0,
+        //                     },
+        //                   ])
+        //                   setValue('quantity_free', '')
+        //                   setValue('price', '')
+        //                 },
+        //               })}
+        //               options={
+        //                 type === 'official' &&
+        //                 paymentType === 'POSTPAID' &&
+        //                 periodType === 'PERIODIC'
+        //                   ? [
+        //                       {
+        //                         label: t('billing:package_manage.popup.mass'),
+        //                         value: 'mass',
+        //                       },
+        //                       {
+        //                         label: t('billing:package_manage.popup.fix'),
+        //                         value: 'fix',
+        //                       },
+        //                       {
+        //                         label: t('billing:package_manage.popup.unit'),
+        //                         value: 'unit',
+        //                       },
+        //                       {
+        //                         label: t(
+        //                           'billing:package_manage.popup.accumulate',
+        //                         ),
+        //                         value: 'accumulated',
+        //                       },
+        //                       {
+        //                         label: t('billing:package_manage.popup.step'),
+        //                         value: 'step',
+        //                       },
+        //                     ]
+        //                   : [
+        //                       {
+        //                         label: t(
+        //                           'billing:package_manage.popup.permanent',
+        //                         ),
+        //                         value: 'fix',
+        //                       },
+        //                       {
+        //                         label: t(
+        //                           'billing:package_manage.popup.by_unit',
+        //                         ),
+        //                         value: 'unit',
+        //                       },
+        //                     ]
+        //               }
+        //               classlabel="w-full"
+        //               classchild="w-full"
+        //               classnamefieldwrapper=""
+        //             />
+        //             {(estimates === 'mass' ||
+        //               estimates === 'accumulated' ||
+        //               estimates === 'step') && (
+        //               <div className="flex items-center">
+        //                 <img
+        //                   onClick={() => {
+        //                     let arrPlan = getValues('plan_lv')
+        //                     const index = getValues('plan_lv')?.length - 1
+        //                     if (arrPlan[index]?.level) {
+        //                       planlvAppend({
+        //                         level: '',
+        //                         price: 0,
+        //                         free: 0,
+        //                       })
+        //                     }
+        //                   }}
+        //                   src={btnAddIcon}
+        //                   alt="add-icon"
+        //                   className="icon-container mt-5 flex h-7 w-7 cursor-pointer items-center justify-center"
+        //                 />
+        //               </div>
+        //             )}
+        //           </div>
+        //           <div className="mr-8 max-h-[122px] overflow-auto">
+        //             {estimates === 'mass' ||
+        //             estimates === 'accumulated' ||
+        //             estimates === 'step'
+        //               ? planlvFields.map((field, index) => {
+        //                   return (
+        //                     <section className="flex w-full" key={field.id}>
+        //                       <div
+        //                         className={cn(
+        //                           'relative grid w-full grid-cols-1 gap-x-4',
+        //                           {
+        //                             'md:grid-cols-3':
+        //                               estimates === 'accumulated' ||
+        //                               estimates === 'step' ||
+        //                               estimates === 'mass',
+        //                           },
+        //                         )}
+        //                       >
+        //                         <InputField
+        //                           label={
+        //                             estimates === 'step'
+        //                               ? t('billing:package_manage.popup.max')
+        //                               : t(
+        //                                   'billing:package_manage.popup.level',
+        //                                 ).replace(
+        //                                   '{{NUMBER}}',
+        //                                   index >= 1
+        //                                     ? (typeof getValues('plan_lv')?.[
+        //                                         index - 1
+        //                                       ]?.level === 'string'
+        //                                         ? parseInt(
+        //                                             getValues('plan_lv')?.[
+        //                                               index - 1
+        //                                             ].level,
+        //                                           )
+        //                                         : getValues('plan_lv')?.[
+        //                                             index - 1
+        //                                           ].level) + 1
+        //                                     : '1',
+        //                                 )
+        //                           }
+        //                           error={
+        //                             formState?.errors?.plan_lv?.[index]?.level
+        //                           }
+        //                           registration={register(
+        //                             `plan_lv.${index}.level`,
+        //                             {
+        //                               onChange: e => {
+        //                                 setExpectedNumber('')
+        //                                 setExpectedPayment('')
+        //                               },
+        //                               valueAsNumber: true,
+        //                               onBlur: e => {
+        //                                 if (
+        //                                   index ===
+        //                                     getValues('plan_lv').length - 1 &&
+        //                                   e.target.value
+        //                                 ) {
+        //                                   planlvAppend({
+        //                                     level: '',
+        //                                     price: 0,
+        //                                     free: 0,
+        //                                   })
+        //                                 }
+        //                               },
+        //                             },
+        //                           )}
+        //                           classlabel="w-1/4"
+        //                           classchild="w-3/4"
+        //                           type="number"
+        //                           classnamefieldwrapper="flex items-center gap-x-3"
+        //                         />
+        //                         <InputField
+        //                           label={t(
+        //                             'billing:package_manage.popup.price',
+        //                           )}
+        //                           error={
+        //                             formState?.errors?.plan_lv?.[index]?.price
+        //                           }
+        //                           registration={register(
+        //                             `plan_lv.${index}.price`,
+        //                             {
+        //                               onChange: e => {
+        //                                 setExpectedNumber('')
+        //                                 setExpectedPayment('')
+        //                               },
+        //                               valueAsNumber: true,
+        //                             },
+        //                           )}
+        //                           classlabel="w-1/4"
+        //                           classchild="w-3/4"
+        //                           type="number"
+        //                           classnamefieldwrapper="flex items-center gap-x-3"
+        //                         />
+        //                         {estimates === 'mass' && (
+        //                           <InputField
+        //                             label={t(
+        //                               'billing:package_manage.popup.free',
+        //                             )}
+        //                             registration={register(
+        //                               `plan_lv.${index}.free`,
+        //                               {
+        //                                 onChange: e => {
+        //                                   setExpectedNumber('')
+        //                                   setExpectedPayment('')
+        //                                 },
+        //                                 valueAsNumber: true,
+        //                               },
+        //                             )}
+        //                             classlabel="w-1/4"
+        //                             classchild="w-3/4"
+        //                             type="number"
+        //                             classnamefieldwrapper="flex items-center gap-x-3"
+        //                           />
+        //                         )}
+        //                       </div>
+        //                       <Button
+        //                         type="button"
+        //                         size="square"
+        //                         variant="trans"
+        //                         className="border-none shadow-none"
+        //                         onClick={() => planlvRemove(index)}
+        //                         startIcon={
+        //                           <img
+        //                             src={btnDeleteIcon}
+        //                             alt="Delete condition"
+        //                             className="icon-container ml-2 flex h-6 w-6 items-center justify-center"
+        //                           />
+        //                         }
+        //                       />
+        //                     </section>
+        //                   )
+        //                 })
+        //               : null}
+        //           </div>
+        //           {(estimates === 'fix' || estimates === 'unit') && (
+        //             <div className="grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
+        //               <InputField
+        //                 label={t('billing:package_manage.popup.price')}
+        //                 error={formState.errors['price']}
+        //                 registration={register('price', {
+        //                   onChange: e => {
+        //                     if (estimates === 'fix') {
+        //                       handleOnChange(
+        //                         '',
+        //                         getValues('tax'),
+        //                         e.target.value,
+        //                         getValues('fix_cost'),
+        //                         getValues('quantity_free'),
+        //                         getValues('plan_lv'),
+        //                       )
+        //                     } else {
+        //                       setExpectedNumber('')
+        //                       setExpectedPayment('')
+        //                     }
+        //                   },
+        //                 })}
+        //                 classnamefieldwrapper="flex items-center gap-x-3"
+        //                 classlabel="w-1/5"
+        //                 classchild="w-full"
+        //                 type="number"
+        //               />
+        //               {estimates === 'unit' && (
+        //                 <InputField
+        //                   label={t(
+        //                     'billing:package_manage.popup.quantity_free',
+        //                   )}
+        //                   error={formState.errors['quantity_free']}
+        //                   registration={register('quantity_free', {
+        //                     onChange: e => {
+        //                       setExpectedNumber('')
+        //                       setExpectedPayment('')
+        //                     },
+        //                   })}
+        //                   classnamefieldwrapper="flex items-center gap-x-3"
+        //                   classlabel="w-1/5"
+        //                   classchild="w-full"
+        //                   type="number"
+        //                   placeholder={t(
+        //                     'billing:package_manage.popup.quantity',
+        //                   )}
+        //                 />
+        //               )}
+        //             </div>
+        //           )}
+        //         </div>
+        //         <p className="!mt-3">
+        //           {t('billing:package_manage.popup.estimated_payment')}
+        //         </p>
+        //         <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
+        //           <InputField
+        //             label={t('billing:package_manage.popup.tax')}
+        //             error={formState.errors['tax']}
+        //             registration={register('tax', {
+        //               onChange: e => {
+        //                 setExpectedNumber('')
+        //                 setExpectedPayment('')
+        //               },
+        //             })}
+        //             classlabel="w-3/5"
+        //             classchild="w-full"
+        //             classnamefieldwrapper="flex items-center gap-x-2"
+        //           />
+        //           <div className="flex items-center">(default 10%)</div>
+        //           {/* <div className="flex items-center"></div> */}
+        //           {estimates !== 'fix' && (
+        //             <InputField
+        //               label={t('billing:package_manage.popup.expected_number')}
+        //               onChange={e => {
+        //                 setExpectedNumber(e.target.value)
+        //                 handleOnChange(
+        //                   e.target.value,
+        //                   getValues('tax'),
+        //                   getValues('price'),
+        //                   getValues('fix_cost'),
+        //                   getValues('quantity_free'),
+        //                   getValues('plan_lv'),
+        //                 )
+        //               }}
+        //               value={expectedNumber}
+        //               classlabel="w-3/5"
+        //               classchild="w-full"
+        //               classnamefieldwrapper="flex items-center gap-x-2"
+        //               placeholder={t(
+        //                 'billing:package_manage.popup.enter_quantity',
+        //               )}
+        //             />
+        //           )}
+        //           <InputField
+        //             label={t('billing:package_manage.popup.expected_payment')}
+        //             disabled
+        //             value={expectedPayment}
+        //             placeholder="1000000"
+        //             classlabel="w-3/5"
+        //             classchild="w-full"
+        //             classnamefieldwrapper="flex items-center gap-x-2"
+        //           />
+        //         </div>
+        //       </>
+        //     )
+        //   }}
+        // </FormMultipleFields>
+        <Form {...form}>
+          <form
+            id="create-plan"
+            className="flex flex-col justify-between"
+            onSubmit={handleSubmit(values => {
+              let plan_lvBE: PlanlvList[] = []
+              if (
+                estimates === 'mass' ||
+                estimates === 'accumulated' ||
+                estimates === 'step'
+              ) {
+                plan_lvBE = values.plan_lv?.map(item => ({
+                  level: (item.level && parseInt(item.level)) || null,
+                  price: (item.price && parseInt(item.price)) || null,
+                  free: (item.free && parseInt(item.free)) || null,
+                  estimate: values.estimate,
+                }))
+              }
+              const expiryNumber =
+                values?.expiry && parseInt(values?.expiry) * 24 * 60 * 60
+              mutate({
+                data: {
+                  ...values,
+                  project_id: projectId,
+                  plan_lv: plan_lvBE,
+                  tax: (values.tax && parseInt(values.tax)) || null,
+                  fix_cost:
+                    (values.fix_cost && parseInt(values.fix_cost)) || null,
+                  period: (values.period && parseInt(values.period)) || null,
+                  quantity_free:
+                    (values.quantity_free && parseInt(values.quantity_free)) ||
+                    null,
+                  price: (values.price && parseInt(values.price)) || null,
+                  expiry: expiryNumber || null,
                 },
-              ],
-            },
-          }}
-        >
-          {(
-            { register, formState, getValues, setValue, setError, watch },
-            {
-              append: planlvAppend,
-              fields: planlvFields,
-              remove: planlvRemove,
-            },
-          ) => {
-            return (
-              <>
-                <p className="flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
-                  {t('billing:package_manage.title')}
-                </p>
-                <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
-                  <InputField
-                    label={t('billing:package_manage.popup.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                    classnamefieldwrapper=""
-                    classlabel="w-full"
-                    classchild="w-full"
-                    placeholder={t('billing:package_manage.input.iname')}
-                  />
-                  <SelectField
-                    label={t('billing:package_manage.popup.type')}
-                    error={formState.errors['type']}
-                    registration={register('type', {
-                      onChange: e => {
-                        setType(e.target.value)
-                        setPaymentType('PREPAY')
-                      },
-                    })}
-                    options={[
-                      {
-                        label: t('billing:package_manage.input.lofficial'),
-                        value: 'official',
-                      },
-                      {
-                        label: t('billing:package_manage.input.ltrial'),
-                        value: 'trial',
-                      },
-                    ]}
-                    classlabel="w-full"
-                    classchild="w-full"
-                    classnamefieldwrapper=""
-                  />
-                  <TextAreaField
-                    label={t('billing:package_manage.popup.description')}
-                    error={formState.errors['description']}
-                    registration={register('description')}
-                    classnamefieldwrapper=""
-                    classlabel="w-full"
-                    classchild="w-full"
-                    placeholder={t('billing:package_manage.input.tdescribe')}
-                  />
-                  <div className="relative w-full">
-                    <label>{t('billing:package_manage.popup.status')}</label>
-                    <div className="mt-1 items-center">
-                      {[
-                        {
-                          label: t('billing:package_manage.input.ldisplay'),
-                          value: 'present',
-                        },
-                        {
-                          label: t('billing:package_manage.input.lhide'),
-                          value: 'hidden',
-                        },
-                      ].map((option, idx) => (
-                        <div key={idx} className="my-2 mr-4 flex items-center">
-                          <input
-                            type="radio"
-                            id={`radio-${option.value}`}
-                            {...register('status', {
-                              onChange: e => {
-                                setStatus(e.target.value)
-                              },
-                            })}
-                            value={option.value}
-                            className="mr-3 h-4 w-4 cursor-pointer"
-                            checked={status === option.value}
+              })
+            })}
+          >
+            <>
+              <p className="flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
+                {t('billing:package_manage.title')}
+              </p>
+              <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
+                {/* <InputField
+                  label={t('billing:package_manage.popup.name')}
+                  error={formState.errors['name']}
+                  registration={register('name')}
+                  classnamefieldwrapper=""
+                  classlabel="w-full"
+                  classchild="w-full"
+                  placeholder={t('billing:package_manage.input.iname')}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:package_manage.popup.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'billing:package_manage.input.iname',
+                            )}
                           />
-                          <label
-                            htmlFor={`radio-${option.value}`}
-                            className="cursor-pointer"
-                          >
-                            {option.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                {/* <SelectField
+                  label={t('billing:package_manage.popup.type')}
+                  error={formState.errors['type']}
+                  registration={register('type', {
+                    onChange: e => {
+                      setType(e.target.value)
+                      setPaymentType('PREPAY')
+                    },
+                  })}
+                  options={[
+                    {
+                      label: t('billing:package_manage.input.lofficial'),
+                      value: 'official',
+                    },
+                    {
+                      label: t('billing:package_manage.input.ltrial'),
+                      value: 'trial',
+                    },
+                  ]}
+                  classlabel="w-full"
+                  classchild="w-full"
+                  classnamefieldwrapper=""
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:package_manage.popup.type')}
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={e => {
+                            setType(e)
+                            setPaymentType('PREPAY')
+                            onChange(e)
+                          }}
+                          value={value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {[
+                              {
+                                label: t(
+                                  'billing:package_manage.input.lofficial',
+                                ),
+                                value: 'official',
+                              },
+                              {
+                                label: t('billing:package_manage.input.ltrial'),
+                                value: 'trial',
+                              },
+                            ]?.map(option => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* <TextAreaField
+                  label={t('billing:package_manage.popup.description')}
+                  error={formState.errors['description']}
+                  registration={register('description')}
+                  classnamefieldwrapper=""
+                  classlabel="w-full"
+                  classchild="w-full"
+                  placeholder={t('billing:package_manage.input.tdescribe')}
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:package_manage.popup.description')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder={t(
+                              'billing:package_manage.input.tdescribe',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <div className="relative w-full">
+                  <label>{t('billing:package_manage.popup.status')}</label>
+                  <div className="mt-1 items-center">
+                    {[
+                      {
+                        label: t('billing:package_manage.input.ldisplay'),
+                        value: 'present',
+                      },
+                      {
+                        label: t('billing:package_manage.input.lhide'),
+                        value: 'hidden',
+                      },
+                    ].map((option, idx) => (
+                      <div key={idx} className="my-2 mr-4 flex items-center">
+                        <input
+                          type="radio"
+                          id={`radio-${option.value}`}
+                          {...register('status', {
+                            onChange: e => {
+                              setStatus(e.target.value)
+                            },
+                          })}
+                          value={option.value}
+                          className="mr-3 h-4 w-4 cursor-pointer"
+                          checked={status === option.value}
+                        />
+                        <label
+                          htmlFor={`radio-${option.value}`}
+                          className="cursor-pointer"
+                        >
+                          {option.label}
+                        </label>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
-                  {t('billing:package_manage.popup.data_plan')}
-                </p>
-                <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
+              </div>
+              <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
+                {t('billing:package_manage.popup.data_plan')}
+              </p>
+              <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
+                <SelectField
+                  label={t('billing:package_manage.popup.payment_type')}
+                  error={formState.errors['payment_type']}
+                  registration={register('payment_type', {
+                    onChange: e => {
+                      setPaymentType(e.target.value)
+                      setPeriodType('PERIODIC')
+                    },
+                  })}
+                  options={
+                    type === 'trial'
+                      ? [
+                          {
+                            label: t('billing:package_manage.popup.pre_pay'),
+                            value: 'PREPAY',
+                          },
+                        ]
+                      : [
+                          {
+                            label: t('billing:package_manage.popup.pre_pay'),
+                            value: 'PREPAY',
+                          },
+                          {
+                            label: t('billing:package_manage.popup.post_paid'),
+                            value: 'POSTPAID',
+                          },
+                        ]
+                  }
+                  classlabel="w-full"
+                  classchild="w-full"
+                  classnamefieldwrapper=""
+                />
+                <div className="flex items-center">
+                  {paymentType === 'POSTPAID' && (
+                    // <InputField
+                    //   label={t('billing:package_manage.popup.expiry')}
+                    //   error={formState.errors['expiry']}
+                    //   registration={register('expiry', {
+                    //     onChange: e => {
+                    //       if (
+                    //         parseNumber(e.target.value) >
+                    //         parseNumberCalUnit(
+                    //           getValues('period'),
+                    //           getValues('cal_unit'),
+                    //         )
+                    //       ) {
+                    //         setError('expiry', {
+                    //           message: t(
+                    //             'billing:package_manage.popup.choose_expiry',
+                    //           ),
+                    //         })
+                    //       } else setError('expiry', { message: '' })
+                    //     },
+                    //   })}
+                    //   type="number"
+                    //   classnamefieldwrapper=""
+                    //   classlabel="w-full"
+                    //   classchild="w-full"
+                    // />
+                    <FormField
+                      control={form.control}
+                      name="expiry"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem className="w-full">
+                          <FormLabel>
+                            {t('billing:package_manage.popup.expiry')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <Input
+                                value={value}
+                                onChange={e => {
+                                  onChange(e)
+                                  if (
+                                    parseNumber(e.target.value) >
+                                    parseNumberCalUnit(
+                                      getValues('period'),
+                                      getValues('cal_unit'),
+                                    )
+                                  ) {
+                                    setError('expiry', {
+                                      message: t(
+                                        'billing:package_manage.popup.choose_expiry',
+                                      ),
+                                    })
+                                  } else clearErrors('expiry')
+                                }}
+                                type="number"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+                <SelectField
+                  label={t('billing:package_manage.popup.type_period')}
+                  error={formState.errors['type_period']}
+                  registration={register('type_period', {
+                    onChange: e => setPeriodType(e.target.value),
+                  })}
+                  options={
+                    type === 'official' && paymentType === 'PREPAY'
+                      ? [
+                          {
+                            label: t('billing:package_manage.popup.periodic'),
+                            value: 'PERIODIC',
+                          },
+                          {
+                            label: t('billing:package_manage.popup.once'),
+                            value: 'ONCE',
+                          },
+                        ]
+                      : [
+                          {
+                            label: t('billing:package_manage.popup.periodic'),
+                            value: 'PERIODIC',
+                          },
+                        ]
+                  }
+                  classlabel="w-full"
+                  classchild="w-full"
+                  classnamefieldwrapper=""
+                />
+                {periodType === 'PERIODIC' ? (
+                  <div
+                    className={cn('', {
+                      'flex items-center': !formState?.errors?.period?.message,
+                    })}
+                  >
+                    <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
+                      <div className="flex flex-col gap-2 md:col-span-1">
+                        {/* <InputField
+                          label={t('billing:package_manage.popup.period')}
+                          classlabel="w-full"
+                          classchild="w-full"
+                          registration={register('period')}
+                          type="number"
+                          min="1"
+                          classnamefieldwrapper=""
+                        /> */}
+
+                        <FormField
+                          control={form.control}
+                          name="period"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {t('billing:package_manage.popup.period')}
+                              </FormLabel>
+                              <div>
+                                <FormControl>
+                                  <Input {...field} type="number" min="1" />
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="mt-4 flex flex-col gap-2 md:col-span-1">
+                        <SelectField
+                          error={formState.errors['cal_unit']}
+                          registration={register('cal_unit')}
+                          options={[
+                            {
+                              label: t('billing:package_manage.popup.day'),
+                              value: 'day',
+                            },
+                            {
+                              label: t('billing:package_manage.popup.week'),
+                              value: 'week',
+                            },
+                            {
+                              label: t('billing:package_manage.popup.month'),
+                              value: 'month',
+                            },
+                            {
+                              label: t('billing:package_manage.popup.year'),
+                              value: 'year',
+                            },
+                          ]}
+                          className="px-2"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-body-sm text-primary-400">
+                      {formState?.errors?.period?.message}
+                    </p>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                {/* <InputField
+                  label={t('billing:package_manage.popup.fix_cost')}
+                  error={formState.errors['fix_cost']}
+                  registration={register('fix_cost', {
+                    onChange: e => {
+                      setExpectedNumber('')
+                      setExpectedPayment('')
+                    },
+                  })}
+                  classlabel="w-full"
+                  classchild="w-full"
+                  type="number"
+                  classnamefieldwrapper=""
+                  placeholder="200"
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="fix_cost"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:package_manage.popup.fix_cost')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            value={value}
+                            onChange={e => {
+                              onChange(e)
+                              setExpectedNumber('')
+                              setExpectedPayment('')
+                            }}
+                            placeholder="200"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <SelectField
+                  label={t('billing:package_manage.popup.charging_unit')}
+                  error={formState.errors['charging_unit']}
+                  registration={register('charging_unit')}
+                  options={[
+                    {
+                      label: t('billing:package_manage.popup.connect'),
+                      value: 'message',
+                    },
+                    {
+                      label: t('billing:package_manage.popup.device'),
+                      value: 'device',
+                    },
+                    { label: 'API', value: 'api' },
+                  ]}
+                  className="!mt-0"
+                  classlabel="w-full"
+                  classchild="w-full"
+                  classnamefieldwrapper=""
+                />
+              </div>
+              <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
+                {t('billing:package_manage.popup.estimate')}
+              </p>
+              <div className="!mt-3 grid grow	grid-cols-1 gap-y-1">
+                <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
                   <SelectField
-                    label={t('billing:package_manage.popup.payment_type')}
-                    error={formState.errors['payment_type']}
-                    registration={register('payment_type', {
+                    label={t('billing:package_manage.popup.estimate')}
+                    error={formState.errors['estimate']}
+                    registration={register('estimate', {
                       onChange: e => {
-                        setPaymentType(e.target.value)
-                        setPeriodType('PERIODIC')
+                        setEstimates(e.target.value)
+                        setValue('plan_lv', [
+                          {
+                            level: '',
+                            price: 0,
+                            free: 0,
+                          },
+                        ])
+                        setValue('quantity_free', '')
+                        setValue('price', '')
                       },
                     })}
                     options={
-                      type === 'trial'
+                      type === 'official' &&
+                      paymentType === 'POSTPAID' &&
+                      periodType === 'PERIODIC'
                         ? [
                             {
-                              label: t('billing:package_manage.popup.pre_pay'),
-                              value: 'PREPAY',
+                              label: t('billing:package_manage.popup.mass'),
+                              value: 'mass',
                             },
-                          ]
-                        : [
                             {
-                              label: t('billing:package_manage.popup.pre_pay'),
-                              value: 'PREPAY',
+                              label: t('billing:package_manage.popup.fix'),
+                              value: 'fix',
+                            },
+                            {
+                              label: t('billing:package_manage.popup.unit'),
+                              value: 'unit',
                             },
                             {
                               label: t(
-                                'billing:package_manage.popup.post_paid',
+                                'billing:package_manage.popup.accumulate',
                               ),
-                              value: 'POSTPAID',
-                            },
-                          ]
-                    }
-                    classlabel="w-full"
-                    classchild="w-full"
-                    classnamefieldwrapper=""
-                  />
-                  <div className="flex items-center">
-                    {paymentType === 'POSTPAID' && (
-                      <InputField
-                        label={t('billing:package_manage.popup.expiry')}
-                        error={formState.errors['expiry']}
-                        registration={register('expiry', {
-                          onChange: e => {
-                            if (
-                              parseNumber(e.target.value) >
-                              parseNumberCalUnit(
-                                getValues('period'),
-                                getValues('cal_unit'),
-                              )
-                            ) {
-                              setError('expiry', {
-                                message: t(
-                                  'billing:package_manage.popup.choose_expiry',
-                                ),
-                              })
-                            } else setError('expiry', { message: '' })
-                          },
-                        })}
-                        type="number"
-                        classnamefieldwrapper=""
-                        classlabel="w-full"
-                        classchild="w-full"
-                      />
-                    )}
-                  </div>
-                  <SelectField
-                    label={t('billing:package_manage.popup.type_period')}
-                    error={formState.errors['type_period']}
-                    registration={register('type_period', {
-                      onChange: e => setPeriodType(e.target.value),
-                    })}
-                    options={
-                      type === 'official' && paymentType === 'PREPAY'
-                        ? [
-                            {
-                              label: t('billing:package_manage.popup.periodic'),
-                              value: 'PERIODIC',
+                              value: 'accumulated',
                             },
                             {
-                              label: t('billing:package_manage.popup.once'),
-                              value: 'ONCE',
+                              label: t('billing:package_manage.popup.step'),
+                              value: 'step',
                             },
                           ]
                         : [
                             {
-                              label: t('billing:package_manage.popup.periodic'),
-                              value: 'PERIODIC',
+                              label: t(
+                                'billing:package_manage.popup.permanent',
+                              ),
+                              value: 'fix',
+                            },
+                            {
+                              label: t('billing:package_manage.popup.by_unit'),
+                              value: 'unit',
                             },
                           ]
                     }
@@ -478,428 +1496,482 @@ export function CreatePackage() {
                     classchild="w-full"
                     classnamefieldwrapper=""
                   />
-                  {periodType === 'PERIODIC' ? (
-                    <div
-                      className={cn('', {
-                        'flex items-center':
-                          !formState?.errors?.period?.message,
-                      })}
-                    >
-                      <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
-                        <div className="flex flex-col gap-2 md:col-span-1">
-                          <InputField
-                            label={t('billing:package_manage.popup.period')}
-                            classlabel="w-full"
-                            classchild="w-full"
-                            registration={register('period')}
-                            type="number"
-                            min="1"
-                            classnamefieldwrapper=""
-                          />
-                        </div>
-                        <div className="mt-4 flex flex-col gap-2 md:col-span-1">
-                          <SelectField
-                            error={formState.errors['cal_unit']}
-                            registration={register('cal_unit')}
-                            options={[
-                              {
-                                label: t('billing:package_manage.popup.day'),
-                                value: 'day',
-                              },
-                              {
-                                label: t('billing:package_manage.popup.week'),
-                                value: 'week',
-                              },
-                              {
-                                label: t('billing:package_manage.popup.month'),
-                                value: 'month',
-                              },
-                              {
-                                label: t('billing:package_manage.popup.year'),
-                                value: 'year',
-                              },
-                            ]}
-                            className="px-2"
-                          />
-                        </div>
-                      </div>
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.period?.message}
-                      </p>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
-                  <InputField
-                    label={t('billing:package_manage.popup.fix_cost')}
-                    error={formState.errors['fix_cost']}
-                    registration={register('fix_cost', {
-                      onChange: e => {
-                        setExpectedNumber('')
-                        setExpectedPayment('')
-                      },
-                    })}
-                    classlabel="w-full"
-                    classchild="w-full"
-                    type="number"
-                    classnamefieldwrapper=""
-                    placeholder="200"
-                  />
-                  <SelectField
-                    label={t('billing:package_manage.popup.charging_unit')}
-                    error={formState.errors['charging_unit']}
-                    registration={register('charging_unit')}
-                    options={[
-                      {
-                        label: t('billing:package_manage.popup.connect'),
-                        value: 'message',
-                      },
-                      {
-                        label: t('billing:package_manage.popup.device'),
-                        value: 'device',
-                      },
-                      { label: 'API', value: 'api' },
-                    ]}
-                    className="!mt-0"
-                    classlabel="w-full"
-                    classchild="w-full"
-                    classnamefieldwrapper=""
-                  />
-                </div>
-                <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
-                  {t('billing:package_manage.popup.estimate')}
-                </p>
-                <div className="!mt-3 grid grow	grid-cols-1 gap-y-1">
-                  <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
-                    <SelectField
-                      label={t('billing:package_manage.popup.estimate')}
-                      error={formState.errors['estimate']}
-                      registration={register('estimate', {
-                        onChange: e => {
-                          setEstimates(e.target.value)
-                          setValue('plan_lv', [
-                            {
+                  {(estimates === 'mass' ||
+                    estimates === 'accumulated' ||
+                    estimates === 'step') && (
+                    <div className="flex items-center">
+                      <img
+                        onClick={() => {
+                          let arrPlan = getValues('plan_lv')
+                          const index = getValues('plan_lv')?.length - 1
+                          if (arrPlan[index]?.level) {
+                            append({
                               level: '',
                               price: 0,
                               free: 0,
-                            },
-                          ])
-                          setValue('quantity_free', '')
-                          setValue('price', '')
-                        },
-                      })}
-                      options={
-                        type === 'official' &&
-                        paymentType === 'POSTPAID' &&
-                        periodType === 'PERIODIC'
-                          ? [
-                              {
-                                label: t('billing:package_manage.popup.mass'),
-                                value: 'mass',
-                              },
-                              {
-                                label: t('billing:package_manage.popup.fix'),
-                                value: 'fix',
-                              },
-                              {
-                                label: t('billing:package_manage.popup.unit'),
-                                value: 'unit',
-                              },
-                              {
-                                label: t(
-                                  'billing:package_manage.popup.accumulate',
-                                ),
-                                value: 'accumulated',
-                              },
-                              {
-                                label: t('billing:package_manage.popup.step'),
-                                value: 'step',
-                              },
-                            ]
-                          : [
-                              {
-                                label: t(
-                                  'billing:package_manage.popup.permanent',
-                                ),
-                                value: 'fix',
-                              },
-                              {
-                                label: t(
-                                  'billing:package_manage.popup.by_unit',
-                                ),
-                                value: 'unit',
-                              },
-                            ]
-                      }
-                      classlabel="w-full"
-                      classchild="w-full"
-                      classnamefieldwrapper=""
-                    />
-                    {(estimates === 'mass' ||
-                      estimates === 'accumulated' ||
-                      estimates === 'step') && (
-                      <div className="flex items-center">
-                        <img
-                          onClick={() => {
-                            let arrPlan = getValues('plan_lv')
-                            const index = getValues('plan_lv')?.length - 1
-                            if (arrPlan[index]?.level) {
-                              planlvAppend({
-                                level: '',
-                                price: 0,
-                                free: 0,
-                              })
-                            }
-                          }}
-                          src={btnAddIcon}
-                          alt="add-icon"
-                          className="icon-container mt-5 flex h-7 w-7 cursor-pointer items-center justify-center"
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className="mr-8 max-h-[122px] overflow-auto">
-                    {estimates === 'mass' ||
-                    estimates === 'accumulated' ||
-                    estimates === 'step'
-                      ? planlvFields.map((field, index) => {
-                          return (
-                            <section className="flex w-full" key={field.id}>
-                              <div
-                                className={cn(
-                                  'relative grid w-full grid-cols-1 gap-x-4',
-                                  {
-                                    'md:grid-cols-3':
-                                      estimates === 'accumulated' ||
-                                      estimates === 'step' ||
-                                      estimates === 'mass',
-                                  },
-                                )}
-                              >
-                                <InputField
-                                  label={
-                                    estimates === 'step'
-                                      ? t('billing:package_manage.popup.max')
-                                      : t(
-                                          'billing:package_manage.popup.level',
-                                        ).replace(
-                                          '{{NUMBER}}',
-                                          index >= 1
-                                            ? (typeof getValues('plan_lv')?.[
-                                                index - 1
-                                              ]?.level === 'string'
-                                                ? parseInt(
-                                                    getValues('plan_lv')?.[
-                                                      index - 1
-                                                    ].level,
-                                                  )
-                                                : getValues('plan_lv')?.[
-                                                    index - 1
-                                                  ].level) + 1
-                                            : '1',
-                                        )
-                                  }
-                                  error={
-                                    formState?.errors?.plan_lv?.[index]?.level
-                                  }
-                                  registration={register(
-                                    `plan_lv.${index}.level`,
-                                    {
-                                      onChange: e => {
-                                        setExpectedNumber('')
-                                        setExpectedPayment('')
-                                      },
-                                      valueAsNumber: true,
-                                      onBlur: e => {
-                                        if (
-                                          index ===
-                                            getValues('plan_lv').length - 1 &&
-                                          e.target.value
-                                        ) {
-                                          planlvAppend({
-                                            level: '',
-                                            price: 0,
-                                            free: 0,
-                                          })
-                                        }
-                                      },
-                                    },
-                                  )}
-                                  classlabel="w-1/4"
-                                  classchild="w-3/4"
-                                  type="number"
-                                  classnamefieldwrapper="flex items-center gap-x-3"
-                                />
-                                <InputField
-                                  label={t(
-                                    'billing:package_manage.popup.price',
-                                  )}
-                                  error={
-                                    formState?.errors?.plan_lv?.[index]?.price
-                                  }
-                                  registration={register(
-                                    `plan_lv.${index}.price`,
-                                    {
-                                      onChange: e => {
-                                        setExpectedNumber('')
-                                        setExpectedPayment('')
-                                      },
-                                      valueAsNumber: true,
-                                    },
-                                  )}
-                                  classlabel="w-1/4"
-                                  classchild="w-3/4"
-                                  type="number"
-                                  classnamefieldwrapper="flex items-center gap-x-3"
-                                />
-                                {estimates === 'mass' && (
-                                  <InputField
-                                    label={t(
-                                      'billing:package_manage.popup.free',
-                                    )}
-                                    registration={register(
-                                      `plan_lv.${index}.free`,
-                                      {
-                                        onChange: e => {
-                                          setExpectedNumber('')
-                                          setExpectedPayment('')
-                                        },
-                                        valueAsNumber: true,
-                                      },
-                                    )}
-                                    classlabel="w-1/4"
-                                    classchild="w-3/4"
-                                    type="number"
-                                    classnamefieldwrapper="flex items-center gap-x-3"
-                                  />
-                                )}
-                              </div>
-                              <Button
-                                type="button"
-                                size="square"
-                                variant="trans"
-                                className="border-none shadow-none"
-                                onClick={() => planlvRemove(index)}
-                                startIcon={
-                                  <img
-                                    src={btnDeleteIcon}
-                                    alt="Delete condition"
-                                    className="icon-container ml-2 flex h-6 w-6 items-center justify-center"
-                                  />
-                                }
-                              />
-                            </section>
-                          )
-                        })
-                      : null}
-                  </div>
-                  {(estimates === 'fix' || estimates === 'unit') && (
-                    <div className="grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
-                      <InputField
-                        label={t('billing:package_manage.popup.price')}
-                        error={formState.errors['price']}
-                        registration={register('price', {
-                          onChange: e => {
-                            if (estimates === 'fix') {
-                              handleOnChange(
-                                '',
-                                getValues('tax'),
-                                e.target.value,
-                                getValues('fix_cost'),
-                                getValues('quantity_free'),
-                                getValues('plan_lv'),
-                              )
-                            } else {
-                              setExpectedNumber('')
-                              setExpectedPayment('')
-                            }
-                          },
-                        })}
-                        classnamefieldwrapper="flex items-center gap-x-3"
-                        classlabel="w-1/5"
-                        classchild="w-full"
-                        type="number"
+                            })
+                          }
+                        }}
+                        src={btnAddIcon}
+                        alt="add-icon"
+                        className="icon-container mt-5 flex h-7 w-7 cursor-pointer items-center justify-center"
                       />
-                      {estimates === 'unit' && (
-                        <InputField
-                          label={t(
-                            'billing:package_manage.popup.quantity_free',
-                          )}
-                          error={formState.errors['quantity_free']}
-                          registration={register('quantity_free', {
-                            onChange: e => {
-                              setExpectedNumber('')
-                              setExpectedPayment('')
-                            },
-                          })}
-                          classnamefieldwrapper="flex items-center gap-x-3"
-                          classlabel="w-1/5"
-                          classchild="w-full"
-                          type="number"
-                          placeholder={t(
-                            'billing:package_manage.popup.quantity',
-                          )}
-                        />
-                      )}
                     </div>
                   )}
                 </div>
-                <p className="!mt-3">
-                  {t('billing:package_manage.popup.estimated_payment')}
-                </p>
-                <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
-                  <InputField
-                    label={t('billing:package_manage.popup.tax')}
-                    error={formState.errors['tax']}
-                    registration={register('tax', {
-                      onChange: e => {
-                        setExpectedNumber('')
-                        setExpectedPayment('')
-                      },
-                    })}
-                    classlabel="w-3/5"
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center gap-x-2"
-                  />
-                  <div className="flex items-center">(default 10%)</div>
-                  {/* <div className="flex items-center"></div> */}
-                  {estimates !== 'fix' && (
-                    <InputField
-                      label={t('billing:package_manage.popup.expected_number')}
-                      onChange={e => {
-                        setExpectedNumber(e.target.value)
-                        handleOnChange(
-                          e.target.value,
-                          getValues('tax'),
-                          getValues('price'),
-                          getValues('fix_cost'),
-                          getValues('quantity_free'),
-                          getValues('plan_lv'),
+                <div className="mr-8 max-h-[122px] overflow-auto">
+                  {estimates === 'mass' ||
+                  estimates === 'accumulated' ||
+                  estimates === 'step'
+                    ? fields.map((field, index) => {
+                        return (
+                          <section className="flex w-full" key={field.id}>
+                            <div
+                              className={cn(
+                                'relative grid w-full grid-cols-1 gap-x-4',
+                                {
+                                  'md:grid-cols-3':
+                                    estimates === 'accumulated' ||
+                                    estimates === 'step' ||
+                                    estimates === 'mass',
+                                },
+                              )}
+                            >
+                              {/* <InputField
+                              label={
+                                estimates === 'step'
+                                  ? t('billing:package_manage.popup.max')
+                                  : t(
+                                    'billing:package_manage.popup.level',
+                                  ).replace(
+                                    '{{NUMBER}}',
+                                    index >= 1
+                                      ? (typeof getValues('plan_lv')?.[
+                                        index - 1
+                                      ]?.level === 'string'
+                                        ? parseInt(
+                                          getValues('plan_lv')?.[
+                                            index - 1
+                                          ].level,
+                                        )
+                                        : getValues('plan_lv')?.[
+                                          index - 1
+                                        ].level) + 1
+                                      : '1',
+                                  )
+                              }
+                              error={
+                                formState?.errors?.plan_lv?.[index]?.level
+                              }
+                              registration={register(
+                                `plan_lv.${index}.level`,
+                                {
+                                  onChange: e => {
+                                    setExpectedNumber('')
+                                    setExpectedPayment('')
+                                  },
+                                  valueAsNumber: true,
+                                  onBlur: e => {
+                                    if (
+                                      index ===
+                                      getValues('plan_lv').length - 1 &&
+                                      e.target.value
+                                    ) {
+                                      append({
+                                        level: '',
+                                        price: 0,
+                                        free: 0,
+                                      })
+                                    }
+                                  },
+                                },
+                              )}
+                              classlabel="w-1/4"
+                              classchild="w-3/4"
+                              type="number"
+                              classnamefieldwrapper="flex items-center gap-x-3"
+                            /> */}
+                              <FormField
+                                control={form.control}
+                                name={`plan_lv.${index}.level`}
+                                render={({
+                                  field: { onChange, value, onBlur, ...field },
+                                }) => (
+                                  <FormItem className="flex items-center gap-x-3">
+                                    <FormLabel>
+                                      {estimates === 'step'
+                                        ? t('billing:package_manage.popup.max')
+                                        : t(
+                                            'billing:package_manage.popup.level',
+                                          ).replace(
+                                            '{{NUMBER}}',
+                                            index >= 1
+                                              ? (typeof getValues('plan_lv')?.[
+                                                  index - 1
+                                                ]?.level === 'string'
+                                                  ? parseInt(
+                                                      getValues('plan_lv')?.[
+                                                        index - 1
+                                                      ].level,
+                                                    )
+                                                  : getValues('plan_lv')?.[
+                                                      index - 1
+                                                    ].level) + 1
+                                              : '1',
+                                          )}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Input
+                                          value={value}
+                                          onBlur={e => {
+                                            if (
+                                              index ===
+                                                getValues('plan_lv').length -
+                                                  1 &&
+                                              e.target.value
+                                            ) {
+                                              append({
+                                                level: '',
+                                                price: 0,
+                                                free: 0,
+                                              })
+                                            }
+                                          }}
+                                          onChange={e => {
+                                            onChange(e)
+                                            setExpectedNumber('')
+                                            setExpectedPayment('')
+                                          }}
+                                          type="number"
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
+                              {/* <InputField
+                              label={t(
+                                'billing:package_manage.popup.price',
+                              )}
+                              error={
+                                formState?.errors?.plan_lv?.[index]?.price
+                              }
+                              registration={register(
+                                `plan_lv.${index}.price`,
+                                {
+                                  onChange: e => {
+                                    setExpectedNumber('')
+                                    setExpectedPayment('')
+                                  },
+                                  valueAsNumber: true,
+                                },
+                              )}
+                              classlabel="w-1/4"
+                              classchild="w-3/4"
+                              type="number"
+                              classnamefieldwrapper="flex items-center gap-x-3"
+                            /> */}
+                              <FormField
+                                control={form.control}
+                                name={`plan_lv.${index}.price`}
+                                render={({
+                                  field: { onChange, value, onBlur, ...field },
+                                }) => (
+                                  <FormItem className="flex items-center gap-x-3">
+                                    <FormLabel>
+                                      {t('billing:package_manage.popup.price')}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Input
+                                          value={value}
+                                          type="number"
+                                          onChange={e => {
+                                            onChange(e)
+                                            setExpectedNumber('')
+                                            setExpectedPayment('')
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
+                              {estimates === 'mass' && (
+                                // <InputField
+                                //   label={t(
+                                //     'billing:package_manage.popup.free',
+                                //   )}
+                                //   registration={register(
+                                //     `plan_lv.${index}.free`,
+                                //     {
+                                //       onChange: e => {
+                                //         setExpectedNumber('')
+                                //         setExpectedPayment('')
+                                //       },
+                                //       valueAsNumber: true,
+                                //     },
+                                //   )}
+                                //   classlabel="w-1/4"
+                                //   classchild="w-3/4"
+                                //   type="number"
+                                //   classnamefieldwrapper="flex items-center gap-x-3"
+                                // />
+                                <FormField
+                                  control={form.control}
+                                  name={`plan_lv.${index}.free`}
+                                  render={({
+                                    field: {
+                                      onChange,
+                                      value,
+                                      onBlur,
+                                      ...field
+                                    },
+                                  }) => (
+                                    <FormItem className="flex items-center gap-x-3">
+                                      <FormLabel>
+                                        {t('billing:package_manage.popup.free')}
+                                      </FormLabel>
+                                      <div>
+                                        <FormControl>
+                                          <Input
+                                            value={value}
+                                            type="number"
+                                            onChange={e => {
+                                              onChange(e)
+                                              setExpectedNumber('')
+                                              setExpectedPayment('')
+                                            }}
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </div>
+                                    </FormItem>
+                                  )}
+                                />
+                              )}
+                            </div>
+                            <Button
+                              type="button"
+                              size="square"
+                              variant="trans"
+                              className="border-none shadow-none"
+                              onClick={() => remove(index)}
+                              startIcon={
+                                <img
+                                  src={btnDeleteIcon}
+                                  alt="Delete condition"
+                                  className="icon-container ml-2 flex h-6 w-6 items-center justify-center"
+                                />
+                              }
+                            />
+                          </section>
                         )
-                      }}
-                      value={expectedNumber}
-                      classlabel="w-3/5"
+                      })
+                    : null}
+                </div>
+                {(estimates === 'fix' || estimates === 'unit') && (
+                  <div className="grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-3">
+                    {/* <InputField
+                      label={t('billing:package_manage.popup.price')}
+                      error={formState.errors['price']}
+                      registration={register('price', {
+                        onChange: e => {
+                          if (estimates === 'fix') {
+                            handleOnChange(
+                              '',
+                              getValues('tax'),
+                              e.target.value,
+                              getValues('fix_cost'),
+                              getValues('quantity_free'),
+                              getValues('plan_lv'),
+                            )
+                          } else {
+                            setExpectedNumber('')
+                            setExpectedPayment('')
+                          }
+                        },
+                      })}
+                      classnamefieldwrapper="flex items-center gap-x-3"
+                      classlabel="w-1/5"
                       classchild="w-full"
-                      classnamefieldwrapper="flex items-center gap-x-2"
-                      placeholder={t(
-                        'billing:package_manage.popup.enter_quantity',
+                      type="number"
+                    /> */}
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({
+                        field: { onChange, value, onBlur, ...field },
+                      }) => (
+                        <FormItem className="flex items-center gap-x-3">
+                          <FormLabel>
+                            {t('billing:package_manage.popup.price')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <Input
+                                value={value}
+                                type="number"
+                                onChange={e => {
+                                  onChange(e)
+                                  if (estimates === 'fix') {
+                                    handleOnChange(
+                                      '',
+                                      getValues('tax'),
+                                      e.target.value,
+                                      getValues('fix_cost'),
+                                      getValues('quantity_free'),
+                                      getValues('plan_lv'),
+                                    )
+                                  } else {
+                                    setExpectedNumber('')
+                                    setExpectedPayment('')
+                                  }
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
                       )}
                     />
+                    {estimates === 'unit' && (
+                      // <InputField
+                      //   label={t(
+                      //     'billing:package_manage.popup.quantity_free',
+                      //   )}
+                      //   error={formState.errors['quantity_free']}
+                      //   registration={register('quantity_free', {
+                      //     onChange: e => {
+                      //       setExpectedNumber('')
+                      //       setExpectedPayment('')
+                      //     },
+                      //   })}
+                      //   classnamefieldwrapper="flex items-center gap-x-3"
+                      //   classlabel="w-1/5"
+                      //   classchild="w-full"
+                      //   type="number"
+                      //   placeholder={t(
+                      //     'billing:package_manage.popup.quantity',
+                      //   )}
+                      // />
+                      <FormField
+                        control={form.control}
+                        name="quantity_free"
+                        render={({
+                          field: { onChange, value, onBlur, ...field },
+                        }) => (
+                          <FormItem className="flex items-center gap-x-3">
+                            <FormLabel>
+                              {t('billing:package_manage.popup.quantity_free')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input
+                                  value={value}
+                                  type="number"
+                                  onChange={e => {
+                                    onChange(e)
+                                    setExpectedNumber('')
+                                    setExpectedPayment('')
+                                  }}
+                                  placeholder={t(
+                                    'billing:package_manage.popup.quantity',
+                                  )}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+              <p className="!mt-3">
+                {t('billing:package_manage.popup.estimated_payment')}
+              </p>
+              <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
+                {/* <InputField
+                  label={t('billing:package_manage.popup.tax')}
+                  error={formState.errors['tax']}
+                  registration={register('tax', {
+                    onChange: e => {
+                      setExpectedNumber('')
+                      setExpectedPayment('')
+                    },
+                  })}
+                  classlabel="w-3/5"
+                  classchild="w-full"
+                  classnamefieldwrapper="flex items-center gap-x-2"
+                /> */}
+                <FormField
+                  control={form.control}
+                  name="tax"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem className="flex items-center gap-x-3">
+                      <FormLabel>
+                        {t('billing:package_manage.popup.tax')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            value={value}
+                            type="number"
+                            onChange={e => {
+                              onChange(e)
+                              setExpectedNumber('')
+                              setExpectedPayment('')
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
                   )}
+                />
+                <div className="flex items-center">(default 10%)</div>
+                {/* <div className="flex items-center"></div> */}
+                {estimates !== 'fix' && (
                   <InputField
-                    label={t('billing:package_manage.popup.expected_payment')}
-                    disabled
-                    value={expectedPayment}
-                    placeholder="1000000"
+                    label={t('billing:package_manage.popup.expected_number')}
+                    onChange={e => {
+                      setExpectedNumber(e.target.value)
+                      handleOnChange(
+                        e.target.value,
+                        getValues('tax'),
+                        getValues('price'),
+                        getValues('fix_cost'),
+                        getValues('quantity_free'),
+                        getValues('plan_lv'),
+                      )
+                    }}
+                    value={expectedNumber}
                     classlabel="w-3/5"
                     classchild="w-full"
                     classnamefieldwrapper="flex items-center gap-x-2"
+                    placeholder={t(
+                      'billing:package_manage.popup.enter_quantity',
+                    )}
                   />
-                </div>
-              </>
-            )
-          }}
-        </FormMultipleFields>
+                )}
+                <InputField
+                  label={t('billing:package_manage.popup.expected_payment')}
+                  disabled
+                  value={expectedPayment}
+                  placeholder="1000000"
+                  classlabel="w-3/5"
+                  classchild="w-full"
+                  classnamefieldwrapper="flex items-center gap-x-2"
+                />
+              </div>
+            </>
+          </form>
+        </Form>
       }
       triggerButton={
         <Button
