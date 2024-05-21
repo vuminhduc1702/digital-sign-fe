@@ -1,28 +1,17 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { type PlanlvList } from '@/cloud/billingPackage'
 import { useGetPlans } from '@/cloud/billingPackage/api'
 import { usePlanById } from '@/cloud/billingPackage/api/getPackageById'
 import { useGetUsers } from '@/cloud/orgManagement/api/userAPI'
-import { Button } from '@/components/ui/button'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOption,
-} from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
-import { PlusIcon } from '@/components/SVGIcons'
-import i18n from '@/i18n'
-import storage from '@/utils/storage'
-import {
-  useCreateSubcription,
-  type CreateSubcriptionDTO,
-} from '../../api/subcriptionAPI/createSubcription'
-import { type PlanlvList } from '@/cloud/billingPackage'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -39,6 +28,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import i18n from '@/i18n'
+import storage from '@/utils/storage'
+import {
+  useCreateSubcription,
+  type CreateSubcriptionDTO,
+} from '../../api/subcriptionAPI/createSubcription'
 
 export const entitySubcriptionSchema = z.object({
   plan_id: z
@@ -127,6 +122,9 @@ export function CreateSubcription() {
     )
     valuePriceMethod()
     valuePeriod()
+    if (PlanDataById?.data?.estimate === 'fix') {
+      setValue('register', '')
+    }
   }, [PlanDataById, planValue])
 
   const handleOnChange = (expected_number?: string) => {
@@ -279,7 +277,7 @@ export function CreateSubcription() {
                   project_id: projectId,
                   plan_id: planValue || '',
                   user_id: userId || '',
-                  register: values.register,
+                  register: parseInt(values.register || ''),
                 },
               })
             })}
