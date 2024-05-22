@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { useSpinDelay } from 'spin-delay'
 import type * as z from 'zod'
 
@@ -62,6 +62,7 @@ export const BarChart = ({
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<Array<{ ts: number; value: string | number }>>
   >([])
+  const [dataNameList, setDataNameList] = useState<string[]>([])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
   // useEffect(() => {
@@ -97,18 +98,24 @@ export const BarChart = ({
           newValuesRef.current = data
           if (newValuesRef.current && prevValuesRef.current) {
             Object.entries(prevValuesRef.current).forEach(([key, items]) => {
-              Object.entries(newValuesRef.current).forEach(
-                ([newKey, newItems]) => {
-                  if (newKey === key) {
-                    prevValuesRef.current[key] = [
-                      ...prevValuesRef.current[key],
-                      ...newItems.filter(
-                        newItem => !items.find(item => item.ts === newItem.ts),
-                      ),
-                    ]
-                  }
-                },
-              )
+              newValuesRef.current &&
+                Object.entries(newValuesRef.current).forEach(
+                  ([newKey, newItems]) => {
+                    if (
+                      newKey === key &&
+                      prevValuesRef.current &&
+                      prevValuesRef?.current[key]
+                    ) {
+                      prevValuesRef.current[key] = [
+                        ...prevValuesRef.current[key],
+                        ...newItems.filter(
+                          newItem =>
+                            !items.find(item => item.ts === newItem.ts),
+                        ),
+                      ]
+                    }
+                  },
+                )
             })
           }
         }
@@ -122,6 +129,7 @@ export const BarChart = ({
   // data manipulation for static chart
   function dataManipulation() {
     const result: { ts: number; value: string | number }[][] = []
+    const keyResult: string[] = []
     Object.entries(prevValuesRef.current || []).forEach(([key, items]) => {
       const tempArr: {
         ts: number
@@ -146,6 +154,7 @@ export const BarChart = ({
       result.push(tempArr)
     })
     setDataTransformedFeedToChart(result)
+    setDataNameList(keyResult)
   }
 
   // data manipulation for realtime chart
@@ -187,25 +196,110 @@ export const BarChart = ({
 
   // set chart dataset
   function getDataset() {
-    return widgetInfo?.attribute_config
-      .map((key, index) => {
-        if (dataTransformedFeedToChart[index]) {
-          return {
-            label: key?.attribute_key,
-            borderColor: key?.color,
-            backgroundColor: key?.color.replace(/[^,]+(?=\))/, '0.2'),
-            data: dataTransformedFeedToChart[index],
+    if (!widgetInfo?.config) return
+
+    if (
+      widgetInfo?.config.aggregation !== 'FFT' &&
+      widgetInfo?.config.aggregation !== 'SMA'
+    ) {
+      return widgetInfo?.attribute_config
+        .map((key, index) => {
+          if (dataTransformedFeedToChart[index]) {
+            return {
+              label: key?.attribute_key,
+              borderColor: key?.color,
+              backgroundColor: key?.color,
+              data: dataTransformedFeedToChart[index],
+              borderWidth: 1,
+            }
+          } else {
+            return {
+              label: key?.attribute_key,
+              borderColor: key?.color,
+              backgroundColor: key?.color,
+              data: [],
+              borderWidth: 1,
+            }
           }
-        } else {
-          return {
-            label: key?.deviceName,
-            borderColor: key?.color,
-            backgroundColor: key?.color.replace(/[^,]+(?=\))/, '0.2'),
-            data: [],
+        })
+        .filter(value => value !== undefined)
+    } else {
+      return widgetInfo?.attribute_config
+        .flatMap((key, index) => {
+          if (
+            dataNameList.filter(item => {
+              return item.includes(key?.label)
+            }) &&
+            dataTransformedFeedToChart[index] &&
+            dataTransformedFeedToChart[
+              dataTransformedFeedToChart.length / 2 + index
+            ]
+          ) {
+            return [
+              {
+                label: key?.attribute_key,
+                borderColor: key?.color,
+                backgroundColor: key?.color,
+                data: dataTransformedFeedToChart[index],
+                borderWidth: 1,
+              },
+              {
+                label:
+                  key?.attribute_key + ' ' + widgetInfo?.config.aggregation,
+                borderColor:
+                  key?.color === ''
+                    ? 'rgba(0, 0, 0, 0.5)'
+                    : key?.color.replace(
+                        /rgba\(([^)]+), [^)]+\)/,
+                        'rgba($1, 0.5)',
+                      ),
+                backgroundColor:
+                  key?.color === ''
+                    ? 'rgba(0, 0, 0, 0.5)'
+                    : key?.color.replace(
+                        /rgba\(([^)]+), [^)]+\)/,
+                        'rgba($1, 0.5)',
+                      ),
+                data: dataTransformedFeedToChart[
+                  dataTransformedFeedToChart.length / 2 + index
+                ],
+                borderWidth: 1,
+              },
+            ]
+          } else {
+            return [
+              {
+                label: key?.attribute_key,
+                borderColor: key?.color,
+                backgroundColor: key?.color,
+                data: [],
+                borderWidth: 1,
+              },
+              {
+                label:
+                  key?.attribute_key + ' ' + widgetInfo?.config.aggregation,
+                borderColor:
+                  key?.color === ''
+                    ? 'rgba(0, 0, 0, 0.5)'
+                    : key?.color.replace(
+                        /rgba\(([^)]+), [^)]+\)/,
+                        'rgba($1, 0.5)',
+                      ),
+                backgroundColor:
+                  key?.color === ''
+                    ? 'rgba(0, 0, 0, 0.5)'
+                    : key?.color.replace(
+                        /rgba\(([^)]+), [^)]+\)/,
+                        'rgba($1, 0.5)',
+                      ),
+                data: [],
+                borderWidth: 1,
+              },
+            ]
           }
-        }
-      })
-      .filter(value => value !== undefined)
+        })
+        .filter(value => value !== undefined)
+    }
   }
 
   const zoomOptions = {
@@ -221,21 +315,106 @@ export const BarChart = ({
         enabled: true,
       },
       mode: 'x',
-      // drag: {
-      //   enabled: true,
-      // },
+    },
+    limits: {
+      x: {
+        min: START_DATE,
+        max: END_DATE,
+        minRange: 12000,
+      },
+    },
+  }
+
+  const realtimeZoomOptions = {
+    pan: {
+      enabled: true,
+      mode: 'x',
+    },
+    zoom: {
+      pinch: {
+        enabled: true,
+      },
+      wheel: {
+        enabled: true,
+      },
+      mode: 'x',
     },
     limits: {
       x: {
         minDelay: 0,
-        maxDelay: 4000,
-        minDuration: 10000,
+        minDuration: 9000,
         maxDuration: TIME_PERIOD,
-        min: START_DATE || 0,
-        max: END_DATE || Date.now(),
+        min: START_DATE || Date.now() - TIME_PERIOD,
       },
     },
   }
+
+  const realtimeOption = useMemo(
+    () => ({
+      maintainAspectRatio: false,
+      parsing: {
+        xAxisKey: 'ts',
+        yAxisKey: 'value',
+      },
+      elements: {
+        line: {
+          tension: 0.1,
+        },
+        point: {
+          radius: 3,
+        },
+      },
+      scales: {
+        x: {
+          type: 'realtime',
+          realtime: {
+            delay: 0,
+            duration: TIME_PERIOD,
+            refresh: TICK_INTERVAL,
+            min: Date.now() - TICK_INTERVAL * 9,
+            max: Date.now(),
+          },
+          title: {
+            display: true,
+            text: t('cloud:dashboard.time'),
+            color: 'black',
+          },
+          ticks: {
+            color: 'black',
+          },
+          grid: {
+            borderColor: 'black',
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: t('cloud:dashboard.value'),
+            color: 'black',
+          },
+          ticks: {
+            color: 'black',
+          },
+          grid: {
+            borderColor: 'black',
+          },
+        },
+      },
+      plugins: {
+        zoom: realtimeZoomOptions,
+        beforeDraw: function (chart) {
+          chart.options.scales.x.realtime.duration = TICK_INTERVAL * 9
+          chart.update()
+        },
+      },
+      interaction: {
+        mode: 'nearest',
+        axis: 'x',
+        intersect: false,
+      },
+    }),
+    [TIME_PERIOD, TICK_INTERVAL],
+  )
 
   return (
     <>
@@ -311,71 +490,7 @@ export const BarChart = ({
           data={{
             datasets: getDataset(),
           }}
-          options={{
-            barPercentage: 0.5,
-            maintainAspectRatio: false,
-            responsive: true,
-            parsing: {
-              xAxisKey: 'ts',
-              yAxisKey: 'value',
-            },
-            elements: {
-              line: {
-                tension: 0.5,
-              },
-            },
-            scales: {
-              x: {
-                type: 'realtime',
-                realtime: {
-                  delay: 0,
-                  duration: TIME_PERIOD,
-                  refresh: TICK_INTERVAL,
-                  onRefresh: chart => {
-                    const now = Date.now()
-                    chart.data.datasets.forEach(dataset => {
-                      // if (dataset.data) {
-                      //   dataset.data = dataset.data.filter(
-                      //     data => data?.ts >= now - TIME_PERIOD,
-                      //   )
-                      // }
-                    })
-                  },
-                },
-                title: {
-                  display: true,
-                  text: t('cloud:dashboard.time'),
-                },
-                ticks: {
-                  color: 'black',
-                },
-                grid: {
-                  borderColor: 'black',
-                },
-              },
-              y: {
-                title: {
-                  display: true,
-                  text: t('cloud:dashboard.value'),
-                },
-                ticks: {
-                  color: 'black',
-                },
-                grid: {
-                  borderColor: 'black',
-                },
-              },
-            },
-            plugins: {
-              zoom: zoomOptions,
-            },
-            interaction: {
-              mode: 'nearest',
-              axis: 'x',
-              intersect: false,
-            },
-            barThickness: 15,
-          }}
+          options={realtimeOption}
           className="!h-[98%] !w-[98%] pt-8"
         />
       )}
