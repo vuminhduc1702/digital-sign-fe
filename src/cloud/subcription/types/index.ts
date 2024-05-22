@@ -19,7 +19,7 @@ export type Subcription = {
   p_status: string
   p_type: string
   p_type_period: string
-  s_cycle_now: number
+  s_cycle_now: number | string
   s_date_register: number
   s_id: string
   s_register: number

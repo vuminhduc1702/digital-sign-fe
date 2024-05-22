@@ -32,9 +32,9 @@ export type PlanList = {
 } & BasePagination
 
 export type PlanlvList = {
-  level: number | string
-  free: number | string
-  price: number | string
+  level?: number | string
+  free?: number | string
+  price?: number | string
   estimate?: string
 }
 
