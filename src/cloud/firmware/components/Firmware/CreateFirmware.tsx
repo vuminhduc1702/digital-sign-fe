@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -6,11 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useGetTemplates } from '@/cloud/deviceTemplate/api'
 import { Button } from '@/components/ui/button'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOption,
-} from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
 import storage from '@/utils/storage'
 import {
@@ -22,7 +16,6 @@ import i18n from '@/i18n'
 import { nameSchema, versionSchema } from '@/utils/schemaValidation'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { PlusIcon } from '@/components/SVGIcons'
 import {
   Form,
   FormControl,
@@ -32,13 +25,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 
 export const entityFirmWareSchema = z.object({
   name: nameSchema,
@@ -55,7 +42,7 @@ export function CreateFirmWare() {
 
   const projectId = storage.getProject()?.id
 
-  const { data } = useGetTemplates({ projectId })
+  const { data, isLoading: templateIsLoading } = useGetTemplates({ projectId })
 
   const { mutate, isLoading, isSuccess } = useCreateFireWare()
 
@@ -64,11 +51,14 @@ export function CreateFirmWare() {
     defaultValues: { template_id: '' },
   })
 
-  const { reset, handleSubmit } = form
+  const templateSelectOptions = data?.templates?.map(template => ({
+    label: template?.name,
+    value: template?.id,
+  }))
 
   return (
     <FormDialog
-      resetData={() => reset()}
+      resetData={() => form.reset()}
       isDone={isSuccess}
       title={t('cloud:firmware.add_firmware.title')}
       body={
@@ -77,7 +67,7 @@ export function CreateFirmWare() {
             <form
               id="create-firm-ware"
               className="flex w-full flex-col justify-between space-y-6"
-              onSubmit={handleSubmit(values => {
+              onSubmit={form.handleSubmit(values => {
                 mutate({
                   data: {
                     name: values.name,
@@ -100,29 +90,15 @@ export function CreateFirmWare() {
                         {t('cloud:firmware.add_firmware.template')}
                       </FormLabel>
                       <div>
-                        <Select
-                          {...field}
-                          onValueChange={e => onChange(e)}
-                          value={value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t('placeholder:select')}
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {data?.templates?.map(template => (
-                              <SelectItem
-                                key={template.name}
-                                value={template.id}
-                              >
-                                {template.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <NewSelectDropdown
+                            isClearable={false}
+                            customOnChange={onChange}
+                            options={templateSelectOptions}
+                            isLoading={templateIsLoading}
+                            {...field}
+                          />
+                        </FormControl>
                         <FormMessage />
                       </div>
                     </FormItem>
@@ -138,10 +114,7 @@ export function CreateFirmWare() {
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>
@@ -158,10 +131,7 @@ export function CreateFirmWare() {
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>
@@ -178,10 +148,7 @@ export function CreateFirmWare() {
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>
@@ -198,10 +165,7 @@ export function CreateFirmWare() {
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>

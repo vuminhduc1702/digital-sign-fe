@@ -34,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 
 type UpdateFirmWareProps = {
   firmwareId: string
@@ -65,7 +66,7 @@ export function UpdateFirmWare({
     value: template_id,
   })
 
-  const { data } = useGetTemplates({ projectId })
+  const { data, isLoading: templateIsLoading } = useGetTemplates({ projectId })
 
   const firmwareData = data?.templates?.map(template => ({
     label: template?.name,
@@ -128,29 +129,18 @@ export function UpdateFirmWare({
                         {t('cloud:firmware.add_firmware.template')}
                       </FormLabel>
                       <div>
-                        <Select
-                          {...field}
-                          onValueChange={e => onChange(e)}
-                          value={value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t('placeholder:select')}
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {firmwareData.map(template => (
-                              <SelectItem
-                                key={template.label}
-                                value={template.value}
-                              >
-                                {template.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <NewSelectDropdown
+                            customOnChange={onChange}
+                            options={firmwareData}
+                            isClearable={false}
+                            isLoading={templateIsLoading}
+                            defaultValue={firmwareData?.find(
+                              template => template.value === template_id,
+                            )}
+                            {...field}
+                          />
+                        </FormControl>
                         <FormMessage />
                       </div>
                     </FormItem>
@@ -166,10 +156,7 @@ export function UpdateFirmWare({
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>
@@ -186,10 +173,7 @@ export function UpdateFirmWare({
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>
@@ -206,10 +190,7 @@ export function UpdateFirmWare({
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>
@@ -226,10 +207,7 @@ export function UpdateFirmWare({
                       </FormLabel>
                       <div>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder={t('placeholder:input_text')}
-                          />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </div>
