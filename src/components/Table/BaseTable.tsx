@@ -39,7 +39,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ScrollArea, ScrollBar } from '../ui/scroll-area'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   LuFilter,
   LuSettings,

@@ -356,6 +356,9 @@ export function UpdateWidget({
     reset()
   }
 
+  console.log(formState.errors)
+  console.log(watch())
+
   return (
     <FormDialog
       size="max"

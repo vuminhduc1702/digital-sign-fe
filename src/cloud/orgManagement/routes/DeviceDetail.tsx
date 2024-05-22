@@ -283,7 +283,7 @@ export function DeviceDetail() {
         <TabsContent value="attr_list" className="mt-2 flex grow flex-col">
           <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
             {attrsData && !attrsLwM2MData ? (
-              <div>
+              <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
                   <div className="flex w-full items-center justify-between gap-x-3">
                     <SearchField
@@ -330,7 +330,7 @@ export function DeviceDetail() {
               </div>
             ) : null}
             {attrsLwM2MData ? (
-              <div>
+              <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
                   <div className="flex w-full items-center justify-between gap-x-3">
                     <SearchField
