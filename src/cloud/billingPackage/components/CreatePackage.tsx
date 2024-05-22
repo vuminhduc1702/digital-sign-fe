@@ -77,6 +77,8 @@ export const entityPlanSchema = z
     tax: z.string().optional(),
     estimate: z.string(),
     expiry: z.string().optional(),
+    expected_payment: z.string().optional(),
+    expected_number: z.string().optional(),
   })
   .and(
     z.discriminatedUnion('estimate', [
@@ -133,8 +135,6 @@ export function CreatePackage() {
     setPaymentType('PREPAY')
     setType('official')
     setPeriodType('PERIODIC')
-    setExpectedPayment('')
-    setExpectedNumber('')
     setStatus('')
     reset()
   }
@@ -247,7 +247,8 @@ export function CreatePackage() {
     }
 
     result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-    setExpectedPayment(result <= 0 ? 0 : result)
+    const resultString = result <= 0 ? 0 : result
+    setValue('expected_payment', resultString.toString())
   }
 
   const form = useForm<CreatePlanDTO['data']>({
@@ -256,8 +257,12 @@ export function CreatePackage() {
       name: '',
       type: 'official',
       tax: '10',
+      payment_type: 'PREPAY',
       period: '1',
       cal_unit: 'month',
+      estimate: 'fix',
+      charging_unit: 'message',
+      type_period: 'PERIODIC',
       plan_lv: [
         {
           level: '',
@@ -284,7 +289,89 @@ export function CreatePackage() {
     control,
   })
 
-  console.log(formState, 'formStateformStateformState')
+  const renderPaymentType = () => {
+    const result =
+      type === 'trial'
+        ? [
+            {
+              label: t('billing:package_manage.popup.pre_pay'),
+              value: 'PREPAY',
+            },
+          ]
+        : [
+            {
+              label: t('billing:package_manage.popup.pre_pay'),
+              value: 'PREPAY',
+            },
+            {
+              label: t('billing:package_manage.popup.post_paid'),
+              value: 'POSTPAID',
+            },
+          ]
+    return result
+  }
+
+  const renderTypePeriod = () => {
+    const result =
+      type === 'official' && paymentType === 'PREPAY'
+        ? [
+            {
+              label: t('billing:package_manage.popup.periodic'),
+              value: 'PERIODIC',
+            },
+            {
+              label: t('billing:package_manage.popup.once'),
+              value: 'ONCE',
+            },
+          ]
+        : [
+            {
+              label: t('billing:package_manage.popup.periodic'),
+              value: 'PERIODIC',
+            },
+          ]
+    return result
+  }
+
+  const renderEstimate = () => {
+    const result =
+      type === 'official' &&
+      paymentType === 'POSTPAID' &&
+      periodType === 'PERIODIC'
+        ? [
+            {
+              label: t('billing:package_manage.popup.mass'),
+              value: 'mass',
+            },
+            {
+              label: t('billing:package_manage.popup.fix'),
+              value: 'fix',
+            },
+            {
+              label: t('billing:package_manage.popup.unit'),
+              value: 'unit',
+            },
+            {
+              label: t('billing:package_manage.popup.accumulate'),
+              value: 'accumulated',
+            },
+            {
+              label: t('billing:package_manage.popup.step'),
+              value: 'step',
+            },
+          ]
+        : [
+            {
+              label: t('billing:package_manage.popup.permanent'),
+              value: 'fix',
+            },
+            {
+              label: t('billing:package_manage.popup.by_unit'),
+              value: 'unit',
+            },
+          ]
+    return result
+  }
 
   return (
     <FormDialog
@@ -999,15 +1086,6 @@ export function CreatePackage() {
                 {t('billing:package_manage.title')}
               </p>
               <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
-                {/* <InputField
-                  label={t('billing:package_manage.popup.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                  classnamefieldwrapper=""
-                  classlabel="w-full"
-                  classchild="w-full"
-                  placeholder={t('billing:package_manage.input.iname')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="name"
@@ -1030,29 +1108,6 @@ export function CreatePackage() {
                     </FormItem>
                   )}
                 />
-                {/* <SelectField
-                  label={t('billing:package_manage.popup.type')}
-                  error={formState.errors['type']}
-                  registration={register('type', {
-                    onChange: e => {
-                      setType(e.target.value)
-                      setPaymentType('PREPAY')
-                    },
-                  })}
-                  options={[
-                    {
-                      label: t('billing:package_manage.input.lofficial'),
-                      value: 'official',
-                    },
-                    {
-                      label: t('billing:package_manage.input.ltrial'),
-                      value: 'trial',
-                    },
-                  ]}
-                  classlabel="w-full"
-                  classchild="w-full"
-                  classnamefieldwrapper=""
-                /> */}
                 <FormField
                   control={form.control}
                   name="type"
@@ -1067,6 +1122,7 @@ export function CreatePackage() {
                           onValueChange={e => {
                             setType(e)
                             setPaymentType('PREPAY')
+                            setValue('payment_type', 'PREPAY')
                             onChange(e)
                           }}
                           value={value}
@@ -1101,15 +1157,6 @@ export function CreatePackage() {
                     </FormItem>
                   )}
                 />
-                {/* <TextAreaField
-                  label={t('billing:package_manage.popup.description')}
-                  error={formState.errors['description']}
-                  registration={register('description')}
-                  classnamefieldwrapper=""
-                  classlabel="w-full"
-                  classchild="w-full"
-                  placeholder={t('billing:package_manage.input.tdescribe')}
-                /> */}
                 <FormField
                   control={form.control}
                   name="description"
@@ -1173,65 +1220,48 @@ export function CreatePackage() {
                 {t('billing:package_manage.popup.data_plan')}
               </p>
               <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
-                <SelectField
-                  label={t('billing:package_manage.popup.payment_type')}
-                  error={formState.errors['payment_type']}
-                  registration={register('payment_type', {
-                    onChange: e => {
-                      setPaymentType(e.target.value)
-                      setPeriodType('PERIODIC')
-                    },
-                  })}
-                  options={
-                    type === 'trial'
-                      ? [
-                          {
-                            label: t('billing:package_manage.popup.pre_pay'),
-                            value: 'PREPAY',
-                          },
-                        ]
-                      : [
-                          {
-                            label: t('billing:package_manage.popup.pre_pay'),
-                            value: 'PREPAY',
-                          },
-                          {
-                            label: t('billing:package_manage.popup.post_paid'),
-                            value: 'POSTPAID',
-                          },
-                        ]
-                  }
-                  classlabel="w-full"
-                  classchild="w-full"
-                  classnamefieldwrapper=""
+                <FormField
+                  control={form.control}
+                  name="payment_type"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:package_manage.popup.payment_type')}
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={e => {
+                            setPaymentType(e)
+                            setPeriodType('PERIODIC')
+                            setValue('type_period', 'PERIODIC')
+                            onChange(e)
+                            setEstimates('fix')
+                            setValue('estimate', 'fix')
+                          }}
+                          value={value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {renderPaymentType()?.map(option => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
                 <div className="flex items-center">
                   {paymentType === 'POSTPAID' && (
-                    // <InputField
-                    //   label={t('billing:package_manage.popup.expiry')}
-                    //   error={formState.errors['expiry']}
-                    //   registration={register('expiry', {
-                    //     onChange: e => {
-                    //       if (
-                    //         parseNumber(e.target.value) >
-                    //         parseNumberCalUnit(
-                    //           getValues('period'),
-                    //           getValues('cal_unit'),
-                    //         )
-                    //       ) {
-                    //         setError('expiry', {
-                    //           message: t(
-                    //             'billing:package_manage.popup.choose_expiry',
-                    //           ),
-                    //         })
-                    //       } else setError('expiry', { message: '' })
-                    //     },
-                    //   })}
-                    //   type="number"
-                    //   classnamefieldwrapper=""
-                    //   classlabel="w-full"
-                    //   classchild="w-full"
-                    // />
                     <FormField
                       control={form.control}
                       name="expiry"
@@ -1270,34 +1300,41 @@ export function CreatePackage() {
                     />
                   )}
                 </div>
-                <SelectField
-                  label={t('billing:package_manage.popup.type_period')}
-                  error={formState.errors['type_period']}
-                  registration={register('type_period', {
-                    onChange: e => setPeriodType(e.target.value),
-                  })}
-                  options={
-                    type === 'official' && paymentType === 'PREPAY'
-                      ? [
-                          {
-                            label: t('billing:package_manage.popup.periodic'),
-                            value: 'PERIODIC',
-                          },
-                          {
-                            label: t('billing:package_manage.popup.once'),
-                            value: 'ONCE',
-                          },
-                        ]
-                      : [
-                          {
-                            label: t('billing:package_manage.popup.periodic'),
-                            value: 'PERIODIC',
-                          },
-                        ]
-                  }
-                  classlabel="w-full"
-                  classchild="w-full"
-                  classnamefieldwrapper=""
+                <FormField
+                  control={form.control}
+                  name="type_period"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:package_manage.popup.type_period')}
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={e => {
+                            setPeriodType(e)
+                            onChange(e)
+                          }}
+                          value={value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {renderTypePeriod()?.map(option => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
                 {periodType === 'PERIODIC' ? (
                   <div
@@ -1307,16 +1344,6 @@ export function CreatePackage() {
                   >
                     <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
                       <div className="flex flex-col gap-2 md:col-span-1">
-                        {/* <InputField
-                          label={t('billing:package_manage.popup.period')}
-                          classlabel="w-full"
-                          classchild="w-full"
-                          registration={register('period')}
-                          type="number"
-                          min="1"
-                          classnamefieldwrapper=""
-                        /> */}
-
                         <FormField
                           control={form.control}
                           name="period"
@@ -1336,28 +1363,63 @@ export function CreatePackage() {
                         />
                       </div>
                       <div className="mt-4 flex flex-col gap-2 md:col-span-1">
-                        <SelectField
-                          error={formState.errors['cal_unit']}
-                          registration={register('cal_unit')}
-                          options={[
-                            {
-                              label: t('billing:package_manage.popup.day'),
-                              value: 'day',
-                            },
-                            {
-                              label: t('billing:package_manage.popup.week'),
-                              value: 'week',
-                            },
-                            {
-                              label: t('billing:package_manage.popup.month'),
-                              value: 'month',
-                            },
-                            {
-                              label: t('billing:package_manage.popup.year'),
-                              value: 'year',
-                            },
-                          ]}
-                          className="px-2"
+                        <FormField
+                          control={form.control}
+                          name="cal_unit"
+                          render={({
+                            field: { onChange, value, ...field },
+                          }) => (
+                            <FormItem>
+                              <FormLabel></FormLabel>
+                              <FormControl>
+                                <Select
+                                  {...field}
+                                  onValueChange={onChange}
+                                  value={value}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent className="bg-white">
+                                    {[
+                                      {
+                                        label: t(
+                                          'billing:package_manage.popup.day',
+                                        ),
+                                        value: 'day',
+                                      },
+                                      {
+                                        label: t(
+                                          'billing:package_manage.popup.week',
+                                        ),
+                                        value: 'week',
+                                      },
+                                      {
+                                        label: t(
+                                          'billing:package_manage.popup.month',
+                                        ),
+                                        value: 'month',
+                                      },
+                                      {
+                                        label: t(
+                                          'billing:package_manage.popup.year',
+                                        ),
+                                        value: 'year',
+                                      },
+                                    ]?.map(option => (
+                                      <SelectItem
+                                        key={option.value}
+                                        value={option.value}
+                                      >
+                                        {option.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
                     </div>
@@ -1368,21 +1430,6 @@ export function CreatePackage() {
                 ) : (
                   <div></div>
                 )}
-                {/* <InputField
-                  label={t('billing:package_manage.popup.fix_cost')}
-                  error={formState.errors['fix_cost']}
-                  registration={register('fix_cost', {
-                    onChange: e => {
-                      setExpectedNumber('')
-                      setExpectedPayment('')
-                    },
-                  })}
-                  classlabel="w-full"
-                  classchild="w-full"
-                  type="number"
-                  classnamefieldwrapper=""
-                  placeholder="200"
-                /> */}
                 <FormField
                   control={form.control}
                   name="fix_cost"
@@ -1397,8 +1444,8 @@ export function CreatePackage() {
                             value={value}
                             onChange={e => {
                               onChange(e)
-                              setExpectedNumber('')
-                              setExpectedPayment('')
+                              setValue('expected_payment', '')
+                              setValue('expected_number', '')
                             }}
                             placeholder="200"
                           />
@@ -1408,25 +1455,50 @@ export function CreatePackage() {
                     </FormItem>
                   )}
                 />
-                <SelectField
-                  label={t('billing:package_manage.popup.charging_unit')}
-                  error={formState.errors['charging_unit']}
-                  registration={register('charging_unit')}
-                  options={[
-                    {
-                      label: t('billing:package_manage.popup.connect'),
-                      value: 'message',
-                    },
-                    {
-                      label: t('billing:package_manage.popup.device'),
-                      value: 'device',
-                    },
-                    { label: 'API', value: 'api' },
-                  ]}
-                  className="!mt-0"
-                  classlabel="w-full"
-                  classchild="w-full"
-                  classnamefieldwrapper=""
+                <FormField
+                  control={form.control}
+                  name="charging_unit"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('billing:package_manage.popup.charging_unit')}
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={onChange}
+                          value={value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {[
+                              {
+                                label: t(
+                                  'billing:package_manage.popup.connect',
+                                ),
+                                value: 'message',
+                              },
+                              {
+                                label: t('billing:package_manage.popup.device'),
+                                value: 'device',
+                              },
+                              { label: 'API', value: 'api' },
+                            ]?.map(option => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
               <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
@@ -1434,67 +1506,50 @@ export function CreatePackage() {
               </p>
               <div className="!mt-3 grid grow	grid-cols-1 gap-y-1">
                 <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
-                  <SelectField
-                    label={t('billing:package_manage.popup.estimate')}
-                    error={formState.errors['estimate']}
-                    registration={register('estimate', {
-                      onChange: e => {
-                        setEstimates(e.target.value)
-                        setValue('plan_lv', [
-                          {
-                            level: '',
-                            price: 0,
-                            free: 0,
-                          },
-                        ])
-                        setValue('quantity_free', '')
-                        setValue('price', '')
-                      },
-                    })}
-                    options={
-                      type === 'official' &&
-                      paymentType === 'POSTPAID' &&
-                      periodType === 'PERIODIC'
-                        ? [
-                            {
-                              label: t('billing:package_manage.popup.mass'),
-                              value: 'mass',
-                            },
-                            {
-                              label: t('billing:package_manage.popup.fix'),
-                              value: 'fix',
-                            },
-                            {
-                              label: t('billing:package_manage.popup.unit'),
-                              value: 'unit',
-                            },
-                            {
-                              label: t(
-                                'billing:package_manage.popup.accumulate',
-                              ),
-                              value: 'accumulated',
-                            },
-                            {
-                              label: t('billing:package_manage.popup.step'),
-                              value: 'step',
-                            },
-                          ]
-                        : [
-                            {
-                              label: t(
-                                'billing:package_manage.popup.permanent',
-                              ),
-                              value: 'fix',
-                            },
-                            {
-                              label: t('billing:package_manage.popup.by_unit'),
-                              value: 'unit',
-                            },
-                          ]
-                    }
-                    classlabel="w-full"
-                    classchild="w-full"
-                    classnamefieldwrapper=""
+                  <FormField
+                    control={form.control}
+                    name="estimate"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:package_manage.popup.estimate')}
+                        </FormLabel>
+                        <FormControl>
+                          <Select
+                            {...field}
+                            onValueChange={e => {
+                              setEstimates(e)
+                              setValue('plan_lv', [
+                                {
+                                  level: '',
+                                  price: 0,
+                                  free: 0,
+                                },
+                              ])
+                              setValue('quantity_free', '')
+                              setValue('price', '')
+                              onChange(e)
+                            }}
+                            value={value}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white">
+                              {renderEstimate()?.map(option => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                   {(estimates === 'mass' ||
                     estimates === 'accumulated' ||
@@ -1537,60 +1592,6 @@ export function CreatePackage() {
                                 },
                               )}
                             >
-                              {/* <InputField
-                              label={
-                                estimates === 'step'
-                                  ? t('billing:package_manage.popup.max')
-                                  : t(
-                                    'billing:package_manage.popup.level',
-                                  ).replace(
-                                    '{{NUMBER}}',
-                                    index >= 1
-                                      ? (typeof getValues('plan_lv')?.[
-                                        index - 1
-                                      ]?.level === 'string'
-                                        ? parseInt(
-                                          getValues('plan_lv')?.[
-                                            index - 1
-                                          ].level,
-                                        )
-                                        : getValues('plan_lv')?.[
-                                          index - 1
-                                        ].level) + 1
-                                      : '1',
-                                  )
-                              }
-                              error={
-                                formState?.errors?.plan_lv?.[index]?.level
-                              }
-                              registration={register(
-                                `plan_lv.${index}.level`,
-                                {
-                                  onChange: e => {
-                                    setExpectedNumber('')
-                                    setExpectedPayment('')
-                                  },
-                                  valueAsNumber: true,
-                                  onBlur: e => {
-                                    if (
-                                      index ===
-                                      getValues('plan_lv').length - 1 &&
-                                      e.target.value
-                                    ) {
-                                      append({
-                                        level: '',
-                                        price: 0,
-                                        free: 0,
-                                      })
-                                    }
-                                  },
-                                },
-                              )}
-                              classlabel="w-1/4"
-                              classchild="w-3/4"
-                              type="number"
-                              classnamefieldwrapper="flex items-center gap-x-3"
-                            /> */}
                               <FormField
                                 control={form.control}
                                 name={`plan_lv.${index}.level`}
@@ -1640,8 +1641,8 @@ export function CreatePackage() {
                                           }}
                                           onChange={e => {
                                             onChange(e)
-                                            setExpectedNumber('')
-                                            setExpectedPayment('')
+                                            setValue('expected_payment', '')
+                                            setValue('expected_number', '')
                                           }}
                                           type="number"
                                         />
@@ -1651,28 +1652,6 @@ export function CreatePackage() {
                                   </FormItem>
                                 )}
                               />
-                              {/* <InputField
-                              label={t(
-                                'billing:package_manage.popup.price',
-                              )}
-                              error={
-                                formState?.errors?.plan_lv?.[index]?.price
-                              }
-                              registration={register(
-                                `plan_lv.${index}.price`,
-                                {
-                                  onChange: e => {
-                                    setExpectedNumber('')
-                                    setExpectedPayment('')
-                                  },
-                                  valueAsNumber: true,
-                                },
-                              )}
-                              classlabel="w-1/4"
-                              classchild="w-3/4"
-                              type="number"
-                              classnamefieldwrapper="flex items-center gap-x-3"
-                            /> */}
                               <FormField
                                 control={form.control}
                                 name={`plan_lv.${index}.price`}
@@ -1690,8 +1669,8 @@ export function CreatePackage() {
                                           type="number"
                                           onChange={e => {
                                             onChange(e)
-                                            setExpectedNumber('')
-                                            setExpectedPayment('')
+                                            setValue('expected_payment', '')
+                                            setValue('expected_number', '')
                                           }}
                                         />
                                       </FormControl>
@@ -1701,25 +1680,6 @@ export function CreatePackage() {
                                 )}
                               />
                               {estimates === 'mass' && (
-                                // <InputField
-                                //   label={t(
-                                //     'billing:package_manage.popup.free',
-                                //   )}
-                                //   registration={register(
-                                //     `plan_lv.${index}.free`,
-                                //     {
-                                //       onChange: e => {
-                                //         setExpectedNumber('')
-                                //         setExpectedPayment('')
-                                //       },
-                                //       valueAsNumber: true,
-                                //     },
-                                //   )}
-                                //   classlabel="w-1/4"
-                                //   classchild="w-3/4"
-                                //   type="number"
-                                //   classnamefieldwrapper="flex items-center gap-x-3"
-                                // />
                                 <FormField
                                   control={form.control}
                                   name={`plan_lv.${index}.free`}
@@ -1742,8 +1702,8 @@ export function CreatePackage() {
                                             type="number"
                                             onChange={e => {
                                               onChange(e)
-                                              setExpectedNumber('')
-                                              setExpectedPayment('')
+                                              setValue('expected_payment', '')
+                                              setValue('expected_number', '')
                                             }}
                                           />
                                         </FormControl>
@@ -1775,31 +1735,6 @@ export function CreatePackage() {
                 </div>
                 {(estimates === 'fix' || estimates === 'unit') && (
                   <div className="grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-3">
-                    {/* <InputField
-                      label={t('billing:package_manage.popup.price')}
-                      error={formState.errors['price']}
-                      registration={register('price', {
-                        onChange: e => {
-                          if (estimates === 'fix') {
-                            handleOnChange(
-                              '',
-                              getValues('tax'),
-                              e.target.value,
-                              getValues('fix_cost'),
-                              getValues('quantity_free'),
-                              getValues('plan_lv'),
-                            )
-                          } else {
-                            setExpectedNumber('')
-                            setExpectedPayment('')
-                          }
-                        },
-                      })}
-                      classnamefieldwrapper="flex items-center gap-x-3"
-                      classlabel="w-1/5"
-                      classchild="w-full"
-                      type="number"
-                    /> */}
                     <FormField
                       control={form.control}
                       name="price"
@@ -1827,8 +1762,8 @@ export function CreatePackage() {
                                       getValues('plan_lv'),
                                     )
                                   } else {
-                                    setExpectedNumber('')
-                                    setExpectedPayment('')
+                                    setValue('expected_payment', '')
+                                    setValue('expected_number', '')
                                   }
                                 }}
                               />
@@ -1839,25 +1774,6 @@ export function CreatePackage() {
                       )}
                     />
                     {estimates === 'unit' && (
-                      // <InputField
-                      //   label={t(
-                      //     'billing:package_manage.popup.quantity_free',
-                      //   )}
-                      //   error={formState.errors['quantity_free']}
-                      //   registration={register('quantity_free', {
-                      //     onChange: e => {
-                      //       setExpectedNumber('')
-                      //       setExpectedPayment('')
-                      //     },
-                      //   })}
-                      //   classnamefieldwrapper="flex items-center gap-x-3"
-                      //   classlabel="w-1/5"
-                      //   classchild="w-full"
-                      //   type="number"
-                      //   placeholder={t(
-                      //     'billing:package_manage.popup.quantity',
-                      //   )}
-                      // />
                       <FormField
                         control={form.control}
                         name="quantity_free"
@@ -1875,8 +1791,8 @@ export function CreatePackage() {
                                   type="number"
                                   onChange={e => {
                                     onChange(e)
-                                    setExpectedNumber('')
-                                    setExpectedPayment('')
+                                    setValue('expected_payment', '')
+                                    setValue('expected_number', '')
                                   }}
                                   placeholder={t(
                                     'billing:package_manage.popup.quantity',
@@ -1896,19 +1812,6 @@ export function CreatePackage() {
                 {t('billing:package_manage.popup.estimated_payment')}
               </p>
               <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
-                {/* <InputField
-                  label={t('billing:package_manage.popup.tax')}
-                  error={formState.errors['tax']}
-                  registration={register('tax', {
-                    onChange: e => {
-                      setExpectedNumber('')
-                      setExpectedPayment('')
-                    },
-                  })}
-                  classlabel="w-3/5"
-                  classchild="w-full"
-                  classnamefieldwrapper="flex items-center gap-x-2"
-                /> */}
                 <FormField
                   control={form.control}
                   name="tax"
@@ -1924,8 +1827,8 @@ export function CreatePackage() {
                             type="number"
                             onChange={e => {
                               onChange(e)
-                              setExpectedNumber('')
-                              setExpectedPayment('')
+                              setValue('expected_payment', '')
+                              setValue('expected_number', '')
                             }}
                           />
                         </FormControl>
@@ -1935,38 +1838,58 @@ export function CreatePackage() {
                   )}
                 />
                 <div className="flex items-center">(default 10%)</div>
-                {/* <div className="flex items-center"></div> */}
                 {estimates !== 'fix' && (
-                  <InputField
-                    label={t('billing:package_manage.popup.expected_number')}
-                    onChange={e => {
-                      setExpectedNumber(e.target.value)
-                      handleOnChange(
-                        e.target.value,
-                        getValues('tax'),
-                        getValues('price'),
-                        getValues('fix_cost'),
-                        getValues('quantity_free'),
-                        getValues('plan_lv'),
-                      )
-                    }}
-                    value={expectedNumber}
-                    classlabel="w-3/5"
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center gap-x-2"
-                    placeholder={t(
-                      'billing:package_manage.popup.enter_quantity',
+                  <FormField
+                    control={form.control}
+                    name="expected_number"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem className="flex items-center gap-x-3">
+                        <FormLabel>
+                          {t('billing:package_manage.popup.expected_number')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input
+                              value={value}
+                              type="number"
+                              onChange={e => {
+                                onChange(e)
+                                handleOnChange(
+                                  e.target.value,
+                                  getValues('tax'),
+                                  getValues('price'),
+                                  getValues('fix_cost'),
+                                  getValues('quantity_free'),
+                                  getValues('plan_lv'),
+                                )
+                              }}
+                              placeholder={t(
+                                'billing:package_manage.popup.enter_quantity',
+                              )}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
                     )}
                   />
                 )}
-                <InputField
-                  label={t('billing:package_manage.popup.expected_payment')}
-                  disabled
-                  value={expectedPayment}
-                  placeholder="1000000"
-                  classlabel="w-3/5"
-                  classchild="w-full"
-                  classnamefieldwrapper="flex items-center gap-x-2"
+                <FormField
+                  control={form.control}
+                  name="expected_payment"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center gap-x-3">
+                      <FormLabel>
+                        {t('billing:package_manage.popup.expected_payment')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} placeholder="1000000" />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
               </div>
             </>
