@@ -31,7 +31,7 @@ export const getFirmwares = ({
   const searchFieldArray = search_field?.split(',')
   const params = new URLSearchParams({
     project_id: projectId,
-    template_id: templateId,
+    template_id: templateId ? templateId : '',
     offset: String(offset),
     limit: String(limit),
     search_str: search_str || '',
