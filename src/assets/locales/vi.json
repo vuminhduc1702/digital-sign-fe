@@ -837,7 +837,7 @@
         "once": "Một lần",
         "period": "Chu kỳ tính tiền",
         "day": "ngày",
-        "week": "tuấn",
+        "week": "tuần",
         "month": "tháng",
         "year": "năm",
         "fix_cost": "Chi phí cố định hàng kỳ",
@@ -903,7 +903,7 @@
         "estimated_payment": "Số tiền thanh toán",
         "period": "Chu kỳ tính tiền",
         "choose_user": "Vui lòng chọn thông tin khách hàng",
-        "choose_plan": "Vui lòng gói cước",
+        "choose_plan": "Vui lòng chọn gói cước",
         "success_create": "Đăng ký dịch vụ thành công",
         "success_update": "Cập nhật dịch vụ thành công",
         "success_delete": "Hủy đăng ký dịch vụ thành công"
