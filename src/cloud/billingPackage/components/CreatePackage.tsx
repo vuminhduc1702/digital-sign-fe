@@ -119,8 +119,6 @@ export function CreatePackage() {
   const [type, setType] = useState('official')
   const [paymentType, setPaymentType] = useState('PREPAY')
   const [periodType, setPeriodType] = useState('PERIODIC')
-  const [expectedPayment, setExpectedPayment] = useState('')
-  const [expectedNumber, setExpectedNumber] = useState('')
   const [status, setStatus] = useState('')
 
   const { mutate, isLoading, isSuccess } = useCreatePlan()
