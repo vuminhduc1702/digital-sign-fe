@@ -468,9 +468,9 @@ export function CreateWidget({
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart({
     config: {
-      onSuccess: () => {
-        queryClient.prefetchQuery(['devices'])
-      },
+      // onSuccess: () => {
+      //   queryClient.prefetchQuery(['devices'])
+      // },
     },
   })
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
@@ -604,6 +604,12 @@ export function CreateWidget({
       setValue('widgetSetting.interval', defaultOption[0].value)
     }
   }, [watch('widgetSetting.time_period')])
+
+  useEffect(() => {
+    if (!isOpen) {
+      reset()
+    }
+  }, [isOpen])
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -798,7 +804,7 @@ export function CreateWidget({
                           {
                             historyCmd: {
                               ...historyCmd,
-                              window: values.widgetSetting?.window,
+                              window: values.widgetSetting?.window || 0,
                             },
                             id: widgetId,
                           },
