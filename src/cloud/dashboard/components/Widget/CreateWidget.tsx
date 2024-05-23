@@ -7,11 +7,18 @@ import ColorPicker from 'react-pick-color'
 import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
-
+import { Input } from '@/components/ui/input'
 import { useGetDevices } from '@/cloud/orgManagement/api/deviceAPI'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Dialog, DialogTitle } from '@/components/ui/dialog'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   FieldWrapper,
   InputField,
@@ -29,7 +36,7 @@ import { useCreateAttrChart } from '../../api'
 import { type SelectInstance } from 'react-select'
 import { nameSchema } from '@/utils/schemaValidation'
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
-
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { LuCalendar } from 'react-icons/lu'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
@@ -256,11 +263,13 @@ export const widgetAgg = [
 export const attrWidgetSchema = z.array(
   z.object({
     attribute_key: z
-      .string()
+      .string({ required_error: i18n.t('ws:filter.choose_attr') })
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
     label: z.string(),
-    color: z.string(),
-    unit: z.string(),
+    color: z
+      .string({ required_error: i18n.t('ws:filter.choose_color') })
+      .min(1, { message: i18n.t('ws:filter.choose_color') }),
+    unit: z.string().optional(),
     max: z.number(),
     min: z.number().optional(),
     deviceName: z.string().optional(),
@@ -311,7 +320,7 @@ export const widgetListSchema = z.record(widgetSchema)
 export type Widget = z.infer<typeof widgetListSchema>
 
 export const widgetCreateSchema = z.object({
-  title: nameSchema,
+  title: z.string({ required_error: i18n.t('schema:no_name') }),
   type: widgetTypeSchema,
   org_id: z.string({
     required_error: i18n.t('cloud:org_manage.org_manage.add_org.choose_org'),
@@ -901,12 +910,33 @@ export function CreateWidget({
                       className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
-                      <InputField
+                      {/* <InputField
                         label={t('cloud:dashboard.config_chart.name')}
                         error={formState.errors['title']}
                         registration={register('title')}
+                      /> */}
+                      <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:dashboard.config_chart.name')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder={t(
+                                    'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                  )}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
                       />
-
                       <FormField
                         control={form.control}
                         name="org_id"
@@ -972,51 +1002,63 @@ export function CreateWidget({
                           </FormItem>
                         )}
                       />
-
-                      <SelectDropdown
-                        refSelect={selectDropdownDeviceRef}
-                        label={t('cloud:dashboard.config_chart.device')}
-                        error={formState?.errors?.device?.[0]}
+                      <FormField
+                        control={form.control}
                         name="device"
-                        control={control}
-                        options={deviceSelectData}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:device') ||
-                          option.label === t('table:no_device')
-                        }
-                        noOptionsMessage={() => t('table:no_device')}
-                        loadingMessage={() => t('loading:device')}
-                        isLoading={deviceIsLoading}
-                        isMulti={isMultipleDevice}
-                        closeMenuOnSelect={!isMultipleDevice}
-                        isWrappedArray
-                        customOnChange={option => {
-                          if (option[0]) {
-                            attrChartMutate({
-                              data: {
-                                entity_ids: option,
-                                entity_type: 'DEVICE',
-                                version_two: true,
-                                // time_series: true,
-                              },
-                            })
-                            // removeField(option)
-                          }
-                        }}
-                        handleClearSelectDropdown={() => {
-                          resetField('attributeConfig', {
-                            defaultValue: [
-                              {
-                                attribute_key: '',
-                                label: '',
-                                color: '',
-                                max: 100,
-                                min: 0,
-                                unit: '',
-                              },
-                            ],
-                          })
-                        }}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:dashboard.config_chart.device')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <NewSelectDropdown
+                                  refSelect={selectDropdownDeviceRef}
+                                  options={deviceSelectData}
+                                  isOptionDisabled={option =>
+                                    option.label === t('loading:device') ||
+                                    option.label === t('table:no_device')
+                                  }
+                                  noOptionsMessage={() => t('table:no_device')}
+                                  loadingMessage={() => t('loading:device')}
+                                  isLoading={deviceIsLoading}
+                                  isMulti={isMultipleDevice}
+                                  closeMenuOnSelect={!isMultipleDevice}
+                                  isWrappedArray
+                                  customOnChange={option => {
+                                    if (option[0]) {
+                                      attrChartMutate({
+                                        data: {
+                                          entity_ids: option,
+                                          entity_type: 'DEVICE',
+                                          version_two: true,
+                                          // time_series: true,
+                                        },
+                                      })
+                                      // removeField(option)
+                                    }
+                                  }}
+                                  handleClearSelectDropdown={() => {
+                                    resetField('attributeConfig', {
+                                      defaultValue: [
+                                        {
+                                          attribute_key: '',
+                                          label: '',
+                                          color: '',
+                                          max: 100,
+                                          min: 0,
+                                          unit: '',
+                                        },
+                                      ],
+                                    })
+                                  }}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
                       />
                     </div>
                     <div className="flex justify-between space-x-3">
@@ -1080,24 +1122,59 @@ export function CreateWidget({
                               )}
                             />
                           ) : (
-                            <SelectDropdown
-                              label={t('cloud:dashboard.config_chart.attr')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]
-                                  ?.attribute_key
-                              }
+                            // <SelectDropdown
+                            //   label={t('cloud:dashboard.config_chart.attr')}
+                            //   error={
+                            //     formState?.errors?.attributeConfig?.[index]
+                            //       ?.attribute_key
+                            //   }
+                            //   name={`attributeConfig.${index}.attribute_key`}
+                            //   control={control}
+                            //   options={removeDup(attrSelectData)}
+                            //   isOptionDisabled={option =>
+                            //     option.label === t('loading:input') ||
+                            //     option.label === t('table:no_attr')
+                            //   }
+                            //   noOptionsMessage={() => t('table:no_attr')}
+                            //   loadingMessage={() => t('loading:attr')}
+                            //   isLoading={attrChartIsLoading}
+                            //   placeholder={t(
+                            //     'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            //   )}
+                            // />
+                            <FormField
+                              control={form.control}
                               name={`attributeConfig.${index}.attribute_key`}
-                              control={control}
-                              options={removeDup(attrSelectData)}
-                              isOptionDisabled={option =>
-                                option.label === t('loading:input') ||
-                                option.label === t('table:no_attr')
-                              }
-                              noOptionsMessage={() => t('table:no_attr')}
-                              loadingMessage={() => t('loading:attr')}
-                              isLoading={attrChartIsLoading}
-                              placeholder={t(
-                                'cloud:org_manage.org_manage.add_attr.choose_attr',
+                              render={({
+                                field: { onChange, value, ...field },
+                              }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t('cloud:dashboard.config_chart.attr')}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <NewSelectDropdown
+                                        customOnChange={onChange}
+                                        options={removeDup(attrSelectData)}
+                                        isOptionDisabled={option =>
+                                          option.label === t('loading:input') ||
+                                          option.label === t('table:no_attr')
+                                        }
+                                        noOptionsMessage={() =>
+                                          t('table:no_attr')
+                                        }
+                                        loadingMessage={() => t('loading:attr')}
+                                        isLoading={attrChartIsLoading}
+                                        placeholder={t(
+                                          'cloud:org_manage.org_manage.add_attr.choose_attr',
+                                        )}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </div>
+                                </FormItem>
                               )}
                             />
                           )}
@@ -1142,74 +1219,82 @@ export function CreateWidget({
                             'CARD',
                           ].find(e => widgetCategory === e) ? (
                             <div className="space-y-1">
-                              <FieldWrapper
-                                label={t('cloud:dashboard.config_chart.color')}
-                                error={
-                                  formState?.errors?.attributeConfig?.[index]
-                                    ?.color
-                                }
-                              >
-                                <Controller
-                                  control={control}
-                                  name={`attributeConfig.${index}.color`}
-                                  render={({
-                                    field: { onChange, value, ...field },
-                                  }) => {
-                                    return (
-                                      <Popover>
-                                        <PopoverTrigger asChild>
-                                          <Button
-                                            className="relative h-9 w-full rounded-md"
-                                            variant="trans"
-                                            size="square"
+                              <FormField
+                                control={control}
+                                name={`attributeConfig.${index}.color`}
+                                render={({
+                                  field: { onChange, value, ...field },
+                                }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {t('cloud:dashboard.config_chart.color')}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Popover>
+                                          <PopoverTrigger asChild>
+                                            <Button
+                                              className="relative h-9 w-full rounded-md"
+                                              variant="trans"
+                                              size="square"
+                                            >
+                                              <div
+                                                className="h-[15px] w-[20px]"
+                                                style={{
+                                                  backgroundColor: `${value}`,
+                                                }}
+                                              />
+                                              {value}
+                                            </Button>
+                                          </PopoverTrigger>
+                                          <PopoverContent
+                                            className="w-auto p-0"
+                                            align="start"
                                           >
-                                            <div
-                                              className="h-[15px] w-[20px]"
-                                              style={{
-                                                backgroundColor: `${value}`,
+                                            <ColorPicker
+                                              {...field}
+                                              color={value}
+                                              onChange={color => {
+                                                const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+                                                onChange(rgb)
                                               }}
+                                              ref={colorPickerRef}
                                             />
-                                            {value}
-                                          </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                          className="w-auto p-0"
-                                          align="start"
-                                        >
-                                          <ColorPicker
-                                            {...field}
-                                            color={value}
-                                            onChange={(color: {
-                                              rgb: {
-                                                r: number
-                                                g: number
-                                                b: number
-                                                a: number
-                                              }
-                                            }) => {
-                                              const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
-                                              onChange(rgb)
-                                            }}
-                                            // @ts-expect-error: ColorPicker don't have ref prop
-                                            ref={colorPickerRef}
-                                          />
-                                        </PopoverContent>
-                                      </Popover>
-                                    )
-                                  }}
-                                />
-                              </FieldWrapper>
+                                          </PopoverContent>
+                                        </Popover>
+                                      </FormControl>
+                                      {/* {formState?.errors?.attributeConfig?.[index]?.color && (
+                                        <FormMessage>
+                                          {formState.errors.attributeConfig[index].color.message}
+                                        </FormMessage>
+                                      )} */}
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
                             </div>
                           ) : null}
                           {widgetCategory === 'MAP' ? null : (
-                            <InputField
-                              label={t('cloud:dashboard.config_chart.unit')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]
-                                  ?.unit
-                              }
-                              registration={register(
-                                `attributeConfig.${index}.unit` as const,
+                            <FormField
+                              control={form.control}
+                              name={`attributeConfig.${index}.unit`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t('cloud:dashboard.config_chart.unit')}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <Input
+                                        {...field}
+                                        placeholder={t(
+                                          'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                        )}
+                                      />
+                                    </FormControl>
+                                  </div>
+                                </FormItem>
                               )}
                             />
                           )}
@@ -1270,7 +1355,7 @@ export function CreateWidget({
                           className="w-full rounded-md bg-secondary-700 pl-3"
                         />
                         <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
-                          <SelectField
+                          {/* <SelectField
                             label={t('ws:filter.dataType')}
                             error={formState?.errors?.widgetSetting?.dataType}
                             registration={register(
@@ -1283,9 +1368,50 @@ export function CreateWidget({
                               label: dataType.label,
                               value: dataType.value,
                             }))}
+                          /> */}
+                          <FormField
+                            control={form.control}
+                            name={`widgetSetting.dataType`}
+                            render={({
+                              field: { onChange, value, ...field },
+                            }) => (
+                              <FormItem>
+                                <FormLabel>{t('ws:filter.dataType')}</FormLabel>
+                                <div>
+                                  <Select
+                                    {...field}
+                                    onValueChange={e => {
+                                      onChange(e)
+                                    }}
+                                    value={value || 'REALTIME'}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue
+                                          placeholder={t(
+                                            'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                          )}
+                                        />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {widgetDataTypeOptions?.map(dataType => (
+                                        <SelectItem
+                                          key={dataType.value}
+                                          value={dataType.value}
+                                        >
+                                          {dataType.label}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                                </div>
+                              </FormItem>
+                            )}
                           />
 
-                          <SelectField
+                          {/* <SelectField
                             label={t('ws:filter.data_aggregation')}
                             error={formState?.errors?.widgetSetting?.agg}
                             registration={register(
@@ -1310,8 +1436,64 @@ export function CreateWidget({
                                     value: agg.value,
                                   }))
                             }
+                          /> */}
+                          <FormField
+                            control={form.control}
+                            name={`widgetSetting.agg`}
+                            render={({
+                              field: { onChange, value, ...field },
+                            }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  {t('ws:filter.data_aggregation')}
+                                </FormLabel>
+                                <div>
+                                  <Select
+                                    {...field}
+                                    onValueChange={e => {
+                                      onChange(e)
+                                    }}
+                                    value={value || 'AVG'}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue
+                                          placeholder={t(
+                                            'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                          )}
+                                        />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {(getValues('widgetSetting.dataType') ===
+                                      'HISTORY'
+                                        ? widgetAgg
+                                            .map(agg => ({
+                                              label: agg.label,
+                                              value: agg.value,
+                                            }))
+                                            .concat([
+                                              { label: 'SMA', value: 'SMA' },
+                                              { label: 'FFT', value: 'FFT' },
+                                            ])
+                                        : widgetAgg.map(agg => ({
+                                            label: agg.label,
+                                            value: agg.value,
+                                          }))
+                                      ).map(option => (
+                                        <SelectItem
+                                          key={option.value}
+                                          value={option.value}
+                                        >
+                                          {option.label}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </FormItem>
+                            )}
                           />
-
                           {watch('widgetSetting.agg') === 'SMA' ? (
                             <InputField
                               type="number"
@@ -1375,6 +1557,57 @@ export function CreateWidget({
                                 value: period.value,
                               }))}
                             />
+                            // <FormField
+                            //   control={form.control}
+                            //   name={`widgetSetting.time_period`}
+                            //   render={({
+                            //     field: { onChange, value, ...field },
+                            //   }) => (
+                            //     <FormItem>
+                            //       <FormLabel>
+                            //         {t('ws:filter.time_period')}
+                            //       </FormLabel>
+                            //       <div>
+                            //         <Select
+                            //           {...field}
+                            //           onValueChange={e => {
+                            //             onChange(Number(e))
+                            //           }}
+                            //           value={value || ''}
+                            //         >
+                            //           <FormControl>
+                            //             <SelectTrigger>
+                            //               <SelectValue
+                            //                 placeholder={t(
+                            //                   'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            //                 )}
+                            //               />
+                            //             </SelectTrigger>
+                            //           </FormControl>
+                            //           <SelectContent>
+                            //             {WS_REALTIME_PERIOD.map(period => (
+                            //               <SelectItem
+                            //                 key={period.value}
+                            //                 value={period.value}
+                            //               >
+                            //                 {period.label}
+                            //               </SelectItem>
+                            //             ))}
+                            //           </SelectContent>
+                            //         </Select>
+                            //         {formState?.errors?.widgetSetting
+                            //           ?.time_period && (
+                            //           <FormMessage>
+                            //             {
+                            //               formState.errors.widgetSetting
+                            //                 .time_period.message
+                            //             }
+                            //           </FormMessage>
+                            //         )}
+                            //       </div>
+                            //     </FormItem>
+                            //   )}
+                            // />
                           )}
 
                           {watch('widgetSetting.dataType') === 'HISTORY' ? (
