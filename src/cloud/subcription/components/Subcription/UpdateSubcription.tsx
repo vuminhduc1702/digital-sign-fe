@@ -184,7 +184,7 @@ export function UpdateSubcription({
     )
     setValue(
       's_cycle_now',
-      data?.data?.s_cycle_now ? data?.data?.s_cycle_now : '',
+      data?.data?.s_cycle_now ? (data?.data?.s_cycle_now).toString() : '',
     )
     valueStatus()
     valuePeriod()
