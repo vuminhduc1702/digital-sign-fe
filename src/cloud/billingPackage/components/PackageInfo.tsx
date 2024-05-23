@@ -1281,7 +1281,7 @@ export function PackageInfo() {
         handleSubmit={() => {
           mutateDelete({ id: packageId })
         }}
-        isLoading={isLoading}
+        isLoading={isLoadingDelete}
       />
     </>
   )
