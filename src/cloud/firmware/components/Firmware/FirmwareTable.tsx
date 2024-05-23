@@ -36,6 +36,7 @@ function FireWareTableContextMenu({
   version,
   template_name,
   template_id,
+  link,
 }: {
   id: string
   name: string
@@ -44,6 +45,7 @@ function FireWareTableContextMenu({
   version: string
   template_name: string
   template_id: string
+  link: string
 }) {
   const { t } = useTranslation()
 
@@ -136,6 +138,7 @@ function FireWareTableContextMenu({
           firmwareId={id}
           close={closeUpload}
           isOpen={isOpenUpload}
+          fileUpload={link}
         />
       ) : null}
 
@@ -195,6 +198,7 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
             version,
             template_name,
             template_id,
+            link,
           } = info.row.original
           return FireWareTableContextMenu({
             name,
@@ -204,6 +208,7 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
             tag,
             template_name,
             template_id,
+            link,
           })
         },
         header: () => null,
