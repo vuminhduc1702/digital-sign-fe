@@ -427,6 +427,11 @@ export function CreateWidget({
 
   const form = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
+    defaultValues: {
+      widgetSetting: {
+        dataType: 'REALTIME',
+      },
+    },
   })
   const {
     register,
@@ -619,7 +624,6 @@ export function CreateWidget({
       reset()
     }
   }, [isOpen])
-
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
@@ -1026,6 +1030,7 @@ export function CreateWidget({
                                   closeMenuOnSelect={!isMultipleDevice}
                                   isWrappedArray
                                   customOnChange={option => {
+                                    onChange(option)
                                     if (option[0]) {
                                       attrChartMutate({
                                         data: {
@@ -1381,9 +1386,13 @@ export function CreateWidget({
                                   <Select
                                     {...field}
                                     onValueChange={e => {
+                                      setValue(
+                                        'widgetSetting.dataType',
+                                        'REALTIME',
+                                      )
                                       onChange(e)
                                     }}
-                                    value={value || 'REALTIME'}
+                                    value={value}
                                   >
                                     <FormControl>
                                       <SelectTrigger>

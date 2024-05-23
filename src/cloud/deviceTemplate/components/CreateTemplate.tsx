@@ -260,7 +260,6 @@ export default function CreateTemplate({
                                   selectDropdownServiceRef.current?.clearValue()
                                 }
                                 isLoading={AdapterIsLoading}
-                                error={formState?.errors?.thing_id}
                                 {...field}
                               />
                             </FormControl>
