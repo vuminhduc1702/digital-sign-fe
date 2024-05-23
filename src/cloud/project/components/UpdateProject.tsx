@@ -139,7 +139,7 @@ export function UpdateProject({
                   data: {
                     name: values.name,
                     description: values.description,
-                    image: dataUploadImage.data.link,
+                    image: dataUploadImage.link,
                   },
                   projectId: selectedUpdateProject.id,
                 })
@@ -213,7 +213,7 @@ export function UpdateProject({
                 <div className="mb-3 space-y-1">
                   <FormField
                     control={controlUploadImage}
-                    name="upload-image"
+                    name="file.file"
                     render={({ field: { ref, ...field } }) => (
                       <FormItem>
                         <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
@@ -224,6 +224,7 @@ export function UpdateProject({
                             <Input
                               type="file"
                               className="mt-2 border-none p-0 shadow-none"
+                              {...controlUploadImage.register('file.file')}
                               ref={fileInputRef}
                               {...field}
                               onChange={event => {
@@ -238,13 +239,16 @@ export function UpdateProject({
                                   },
                                 )
 
-                                if (file.size > MAX_FILE_SIZE) {
+                                if (file && file.size > MAX_FILE_SIZE) {
                                   setUploadImageErr(
                                     t('validate:image_max_size'),
                                   )
                                   return false
                                 }
-                                if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                                if (
+                                  file &&
+                                  !ACCEPTED_IMAGE_TYPES.includes(file.type)
+                                ) {
                                   setUploadImageErr(t('validate:image_type'))
                                   return false
                                 }
@@ -261,6 +265,7 @@ export function UpdateProject({
                                       .result as string
                                   }
                                 }
+                                event.target.value = ''
                               }}
                             />
                           </FormControl>
@@ -297,7 +302,7 @@ export function UpdateProject({
                 <div className="mb-3 space-y-1">
                   <FormField
                     control={controlUploadRestoreProject}
-                    name="restore-project"
+                    name="backup"
                     render={({ field: { ref, ...field } }) => (
                       <FormItem>
                         <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
@@ -310,6 +315,9 @@ export function UpdateProject({
                             <Input
                               type="file"
                               className="mt-2 border-none p-0 shadow-none"
+                              {...controlUploadRestoreProject.register(
+                                'backup',
+                              )}
                               ref={fileInputRef}
                               {...field}
                               onChange={event => {
