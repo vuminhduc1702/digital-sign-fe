@@ -154,7 +154,7 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
                       name: dataCreateOrg.name,
                       description: dataCreateOrg.description,
                       org_id: dataCreateOrg.org_id,
-                      image: dataUploadImage.data.link,
+                      image: dataUploadImage.link,
                     },
                     org_id: dataCreateOrg.id,
                   })
@@ -294,6 +294,7 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
                                       .result as string
                                   }
                                 }
+                                event.target.value = ''
                               }}
                             />
                           </FormControl>

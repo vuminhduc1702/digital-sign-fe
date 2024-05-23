@@ -154,7 +154,7 @@ export function UpdateOrg({
                       name: values.name,
                       description: values.description,
                       org_id: values.org_id !== no_org_val ? values.org_id : '',
-                      image: dataUploadImage?.data?.link,
+                      image: dataUploadImage?.link,
                     },
                     org_id: selectedUpdateOrg?.id,
                   })
@@ -311,6 +311,7 @@ export function UpdateOrg({
                                       .result as string
                                   }
                                 }
+                                event.target.value = ''
                               }}
                             />
                           </FormControl>
