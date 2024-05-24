@@ -150,32 +150,28 @@ export function DataBaseSidebar() {
           </div>
         )}
       </div>
-      {isOpenDataBase && (
-        <CreateDataBase
-          close={closeDataBase}
-          isOpen={isOpenDataBase}
-          projectId={projectId}
-        />
-      )}
-      {isOpenDelete && name ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:db_template.sidebar.delete_db')}
-          body={t('cloud:db_template.sidebar.delete_db_confirm').replace(
-            '{{DBNAME}}',
-            name,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          handleSubmit={() =>
-            mutate({
-              table: name,
-              project_id: projectId,
-            })
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+      <CreateDataBase
+        close={closeDataBase}
+        isOpen={isOpenDataBase}
+        projectId={projectId}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:db_template.sidebar.delete_db')}
+        body={t('cloud:db_template.sidebar.delete_db_confirm').replace(
+          '{{DBNAME}}',
+          name,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        handleSubmit={() =>
+          mutate({
+            table: name,
+            project_id: projectId,
+          })
+        }
+        isLoading={isLoading}
+      />
     </>
   )
 }

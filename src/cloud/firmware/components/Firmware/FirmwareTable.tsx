@@ -92,71 +92,37 @@ function FireWareTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical 
-            className="text-lg text-gray-500 hover:text-black hover:scale-125 transition-all duration-200 ease-in-out"
-             />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={open}>
-              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              {t('cloud:firmware.add_firmware.edit_firmware')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openUpload}>
-              <UploadIcon className="h-5 w-5" />
-              {t('cloud:firmware.add_firmware.upload_firmware')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img
-                src={btnDeleteIcon}
-                alt="Delete firmware"
-                className="h-5 w-5"
-              />
-              {t('cloud:firmware.table.delete_firmware')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateFirmWare
-          firmwareId={id}
-          name={name}
-          description={description}
-          tag={tag}
-          version={version}
-          close={close}
-          isOpen={isOpen}
-          template_name={template_name}
-          template_id={template_id}
-        />
-      ) : null}
-      {isOpenUpload ? (
-        <UploadFileFirmWare
-          firmwareId={id}
-          close={closeUpload}
-          isOpen={isOpenUpload}
-          fileUpload={link}
-        />
-      ) : null}
-
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:firmware.table.delete_firmware')}
-          body={t('cloud:firmware.table.delete_firmware_confirm').replace(
-            '{{FIRMWARE_NAME}}',
-            name,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccess}
-          handleSubmit={() => mutate({ id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <UpdateFirmWare
+        firmwareId={id}
+        name={name}
+        description={description}
+        tag={tag}
+        version={version}
+        close={close}
+        isOpen={isOpen}
+        template_name={template_name}
+        template_id={template_id}
+      />
+      <UploadFileFirmWare
+        firmwareId={id}
+        close={closeUpload}
+        isOpen={isOpenUpload}
+        fileUpload={link}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:firmware.table.delete_firmware')}
+        body={t('cloud:firmware.table.delete_firmware_confirm').replace(
+          '{{FIRMWARE_NAME}}',
+          name,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccess}
+        handleSubmit={() => mutate({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

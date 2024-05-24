@@ -77,7 +77,7 @@ type CreateTemplateLwM2MProps = {
   isOpen?: boolean
 }
 
-export default function CreateTemplateLwM2M({
+export function CreateTemplateLwM2M({
   open,
   close,
   isOpen,

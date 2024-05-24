@@ -12,6 +12,16 @@ import { useGetCustomers } from '../../api/customerManageAPI'
 import { type Customer } from '../../types'
 import { PlanTable } from './PlanTable'
 import { ViewPopup } from './ViewPopup'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { useForm } from 'react-hook-form'
 
 export function InfoCustomer() {
   const { t } = useTranslation()
@@ -48,6 +58,31 @@ export function InfoCustomer() {
     dataFilter?.length && setUserById(dataFilter[0])
   }, [dataUsers])
 
+  const form = useForm({
+    defaultValues: {
+      customer_code: '',
+      name: '',
+      id_number: '',
+      phone: '',
+      email: '',
+      full_address: '',
+      role_name: '',
+      org_name: '',
+    },
+  })
+
+  const { setValue } = form
+
+  useEffect(() => {
+    setValue('customer_code', userById?.customer_code ?? '')
+    setValue('name', userById?.name ?? '')
+    setValue('phone', userById?.phone ?? '')
+    setValue('email', userById?.email ?? '')
+    setValue('full_address', userById?.profile?.full_address ?? '')
+    setValue('org_name', userById?.org_name ?? '')
+    setValue('role_name', userById?.role_name ?? '')
+  }, [userById])
+
   return (
     <div className="relative h-full p-4">
       <div className="mb-5 flex">
@@ -78,48 +113,148 @@ export function InfoCustomer() {
             </p>
           </div>
         </div>
-        <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <InputField
-            label={t('billing:customer_manage.table.customer_code')}
-            value={userById?.customer_code || ''}
-            disabled
-          />
-          <InputField
-            label={t('billing:customer_manage.table.customer_name')}
-            value={userById?.name || ''}
-            disabled
-          />
-          <InputField
-            label={t('billing:customer_manage.table.id_number')}
-            value={''}
-            disabled
-          />
-          <InputField
-            label={t('billing:customer_manage.table.phone')}
-            value={userById?.phone || ''}
-            disabled
-          />
-          <InputField
-            label={t('billing:customer_manage.table.email')}
-            value={userById?.email || ''}
-            disabled
-          />
-          <InputField
-            label={t('billing:customer_manage.table.address')}
-            value={userById?.profile?.full_address || ''}
-            disabled
-          />
-          <InputField
-            label={t('billing:customer_manage.table.role')}
-            value={userById?.role_name || ''}
-            disabled
-          />
-          <InputField
-            label={t('billing:customer_manage.table.parent')}
-            value={userById?.org_name || ''}
-            disabled
-          />
-        </div>
+        <Form {...form}>
+          <form className="w-full space-y-5" onSubmit={e => e.preventDefault()}>
+            <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="customer_code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.customer_code')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.customer_name')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="id_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.id_number')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.phone')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.email')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="full_address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.address')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.role')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="org_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('billing:customer_manage.table.parent')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </form>
+        </Form>
         <div className="mt-5 flex items-center gap-2">
           <div className="flex gap-3">
             <p className="text-xl font-semibold">
@@ -161,16 +296,14 @@ export function InfoCustomer() {
         </div>
       </div>
 
-      {isOpen ? (
-        <ViewPopup
-          type={type}
-          id={customerId}
-          customerCode={userById?.customer_code}
-          customerName={userById?.name}
-          close={close}
-          isOpen={isOpen}
-        />
-      ) : null}
+      <ViewPopup
+        type={type}
+        id={customerId}
+        customerCode={userById?.customer_code}
+        customerName={userById?.name}
+        close={close}
+        isOpen={isOpen}
+      />
     </div>
   )
 }

@@ -128,40 +128,36 @@ export function GroupDetail() {
           isSearchData={searchQuery.length > 0 && isSearchData}
         />
       </div>
-      {isOpen ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-          body={t(
-            'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
-          )}
-          close={close}
-          isOpen={isOpen}
-          isSuccessDelete={isSuccessDeleteMultipleAttrs}
-          handleSubmit={() =>
-            mutateDeleteMultipleAttrs(
-              {
-                data: {
-                  keys: attrKeys,
-                  entity_type: 'GROUP',
-                  entity_id: groupId,
-                },
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+        body={t(
+          'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
+        )}
+        close={close}
+        isOpen={isOpen}
+        isSuccessDelete={isSuccessDeleteMultipleAttrs}
+        handleSubmit={() =>
+          mutateDeleteMultipleAttrs(
+            {
+              data: {
+                keys: attrKeys,
+                entity_type: 'GROUP',
+                entity_id: groupId,
               },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
-      {isOpenAttrs && (
-        <CreateAttr
-          entityId={groupId}
-          entityType="GROUP"
-          close={closeAttrs}
-          open={openAttrs}
-          isOpen={isOpenAttrs}
-        />
-      )}
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
+      <CreateAttr
+        entityId={groupId}
+        entityType="GROUP"
+        close={closeAttrs}
+        open={openAttrs}
+        isOpen={isOpenAttrs}
+      />
     </div>
   )
 }

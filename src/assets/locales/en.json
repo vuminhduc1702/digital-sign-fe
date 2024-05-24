@@ -936,6 +936,7 @@
     "total_user": "Total Users",
     "total_user_online": "Total Users Online",
     "request_time": "Request Time",
+    "total_request": "Total Request",
     "success_rate": "Success Rate",
     "quick_link": "Quick Link",
     "setup_confirm": "Are you sure you want to set up the {{TITLE}} Device Template?"

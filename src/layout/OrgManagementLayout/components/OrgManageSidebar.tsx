@@ -248,20 +248,16 @@ function OrgManageSidebar() {
               t('cloud:org_manage.org_manage.overview.choose_project')}
           </Button>
         </div>
-        {isOpenCreateOrg && (
-          <CreateOrg
-            close={closeCreateOrg}
-            open={openCreateOrg}
-            isOpen={isOpenCreateOrg}
-          />
-        )}
-        {isOpen ? (
-          <UpdateOrg
-            close={close}
-            isOpen={isOpen}
-            selectedUpdateOrg={selectedUpdateOrg}
-          />
-        ) : null}
+        <CreateOrg
+          close={closeCreateOrg}
+          open={openCreateOrg}
+          isOpen={isOpenCreateOrg}
+        />
+        <UpdateOrg
+          close={close}
+          isOpen={isOpen}
+          selectedUpdateOrg={selectedUpdateOrg}
+        />
         <TreeView
           data={convertData(filteredComboboxData)}
           handleEditTreeView={(data: OrgMapType) => handleEdit(data)}

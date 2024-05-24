@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
 import {
   useDeleteSubcription,
   useSubcriptionById,
@@ -14,16 +13,32 @@ import {
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import * as z from 'zod'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 
-import { Dialog, DialogTitle } from '@/components/ui/dialog'
-import { getVNDateFormat } from '@/utils/misc'
-import storage from '@/utils/storage'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { Dialog, DialogTitle } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { useDisclosure } from '@/utils/hooks'
+import { getVNDateFormat } from '@/utils/misc'
 
 export const entitySubcriptionUpdateSchema = z.object({
   register: z.string(),
+  c_name: z.string().optional(),
+  c_customer_code: z.string().optional(),
+  p_name: z.string().optional(),
+  status: z.string().optional(),
+  price_method: z.string().optional(),
+  p_payment_type: z.string().optional(),
+  s_date_register: z.string().optional(),
+  period: z.string().optional(),
+  s_cycle_now: z.string().optional(),
 })
 
 type UpdateSubcriptionProps = {
@@ -57,6 +72,7 @@ export function UpdateSubcription({
   useEffect(() => {
     if (isSuccess || isSuccessDelete) {
       close()
+      setIsUpdate(false)
     }
   }, [isSuccess, close, isSuccessDelete])
 
@@ -83,7 +99,7 @@ export function UpdateSubcription({
           break
       }
     }
-    return result || ''
+    return setValue('price_method', result)
   }
 
   const valuePeriod = () => {
@@ -106,7 +122,10 @@ export function UpdateSubcription({
           break
       }
     }
-    return data?.data?.p_period ? data?.data?.p_period + result : ''
+    return setValue(
+      'period',
+      data?.data?.p_period ? data?.data?.p_period + result : '',
+    )
   }
 
   const valueStatus = () => {
@@ -132,11 +151,10 @@ export function UpdateSubcription({
           break
       }
     }
-    return result
+    return setValue('status', result)
   }
-  const { register, formState, handleSubmit } = useForm<
-    UpdateSubcriptionDTO['data']
-  >({
+
+  const form = useForm<UpdateSubcriptionDTO['data']>({
     resolver:
       entitySubcriptionUpdateSchema &&
       zodResolver(entitySubcriptionUpdateSchema),
@@ -144,6 +162,36 @@ export function UpdateSubcription({
       register: data?.data?.s_register?.toString() || '',
     },
   })
+  const { control, handleSubmit, setValue, formState, register, reset } = form
+
+  useEffect(() => {
+    setValue('register', data?.data?.s_register?.toString() ?? '')
+    setValue('c_name', data?.data?.c_name ?? '')
+    setValue('c_customer_code', data?.data?.c_customer_code ?? '')
+    setValue('p_name', data?.data?.p_name ?? '')
+    setValue(
+      'p_payment_type',
+      data?.data?.p_payment_type
+        ? data?.data?.p_payment_type === 'PREPAY'
+          ? 'Trả trước'
+          : 'Trả sau'
+        : '',
+    )
+    setValue(
+      's_date_register',
+      getVNDateFormat({
+        date: (data?.data?.s_date_register || 0) * 1000,
+      }) ?? '',
+    )
+    setValue(
+      's_cycle_now',
+      data?.data?.s_cycle_now ? (data?.data?.s_cycle_now).toString() : '',
+    )
+    valueStatus()
+    valuePeriod()
+    valuePriceMethod()
+  }, [data, isOpen])
+
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
       <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-3xl sm:p-6 sm:align-middle">
@@ -157,139 +205,260 @@ export function UpdateSubcription({
             <div className="flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                onClick={close}
+                onClick={() => {
+                  close()
+                  reset()
+                  setIsUpdate(false)
+                }}
               >
                 <span className="sr-only">Close panel</span>
                 <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
-          <form
-            id="update-subcription"
-            className="flex w-full flex-col justify-between space-y-6"
-            onSubmit={handleSubmit(async values => {
-              await mutateAsync({
-                data: {
-                  register: parseInt(values.register),
-                },
-                id: id || '',
-              })
-              refetch()
-            })}
-          >
-            <>
-              <div className="mt-2 flex justify-between gap-2 py-2 ">
-                <div className="flex items-center gap-3">
-                  <p className="text-lg font-semibold">
-                    {t('billing:subcription.table.sub_code')} : {id}
-                  </p>
+          <Form {...form}>
+            <form
+              id="update-subcription"
+              className="flex w-full flex-col justify-between space-y-6"
+              onSubmit={handleSubmit(async values => {
+                await mutateAsync({
+                  data: {
+                    register: parseInt(values.register),
+                  },
+                  id: id || '',
+                })
+                refetch()
+              })}
+            >
+              <>
+                <div className="mt-2 flex justify-between gap-2 py-2 ">
+                  <div className="flex items-center gap-3">
+                    <p className="text-lg font-semibold">
+                      {t('billing:subcription.table.sub_code')} : {id}
+                    </p>
+                  </div>
+                  {(data?.data?.s_status === 'Active' ||
+                    data?.data?.s_status === 'Pending Active') &&
+                    !isUpdate && (
+                      <div>
+                        <Button
+                          className="w-full rounded-md border-none bg-orange-500 text-white shadow-none"
+                          style={{ justifyContent: 'flex-start' }}
+                          variant="trans"
+                          onClick={open}
+                          size="square"
+                        >
+                          {t('billing:subcription.delete')}
+                        </Button>
+                      </div>
+                    )}
                 </div>
-                {(data?.data?.s_status === 'Active' ||
-                  data?.data?.s_status === 'Pending Active') &&
-                  !isUpdate && (
-                    <div>
-                      <Button
-                        className="w-full rounded-md border-none bg-orange-500 text-white shadow-none"
-                        style={{ justifyContent: 'flex-start' }}
-                        variant="trans"
-                        onClick={open}
-                        size="square"
-                      >
-                        {t('billing:subcription.delete')}
-                      </Button>
-                    </div>
-                  )}
-              </div>
-              <div className="mt-2 flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2 ">
-                <div className="flex gap-3">
-                  <p className="text-lg font-semibold">
-                    {t('billing:subcription.popup.customer_info')}
-                  </p>
+                <div className="mt-2 flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2 ">
+                  <div className="flex gap-3">
+                    <p className="text-lg font-semibold">
+                      {t('billing:subcription.popup.customer_info')}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
-                <InputField
-                  label={t('billing:subcription.popup.customer_name')}
-                  disabled
-                  value={data?.data?.c_name || ''}
-                />
-                <InputField
-                  label={t('billing:subcription.popup.customer_code')}
-                  value={data?.data?.c_customer_code || ''}
-                  disabled
-                />
-              </div>
-              <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2">
-                <div className="flex gap-3">
-                  <p className="text-lg font-semibold">
-                    {t('billing:subcription.popup.service_info')}
-                  </p>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <InputField
-                  label={t('billing:subcription.popup.package')}
-                  value={data?.data?.p_name || ''}
-                  disabled
-                />
-                <InputField
-                  label={t('billing:subcription.table.status')}
-                  disabled
-                  value={valueStatus()}
-                />
-                <InputField
-                  label={t('billing:subcription.popup.price_method')}
-                  disabled
-                  value={valuePriceMethod()}
-                />
-                {data?.data?.p_estimate !== 'fix' && (
-                  <InputField
-                    label={t('billing:subcription.popup.quantity')}
-                    disabled={!isUpdate}
-                    error={formState.errors['register']}
-                    registration={register('register')}
+                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="c_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.popup.customer_name')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
-                )}
-              </div>
-              <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2">
-                <div className="flex gap-3">
-                  <p className="text-lg font-semibold">
-                    {t('billing:subcription.popup.billing_info')}
-                  </p>
+                  <FormField
+                    control={form.control}
+                    name="c_customer_code"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.popup.customer_code')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <InputField
-                  label={t('billing:subcription.popup.payment_type')}
-                  disabled
-                  value={
-                    data?.data?.p_payment_type
-                      ? data?.data?.p_payment_type === 'PREPAY'
-                        ? 'Trả trước'
-                        : 'Trả sau'
-                      : ''
-                  }
-                />
-                <InputField
-                  label={t('billing:subcription.table.start_date')}
-                  disabled
-                  value={getVNDateFormat({
-                    date: (data?.data?.s_date_register || 0) * 1000,
-                  })}
-                />
-                <InputField
-                  label={t('billing:subcription.popup.period')}
-                  disabled
-                  value={valuePeriod()}
-                />
-                <InputField
-                  label={t('billing:subcription.table.cycle_now')}
-                  disabled
-                  value={data?.data?.s_cycle_now || ''}
-                />
-              </div>
-            </>
-          </form>
+                <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2">
+                  <div className="flex gap-3">
+                    <p className="text-lg font-semibold">
+                      {t('billing:subcription.popup.service_info')}
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="p_name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.popup.package')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.table.status')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="price_method"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.popup.price_method')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  {data?.data?.p_estimate !== 'fix' && (
+                    <FormField
+                      control={form.control}
+                      name="register"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('billing:subcription.popup.quantity')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="number"
+                                disabled={!isUpdate}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+                <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2">
+                  <div className="flex gap-3">
+                    <p className="text-lg font-semibold">
+                      {t('billing:subcription.popup.billing_info')}
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <FormField
+                    control={form.control}
+                    name="p_payment_type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.popup.payment_type')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="s_date_register"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.table.start_date')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="period"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.popup.period')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="s_cycle_now"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('billing:subcription.table.cycle_now')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </>
+            </form>
+          </Form>
         </div>
         <div className="mt-4 flex justify-center space-x-3">
           {!isUpdate ? (
@@ -303,15 +472,16 @@ export function UpdateSubcription({
               >
                 {t('btn:close')}
               </Button>
-              {data?.data?.s_status !== 'Cancelled' && (
-                <Button
-                  onClick={() => setIsUpdate(true)}
-                  size="md"
-                  className="w-[100px] rounded-md bg-primary-400"
-                >
-                  {t('btn:update')}
-                </Button>
-              )}
+              {data?.data?.s_status !== 'Cancelled' &&
+                data?.data?.p_estimate !== 'fix' && (
+                  <Button
+                    onClick={() => setIsUpdate(true)}
+                    size="md"
+                    className="w-[100px] rounded-md bg-primary-400"
+                  >
+                    {t('btn:update')}
+                  </Button>
+                )}
             </>
           ) : (
             <Button
@@ -326,21 +496,19 @@ export function UpdateSubcription({
           )}
         </div>
       </div>
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('billing:subcription.delete')}
-          body={t('billing:subcription.delete_sub_confirm').replace(
-            '{{SUBCRIPTION}}',
-            id,
-          )}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          isSuccessDelete={isSuccessDelete}
-          handleSubmit={() => mutateDelete({ id })}
-          isLoading={isLoadingDelete}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('billing:subcription.delete')}
+        body={t('billing:subcription.delete_sub_confirm').replace(
+          '{{SUBCRIPTION}}',
+          id,
+        )}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        isSuccessDelete={isSuccessDelete}
+        handleSubmit={() => mutateDelete({ id })}
+        isLoading={isLoadingDelete}
+      />
     </Dialog>
   )
 }

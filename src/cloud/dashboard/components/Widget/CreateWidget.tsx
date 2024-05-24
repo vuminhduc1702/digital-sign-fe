@@ -428,6 +428,7 @@ export function CreateWidget({
     getValues,
     setValue,
     resetField,
+    reset,
   } = form
 
   const { fields, append, remove } = useFieldArray({
@@ -467,9 +468,9 @@ export function CreateWidget({
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart({
     config: {
-      onSuccess: () => {
-        queryClient.prefetchQuery(['devices'])
-      },
+      // onSuccess: () => {
+      //   queryClient.prefetchQuery(['devices'])
+      // },
     },
   })
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
@@ -603,6 +604,12 @@ export function CreateWidget({
       setValue('widgetSetting.interval', defaultOption[0].value)
     }
   }, [watch('widgetSetting.time_period')])
+
+  useEffect(() => {
+    if (!isOpen) {
+      reset()
+    }
+  }, [isOpen])
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -760,8 +767,7 @@ export function CreateWidget({
                               ...tsCmd,
                               startTs:
                                 values.widgetSetting?.dataType === 'REALTIME'
-                                  ? Date.now() -
-                                    values.widgetSetting?.time_period
+                                  ? values.widgetSetting?.time_period
                                   : undefined,
                             },
                             id: widgetId,
@@ -798,7 +804,7 @@ export function CreateWidget({
                           {
                             historyCmd: {
                               ...historyCmd,
-                              window: values.widgetSetting?.window,
+                              window: values.widgetSetting?.window || 0,
                             },
                             id: widgetId,
                           },
@@ -814,6 +820,7 @@ export function CreateWidget({
                       }
 
                 const widget: z.infer<typeof widgetSchema> = {
+                  id: widgetId,
                   title: values.title,
                   description: widgetCategory,
                   type: widgetType,
@@ -869,7 +876,7 @@ export function CreateWidget({
                                 : undefined,
                             time_period:
                               values.widgetSetting?.dataType === 'REALTIME'
-                                ? Date.now() - values.widgetSetting?.time_period
+                                ? values.widgetSetting?.time_period
                                 : undefined,
                           },
                         }
@@ -878,6 +885,7 @@ export function CreateWidget({
 
                 setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
 
+                reset()
                 close()
               })}
             >

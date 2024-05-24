@@ -154,10 +154,9 @@ export function SubcriptionTemplate() {
               closeSearch={true}
             />
           </div>
-          <CreateSubcription />
-          {/* <div className="flex items-center gap-x-3">
+          <div className="flex items-center gap-x-3">
             <CreateSubcription />
-          </div> */}
+          </div>
         </div>
 
         <SubcriptionTable

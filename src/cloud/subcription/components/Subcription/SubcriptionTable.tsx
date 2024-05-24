@@ -40,28 +40,8 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
             onClick={open}
           />
         </div>
-        {/* <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit DataBase" className="h-5 w-5" />
-            {t('billing:subcription.title')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu> */}
       </div>
-      {isOpen ? (
-        <UpdateSubcription id={id} close={close} isOpen={isOpen} />
-      ) : null}
+      <UpdateSubcription id={id} close={close} isOpen={isOpen} />
     </>
   )
 }

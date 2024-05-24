@@ -156,46 +156,38 @@ function GroupTableContextMenu({
         </DropdownMenu>
       </div>
 
-      {isOpen ? (
-        <UpdateGroup
-          groupId={id}
-          name={name}
-          org_name={org_name}
-          close={close}
-          isOpen={isOpen}
-          {...props}
-        />
-      ) : null}
+      <UpdateGroup
+        groupId={id}
+        name={name}
+        org_name={org_name}
+        close={close}
+        isOpen={isOpen}
+        {...props}
+      />
 
-      {isOpenAssignUser && (
-        <AssignUser
-          closeAssignUser={closeAssignUser}
-          isOpenAssignUser={isOpenAssignUser}
-          groupId={id}
-        />
-      )}
+      <AssignUser
+        closeAssignUser={closeAssignUser}
+        isOpenAssignUser={isOpenAssignUser}
+        groupId={id}
+      />
 
-      {isOpenAssignGroupRole && (
-        <AssignGroupRole
-          closeAssignGroupRole={closeAssignGroupRole}
-          isOpenAssignGroupRole={isOpenAssignGroupRole}
-          groupId={id}
-        />
-      )}
+      <AssignGroupRole
+        closeAssignGroupRole={closeAssignGroupRole}
+        isOpenAssignGroupRole={isOpenAssignGroupRole}
+        groupId={id}
+      />
 
-      {isOpenDelete ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.group_manage.table.delete_group')}
-          body={t(
-            'cloud:org_manage.group_manage.table.delete_group_confirm',
-          ).replace('{{GROUPNAME}}', name)}
-          close={closeDelete}
-          isOpen={isOpenDelete}
-          handleSubmit={() => mutateAsync({ id })}
-          isLoading={isLoading}
-        />
-      ) : null}
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.group_manage.table.delete_group')}
+        body={t(
+          'cloud:org_manage.group_manage.table.delete_group_confirm',
+        ).replace('{{GROUPNAME}}', name)}
+        close={closeDelete}
+        isOpen={isOpenDelete}
+        handleSubmit={() => mutateAsync({ id })}
+        isLoading={isLoading}
+      />
     </>
   )
 }

@@ -195,14 +195,12 @@ export function UpdateCustomer({
             }
           />
         </div>
-        {isOpenRole ? (
-          <UpdateCustomerRole
-            modalTitle={t('form:role.add')}
-            customerId={customerId}
-            isOpenRole={isOpenRole}
-            closeRole={closeRole}
-          />
-        ) : null}
+        <UpdateCustomerRole
+          modalTitle={t('form:role.add')}
+          customerId={customerId}
+          isOpenRole={isOpenRole}
+          closeRole={closeRole}
+        />
         <div className="mt-4 px-14">
           <TenantRoleTable
             data={permissions}

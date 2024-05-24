@@ -20,7 +20,7 @@ export const useDeleteSubcription = ({
 
   return useMutation({
     onSuccess: async () => {
-      toast.promise(() => queryClient.invalidateQueries(['subcription']), {
+      toast.promise(() => queryClient.invalidateQueries(['subcriptions']), {
         loading: t('loading:loading'),
         success: t('billing:subcription.popup.success_delete'),
         error: t('error:server_res.title'),

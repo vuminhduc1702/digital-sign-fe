@@ -158,40 +158,36 @@ export function Default() {
           </div>
         </div>
       ) : null}
-      {isOpenAttrs && (
-        <CreateAttr
-          entityId={templateId}
-          entityType="TEMPLATE"
-          close={closeAttrs}
-          open={openAttrs}
-          isOpen={isOpenAttrs}
-        />
-      )}
-      {isOpenDeleteMulti ? (
-        <ConfirmDialog
-          icon="danger"
-          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-          body={t(
-            'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
-          )}
-          close={closeDeleteMulti}
-          isOpen={isOpenDeleteMulti}
-          isSuccessDelete={isSuccessDeleteMultipleAttrs}
-          handleSubmit={() =>
-            mutateDeleteMultipleAttrs(
-              {
-                data: {
-                  keys: attrKeys,
-                  entity_type: 'TEMPLATE',
-                  entity_id: templateId,
-                },
+      <CreateAttr
+        entityId={templateId}
+        entityType="TEMPLATE"
+        close={closeAttrs}
+        open={openAttrs}
+        isOpen={isOpenAttrs}
+      />
+      <ConfirmDialog
+        icon="danger"
+        title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+        body={t(
+          'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
+        )}
+        close={closeDeleteMulti}
+        isOpen={isOpenDeleteMulti}
+        isSuccessDelete={isSuccessDeleteMultipleAttrs}
+        handleSubmit={() =>
+          mutateDeleteMultipleAttrs(
+            {
+              data: {
+                keys: attrKeys,
+                entity_type: 'TEMPLATE',
+                entity_id: templateId,
               },
-              { onSuccess: () => setRowSelection({}) },
-            )
-          }
-          isLoading={isLoading}
-        />
-      ) : null}
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )
+        }
+        isLoading={isLoading}
+      />
     </div>
   )
 }
