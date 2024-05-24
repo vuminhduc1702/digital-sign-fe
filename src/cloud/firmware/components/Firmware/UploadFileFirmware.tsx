@@ -24,6 +24,7 @@ type UploadFileFirmWareProps = {
   firmwareId: string
   close: () => void
   isOpen: boolean
+  fileUpload: string
 }
 
 export const uploadFileSchema = z.object({
@@ -33,6 +34,7 @@ export function UploadFileFirmWare({
   firmwareId,
   close,
   isOpen,
+  fileUpload,
 }: UploadFileFirmWareProps) {
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
@@ -44,6 +46,7 @@ export function UploadFileFirmWare({
     useForm<UploadFileFirmWareDTO>({
       resolver: uploadFileSchema && zodResolver(uploadFileSchema),
     })
+
   useEffect(() => {
     if (isSuccess && close) {
       close()
@@ -94,6 +97,8 @@ export function UploadFileFirmWare({
                         <div className="flex cursor-pointer items-center justify-center gap-1">
                           <span>Name: {file.name}</span>
                         </div>
+                      ) : fileUpload != '' ? (
+                        fileUpload.split('/').pop()
                       ) : (
                         'Upload File'
                       )}
