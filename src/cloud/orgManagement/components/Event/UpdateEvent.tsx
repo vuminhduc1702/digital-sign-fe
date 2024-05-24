@@ -924,7 +924,7 @@ export function UpdateEvent({
                                     <FormItem>
                                       <FormLabel>
                                         {t(
-                                          'cloud:org_manage.event_manage.add_event.condition.temp',
+                                          'cloud:org_manage.event_manage.add_event.condition.city',
                                         )}
                                       </FormLabel>
                                       <div>

@@ -14,6 +14,16 @@ import { nameSchema } from '@/utils/schemaValidation'
 import { HiOutlineXMark } from 'react-icons/hi2'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -39,12 +49,12 @@ export function UpdateThing({
 
   const { mutate, isLoading, isSuccess } = useUpdateThing()
 
-  const { register, formState, handleSubmit } = useForm<UpdateThingDTO['data']>(
-    {
-      resolver: updateThingSchema && zodResolver(updateThingSchema),
-      defaultValues: { name, description },
-    },
-  )
+  const form = useForm<UpdateThingDTO['data']>({
+    resolver: updateThingSchema && zodResolver(updateThingSchema),
+    defaultValues: { name, description },
+  })
+
+  const { control, handleSubmit, setValue, watch, formState, reset } = form
 
   useEffect(() => {
     if (isSuccess && close) {
@@ -63,46 +73,78 @@ export function UpdateThing({
             <div className="ml-3 flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                onClick={close}
+                onClick={() => {
+                  close()
+                  reset()
+                }}
               >
                 <span className="sr-only">Close panel</span>
                 <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
-          <form
-            id="create-entityThing"
-            className="mt-2 flex w-full flex-col justify-between space-y-6"
-            onSubmit={handleSubmit(values => {
-              mutate({
-                data: {
-                  name: values.name,
-                  description: values.description,
-                },
-                thingId,
-              })
-            })}
-          >
-            <>
-              <InputField
-                label={t('cloud:custom_protocol.thing.name')}
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-              <InputField
-                label={t('cloud:custom_protocol.thing.description')}
-                error={formState.errors['description']}
-                registration={register('description')}
-              />
-            </>
-          </form>
+          <Form {...form}>
+            <form
+              id="create-entityThing"
+              className="mt-2 flex w-full flex-col justify-between space-y-6"
+              onSubmit={handleSubmit(values => {
+                mutate({
+                  data: {
+                    name: values.name,
+                    description: values.description,
+                  },
+                  thingId,
+                })
+              })}
+            >
+              <>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:custom_protocol.thing.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:custom_protocol.thing.description')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Textarea {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </>
+            </form>
+          </Form>
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button
             type="button"
             variant="secondary"
             className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
-            onClick={close}
+            onClick={() => {
+              close()
+              reset()
+            }}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }

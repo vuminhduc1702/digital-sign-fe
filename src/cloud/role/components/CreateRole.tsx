@@ -197,6 +197,11 @@ export function CreateRole({
     setType('Generic')
   }
 
+  const resetForm = () => {
+    close()
+    form.reset()
+  }
+
   useEffect(() => {
     if (isSuccess && close) {
       close()
@@ -204,7 +209,7 @@ export function CreateRole({
   }, [isSuccess])
 
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -611,7 +616,7 @@ export function CreateRole({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

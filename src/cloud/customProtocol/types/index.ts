@@ -35,6 +35,7 @@ export type Adapter = {
   thing_id: string
   handle_service: string
   schema: SchemaType
+  encrypted?: string
 }
 
 export type AdapterList = {

@@ -8,14 +8,12 @@ import { format } from 'date-fns'
 import { LuCalendar } from 'react-icons/lu'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { InputField, SelectField } from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { PlusIcon } from '@/components/SVGIcons'
 import i18n from '@/i18n'
 import { useAreaList } from '@/layout/MainLayout/components/UserAccount/api/getAreaList'
 import { cn } from '@/utils/misc'
@@ -33,6 +31,22 @@ import {
   useCreateCustomer,
   type CreateEntityCustomerDTO,
 } from '../api/createTenantApi'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const entityCustomerSchema = z
   .object({
@@ -61,20 +75,27 @@ export const entityCustomerSchema = z
 
 export function CreateCustomer() {
   const { t } = useTranslation()
+  const listGender = [
+    { label: t('form:male'), value: 'male' },
+    { label: t('form:female'), value: 'female' },
+  ]
 
-  const { register, formState, handleSubmit, reset } = useForm<
-    CreateEntityCustomerDTO['data']
-  >({
+  const form = useForm<CreateEntityCustomerDTO['data']>({
     resolver: entityCustomerSchema && zodResolver(entityCustomerSchema),
     defaultValues: {
+      name: '',
       gender: 'male',
       province: '',
       district: '',
       ward: '',
       password: '',
+      confirm_password: '',
       full_address: '',
+      email: '',
+      phone: '',
     },
   })
+  const { formState, handleSubmit, reset, setValue } = form
 
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
@@ -110,177 +131,348 @@ export function CreateCustomer() {
       title={t('form:tenant.create')}
       resetData={() => reset()}
       body={
-        <form
-          id="create-tenant"
-          className="flex flex-col justify-between"
-          onSubmit={handleSubmit(values => {
-            mutate({
-              data: {
-                email: values.email,
-                password: values.password,
-                name: values.name,
-                phone: values.phone,
-                profile: {
-                  dob: date,
-                  gender: values.gender,
-                  province: values.province,
-                  district: values.district,
-                  ward: values.ward,
-                  full_address: values.full_address,
+        <Form {...form}>
+          <form
+            id="create-tenant"
+            className="flex flex-col justify-between"
+            onSubmit={handleSubmit(values => {
+              mutate({
+                data: {
+                  email: values.email,
+                  password: values.password,
+                  name: values.name,
+                  phone: values.phone,
+                  profile: {
+                    dob: date,
+                    gender: values.gender,
+                    province: values.province,
+                    district: values.district,
+                    ward: values.ward,
+                    full_address: values.full_address,
+                  },
                 },
-              },
-            })
-          })}
-        >
-          <>
-            <div className="mb-3 text-base font-semibold text-black">
-              {t('cloud:dashboard.table.tenant_info')}
-            </div>
-            <div className="mb-3 grid grid-cols-4 gap-4">
-              <div className="text-end">
-                Tenant
-                <span className="text-red-600">*</span>
+              })
+            })}
+          >
+            <>
+              <div className="mb-3 text-base font-semibold text-black">
+                {t('cloud:dashboard.table.tenant_info')}
               </div>
-              <InputField
-                autoComplete="off"
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-
-              <div className="text-end">{t('form:dob')}</div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    id="date"
-                    variant="trans"
-                    className={cn(
-                      'relative h-[37px] w-full justify-start rounded-md text-left font-normal ',
-                      !date && 'text-muted-foreground',
-                    )}
-                  >
-                    <LuCalendar className="mr-2 h-4 w-4" />
-                    {date ? (
-                      date ? (
-                        <>{format(date, 'dd/MM/y')}</>
+              <div className="mb-3 grid grid-cols-4 gap-4">
+                <FormLabel
+                  htmlFor="name"
+                  className={`text-end ${formState.errors.name ? 'text-destructive' : ''}`}
+                >
+                  Tenant<span className="text-red-600">*</span>
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel className="text-end">{t('form:dob')}</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="date"
+                      variant="trans"
+                      className={cn(
+                        'relative h-[37px] w-full justify-start rounded-md text-left font-normal ',
+                        !date && 'text-muted-foreground',
+                      )}
+                    >
+                      <LuCalendar className="mr-2 h-4 w-4" />
+                      {date ? (
+                        date ? (
+                          <>{format(date, 'dd/MM/y')}</>
+                        ) : (
+                          format(date, 'dd MM, y')
+                        )
                       ) : (
-                        format(date, 'dd MM, y')
-                      )
-                    ) : (
-                      <span className="text-sm">
-                        {t('cloud:dashboard.config_chart.pick_date')}
-                      </span>
+                        <span className="text-sm">
+                          {t('cloud:dashboard.config_chart.pick_date')}
+                        </span>
+                      )}
+                      {date && (
+                        <HiOutlineXMark
+                          onClick={() => setDate(undefined)}
+                          className="absolute right-3 top-2.5 h-4 w-4 "
+                        />
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      fromYear={1950}
+                      toYear={new Date().getFullYear()}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormLabel className="text-end">{t('form:sex')}</FormLabel>
+                <FormField
+                  control={form.control}
+                  name="gender"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <div>
+                        <Select
+                          {...field}
+                          onValueChange={e => onChange(e)}
+                          value={value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {listGender.map(template => (
+                              <SelectItem
+                                key={template.label}
+                                value={template.value}
+                              >
+                                {template.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel className="col-start-1 text-end">
+                  {t('cloud:org_manage.event_manage.add_event.action.address')}
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="province"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <div>
+                        <Select
+                          {...field}
+                          onValueChange={e => {
+                            onChange(e)
+                            setProvinceCode(e)
+                            setValue('district', '')
+                            setValue('ward', '')
+                          }}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t('form:province_city')}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {provinceList?.map((template: any) => (
+                              <SelectItem
+                                key={template.label}
+                                value={template.value}
+                              >
+                                {template.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="district"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <div>
+                        <Select
+                          {...field}
+                          onValueChange={e => {
+                            onChange(e)
+                            setDistrictCode(e)
+                            setValue('ward', '')
+                          }}
+                          value={value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={t('form:district')} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {districtList?.map((template: any) => (
+                              <SelectItem
+                                key={template.label}
+                                value={template.value}
+                              >
+                                {template.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="ward"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <div>
+                        <Select
+                          {...field}
+                          onValueChange={e => {
+                            onChange(e)
+                            setDistrictCode(e)
+                          }}
+                          value={value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={t('form:village')} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {wardList?.map((template: any) => (
+                              <SelectItem
+                                key={template.label}
+                                value={template.value}
+                              >
+                                {template.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel className="col-start-1 text-end">
+                  {t('form:detail_address')}
+                </FormLabel>
+                <div className="col-span-3">
+                  <FormField
+                    control={form.control}
+                    name="full_address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
                     )}
-                    {date && (
-                      <HiOutlineXMark
-                        onClick={() => setDate(undefined)}
-                        className="absolute right-3 top-2.5 h-4 w-4 "
-                      />
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    fromYear={1950}
-                    toYear={new Date().getFullYear()}
                   />
-                </PopoverContent>
-              </Popover>
-              <div className="text-end">{t('form:sex')}</div>
-              <SelectField
-                error={formState.errors['gender']}
-                registration={register('gender')}
-                options={[
-                  { label: t('form:male'), value: 'male' },
-                  { label: t('form:female'), value: 'female' },
-                ]}
-              />
-
-              <div className="col-start-1 text-end">
-                {t('cloud:org_manage.event_manage.add_event.action.address')}
+                </div>
               </div>
-              <SelectField
-                error={formState.errors['province']}
-                registration={register('province')}
-                options={provinceList}
-                placeholder={t('form:province_city')}
-                classchild="w-full"
-                onChange={e => setProvinceCode(e.target.value)}
-              />
-              <SelectField
-                error={formState.errors['district']}
-                registration={register('district')}
-                options={districtList}
-                placeholder={t('form:district')}
-                onChange={e => setDistrictCode(e.target.value)}
-              />
-              <SelectField
-                error={formState.errors['ward']}
-                registration={register('ward')}
-                options={wardList}
-                placeholder={t('form:village')}
-              />
 
-              <div className="text-end">{t('form:detail_address')}</div>
-              <div className="col-span-3">
-                <InputField
-                  autoComplete="off"
-                  error={formState.errors['full_address']}
-                  registration={register('full_address')}
+              <div className="mb-3 text-base font-semibold text-black">
+                {t('form:account_info')}
+              </div>
+              <div className="grid grid-cols-4 gap-4">
+                <FormLabel
+                  className={`text-end ${formState.errors.email ? 'text-destructive' : ''}`}
+                >
+                  Email<span className="text-red-600">*</span>
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel
+                  className={`text-end ${formState.errors.phone ? 'text-destructive' : ''}`}
+                >
+                  {t('cloud:org_manage.user_manage.add_user.phone')}
+                  <span className="text-red-600">*</span>
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} type="number" />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel
+                  className={`text-end ${formState.errors.password ? 'text-destructive' : ''}`}
+                >
+                  {t('cloud:org_manage.user_manage.add_user.password')}
+                  <span className="text-red-600">*</span>
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} type="password" />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel
+                  className={`text-end ${formState.errors.confirm_password ? 'text-destructive' : ''}`}
+                >
+                  {t('form:confirm_password')}
+                  <span className="text-red-600">*</span>
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="confirm_password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} type="password" />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
                 />
               </div>
-            </div>
-
-            <div className="mb-3 text-base font-semibold text-black">
-              {t('form:account_info')}
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              <div className="text-end">
-                Email<span className="text-red-600">*</span>
-              </div>
-              <InputField
-                autoComplete="off"
-                error={formState.errors['email']}
-                registration={register('email')}
-              />
-
-              <div className="text-end">
-                {t('cloud:org_manage.user_manage.add_user.phone')}
-                <span className="text-red-600">*</span>
-              </div>
-              <InputField
-                type="number"
-                autoComplete="off"
-                error={formState.errors['phone']}
-                registration={register('phone')}
-              />
-
-              <div className="text-end">
-                {t('cloud:org_manage.user_manage.add_user.password')}
-                <span className="text-red-600">*</span>
-              </div>
-              <InputField
-                type="password"
-                autoComplete="off"
-                error={formState.errors['password']}
-                registration={register('password')}
-              />
-
-              <div className="text-end">
-                {t('form:confirm_password')}
-                <span className="text-red-600">*</span>
-              </div>
-              <InputField
-                type="password"
-                autoComplete="off"
-                error={formState.errors['confirm_password']}
-                registration={register('confirm_password')}
-              />
-            </div>
-          </>
-        </form>
+            </>
+          </form>
+        </Form>
       }
       triggerButton={
         <Button className="h-[38px] rounded border-none">

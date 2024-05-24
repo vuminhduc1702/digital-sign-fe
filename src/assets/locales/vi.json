@@ -347,10 +347,11 @@
           "HCM": "Hồ Chí Minh",
           "condition": {
             "title": "Điều kiện kích hoạt",
+            "city": "Thành phố",
             "onClick": "Onclick",
             "device": "Thiết bị",
             "attr": "Thuộc tính",
-            "temp": "Thời tiết",
+            "temp": "Nhiệt độ",
             "condition_type": {
               "title": "Kiểu điều kiện",
               "normal": "Normal",
@@ -612,6 +613,8 @@
         "success_create": "Tạo adapter thành công",
         "success_update": "Sửa adapter thành công",
         "success_delete": "Xoá adapter thành công",
+        "encrypted": "Encryption key",
+        "encryption": "Encryption",
         "table": {
           "name": "Tên",
           "protocol": "Protocol",
@@ -640,6 +643,8 @@
         "port": "Port",
         "username": "Tài khoản",
         "pass": "Mật khẩu",
+        "option": "Tùy chọn",
+        "AES128": "AES128",
         "topic_list": "Danh sách Topic",
         "new_template": "Mẫu bản tin",
         "schema": {
@@ -1512,6 +1517,7 @@
     "name_long": "Tên quá dài",
     "name_short": "Tên quá ngắn",
     "name_regex": "Tên service chỉ bao gồm chữ, số, hoặc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt",
+    "encrypted_regex": "Encryption key phải là chuỗi dài 16 ký tự và chỉ bao gồm chữ hoa, chữ thường và số",
     "version_scheam": "Please enter the version number in the form x.x.x | Example 1.0.0",
     "otp": "Vui lòng nhập đúng OTP",
     "wrong_email": "Nhập sai định dạng email",
