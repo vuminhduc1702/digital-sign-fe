@@ -45,7 +45,7 @@ export function NewSelectDropdown<
   return (
     <Select
       isMulti={isMulti}
-      className={cn('h-9', classname)}
+      // className={cn('h-9', classname)}
       ref={refSelect}
       isSearchable
       isClearable={isClearable}
@@ -77,7 +77,7 @@ export function NewSelectDropdown<
           const isErr = error != null || (error != null && state.isFocused)
           return {
             ...baseStyles,
-            height: '36px',
+            // height: '36px',
             borderRadius: '6px',
             borderColor: isErr ? 'red' : '#b4b5b6',
             boxShadow: isErr ? 'red' : '',

@@ -72,6 +72,7 @@ export function UpdateSubcription({
   useEffect(() => {
     if (isSuccess || isSuccessDelete) {
       close()
+      setIsUpdate(false)
     }
   }, [isSuccess, close, isSuccessDelete])
 
@@ -184,12 +185,12 @@ export function UpdateSubcription({
     )
     setValue(
       's_cycle_now',
-      data?.data?.s_cycle_now ? data?.data?.s_cycle_now : '',
+      data?.data?.s_cycle_now ? (data?.data?.s_cycle_now).toString() : '',
     )
     valueStatus()
     valuePeriod()
     valuePriceMethod()
-  }, [data])
+  }, [data, isOpen])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -204,7 +205,11 @@ export function UpdateSubcription({
             <div className="flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                onClick={close}
+                onClick={() => {
+                  close()
+                  reset()
+                  setIsUpdate(false)
+                }}
               >
                 <span className="sr-only">Close panel</span>
                 <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
@@ -467,15 +472,16 @@ export function UpdateSubcription({
               >
                 {t('btn:close')}
               </Button>
-              {data?.data?.s_status !== 'Cancelled' && (
-                <Button
-                  onClick={() => setIsUpdate(true)}
-                  size="md"
-                  className="w-[100px] rounded-md bg-primary-400"
-                >
-                  {t('btn:update')}
-                </Button>
-              )}
+              {data?.data?.s_status !== 'Cancelled' &&
+                data?.data?.p_estimate !== 'fix' && (
+                  <Button
+                    onClick={() => setIsUpdate(true)}
+                    size="md"
+                    className="w-[100px] rounded-md bg-primary-400"
+                  >
+                    {t('btn:update')}
+                  </Button>
+                )}
             </>
           ) : (
             <Button

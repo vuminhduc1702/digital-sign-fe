@@ -118,6 +118,7 @@ export function CreateProject() {
                 description: values.description,
               },
             })
+            console.log('file', getValueUploadImage('file'))
             if (getValueUploadImage('file') != null) {
               const dataUploadImage = await mutateAsyncUploadImage({
                 data: {
@@ -125,11 +126,12 @@ export function CreateProject() {
                   file: getValueUploadImage('file'),
                 },
               })
+              console.log('dataUploadImage', dataUploadImage)
               mutateUpdateProject({
                 data: {
                   name: dataCreateProject.name,
                   description: dataCreateProject.description,
-                  image: dataUploadImage.data.link,
+                  image: dataUploadImage.link,
                 },
                 projectId: dataCreateProject.id,
               })
@@ -189,7 +191,7 @@ export function CreateProject() {
               <div className="mb-3 space-y-1">
                 <FormField
                   control={controlUploadImage}
-                  name="upload-image"
+                  name="file.file"
                   render={({ field: { ref, ...field } }) => (
                     <FormItem>
                       <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
@@ -198,9 +200,9 @@ export function CreateProject() {
                       <div>
                         <FormControl>
                           <Input
-                            text={t('cloud:project_manager.add_project.avatar')}
                             type="file"
-                            className="mt-2  border-none p-2 shadow-none"
+                            className="mt-2 border-none p-2 shadow-none"
+                            {...controlUploadImage.register('file')}
                             ref={fileInputRef}
                             {...field}
                             onChange={event => {
@@ -215,27 +217,34 @@ export function CreateProject() {
                                 },
                               )
 
-                              if (file.size > MAX_FILE_SIZE) {
+                              if (file && file.size > MAX_FILE_SIZE) {
                                 setUploadImageErr(t('validate:image_max_size'))
                                 return false
                               }
-                              if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                              if (
+                                file &&
+                                !ACCEPTED_IMAGE_TYPES.includes(file.type)
+                              ) {
                                 setUploadImageErr(t('validate:image_type'))
                                 return false
                               }
 
-                              const reader = new FileReader()
-                              reader.readAsDataURL(file)
-                              reader.onload = e => {
-                                if (
-                                  avatarRef.current != null &&
-                                  e.target != null &&
-                                  reader.readyState === 2
-                                ) {
-                                  avatarRef.current.src = e.target
-                                    .result as string
+                              if (file) {
+                                const reader = new FileReader()
+                                reader.readAsDataURL(file)
+                                reader.onload = e => {
+                                  console.log('Here')
+                                  if (
+                                    avatarRef.current != null &&
+                                    e.target != null &&
+                                    reader.readyState === 2
+                                  ) {
+                                    avatarRef.current.src = e.target
+                                      .result as string
+                                  }
                                 }
                               }
+                              event.target.value = ''
                             }}
                           />
                         </FormControl>
@@ -268,7 +277,7 @@ export function CreateProject() {
               <div className="mb-3 space-y-1">
                 <FormField
                   control={controlUploadRestoreProject}
-                  name="restore-project"
+                  name="backup"
                   render={({ field: { ref, ...field } }) => (
                     <FormItem>
                       <FormLabel className="flex w-fit cursor-pointer items-center justify-center gap-x-2 rounded-md border bg-primary-400 px-3 py-2 font-medium text-white shadow-sm hover:opacity-80">
@@ -279,6 +288,7 @@ export function CreateProject() {
                           <Input
                             type="file"
                             className="mt-2 border-none p-0 shadow-none"
+                            {...controlUploadRestoreProject.register('backup')}
                             ref={fileInputRef}
                             {...field}
                             onChange={event => {

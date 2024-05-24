@@ -1018,7 +1018,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                     <div>
                                       <FormControl>
                                         <NewSelectDropdown
-                                          classnamefieldwrapper="h-9"
                                           options={deviceSelectData}
                                           customOnChange={value => {
                                             const filter =
@@ -1072,7 +1071,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                     <div>
                                       <FormControl>
                                         <NewSelectDropdown
-                                          classnamefieldwrapper="h-9"
                                           options={deviceNameOptions}
                                           customOnChange={value => {
                                             setValue(

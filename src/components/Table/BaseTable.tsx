@@ -67,7 +67,7 @@ export type BaseTableProps<T extends Record<string, any>> = {
   isPreviousData: boolean
   isLoading: boolean
   className?: string
-  renderSubComponent?: (row: Row<T>) => React.ReactNode
+  renderSubComponent?: (props: { row: Row<T> }) => React.ReactElement
   getRowCanExpand?: (row: Row<T>) => boolean
   colsVisibility?: VisibilityState
   popoverClassName?: string
@@ -346,38 +346,50 @@ export function BaseTable<T extends Record<string, any>>({
                   table.getRowModel().rows.map((row, index) => {
                     const linkId = row.original.id
                     return (
-                      <TableRow
-                        key={row.id}
-                        className={cn(
-                          'box-border',
-                          index % 2 === 1 ? 'bg-[#F9F9F9]' : 'bg-white',
-                          viewDetailOnClick &&
-                            'cursor-pointer hover:bg-primary-100',
-                        )}
-                      >
-                        {row.getVisibleCells().map((cell, index) => {
-                          const cellContent = flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )
-                          return (
-                            <TableCell
-                              key={index}
-                              className="h-[30px] max-h-[30px] min-w-[80px] truncate whitespace-nowrap break-words px-5 py-0 text-left"
-                              onClick={
-                                cell.column.id !== 'contextMenu' &&
-                                cell.column.id !== 'select'
-                                  ? viewDetailOnClick
-                                    ? () => viewDetailOnClick(linkId)
+                      <>
+                        <TableRow
+                          key={row.id}
+                          className={cn(
+                            'box-border',
+                            index % 2 === 1 ? 'bg-[#F9F9F9]' : 'bg-white',
+                            viewDetailOnClick &&
+                              'cursor-pointer hover:bg-primary-100',
+                          )}
+                        >
+                          {row.getVisibleCells().map((cell, index) => {
+                            const cellContent = flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )
+                            return (
+                              <TableCell
+                                key={index}
+                                className="h-[30px] max-h-[30px] min-w-[80px] truncate whitespace-nowrap break-words px-5 py-0 text-left"
+                                onClick={
+                                  cell.column.id !== 'contextMenu' &&
+                                  cell.column.id !== 'select'
+                                    ? viewDetailOnClick
+                                      ? () => viewDetailOnClick(linkId)
+                                      : undefined
                                     : undefined
-                                  : undefined
-                              }
+                                }
+                              >
+                                {cellContent}
+                              </TableCell>
+                            )
+                          })}
+                        </TableRow>
+                        {row.getIsExpanded() && (
+                          <TableRow>
+                            <TableCell
+                              className="h-[30px] max-h-[30px] min-w-[80px] truncate whitespace-nowrap break-words px-5 py-0 text-left"
+                              colSpan={row.getVisibleCells().length}
                             >
-                              {cellContent}
+                              {renderSubComponent?.({ row })}
                             </TableCell>
-                          )
-                        })}
-                      </TableRow>
+                          </TableRow>
+                        )}
+                      </>
                     )
                   })
                 ) : (

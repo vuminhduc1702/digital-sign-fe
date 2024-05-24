@@ -1,34 +1,19 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { BaseTable } from '@/components/Table'
 import { useDisclosure } from '@/utils/hooks'
 
-import { type BaseTablePagination } from '@/types'
-
-import { DownloadIcon, EyeOpenIcon } from '@radix-ui/react-icons'
+import { type BaseTableProps } from '@/components/Table'
+import { getVNDateFormat } from '@/utils/misc'
+import { DownloadIcon } from '@radix-ui/react-icons'
 import { PDFDownloadLink } from '@react-pdf/renderer'
-import btnFilterIcon from '@/assets/icons/btn-filter.svg'
-import { Button } from '@/components/ui/button'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import { cn, getVNDateFormat } from '@/utils/misc'
+import { LuEye } from 'react-icons/lu'
 import { useBillingById } from '../../api/billingAPI'
 import { type Billing } from '../../types'
 import { BillingPDF } from './BillingPDF'
 import { ViewBilling } from './ViewBilling'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { type BaseTableProps } from '@/components/Table'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -40,37 +25,22 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-            }}
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuEye
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={open}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <PDFDownloadLink
+            document={<BillingPDF dataPdf={data?.data} />}
+            fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
           >
-            <EyeOpenIcon className="h-5 w-5" />
-            {t('billing:manage_bill.preview_bill')}
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <PDFDownloadLink
-              document={<BillingPDF dataPdf={data?.data} />}
-              fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
-            >
-              <DownloadIcon className="h-5 w-5" />
-              {t('billing:manage_bill.export_PDF')}
-            </PDFDownloadLink>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <DownloadIcon className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black" />
+          </PDFDownloadLink>
+        </div>
+      </div>
       <ViewBilling id={id} close={close} isOpen={isOpen} />
     </>
   )
