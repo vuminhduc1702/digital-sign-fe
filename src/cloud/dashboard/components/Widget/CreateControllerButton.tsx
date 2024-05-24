@@ -8,6 +8,16 @@ import { useSpinDelay } from 'spin-delay'
 import { type SelectInstance } from 'react-select'
 
 import { Button } from '@/components/ui/button'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   FieldWrapper,
   InputField,
@@ -38,8 +48,10 @@ export const controllerBtnSchema = z.object({
   description: widgetCategorySchema,
   datasource: z.object({
     controller_message: z.string(),
-    thing_id: z.string(),
-    handle_service: z.string(),
+    thing_id: z.string({ required_error: i18n.t('ws:filter.choose_attr') }),
+    handle_service: z.string({
+      required_error: i18n.t('ws:filter.choose_attr'),
+    }),
   }),
   id: z.string().optional(),
 })
@@ -47,7 +59,7 @@ export const ControllerBtnListSchema = z.record(controllerBtnSchema)
 export type ControllerBtnList = z.infer<typeof ControllerBtnListSchema>
 
 export const controllerBtnCreateSchema = z.object({
-  title: z.string(),
+  title: z.string().optional(),
   thing_id: z.string(),
   handle_service: z.string(),
   input: z.array(
@@ -85,11 +97,12 @@ export function CreateControllerButton({
 
   const projectId = storage.getProject()?.id
 
-  const { register, formState, control, handleSubmit, watch } =
-    useForm<ControllerBtnCreate>({
-      resolver:
-        controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
-    })
+  const form = useForm<ControllerBtnCreate>({
+    resolver:
+      controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
+  })
+
+  const { register, formState, control, handleSubmit, watch } = form
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
@@ -233,14 +246,34 @@ export function CreateControllerButton({
                     className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <div className="grid grid-cols-3 gap-x-2 px-2">
-                    <InputField
+                    {/* <InputField
                       label={t('cloud:dashboard.config_chart.name')}
                       error={formState.errors['title']}
                       registration={register('title')}
                       placeholder={t('cloud:dashboard.config_chart.name')}
+                    /> */}
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('cloud:dashboard.config_chart.name')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder={t(
+                                  'cloud:dashboard.config_chart.name',
+                                )}
+                              />
+                            </FormControl>
+                          </div>
+                        </FormItem>
+                      )}
                     />
-
-                    <SelectDropdown
+                    {/* <SelectDropdown
                       label={t('cloud:custom_protocol.thing.id')}
                       name="thing_id"
                       control={control}
@@ -260,9 +293,48 @@ export function CreateControllerButton({
                         selectDropdownServiceRef.current?.clearValue()
                       }
                       error={formState?.errors?.thing_id}
+                    /> */}
+
+                    <FormField
+                      control={form.control}
+                      name="thing_id"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('cloud:custom_protocol.thing.id')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <NewSelectDropdown
+                                customOnChange={onChange}
+                                options={thingSelectData}
+                                isClearable={true}
+                                isOptionDisabled={option =>
+                                  option.label === t('loading:entity_thing') ||
+                                  option.label === t('table:no_thing')
+                                }
+                                noOptionsMessage={() => t('table:no_thing')}
+                                loadingMessage={() => t('loading:entity_thing')}
+                                placeholder={t(
+                                  'cloud:custom_protocol.thing.choose',
+                                )}
+                                handleClearSelectDropdown={() =>
+                                  selectDropdownServiceRef.current?.clearValue()
+                                }
+                                handleChangeSelect={() =>
+                                  selectDropdownServiceRef.current?.clearValue()
+                                }
+                                isLoading={isLoadingThing}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
                     />
 
-                    <SelectDropdown
+                    {/* <SelectDropdown
                       refSelect={selectDropdownServiceRef}
                       label={t('cloud:custom_protocol.service.title')}
                       name="handle_service"
@@ -279,6 +351,49 @@ export function CreateControllerButton({
                       noOptionsMessage={() => t('table:no_service')}
                       placeholder={t('cloud:custom_protocol.service.choose')}
                       error={formState?.errors?.handle_service}
+                    /> */}
+                    <FormField
+                      control={form.control}
+                      name="handle_service"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('cloud:custom_protocol.service.title')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <NewSelectDropdown
+                                customOnChange={onChange}
+                                options={serviceSelectData}
+                                isOptionDisabled={option =>
+                                  option.label === t('loading:service_thing') ||
+                                  option.label === t('table:no_service')
+                                }
+                                noOptionsMessage={() => t('table:no_service')}
+                                loadingMessage={() =>
+                                  t('loading:service_thing')
+                                }
+                                placeholder={t(
+                                  'cloud:custom_protocol.service.choose',
+                                )}
+                                handleClearSelectDropdown={() =>
+                                  selectDropdownServiceRef.current?.clearValue()
+                                }
+                                handleChangeSelect={() =>
+                                  selectDropdownServiceRef.current?.clearValue()
+                                }
+                                isLoading={
+                                  watch('thing_id') != null
+                                    ? isLoadingService
+                                    : false
+                                }
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
                     />
                   </div>
 
@@ -313,7 +428,7 @@ export function CreateControllerButton({
                       >
                         <div className="flex w-2/3 gap-x-2">
                           <div className="w-full">
-                            <SelectDropdown
+                            {/* <SelectDropdown
                               label={t('cloud:custom_protocol.service.input')}
                               name={`input.${index}.name`}
                               control={control}
@@ -333,6 +448,48 @@ export function CreateControllerButton({
                                 'cloud:custom_protocol.service.choose_input',
                               )}
                               error={formState?.errors?.input?.[index]?.name}
+                            /> */}
+                            <FormField
+                              control={form.control}
+                              name={`input.${index}.name`}
+                              render={({
+                                field: { onChange, value, ...field },
+                              }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t('cloud:custom_protocol.service.input')}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <NewSelectDropdown
+                                        customOnChange={onChange}
+                                        options={inputSelectData}
+                                        isOptionDisabled={option =>
+                                          option.label === t('loading:input') ||
+                                          option.label === t('table:no_input')
+                                        }
+                                        noOptionsMessage={() =>
+                                          t('table:no_input')
+                                        }
+                                        loadingMessage={() =>
+                                          t('loading:input')
+                                        }
+                                        isLoading={
+                                          watch('thing_id') &&
+                                          watch('handle_service')
+                                            ? thingServiceIsLoading
+                                            : false
+                                        }
+                                        placeholder={t(
+                                          'cloud:custom_protocol.service.choose_input',
+                                        )}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </div>
+                                </FormItem>
+                              )}
                             />
                           </div>
                           {input[index].name ===
@@ -370,17 +527,45 @@ export function CreateControllerButton({
                               <span className="pl-3">True</span>
                             </FieldWrapper>
                           ) : (
-                            <InputField
-                              label={t(
-                                'cloud:custom_protocol.service.service_input.value',
-                              )}
-                              error={formState.errors?.input?.[index]?.value}
-                              registration={register(
-                                `input.${index}.value` as const,
-                              )}
-                              type={checkInputValueType(
-                                input[index].name,
-                                index,
+                            // <InputField
+                            //   label={t(
+                            //     'cloud:custom_protocol.service.service_input.value',
+                            //   )}
+                            //   error={formState.errors?.input?.[index]?.value}
+                            //   registration={register(
+                            //     `input.${index}.value` as const,
+                            //   )}
+                            //   type={checkInputValueType(
+                            //     input[index].name,
+                            //     index,
+                            //   )}
+                            // />
+                            <FormField
+                              control={form.control}
+                              name={`input.${index}.value`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t(
+                                      'cloud:custom_protocol.service.service_input.value',
+                                    )}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <Input
+                                        {...field}
+                                        type={checkInputValueType(
+                                          input[index].name,
+                                          index,
+                                        )}
+                                        placeholder={t(
+                                          'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                        )}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </div>
+                                </FormItem>
                               )}
                             />
                           )}
