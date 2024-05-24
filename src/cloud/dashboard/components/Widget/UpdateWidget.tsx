@@ -359,9 +359,6 @@ export function UpdateWidget({
     reset()
   }
 
-  console.log(formState.errors)
-  console.log(watch())
-
   return (
     <FormDialog
       size="max"
@@ -383,7 +380,7 @@ export function UpdateWidget({
                       : t('cloud:dashboard.config_chart.update')
       }
       isDone={isDone}
-      resetForm={resetForm}
+      resetData={resetForm}
       body={
         <Form {...form}>
           <form
@@ -1122,9 +1119,14 @@ export function UpdateWidget({
                             )}
                           />
                         )}
-                        {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
-                          e => widgetInfoMemo?.description === e,
-                        ) ? (
+                        {![
+                          'GAUGE',
+                          'TABLE',
+                          'MAP',
+                          'CONTROLLER',
+                          'CONTROLLER_FORM',
+                          'CARD',
+                        ].find(e => widgetInfoMemo?.description === e) ? (
                           <div className="space-y-1">
                             {/* <FieldWrapper
                               label={t('cloud:dashboard.config_chart.color')}

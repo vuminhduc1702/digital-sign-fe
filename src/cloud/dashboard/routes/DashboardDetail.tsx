@@ -85,6 +85,7 @@ import BD_08 from '@/assets/images/landingpage/BD_08.png'
 import BD_09 from '@/assets/images/landingpage/BD_09.png'
 import { queryClient } from '@/lib/react-query'
 import { DashboardTooltip } from './DashboardTooltip'
+import { ControllerForm } from '../components/ControllerForm'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -114,10 +115,13 @@ export function DashboardDetail() {
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
   const [isShowCreateControllerBtn, setIsShowCreateControllerBtn] =
     useState(false)
+  const [isShowCreateControllerForm, setIsShowCreateControlForm] =
+    useState(false)
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
   const [isMapFullscreen, setIsMapFullscreen] = useState(false)
+  const [isEditControllerForm, setIsEditControllerForm] = useState(false)
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -505,6 +509,19 @@ export function DashboardDetail() {
                         }
                         sendMessage={sendMessage}
                       />
+                    ) : widgetInfo?.description === 'CONTROLLER_FORM' ? (
+                      <ControllerForm
+                        name={widgetInfo?.title}
+                        data={
+                          widgetInfo?.datasource?.controller_message as string
+                        }
+                        sendMessage={sendMessage}
+                        isEdit={isEditControllerForm}
+                        setIsEdit={setIsEditControllerForm}
+                        setWidgetList={setWidgetList}
+                        widgetInfo={widgetInfo}
+                        widgetId={widgetId}
+                      />
                     ) : null}
                     {isEditMode ? (
                       <div
@@ -518,7 +535,25 @@ export function DashboardDetail() {
                           viewBox="0 0 20 20"
                           className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
                         />
-                        {widgetInfo?.description === 'CONTROLLER' ? (
+                        {widgetInfo?.description === 'CONTROLLER_FORM' ? (
+                          <>
+                            <Button
+                              className="h-5 w-5 hover:text-primary-400"
+                              variant="none"
+                              size="square"
+                              startIcon={
+                                <EditBtnIcon
+                                  width={20}
+                                  height={17}
+                                  viewBox="0 0 20 17"
+                                />
+                              }
+                              onClick={() => {
+                                setIsEditControllerForm(true)
+                              }}
+                            />
+                          </>
+                        ) : widgetInfo?.description === 'CONTROLLER' ? (
                           <UpdateControllerButton
                             widgetInfo={widgetInfo}
                             setWidgetList={setWidgetList}
@@ -657,7 +692,7 @@ export function DashboardDetail() {
                     {t('cloud:dashboard.detail_dashboard.add_widget.create')}
                   </SheetTitle>
                 </SheetHeader>
-                <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
+                <div className="max-h-[85%] min-h-[85%] overflow-y-auto overflow-x-hidden pr-2">
                   <div className="flex w-full gap-x-8">
                     <div className="w-full space-y-6">
                       <DashboardTooltip
@@ -773,7 +808,35 @@ export function DashboardDetail() {
                             />
                             <span className="flex items-center">
                               {t(
-                                'cloud:dashboard.detail_dashboard.add_widget.controller.title',
+                                'cloud:dashboard.detail_dashboard.add_widget.controller.button',
+                              )}
+                            </span>
+                          </Button>
+                        }
+                        image={<img src={BD_05} alt="" className="w-full" />}
+                      />
+
+                      <DashboardTooltip
+                        content={
+                          <Button
+                            type="button"
+                            size="square"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
+                            variant="secondaryLight"
+                            onClick={() => {
+                              close()
+                              setIsShowCreateControllerBtn(true)
+                              setWidgetCategory('CONTROLLER_FORM')
+                            }}
+                          >
+                            <ChartControl
+                              height={58}
+                              width={58}
+                              viewBox="0 0 58 58"
+                            />
+                            <span className="flex items-center">
+                              {t(
+                                'cloud:dashboard.detail_dashboard.add_widget.controller.form',
                               )}
                             </span>
                           </Button>
