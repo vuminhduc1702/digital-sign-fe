@@ -26,6 +26,17 @@ import { nameSchema } from '@/utils/schemaValidation'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
 import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
+import { Textarea } from '@/components/ui/textarea'
 
 export const entityThingSchema = z
   .object({
@@ -67,10 +78,11 @@ export function CreateThing({
 
   const projectId = storage.getProject()?.id
 
-  const { register, formState, handleSubmit, control, watch, setValue } =
-    useForm<CreateEntityThingDTO['data']>({
-      resolver: entityThingSchema && zodResolver(entityThingSchema),
-    })
+  const form = useForm<CreateEntityThingDTO['data']>({
+    resolver: entityThingSchema && zodResolver(entityThingSchema),
+  })
+
+  const { control, handleSubmit, setValue, watch } = form
 
   const {
     mutate: mutateThing,
@@ -100,113 +112,193 @@ export function CreateThing({
       resetData={resetData}
       title={t('cloud:custom_protocol.thing.create')}
       body={
-        <form
-          id="create-entityThing"
-          className="flex w-full flex-col justify-between space-y-6"
-          onSubmit={handleSubmit(values => {
-            if (values.type === 'thing') {
-              mutateThing({
-                data: {
-                  name: values.name,
-                  project_id: values.share ? undefined : projectId,
-                  description: values.description,
-                  type: values.type,
-                  base_template: values.base_template,
-                  share: values.share,
-                },
-              })
-            }
-            if (values.type === 'template') {
-              mutateThing({
-                data: {
-                  name: values.name,
-                  project_id: values.share ? undefined : projectId,
-                  description: values.description,
-                  type: values.type,
-                  base_shapes: values.base_shapes,
-                  share: values.share,
-                },
-              })
-            }
-            if (values.type === 'shape') {
-              mutateThing({
-                data: {
-                  name: values.name,
-                  project_id: values.share ? undefined : projectId,
-                  description: values.description,
-                  type: values.type,
-                  share: values.share,
-                },
-              })
-            }
-          })}
-        >
-          <>
-            <InputField
-              label={t('cloud:custom_protocol.thing.name')}
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <SelectField
-              label={t('cloud:custom_protocol.thing.type')}
-              error={formState.errors['type']}
-              registration={register('type')}
-              options={thingTypeList
-                .filter(item => item.value === thingType)
-                .map(item => ({ ...item, selected: true }))}
-              disabled
-            />
-            {watch('type') === 'thing' ? (
-              <SelectDropdown
-                label={t('cloud:custom_protocol.thing.base_template')}
-                name="base_template"
-                control={control}
-                options={thingSelectData}
-                isOptionDisabled={option => option.label === t('loading:base')}
-                noOptionsMessage={() => t('table:no_base_template')}
-                isLoading={isLoadingThing}
-                maxMenuHeight={150}
-                error={formState?.errors?.base_template}
+        <Form {...form}>
+          <form
+            id="create-entityThing"
+            className="flex w-full flex-col justify-between space-y-6"
+            onSubmit={handleSubmit(values => {
+              if (values.type === 'thing') {
+                mutateThing({
+                  data: {
+                    name: values.name,
+                    project_id: values.share ? undefined : projectId,
+                    description: values.description,
+                    type: values.type,
+                    base_template: values.base_template,
+                    share: values.share,
+                  },
+                })
+              }
+              if (values.type === 'template') {
+                mutateThing({
+                  data: {
+                    name: values.name,
+                    project_id: values.share ? undefined : projectId,
+                    description: values.description,
+                    type: values.type,
+                    base_shapes: values.base_shapes,
+                    share: values.share,
+                  },
+                })
+              }
+              if (values.type === 'shape') {
+                mutateThing({
+                  data: {
+                    name: values.name,
+                    project_id: values.share ? undefined : projectId,
+                    description: values.description,
+                    type: values.type,
+                    share: values.share,
+                  },
+                })
+              }
+            })}
+          >
+            <>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:custom_protocol.thing.name')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
               />
-            ) : watch('type') === 'template' ? (
-              <SelectDropdown
-                label={t('cloud:custom_protocol.thing.base_shapes')}
-                name="base_shapes"
-                control={control}
-                options={thingSelectData}
-                isOptionDisabled={option => option.label === t('loading:base')}
-                noOptionsMessage={() => t('table:no_base_shapes')}
-                isLoading={isLoadingThing}
-                maxMenuHeight={150}
-                error={formState?.errors?.base_shapes}
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field: { onChange, value, ...field } }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:custom_protocol.thing.type')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <NewSelectDropdown
+                          defaultValue={
+                            thingTypeList
+                              .filter(item => item.value === thingType)
+                              .map(item => ({ ...item, selected: true })) ?? ''
+                          }
+                          isDisabled={true}
+                          isClearable={false}
+                          options={thingTypeList
+                            .filter(item => item.value === thingType)
+                            .map(item => ({ ...item, selected: true }))}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
               />
-            ) : null}
-            <InputField
-              label={t('cloud:custom_protocol.thing.description')}
-              error={formState.errors['description']}
-              registration={register('description')}
-            />
-            <FieldWrapper
-              className="w-fit space-y-2"
-              label={t('cloud:custom_protocol.thing.shared')}
-              error={formState?.errors['share']}
-            >
-              <Controller
-                control={control}
-                name={'share'}
-                render={({ field: { onChange, value, ...field } }) => {
-                  return (
-                    <Checkbox
-                      {...field}
-                      checked={value}
-                      onCheckedChange={onChange}
-                    />
-                  )
-                }}
+              {watch('type') === 'thing' ? (
+                <FormField
+                  control={form.control}
+                  name="base_template"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:custom_protocol.thing.base_template')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <NewSelectDropdown
+                            customOnChange={onChange}
+                            isClearable={false}
+                            options={thingSelectData}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:base')
+                            }
+                            noOptionsMessage={() => t('table:no_base_template')}
+                            isLoading={isLoadingThing}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              ) : watch('type') === 'template' ? (
+                <FormField
+                  control={form.control}
+                  name="base_shapes"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:custom_protocol.thing.base_shapes')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <NewSelectDropdown
+                            customOnChange={onChange}
+                            isClearable={false}
+                            options={thingSelectData}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:base')
+                            }
+                            noOptionsMessage={() => t('table:no_base_shapes')}
+                            isLoading={isLoadingThing}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              ) : null}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:custom_protocol.thing.description')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
               />
-            </FieldWrapper>
-          </>
-        </form>
+              <FormField
+                control={form.control}
+                name="share"
+                render={({ field: { onChange, value, ...field } }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:custom_protocol.thing.shared')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Checkbox
+                          {...field}
+                          checked={value}
+                          onCheckedChange={onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </>
+          </form>
+        </Form>
       }
       triggerButton={
         <Button

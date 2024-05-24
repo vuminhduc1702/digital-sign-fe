@@ -56,6 +56,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { InputField, type SelectOption } from '@/components/Form'
+import { Switch } from '@/components/ui/switch'
 
 export const protocolList = [
   {
@@ -91,6 +92,17 @@ export const contentTypeList = [
   },
 ] as const
 
+export const encryptedList = [
+  {
+    label: i18n.t('cloud:custom_protocol.adapter.AES128'),
+    value: 'AES128',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.adapter.option'),
+    value: 'option',
+  },
+] as const
+
 export const contentTypeFTPList = [
   {
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
@@ -123,6 +135,13 @@ export const adapterSchema = z
     handle_service: z.string({
       required_error: i18n.t('cloud:custom_protocol.message.handle_service'),
     }),
+    encrypted_select: z.string().optional(),
+    encrypted: z
+      .string()
+      .regex(new RegExp('^[A-Za-z0-9]{16,}$'), {
+        message: i18n.t('schema:encrypted_regex'),
+      })
+      .optional(),
   })
   .and(
     z.discriminatedUnion('protocol', [
@@ -141,11 +160,9 @@ export const adapterSchema = z
           }),
           topic_filters: z.array(
             z.object({
-              topic: z
-                .string()
-                .min(1, {
-                  message: i18n.t('cloud:custom_protocol.message.topic'),
-                }),
+              topic: z.string().min(1, {
+                message: i18n.t('cloud:custom_protocol.message.topic'),
+              }),
             }),
           ),
         }),
@@ -166,15 +183,12 @@ export const adapterSchema = z
           fields: z.array(
             z.object({
               name: nameSchema,
-              start_byte: z.number(),
-              length_byte: z
-                .number()
-                .min(1, {
-                  message: i18n.t(
-                    'cloud:custom_protocol.adapter.schema.length_byte_validate',
-                  ),
-                })
-                .optional(),
+              start_byte: z.number().optional(),
+              length_byte: z.number().min(1, {
+                message: i18n.t(
+                  'cloud:custom_protocol.adapter.schema.length_byte_validate',
+                ),
+              }),
             }),
           ),
         }),
@@ -202,6 +216,7 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
   const projectId = storage.getProject()?.id
 
   const [isShow, setIsShow] = useState(true)
+  const [isEncrypted, setIsEncrypted] = useState<boolean>(false)
 
   const {
     mutate: mutateAdapter,
@@ -305,6 +320,11 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
     }
   }, [watch('protocol')])
 
+  useEffect(() => {
+    setIsEncrypted(false)
+    resetData()
+  }, [isOpen])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -335,6 +355,13 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
                     handle_service: values.handle_service,
                     host: values.host,
                     port: values.port,
+                    encrypted: isEncrypted
+                      ? values.encrypted_select === 'AES128'
+                        ? values.encrypted_select
+                        : values.encrypted
+                          ? values.encrypted
+                          : null
+                      : null,
                     configuration: {
                       credentials: {
                         username: values.configuration.credentials.username,
@@ -377,6 +404,13 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
                     content_type: values.content_type,
                     thing_id: values.thing_id,
                     handle_service: values.handle_service,
+                    encrypted: isEncrypted
+                      ? values.encrypted_select === 'AES128'
+                        ? values.encrypted_select
+                        : values.encrypted
+                          ? values.encrypted
+                          : null
+                      : null,
                   }
                   if (values.content_type === 'json') {
                     mutateAdapter({ data })
@@ -636,6 +670,68 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
                       )}
                     />
                   )}
+                  <Switch
+                    onCheckedChange={checked => setIsEncrypted(checked)}
+                    checked={isEncrypted}
+                  />
+                  {isEncrypted && (
+                    <FormField
+                      control={form.control}
+                      name="encrypted_select"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('cloud:custom_protocol.adapter.encryption')}
+                          </FormLabel>
+                          <div>
+                            <Select
+                              {...field}
+                              onValueChange={onChange}
+                              value={value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={t('placeholder:select')}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {encryptedList.map(option => (
+                                  <SelectItem
+                                    key={option.value}
+                                    value={option.value}
+                                  >
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {watch('encrypted_select') === 'option' && isEncrypted && (
+                    <FormField
+                      control={form.control}
+                      name="encrypted"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('cloud:custom_protocol.adapter.encrypted')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
                   {watch('content_type') != null &&
                   watch('content_type') !== '' &&
                   watch('content_type') !== 'json' &&
@@ -709,77 +805,61 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
                                 </FormItem>
                               )}
                             />
-                            <InputField
-                              label={t(
-                                'cloud:custom_protocol.adapter.schema.start_byte',
-                              )}
-                              error={
-                                formState.errors?.schema?.fields?.[index]
-                                  ?.start_byte
-                              }
-                              type="number"
-                              registration={register(
-                                `schema.fields.${index}.start_byte` as const,
-                                {
-                                  valueAsNumber: true,
-                                },
-                              )}
-                            />
-                            <InputField
-                              label={t(
-                                'cloud:custom_protocol.adapter.schema.length_byte',
-                              )}
-                              error={
-                                formState.errors?.schema?.fields?.[index]
-                                  ?.length_byte
-                              }
-                              type="number"
-                              registration={register(
-                                `schema.fields.${index}.length_byte` as const,
-                                {
-                                  valueAsNumber: true,
-                                },
-                              )}
-                            />
-                            {/* <FormField
+                            <FormField
                               control={form.control}
-                              name={`schema.fields.${index}.start_byte` as const}
+                              name={
+                                `schema.fields.${index}.start_byte` as const
+                              }
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>
-                                    {t('cloud:custom_protocol.adapter.schema.start_byte')}
+                                    {t(
+                                      'cloud:custom_protocol.adapter.schema.start_byte',
+                                    )}
                                   </FormLabel>
                                   <div>
                                     <FormControl>
                                       <Input
                                         type="number"
-                                        {...register(`schema.fields.${index}.start_byte`, {
-                                          valueAsNumber: true,
-                                        })}
                                         {...field}
+                                        {...register(
+                                          `schema.fields.${index}.start_byte`,
+                                          {
+                                            valueAsNumber: true,
+                                          },
+                                        )}
                                       />
                                     </FormControl>
                                     <FormMessage />
                                   </div>
                                 </FormItem>
                               )}
-                            /> */}
-                            {/* <FormField
+                            />
+                            <FormField
                               control={form.control}
-                              name={`schema.fields.${index}.length_byte` as const}
+                              name={
+                                `schema.fields.${index}.length_byte` as const
+                              }
                               rules={{ required: true }}
-                              // valueAsNumber={true}
                               render={({ field }) => {
                                 return (
                                   <FormItem>
                                     <FormLabel>
-                                      {t('cloud:custom_protocol.adapter.schema.length_byte')}
+                                      {t(
+                                        'cloud:custom_protocol.adapter.schema.length_byte',
+                                      )}
                                     </FormLabel>
                                     <div>
                                       <FormControl>
                                         <Input
                                           type="number"
                                           {...field}
+                                          {...register(
+                                            `schema.fields.${index}.length_byte`,
+                                            {
+                                              valueAsNumber: true,
+                                            },
+                                          )}
                                         />
                                       </FormControl>
                                       <FormMessage />
@@ -787,7 +867,7 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
                                   </FormItem>
                                 )
                               }}
-                            /> */}
+                            />
                           </div>
                           <Button
                             type="button"
