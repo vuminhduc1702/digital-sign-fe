@@ -7,12 +7,9 @@ import i18n from '@/i18n'
 import { type SelectInstance } from 'react-select'
 
 import { Button } from '@/components/ui/button'
-import {
-  InputField,
-  SelectDropdown,
-  SelectField,
-  type SelectOption,
-} from '@/components/Form'
+// import {
+//   InputFie  type SelectOption,
+// } from '@/components/Form'
 import {
   type CreateAdapterDTO,
   useCreateAdapter,
@@ -35,14 +32,30 @@ import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import { LuChevronDown, LuChevronRight } from 'react-icons/lu'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { InputField, type SelectOption } from '@/components/Form'
 
 export const protocolList = [
   {
@@ -104,15 +117,23 @@ export const adapterSchema = z
   .object({
     name: nameSchema,
     project_id: z.string().optional(),
-    thing_id: z.string(),
-    handle_service: z.string(),
+    thing_id: z.string({
+      required_error: i18n.t('cloud:custom_protocol.message.thing'),
+    }),
+    handle_service: z.string({
+      required_error: i18n.t('cloud:custom_protocol.message.handle_service'),
+    }),
   })
   .and(
     z.discriminatedUnion('protocol', [
       z.object({
         protocol: z.literal('mqtt'),
-        host: z.string().min(1, { message: 'Vui lòng nhập host' }),
-        port: z.string().min(1, { message: 'Vui lòng nhập port' }),
+        host: z
+          .string()
+          .min(1, { message: i18n.t('cloud:custom_protocol.message.host') }),
+        port: z
+          .string()
+          .min(1, { message: i18n.t('cloud:custom_protocol.message.port') }),
         configuration: z.object({
           credentials: z.object({
             username: z.string(),
@@ -120,7 +141,9 @@ export const adapterSchema = z
           }),
           topic_filters: z.array(
             z.object({
-              topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
+              topic: z.string().min(1, {
+                message: i18n.t('cloud:custom_protocol.message.topic'),
+              }),
             }),
           ),
         }),
@@ -193,6 +216,21 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
     label: thing.name,
   }))
 
+  const form = useForm<CreateAdapterDTO['data']>({
+    resolver: adapterSchema && zodResolver(adapterSchema),
+    defaultValues: {
+      name: '',
+      protocol: 'mqtt',
+      host: '',
+      port: '',
+      configuration: {
+        credentials: {
+          username: '',
+          password: '',
+        },
+      },
+    },
+  })
   const {
     register,
     formState,
@@ -201,9 +239,8 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
     watch,
     getValues,
     reset,
-  } = useForm<CreateAdapterDTO['data']>({
-    resolver: adapterSchema && zodResolver(adapterSchema),
-  })
+    setValue,
+  } = form
 
   const { fields, append, remove, replace } = useFieldArray({
     name: 'configuration.topic_filters',
@@ -254,6 +291,18 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
       close()
     }
   }, [isSuccessAdapter])
+
+  useEffect(() => {
+    setValue('protocol', 'mqtt')
+    setValue('content_type', 'json')
+  }, [])
+
+  useEffect(() => {
+    if (getValues('protocol') === 'ftp') {
+      setValue('content_type', 'text')
+    }
+  }, [watch('protocol')])
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -269,401 +318,652 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
           <SheetTitle>{t('cloud:custom_protocol.adapter.create')}</SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            id="create-adapter"
-            className="flex w-full flex-col justify-between"
-            onSubmit={handleSubmit(values => {
-              if (values.protocol === 'mqtt') {
-                const data = {
-                  project_id: projectId,
-                  name: values.name,
-                  protocol: values.protocol,
-                  content_type: values.content_type,
-                  thing_id: values.thing_id,
-                  handle_service: values.handle_service,
-                  host: values.host,
-                  port: values.port,
-                  configuration: {
-                    credentials: {
-                      username: values.configuration.credentials.username,
-                      password: values.configuration.credentials.password,
-                    },
-                    topic_filters: values.configuration.topic_filters.map(
-                      (topic: { topic: string }) => ({
-                        topic: topic.topic.trim(),
-                      }),
-                    ),
-                  },
-                }
-                if (values.content_type === 'json') {
-                  mutateAdapter({ data })
-                }
-                if (
-                  values.content_type === 'hex' ||
-                  values.content_type === 'text'
-                ) {
-                  mutateAdapter({
-                    data: {
-                      ...data,
-                      schema: {
-                        fields: values.schema.fields.map(item => ({
-                          name: item.name,
-                          start_byte: item.start_byte,
-                          end_byte:
-                            item.start_byte +
-                            (item.length_byte as unknown as number),
-                        })),
+          <Form {...form}>
+            <form
+              id="create-adapter"
+              className="flex w-full flex-col justify-between"
+              onSubmit={handleSubmit(values => {
+                if (values.protocol === 'mqtt') {
+                  const data = {
+                    project_id: projectId,
+                    name: values.name,
+                    protocol: values.protocol,
+                    content_type: values.content_type,
+                    thing_id: values.thing_id,
+                    handle_service: values.handle_service,
+                    host: values.host,
+                    port: values.port,
+                    configuration: {
+                      credentials: {
+                        username: values.configuration.credentials.username,
+                        password: values.configuration.credentials.password,
                       },
+                      topic_filters: values.configuration.topic_filters.map(
+                        (topic: { topic: string }) => ({
+                          topic: topic.topic.trim(),
+                        }),
+                      ),
                     },
-                  })
-                }
-              } else {
-                const data = {
-                  project_id: projectId,
-                  name: values.name,
-                  protocol: values.protocol,
-                  content_type: values.content_type,
-                  thing_id: values.thing_id,
-                  handle_service: values.handle_service,
-                }
-                if (values.content_type === 'json') {
-                  mutateAdapter({ data })
-                }
-                if (
-                  values.content_type === 'hex' ||
-                  values.content_type === 'text'
-                ) {
-                  mutateAdapter({
-                    data: {
-                      ...data,
-                      schema: {
-                        fields: values.schema.fields.map(item => ({
-                          name: item.name,
-                          start_byte: item.start_byte,
-                          end_byte:
-                            item.start_byte +
-                            (item.length_byte as unknown as number),
-                        })),
+                  }
+                  if (values.content_type === 'json') {
+                    mutateAdapter({ data })
+                  }
+                  if (
+                    values.content_type === 'hex' ||
+                    values.content_type === 'text'
+                  ) {
+                    mutateAdapter({
+                      data: {
+                        ...data,
+                        schema: {
+                          fields: values.schema.fields.map(item => ({
+                            name: item.name,
+                            start_byte: item.start_byte,
+                            end_byte:
+                              item.start_byte +
+                              (item.length_byte as unknown as number),
+                          })),
+                        },
                       },
-                    },
-                  })
+                    })
+                  }
+                } else {
+                  const data = {
+                    project_id: projectId,
+                    name: values.name,
+                    protocol: values.protocol,
+                    content_type: values.content_type,
+                    thing_id: values.thing_id,
+                    handle_service: values.handle_service,
+                  }
+                  if (values.content_type === 'json') {
+                    mutateAdapter({ data })
+                  }
+                  if (
+                    values.content_type === 'hex' ||
+                    values.content_type === 'text'
+                  ) {
+                    mutateAdapter({
+                      data: {
+                        ...data,
+                        schema: {
+                          fields: values.schema.fields.map(item => ({
+                            name: item.name,
+                            start_byte: item.start_byte,
+                            end_byte:
+                              item.start_byte +
+                              (item.length_byte as unknown as number),
+                          })),
+                        },
+                      },
+                    })
+                  }
                 }
-              }
-            })}
-          >
-            <div className="flex w-full grow flex-col">
-              <div className="flex grow flex-col gap-y-5">
-                <InputField
-                  label={t('cloud:custom_protocol.adapter.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                />
-                <div className="relative w-full">
-                  <div className="w-[calc(100%-2.5rem)]">
-                    <SelectDropdown
-                      label={t('cloud:custom_protocol.thing.id')}
-                      name="thing_id"
-                      control={control}
-                      options={thingSelectData}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:entity_thing') ||
-                        option.label === t('table:no_thing')
-                      }
-                      noOptionsMessage={() => t('table:no_thing')}
-                      loadingMessage={() => t('loading:entity_thing')}
-                      isLoading={AdapterIsLoading}
-                      placeholder={t('cloud:custom_protocol.thing.choose')}
-                      handleClearSelectDropdown={() =>
-                        selectDropdownServiceRef.current?.clearValue()
-                      }
-                      handleChangeSelect={() =>
-                        selectDropdownServiceRef.current?.clearValue()
-                      }
-                      error={formState?.errors?.thing_id}
-                    />
-                  </div>
-                  <CreateThing
-                    thingType="thing"
-                    classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
-                  />
-                </div>
-                <div className="relative w-full">
-                  <div className="w-[calc(100%-2.5rem)]">
-                    <SelectDropdown
-                      refSelect={selectDropdownServiceRef}
-                      label={t('cloud:custom_protocol.service.title')}
-                      name="handle_service"
-                      control={control}
-                      options={serviceSelectData}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:service_thing') ||
-                        option.label === t('table:no_service')
-                      }
-                      isLoading={
-                        watch('thing_id') != null ? isLoadingService : false
-                      }
-                      loadingMessage={() => t('loading:service_thing')}
-                      noOptionsMessage={() => t('table:no_service')}
-                      placeholder={t('cloud:custom_protocol.service.choose')}
-                      error={formState?.errors?.handle_service}
-                    />
-                  </div>
-                  <CreateService
-                    thingId={watch('thing_id')}
-                    classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
-                  />
-                </div>
-                <SelectField
-                  label={t('cloud:custom_protocol.protocol')}
-                  error={formState.errors['protocol']}
-                  registration={register('protocol')}
-                  options={protocolList}
-                />
-                {watch('protocol') === 'ftp' ? (
-                  <SelectField
-                    label={t(
-                      'cloud:custom_protocol.adapter.content_type.title',
+              })}
+            >
+              <div className="flex w-full grow flex-col">
+                <div className="flex grow flex-col gap-y-5">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:custom_protocol.adapter.name')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
                     )}
-                    error={formState.errors['content_type']}
-                    registration={register('content_type')}
-                    options={contentTypeFTPList}
                   />
-                ) : (
-                  <SelectField
-                    label={t(
-                      'cloud:custom_protocol.adapter.content_type.title',
-                    )}
-                    error={formState.errors['content_type']}
-                    registration={register('content_type')}
-                    options={contentTypeList}
-                  />
-                )}
-                {watch('content_type') != null &&
-                watch('content_type') !== '' &&
-                watch('content_type') !== 'json' ? (
-                  <div className="space-y-6">
-                    <div className="flex justify-between space-x-3">
-                      <TitleBar
-                        title={t('cloud:custom_protocol.adapter.new_template')}
-                        className="w-full rounded-md bg-gray-500 pl-3"
-                      />
-                      <div
-                        className="flex cursor-pointer items-center"
-                        onClick={() => setIsShow(!isShow)}
-                      >
-                        {isShow ? (
-                          <LuChevronDown className="h-5 w-5" />
-                        ) : (
-                          <LuChevronRight className="h-5 w-5" />
+                  <div className="relative w-full">
+                    <div className="w-[calc(100%-2.5rem)]">
+                      <FormField
+                        control={form.control}
+                        name="thing_id"
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:custom_protocol.thing.id')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <NewSelectDropdown
+                                  isClearable={true}
+                                  customOnChange={onChange}
+                                  options={thingSelectData}
+                                  isOptionDisabled={option =>
+                                    option.label ===
+                                      t('loading:entity_thing') ||
+                                    option.label === t('table:no_thing')
+                                  }
+                                  noOptionsMessage={() => t('table:no_thing')}
+                                  loadingMessage={() =>
+                                    t('loading:entity_thing')
+                                  }
+                                  isLoading={AdapterIsLoading}
+                                  placeholder={t(
+                                    'cloud:custom_protocol.thing.choose',
+                                  )}
+                                  handleClearSelectDropdown={() =>
+                                    selectDropdownServiceRef.current?.clearValue()
+                                  }
+                                  handleChangeSelect={() =>
+                                    selectDropdownServiceRef.current?.clearValue()
+                                  }
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
                         )}
-                      </div>
-                      <Button
-                        className="rounded-md"
-                        variant="trans"
-                        size="square"
-                        startIcon={
-                          <PlusIcon
-                            width={16}
-                            height={16}
-                            viewBox="0 0 16 16"
-                          />
-                        }
-                        onClick={() => {
-                          setIsShow(true)
-                          appendSchema({
-                            name: '',
-                            start_byte: 0,
-                            length_byte: 1,
-                          })
-                        }}
                       />
                     </div>
-                    {fieldsSchema.map((field, index) => (
-                      <section
-                        className={cn(
-                          'mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4',
-                          {
-                            hidden: !isShow,
-                          },
+                    <CreateThing
+                      thingType="thing"
+                      classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
+                    />
+                  </div>
+                  <div className="relative w-full">
+                    <div className="w-[calc(100%-2.5rem)]">
+                      <FormField
+                        control={form.control}
+                        name="handle_service"
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:custom_protocol.service.title')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <NewSelectDropdown
+                                  isClearable={true}
+                                  customOnChange={onChange}
+                                  options={serviceSelectData}
+                                  isOptionDisabled={option =>
+                                    option.label ===
+                                      t('loading:service_thing') ||
+                                    option.label === t('table:no_service')
+                                  }
+                                  isLoading={
+                                    watch('thing_id') != null
+                                      ? isLoadingService
+                                      : false
+                                  }
+                                  loadingMessage={() =>
+                                    t('loading:service_thing')
+                                  }
+                                  noOptionsMessage={() => t('table:no_service')}
+                                  placeholder={t(
+                                    'cloud:custom_protocol.service.choose',
+                                  )}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
                         )}
-                        key={field.id}
-                      >
-                        <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                          <InputField
-                            label={t(
-                              'cloud:custom_protocol.adapter.schema.name',
+                      />
+                    </div>
+                    <CreateService
+                      thingId={watch('thing_id')}
+                      classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="protocol"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:custom_protocol.protocol')}
+                        </FormLabel>
+                        <div>
+                          <Select
+                            {...field}
+                            onValueChange={e => onChange(e)}
+                            value={value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue
+                                  placeholder={t('placeholder:select')}
+                                />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {protocolList.map(template => (
+                                <SelectItem
+                                  key={template.label}
+                                  value={template.value}
+                                >
+                                  {template.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  {watch('protocol') === 'ftp' ? (
+                    <FormField
+                      control={form.control}
+                      name="content_type"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t(
+                              'cloud:custom_protocol.adapter.content_type.title',
                             )}
-                            error={
-                              formState.errors?.schema?.fields?.[index]?.name
-                            }
-                            registration={register(
-                              `schema.fields.${index}.name` as const,
+                          </FormLabel>
+                          <div>
+                            <Select
+                              {...field}
+                              onValueChange={e => onChange(e)}
+                              value={value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={t('placeholder:select')}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {contentTypeFTPList.map(template => (
+                                  <SelectItem
+                                    key={template.label}
+                                    value={template.value}
+                                  >
+                                    {template.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  ) : (
+                    <FormField
+                      control={form.control}
+                      name="content_type"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t(
+                              'cloud:custom_protocol.adapter.content_type.title',
                             )}
-                          />
-                          <InputField
-                            label={t(
-                              'cloud:custom_protocol.adapter.schema.start_byte',
-                            )}
-                            error={
-                              formState.errors?.schema?.fields?.[index]
-                                ?.start_byte
-                            }
-                            type="number"
-                            registration={register(
-                              `schema.fields.${index}.start_byte` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                          />
-                          <InputField
-                            label={t(
-                              'cloud:custom_protocol.adapter.schema.length_byte',
-                            )}
-                            error={
-                              formState.errors?.schema?.fields?.[index]
-                                ?.length_byte
-                            }
-                            type="number"
-                            registration={register(
-                              `schema.fields.${index}.length_byte` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                          />
+                          </FormLabel>
+                          <div>
+                            <Select
+                              {...field}
+                              onValueChange={e => onChange(e)}
+                              value={value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={t('placeholder:select')}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {contentTypeList.map(template => (
+                                  <SelectItem
+                                    key={template.label}
+                                    value={template.value}
+                                  >
+                                    {template.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {watch('content_type') != null &&
+                  watch('content_type') !== '' &&
+                  watch('content_type') !== 'json' &&
+                  watch('protocol') !== 'ftp' ? (
+                    <div className="space-y-6">
+                      <div className="flex justify-between space-x-3">
+                        <TitleBar
+                          title={t(
+                            'cloud:custom_protocol.adapter.new_template',
+                          )}
+                          className="w-full rounded-md bg-gray-500 pl-3"
+                        />
+                        <div
+                          className="flex cursor-pointer items-center"
+                          onClick={() => setIsShow(!isShow)}
+                        >
+                          {isShow ? (
+                            <LuChevronDown className="h-5 w-5" />
+                          ) : (
+                            <LuChevronRight className="h-5 w-5" />
+                          )}
                         </div>
                         <Button
-                          type="button"
+                          className="rounded-md"
+                          variant="trans"
                           size="square"
-                          variant="none"
-                          className="mt-3 self-start !pr-0"
-                          onClick={() => removeSchema(index)}
                           startIcon={
-                            <img
-                              src={btnDeleteIcon}
-                              alt="Delete schema"
-                              className="h-9 w-9"
+                            <PlusIcon
+                              width={16}
+                              height={16}
+                              viewBox="0 0 16 16"
                             />
                           }
+                          onClick={() => {
+                            setIsShow(true)
+                            appendSchema({
+                              name: '',
+                              start_byte: 0,
+                              length_byte: 1,
+                            })
+                          }}
                         />
-                      </section>
-                    ))}
-                  </div>
-                ) : null}
-                {watch('protocol') != null && watch('protocol') === 'mqtt' ? (
-                  <div className="space-y-6">
-                    <InputField
-                      label={t('cloud:custom_protocol.adapter.host')}
-                      error={formState.errors['host']}
-                      registration={register('host')}
-                    />
-                    <InputField
-                      label={t('cloud:custom_protocol.adapter.port')}
-                      error={formState.errors['port']}
-                      registration={register('port')}
-                    />
-                    <InputField
-                      label={t('cloud:custom_protocol.adapter.username')}
-                      error={
-                        formState.errors?.configuration?.credentials?.username
-                      }
-                      registration={register(
-                        'configuration.credentials.username',
-                      )}
-                    />
-                    <InputField
-                      label={t('cloud:custom_protocol.adapter.pass')}
-                      error={
-                        formState.errors?.configuration?.credentials?.password
-                      }
-                      registration={register(
-                        'configuration.credentials.password',
-                      )}
-                    />
-                    <div className="flex justify-between space-x-3">
-                      <TitleBar
-                        title={t('cloud:custom_protocol.adapter.topic_list')}
-                        className="w-full rounded-md bg-secondary-700 pl-3"
-                      />
-                      <Button
-                        className="rounded-md"
-                        variant="trans"
-                        size="square"
-                        startIcon={
-                          <PlusIcon
-                            width={16}
-                            height={16}
-                            viewBox="0 0 16 16"
-                          />
-                        }
-                        onClick={() => append({ topic: '' })}
-                      />
-                    </div>
-                    {fields.map((field, index) => (
-                      <section
-                        className="mt-3 flex justify-between gap-x-2"
-                        key={field.id}
-                      >
-                        <InputField
-                          label={`${t('cloud:custom_protocol.adapter.topic')} ${
-                            index + 1
-                          }`}
-                          error={
-                            formState.errors?.configuration?.topic_filters?.[
-                              index
-                            ]?.topic
-                          }
-                          registration={register(
-                            `configuration.topic_filters.${index}.topic` as const,
+                      </div>
+                      {fieldsSchema.map((field, index) => (
+                        <section
+                          className={cn(
+                            'mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4',
+                            {
+                              hidden: !isShow,
+                            },
                           )}
-                          classnamefieldwrapper="flex items-center gap-x-3 mr-[42px]"
+                          key={field.id}
+                        >
+                          <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
+                            <FormField
+                              control={form.control}
+                              name={`schema.fields.${index}.name` as const}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t(
+                                      'cloud:custom_protocol.adapter.schema.name',
+                                    )}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <Input {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </div>
+                                </FormItem>
+                              )}
+                            />
+                            <InputField
+                              label={t(
+                                'cloud:custom_protocol.adapter.schema.start_byte',
+                              )}
+                              error={
+                                formState.errors?.schema?.fields?.[index]
+                                  ?.start_byte
+                              }
+                              type="number"
+                              registration={register(
+                                `schema.fields.${index}.start_byte` as const,
+                                {
+                                  valueAsNumber: true,
+                                },
+                              )}
+                            />
+                            <InputField
+                              label={t(
+                                'cloud:custom_protocol.adapter.schema.length_byte',
+                              )}
+                              error={
+                                formState.errors?.schema?.fields?.[index]
+                                  ?.length_byte
+                              }
+                              type="number"
+                              registration={register(
+                                `schema.fields.${index}.length_byte` as const,
+                                {
+                                  valueAsNumber: true,
+                                },
+                              )}
+                            />
+                            {/* <FormField
+                              control={form.control}
+                              name={`schema.fields.${index}.start_byte` as const}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t('cloud:custom_protocol.adapter.schema.start_byte')}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <Input
+                                        type="number"
+                                        {...register(`schema.fields.${index}.start_byte`, {
+                                          valueAsNumber: true,
+                                        })}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </div>
+                                </FormItem>
+                              )}
+                            /> */}
+                            {/* <FormField
+                              control={form.control}
+                              name={`schema.fields.${index}.length_byte` as const}
+                              rules={{ required: true }}
+                              // valueAsNumber={true}
+                              render={({ field }) => {
+                                return (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {t('cloud:custom_protocol.adapter.schema.length_byte')}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Input
+                                          type="number"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )
+                              }}
+                            /> */}
+                          </div>
+                          <Button
+                            type="button"
+                            size="square"
+                            variant="none"
+                            className="mt-3 self-start !pr-0"
+                            onClick={() => removeSchema(index)}
+                            startIcon={
+                              <img
+                                src={btnDeleteIcon}
+                                alt="Delete schema"
+                                className="h-9 w-9"
+                              />
+                            }
+                          />
+                        </section>
+                      ))}
+                    </div>
+                  ) : null}
+                  {watch('protocol') != null && watch('protocol') === 'mqtt' ? (
+                    <div className="space-y-6">
+                      <FormField
+                        control={form.control}
+                        name="host"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:custom_protocol.adapter.host')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="port"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:custom_protocol.adapter.port')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="configuration.credentials.username"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:custom_protocol.adapter.username')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="configuration.credentials.password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:custom_protocol.adapter.pass')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex justify-between space-x-3">
+                        <TitleBar
+                          title={t('cloud:custom_protocol.adapter.topic_list')}
+                          className="w-full rounded-md bg-secondary-700 pl-3"
                         />
                         <Button
-                          type="button"
+                          className="rounded-md"
+                          variant="trans"
                           size="square"
-                          variant="none"
-                          className="mt-0 self-start p-0"
-                          onClick={() => remove(index)}
                           startIcon={
-                            <img
-                              src={btnDeleteIcon}
-                              alt="Delete topic"
-                              className="h-10 w-10"
+                            <PlusIcon
+                              width={16}
+                              height={16}
+                              viewBox="0 0 16 16"
                             />
                           }
+                          onClick={() => append({ topic: '' })}
                         />
-                      </section>
-                    ))}
-                    <div className="flex justify-end">
-                      <Button
-                        className="rounded-sm border-none"
-                        variant="secondary"
-                        size="square"
-                        onClick={() =>
-                          mutatePingMQTT({
-                            data: {
-                              host: getValues('host'),
-                              port: getValues('port'),
-                              username: getValues(
-                                'configuration.credentials.username',
-                              ),
-                              password: getValues(
-                                'configuration.credentials.password',
-                              ),
-                            },
-                          })
-                        }
-                        isLoading={isLoadingPingMQTT}
-                      >
-                        {t('cloud:custom_protocol.adapter.ping_MQTT.title')}
-                      </Button>
+                      </div>
+                      {fields.map((field, index) => (
+                        <section
+                          className="mt-3 flex justify-between gap-x-2"
+                          key={field.id}
+                        >
+                          <FormField
+                            control={form.control}
+                            name={
+                              `configuration.topic_filters.${index}.topic` as const
+                            }
+                            render={({ field }) => (
+                              <FormItem className="mr-[42px] flex items-center gap-x-3">
+                                <FormLabel>
+                                  {`${t('cloud:custom_protocol.adapter.topic')} ${index + 1}`}
+                                </FormLabel>
+                                <div>
+                                  <FormControl>
+                                    <Input {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </div>
+                              </FormItem>
+                            )}
+                          />
+                          <Button
+                            type="button"
+                            size="square"
+                            variant="none"
+                            className="mt-0 self-start p-0"
+                            onClick={() => remove(index)}
+                            startIcon={
+                              <img
+                                src={btnDeleteIcon}
+                                alt="Delete topic"
+                                className="h-10 w-10"
+                              />
+                            }
+                          />
+                        </section>
+                      ))}
+                      <div className="flex justify-end">
+                        <Button
+                          className="rounded-sm border-none"
+                          variant="secondary"
+                          size="square"
+                          onClick={() =>
+                            mutatePingMQTT({
+                              data: {
+                                host: getValues('host'),
+                                port: getValues('port'),
+                                username: getValues(
+                                  'configuration.credentials.username',
+                                ),
+                                password: getValues(
+                                  'configuration.credentials.password',
+                                ),
+                              },
+                            })
+                          }
+                          isLoading={isLoadingPingMQTT}
+                        >
+                          {t('cloud:custom_protocol.adapter.ping_MQTT.title')}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>
