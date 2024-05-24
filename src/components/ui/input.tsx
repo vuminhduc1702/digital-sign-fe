@@ -3,6 +3,7 @@ import * as React from 'react'
 import { cn } from '@/utils/misc'
 
 import { useFormField } from './form'
+import { useTranslation } from 'react-i18next'
 
 type IconProps = {
   startIcon?: React.ReactElement
@@ -14,8 +15,12 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps & IconProps>(
-  ({ className, type, startIcon, endIcon, endText, ...props }, ref) => {
+  (
+    { className, type, startIcon, endIcon, endText, placeholder, ...props },
+    ref,
+  ) => {
     const { error } = useFormField()
+    const { t } = useTranslation()
 
     return (
       <div className="relative">
@@ -32,6 +37,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps & IconProps>(
             className,
           )}
           ref={ref}
+          placeholder={placeholder ?? t('placeholder:input_text')}
           {...props}
         />
         {endIcon}

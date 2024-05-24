@@ -654,6 +654,14 @@
           "success": "MQTT connection khả dụng",
           "failure": "MQTT connection không tồn tại"
         }
+      },
+      "message": {
+        "thing": "Vui lòng chọn thing",
+        "handle_service": "Vui lòng chọn nghiệp vụ",
+        "host": "Vui lòng nhập host",
+        "port": "Vui lòng nhập port",
+        "topic": "Vui lòng nhập topic",
+        "number": "Vui lòng nhập số"
       }
     },
     "dashboard": {

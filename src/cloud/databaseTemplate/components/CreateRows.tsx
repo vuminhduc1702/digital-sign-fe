@@ -76,7 +76,7 @@ export default function CreateRows({
       fields: [defaultValues],
     },
   })
-  const { control, handleSubmit } = form
+  const { control, handleSubmit, reset } = form
   const { fields, append, remove } = useFieldArray({
     name: 'fields',
     control,
@@ -90,7 +90,14 @@ export default function CreateRows({
   }, [isSuccess])
 
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet
+      open={isOpen}
+      onOpenChange={() => {
+        close?.()
+        reset()
+      }}
+      modal={false}
+    >
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -181,7 +188,10 @@ export default function CreateRows({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={() => {
+                close?.()
+                reset()
+              }}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

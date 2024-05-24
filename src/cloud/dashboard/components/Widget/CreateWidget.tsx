@@ -258,9 +258,7 @@ export const attrWidgetSchema = z.array(
       .string({ required_error: i18n.t('ws:filter.choose_attr') })
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
     label: z.string({ required_error: i18n.t('ws:filter.choose_label') }),
-    color: z
-      .string({ required_error: i18n.t('ws:filter.choose_color') })
-      .min(1, { message: i18n.t('ws:filter.choose_color') }),
+    color: z.string(),
     unit: z.string().optional(),
     max: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
     min: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
@@ -438,7 +436,6 @@ export function CreateWidget({
     resetField,
     reset,
   } = form
-  console.log('watch', watch('widgetSetting.interval'))
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
     control: control,

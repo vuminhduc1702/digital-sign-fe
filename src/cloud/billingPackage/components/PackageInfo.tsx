@@ -335,7 +335,7 @@ export function PackageInfo() {
         <form
           id="update-plan"
           className="flex max-h-[82vh] flex-col justify-between overflow-auto"
-          onSubmit={values => {
+          onSubmit={handleSubmit(values => {
             let plan_lvBE: PlanlvList[] = []
             if (
               estimates === 'mass' ||
@@ -368,7 +368,7 @@ export function PackageInfo() {
               },
               planId: packageId,
             })
-          }}
+          })}
         >
           <>
             <p className="flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
@@ -1281,7 +1281,7 @@ export function PackageInfo() {
         handleSubmit={() => {
           mutateDelete({ id: packageId })
         }}
-        isLoading={isLoading}
+        isLoading={isLoadingDelete}
       />
     </>
   )

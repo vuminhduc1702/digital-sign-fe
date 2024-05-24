@@ -147,11 +147,14 @@ export function useResetDefaultImage(
     setValue: setValueUploadImage,
     getValues: getValueUploadImage,
     formState: formStateUploadImage,
+    resetField: resetFieldUploadImage,
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
 
   function handleResetDefaultImage() {
+    resetFieldUploadImage('file')
+    console.log(getValueUploadImage())
     setUploadImageErr('')
     if (avatarRef.current != null) {
       avatarRef.current.src = defaultImage
