@@ -4,6 +4,13 @@ import { useParams } from 'react-router-dom'
 import { SelectField } from '@/components/Form'
 import { useEventService } from '../../api/thingServiceAPI'
 import { EventServiceTable } from './EventServiceTable'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type ThingServicesTab2Props = {
   serviceName: string
@@ -57,23 +64,30 @@ export function ThingEventServices({ serviceName }: ThingServicesTab2Props) {
   ]
 
   const handleSelect = (e: any) => {
-    const startTimeParse = Math.round(Date.now()) - parseInt(e.target.value)
+    const startTimeParse = Math.round(Date.now()) - parseInt(e)
     setStartTime(startTimeParse)
     setEndTime(Math.round(Date.now()))
-    setSelectValue(e.target.value)
+    setSelectValue(e)
   }
 
   return (
     <>
       <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
-          <div className="mr-[42px] flex items-center gap-x-3">
+          <div className="mb-3 mr-[42px] flex items-center gap-x-3">
             {isSuccess ? (
-              <SelectField
-                value={selectValue}
-                options={eventSelectData}
-                onChange={handleSelect}
-              />
+              <Select onValueChange={handleSelect} value={selectValue}>
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="w-40 bg-white">
+                  {eventSelectData.map(option => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             ) : null}
           </div>
         </div>
