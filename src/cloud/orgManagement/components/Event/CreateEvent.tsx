@@ -1119,7 +1119,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <FormControl>
                                       <NewSelectDropdown
-                                        classnamefieldwrapper="h-9"
                                         options={
                                           watch('condition_event_type') ===
                                           'device_condition'

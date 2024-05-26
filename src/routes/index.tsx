@@ -14,15 +14,10 @@ import { lazyImport } from '@/utils/lazyImport'
 import { protectedRoutes } from './protected'
 import { publicRoutes } from './public'
 import { ErrorFallback } from '@/pages/ErrorPage'
-import { PDFViewer } from '@/pages/LandingPage/components/PdfViewer'
 import { endProgress, startProgress } from '@/components/Progress'
 import { useProjectIdStore } from '@/stores/project'
 import storage from '@/utils/storage'
 
-const { LandingPage } = lazyImport(
-  () => import('@/pages/LandingPage'),
-  'LandingPage',
-)
 const { MaintainPage } = lazyImport(
   () => import('@/pages/MaintainPage'),
   'MaintainPage',
@@ -45,7 +40,6 @@ export const AppRoutes = () => {
   const { data: userDataFromStorage } = useUser()
 
   const commonRoutes = [
-    // { path: BASE_PATH, element: <LandingPage /> },
     {
       path: PATHS.MAINTAIN,
       element: <MaintainPage />,
@@ -74,21 +68,6 @@ export const AppRoutes = () => {
       loader: async () => {
         startProgress()
         await import('@/pages/VersionPage')
-        endProgress()
-
-        return null
-      },
-    },
-    {
-      path: PATHS.PDF_VIEWER,
-      element: (
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <PDFViewer />
-        </ErrorBoundary>
-      ),
-      loader: async () => {
-        startProgress()
-        await import('@/pages/LandingPage/components/PdfViewer')
         endProgress()
 
         return null
