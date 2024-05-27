@@ -97,7 +97,11 @@ export function TemplateDefault() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
           onClick={openTemplate}
         />
-        <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
+        <SearchField
+          setSearchValue={setSearchQuery}
+          setSearchFieldName={'name'}
+          closeSearch={true}
+        />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
         {data?.templates !== null && data?.templates?.length > 0 ? (
