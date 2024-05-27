@@ -1,4 +1,5 @@
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import i18n from '@/i18n'
 import {
   Select,
   SelectContent,
@@ -18,6 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 type SearchFieldProps = {
   setSearchValue?: React.Dispatch<React.SetStateAction<string>>
+  setSearchFieldName?: string
   searchField?: React.MutableRefObject<string>
   fieldOptions?: { value: string; label: string }[]
   setIsSearchData?: React.Dispatch<React.SetStateAction<boolean>>
@@ -29,6 +31,7 @@ type SearchFieldProps = {
 
 export function SearchField({
   setSearchValue,
+  setSearchFieldName,
   searchField,
   fieldOptions,
   setIsSearchData,
@@ -39,8 +42,8 @@ export function SearchField({
 }: SearchFieldProps) {
   const { t } = useTranslation()
   const searchSchema = z.object({
-    searchByField: z.string().min(1, {
-      message: t('search:no_search_field'),
+    searchByField: z.string({
+      required_error: i18n.t('search:no_search_field'),
     }),
     searchByName: z.string().min(1, {
       message: t('search:no_search_name'),
@@ -50,7 +53,7 @@ export function SearchField({
     resolver: searchSchema && zodResolver(searchSchema),
     defaultValues: {
       searchByName: '',
-      searchByField: '',
+      searchByField: '' || setSearchFieldName,
     },
   })
 
@@ -70,7 +73,6 @@ export function SearchField({
     }, 1000)
     // e.preventDefault()
   }
-
   return (
     <Form {...form}>
       <form className={cn(className)} onSubmit={handleSubmit(onSubmit)}>

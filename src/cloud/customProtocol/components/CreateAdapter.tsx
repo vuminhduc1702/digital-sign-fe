@@ -183,12 +183,24 @@ export const adapterSchema = z
           fields: z.array(
             z.object({
               name: nameSchema,
-              start_byte: z.number().optional(),
-              length_byte: z.number().min(1, {
-                message: i18n.t(
-                  'cloud:custom_protocol.adapter.schema.length_byte_validate',
-                ),
-              }),
+              start_byte: z
+                .number({
+                  invalid_type_error: i18n.t(
+                    'cloud:custom_protocol.message.number',
+                  ),
+                })
+                .optional(),
+              length_byte: z
+                .number({
+                  invalid_type_error: i18n.t(
+                    'cloud:custom_protocol.message.number',
+                  ),
+                })
+                .min(1, {
+                  message: i18n.t(
+                    'cloud:custom_protocol.adapter.schema.length_byte_validate',
+                  ),
+                }),
             }),
           ),
         }),

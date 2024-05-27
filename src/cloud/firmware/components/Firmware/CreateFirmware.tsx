@@ -48,7 +48,7 @@ export function CreateFirmWare() {
 
   const form = useForm<CreateFirmWareDTO['data']>({
     resolver: entityFirmWareSchema && zodResolver(entityFirmWareSchema),
-    defaultValues: { template_id: '' },
+    defaultValues: { template_id: '', name: '', version: '' },
   })
 
   const templateSelectOptions = data?.templates?.map(template => ({

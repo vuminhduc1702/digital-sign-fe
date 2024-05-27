@@ -103,12 +103,11 @@ axios.interceptors.response.use(
       case 404:
         message = i18n.t('error:server_res.notfound')
         break
+      case 500:
+        message = i18n.t('error:server_res.500')
+        break
       default:
         message = errRes?.data?.message ?? error.message
-    }
-
-    if (errRes?.data?.message === 'malformed entity specification') {
-      message = i18n.t('error:server_res.malformed_data')
     }
 
     switch (errRes?.data?.code) {
