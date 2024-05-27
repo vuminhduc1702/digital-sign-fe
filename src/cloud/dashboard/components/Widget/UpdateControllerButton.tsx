@@ -160,6 +160,8 @@ export function UpdateControllerButton({
     setValue('input', [])
   }
 
+  console.log(watch())
+
   return (
     <FormDialog
       size="max"
