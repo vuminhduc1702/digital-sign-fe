@@ -251,7 +251,6 @@ export const widgetAgg = [
   { label: 'Sum', value: 'SUM' },
   { label: 'Count', value: 'COUNT' },
 ] as const
-
 export const attrWidgetSchema = z.array(
   z.object({
     attribute_key: z
@@ -260,8 +259,12 @@ export const attrWidgetSchema = z.array(
     label: z.string({ required_error: i18n.t('ws:filter.choose_label') }),
     color: z.string().optional(),
     unit: z.string().optional(),
-    max: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
-    min: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
+    max: z.number({
+      invalid_type_error: i18n.t('error:default_zod_err.number'),
+    }),
+    min: z.number({
+      invalid_type_error: i18n.t('error:default_zod_err.number'),
+    }),
     deviceName: z.string().optional(),
   }),
 )
@@ -314,18 +317,18 @@ export const widgetCreateSchema = z.object({
   org_id: z.string({
     required_error: i18n.t('cloud:org_manage.org_manage.add_org.choose_org'),
   }),
-  device: z.array(
-    z.string({
+  device: z
+    .array(z.union([z.string(), z.undefined()]), {
       required_error: i18n.t(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
+    })
+    .refine(arr => !arr.includes(undefined), {
+      message: i18n.t(
+        'cloud:org_manage.device_manage.add_device.choose_device',
+      ),
+      path: [],
     }),
-    {
-      required_error: i18n.t(
-        'cloud:org_manage.device_manage.add_device.choose_device',
-      ),
-    },
-  ),
   attributeConfig: attrWidgetSchema,
   widgetSetting: z
     .object({
@@ -396,7 +399,6 @@ export const widgetDataTypeOptions = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
-
 export function CreateWidget({
   widgetType,
   widgetCategory,
@@ -1323,14 +1325,11 @@ export function CreateWidget({
                                         <Input
                                           {...field}
                                           type="number"
-                                          onChange={e => {
-                                            const value = parseFloat(
-                                              e.target.value,
-                                            )
-                                            field.onChange(value)
-                                          }}
-                                          placeholder={t(
-                                            'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                          {...register(
+                                            `attributeConfig.${index}.min`,
+                                            {
+                                              valueAsNumber: true,
+                                            },
                                           )}
                                         />
                                       </FormControl>
@@ -1352,14 +1351,11 @@ export function CreateWidget({
                                         <Input
                                           {...field}
                                           type="number"
-                                          onChange={e => {
-                                            const value = parseFloat(
-                                              e.target.value,
-                                            )
-                                            field.onChange(value)
-                                          }}
-                                          placeholder={t(
-                                            'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                          {...register(
+                                            `attributeConfig.${index}.max`,
+                                            {
+                                              valueAsNumber: true,
+                                            },
                                           )}
                                         />
                                       </FormControl>

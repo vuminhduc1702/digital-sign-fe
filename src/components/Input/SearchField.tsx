@@ -1,4 +1,5 @@
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import i18n from '@/i18n'
 import {
   Select,
   SelectContent,
@@ -25,6 +26,9 @@ type SearchFieldProps = {
   title?: string
   closeSearch?: boolean
   className?: string
+  searchByFieldClassName?: string
+  searchByNameClassName?: string
+  placeholderValueText?: string
 }
 
 export function SearchField({
@@ -36,11 +40,14 @@ export function SearchField({
   title,
   closeSearch,
   className,
+  searchByFieldClassName,
+  searchByNameClassName,
+  placeholderValueText,
 }: SearchFieldProps) {
   const { t } = useTranslation()
   const searchSchema = z.object({
-    searchByField: z.string().min(1, {
-      message: t('search:no_search_field'),
+    searchByField: z.string({
+      required_error: i18n.t('search:no_search_field'),
     }),
     searchByName: z.string().min(1, {
       message: t('search:no_search_name'),
@@ -70,7 +77,6 @@ export function SearchField({
     }, 1000)
     // e.preventDefault()
   }
-
   return (
     <Form {...form}>
       <form className={cn(className)} onSubmit={handleSubmit(onSubmit)}>
@@ -95,10 +101,13 @@ export function SearchField({
                           <SelectTrigger
                             className={cn(
                               'h-[38px] min-w-[250px] px-[12px] py-[8px] text-sm',
+                              searchByFieldClassName,
                             )}
                           >
                             <SelectValue
-                              placeholder={t('table:search_field')}
+                              placeholder={
+                                placeholderValueText ?? t('table:search_field')
+                              }
                             />
                           </SelectTrigger>
                           <SelectContent className="bg-white">
@@ -138,6 +147,7 @@ export function SearchField({
                         className={cn(
                           'h-[38px] min-w-[250px] px-[12px] py-[8px] text-sm',
                           closeSearch ? 'pr-[36px]' : 'pr-[12px]',
+                          searchByNameClassName,
                         )}
                         placeholder={placeholder ?? t('search:title')}
                         endIcon={

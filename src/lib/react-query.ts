@@ -12,11 +12,13 @@ import { toast } from 'sonner'
 import i18n from '@/i18n'
 import storage from '@/utils/storage'
 
+const FAILURE_COUNT = 4
+
 function retryQuery(failureCount: number, error: any) {
   if (
     storage.getIsPersistLogin() === 'true' &&
     error.response?.status === 401 &&
-    failureCount < 3
+    failureCount < FAILURE_COUNT
   ) {
     return true
   }
@@ -25,7 +27,7 @@ function retryQuery(failureCount: number, error: any) {
     error.response?.status !== 403 &&
     error.response?.status !== 401 &&
     error.response?.status != null &&
-    failureCount < 3
+    failureCount < FAILURE_COUNT
 
   return shouldRetry
 }

@@ -258,6 +258,9 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
           password: '',
         },
       },
+      schema: {
+        fields: [],
+      },
     },
   })
   const {
@@ -304,11 +307,6 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
   const resetData = () => {
     reset()
     replace({ topic: '' })
-    replaceSchema({
-      name: '',
-      start_byte: 0,
-      length_byte: 1,
-    })
   }
 
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(

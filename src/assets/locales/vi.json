@@ -404,6 +404,8 @@
       }
     },
     "device_template": {
+      "name": "Tên thiết bị",
+      "id": "ID thiết bị",
       "title": "Mẫu thiết bị",
       "default": "Default",
       "lwm2m": "LwM2M",
@@ -923,7 +925,8 @@
         "choose_plan": "Vui lòng chọn gói cước",
         "success_create": "Đăng ký dịch vụ thành công",
         "success_update": "Cập nhật dịch vụ thành công",
-        "success_delete": "Hủy đăng ký dịch vụ thành công"
+        "success_delete": "Hủy đăng ký dịch vụ thành công",
+        "choose_quantity": "Vượt quá số lượng được phép đăng ký"
       },
       "table": {
         "sub_code": "Mã đăng ký",
@@ -1095,7 +1098,8 @@
       "select_all": "Tất cả"
     },
     "loading": "Xin vui lòng chờ...",
-    "search_field": "Tìm kiếm theo trường"
+    "search_field": "Tìm kiếm theo trường",
+    "search_field_custom": "Trường tìm kiếm"
   },
   "btn": {
     "create": "Tạo mới",
@@ -1123,7 +1127,8 @@
       "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ.",
       "authorization": "Lỗi 403: Bạn không có quyền truy cập vào trang này.",
       "server": "Lỗi 500: Server đang bị lỗi, vui lòng thử lại.",
-      "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này."
+      "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này.",
+      "500": "Lỗi unknown! Vui lòng refresh lại trang hoặc đăng xuất rồi đăng nhập lại."
     },
     "no_data_res": "Dữ liệu trả về không đúng.",
     "default_zod_err": {
@@ -1204,7 +1209,7 @@
     "no_org": "Không trực thuộc tổ chức",
     "no_group": "Không trực thuộc nhóm",
     "no_search_field": "Chưa nhập trường tìm kiếm",
-    "no_search_name": "Chưa nhập thông tin tìm kiếm"
+    "no_search_name": "Chưa nhập thông tin"
   },
   "user": {
     "login": "Đăng nhập",
@@ -1229,7 +1234,7 @@
   },
   "ws": {
     "connect_success": "Kết nối WS thành công",
-    "connect_error": "Không kết nối WS được, vui lòng refresh lại trang",
+    "connect_error": "Không kết nối WS được, vui lòng refresh lại trang hoặc đăng xuất rồi đăng nhập lại.",
     "filter": {
       "date": "Ngày",
       "group_interval": "Đơn vị thời gian",
