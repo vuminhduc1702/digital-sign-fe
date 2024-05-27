@@ -258,7 +258,7 @@ export const attrWidgetSchema = z.array(
       .string({ required_error: i18n.t('ws:filter.choose_attr') })
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
     label: z.string({ required_error: i18n.t('ws:filter.choose_label') }),
-    color: z.string(),
+    color: z.string().optional(),
     unit: z.string().optional(),
     max: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
     min: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
@@ -614,6 +614,7 @@ export function CreateWidget({
       reset()
     }
   }, [isOpen])
+
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
