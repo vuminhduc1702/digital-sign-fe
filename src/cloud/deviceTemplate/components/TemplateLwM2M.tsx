@@ -1,35 +1,30 @@
-import { useState, useEffect } from 'react'
+import clsx from 'clsx'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
-import clsx from 'clsx'
 
 import { Button } from '@/components/ui/button'
 
-import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { PATHS } from '@/routes/PATHS'
-import { CreateTemplateLwM2M } from './CreateTemplateLwM2M'
-import { useDeleteTemplate } from '../api'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
+import { useDeleteTemplate } from '../api'
+import { CreateTemplateLwM2M } from './CreateTemplateLwM2M'
 
 import { type Template } from '../types'
 
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { UpdateTemplateLwM2M } from './UpdateTemplateLwM2M'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { BtnContextMenuIcon, PlusIcon } from '@/components/SVGIcons'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { SearchField } from '@/components/Input'
-import { useGetTemplates } from '../api'
-import { PlusIcon } from '@/components/SVGIcons'
-import CreateTemplate from './CreateTemplate'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import {
   Select,
@@ -39,7 +34,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useForm } from 'react-hook-form'
+import { useGetTemplates } from '../api'
+import CreateTemplate from './CreateTemplate'
 import { UpdateTemplate } from './UpdateTemplate'
+import { UpdateTemplateLwM2M } from './UpdateTemplateLwM2M'
 
 export function TemplateLwM2M() {
   const { t } = useTranslation()
@@ -63,6 +61,7 @@ export function TemplateLwM2M() {
 
   const { id: projectId } = storage.getProject()
   const [searchQuery, setSearchQuery] = useState('')
+  const searchField = useRef('')
   const { mutate, isLoading, isSuccess } = useDeleteTemplate()
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const [selectedUpdateTemplate, setSelectedUpdateTemplate] =
@@ -73,7 +72,7 @@ export function TemplateLwM2M() {
     protocol: protocolQuery,
 
     search_str: searchQuery,
-    search_field: 'name',
+    search_field: searchField.current,
   })
 
   const fieldOptions = [
@@ -130,11 +129,6 @@ export function TemplateLwM2M() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
           onClick={openTemplate}
         />
-        <SearchField
-          setSearchValue={setSearchQuery}
-          setSearchFieldName={'name'}
-          closeSearch={true}
-        />
         <Form {...form}>
           <form className="w-full" onSubmit={e => e.preventDefault()}>
             <FormField
@@ -170,6 +164,28 @@ export function TemplateLwM2M() {
             />
           </form>
         </Form>
+        <SearchField
+          setSearchValue={setSearchQuery}
+          searchField={searchField}
+          fieldOptions={[
+            {
+              value: 'name,id',
+              label: t('search:all'),
+            },
+            {
+              value: 'name',
+              label: t('cloud:device_template.name'),
+            },
+            {
+              value: 'id',
+              label: t('cloud:device_template.id'),
+            },
+          ]}
+          closeSearch={true}
+          searchByFieldClassName="min-w-[150px]"
+          searchByNameClassName="min-w-[110px]"
+          placeholderValueText={t('table:search_field_custom')}
+        />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
         {data?.templates && data?.templates?.length > 0 ? (
