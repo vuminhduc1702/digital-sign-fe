@@ -62,7 +62,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 import {
   Select,
   SelectContent,
@@ -146,24 +145,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     isError,
     error: errorExecute,
   } = useExecuteService()
-
-  // const {
-  //   register,
-  //   formState,
-  //   control,
-  //   setError,
-  //   setValue,
-  //   handleSubmit,
-  //   watch,
-  //   reset,
-  // } = useForm<CreateServiceThingDTO['data']>({
-  //   resolver: serviceThingSchema && zodResolver(serviceThingSchema),
-  //   defaultValues: {
-  //     name: '',
-  //     input: [{ name: '', value: '', type: 'json' }],
-  //     fail_limit: 0,
-  //   },
-  // })
 
   const form = useForm<CreateServiceThingDTO['data']>({
     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
