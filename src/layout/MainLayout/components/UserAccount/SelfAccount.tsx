@@ -159,18 +159,6 @@ const SelfAccount = () => {
                 className="w-full space-y-6 pr-32"
               >
                 <div className="grid grid-cols-4 gap-4">
-                  {/* <div className="col-start-1 flex items-center justify-end">
-                  {t('form:enter_name')}{' '}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-2">
-                  <InputField
-                    classchild="w-full"
-                    classnamefieldwrapper="flex justify-end items-center"
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                </div> */}
                   <FormLabel
                     className={`col-start-1 flex items-center justify-end ${formState.errors.name ? 'text-destructive' : ''}`}
                   >
@@ -191,19 +179,6 @@ const SelfAccount = () => {
                       </FormItem>
                     )}
                   />
-                  {/* <div className="col-start-3 flex items-center justify-end">
-                  {t('form:enter_tax')}{' '}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-4">
-                  <InputField
-                    type="number"
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center"
-                    error={formState?.errors?.profile?.tax_code}
-                    registration={register('profile.tax_code')}
-                  />
-                </div> */}
                   <FormLabel
                     className={`col-start-3 flex items-center justify-end ${formState.errors?.profile?.tax_code ? 'text-destructive' : ''}`}
                   >
@@ -224,19 +199,6 @@ const SelfAccount = () => {
                       </FormItem>
                     )}
                   />
-                  {/* <div className="col-start-1 flex items-center justify-end">
-                  {t('form:enter_phone_num')}{' '}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-2">
-                  <InputField
-                    type="number"
-                    classchild="w-full"
-                    classnamefieldwrapper="flex flex justify-end items-center"
-                    error={formState.errors['phone']}
-                    registration={register('phone')}
-                  />
-                </div> */}
                   <FormLabel
                     className={`col-start-1 flex items-center justify-end ${formState.errors.phone ? 'text-destructive' : ''}`}
                   >
@@ -257,17 +219,6 @@ const SelfAccount = () => {
                       </FormItem>
                     )}
                   />
-                  {/* <div className="col-start-3 flex items-center justify-end">
-                  {t('form:email')} <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-4">
-                  <InputField
-                    registration={register('email')}
-                    disabled
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center"
-                  />
-                </div> */}
                   <FormLabel
                     className={`col-start-3 flex items-center justify-end ${formState.errors.email ? 'text-destructive' : ''}`}
                   >
@@ -288,24 +239,6 @@ const SelfAccount = () => {
                       </FormItem>
                     )}
                   />
-                  {/* <div className="col-start-1 flex items-center justify-end">
-                  {t('cloud:org_manage.event_manage.add_event.action.address')}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-2">
-                  <SelectField
-                    error={formState?.errors?.profile?.province}
-                    registration={register('profile.province', {
-                      onChange: () =>
-                        setValue('profile.district', districtList?.[0]?.value),
-                    })}
-                    options={provinceList}
-                    classchild="w-full"
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.province',
-                    )}
-                  />
-                </div> */}
                   <FormLabel
                     className={`col-start-1 flex items-center justify-end ${formState.errors?.profile?.province ? 'text-destructive' : ''}`}
                   >
@@ -323,11 +256,9 @@ const SelfAccount = () => {
                           <Select
                             {...field}
                             onValueChange={e => {
-                              setValue(
-                                'profile.district',
-                                districtList?.[0]?.value,
-                              )
                               onChange(e)
+                              setValue('profile.district', '')
+                              setValue('profile.ward', '')
                             }}
                             value={value}
                           >
@@ -357,14 +288,6 @@ const SelfAccount = () => {
                     )}
                   />
                   <div>
-                    {/* <SelectField
-                    error={formState?.errors?.profile?.district}
-                    registration={register('profile.district')}
-                    options={districtList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.district',
-                    )}
-                  /> */}
                     <FormField
                       control={form.control}
                       name="profile.district"
@@ -373,7 +296,10 @@ const SelfAccount = () => {
                           <div>
                             <Select
                               {...field}
-                              onValueChange={e => onChange(e)}
+                              onValueChange={e => {
+                                onChange(e)
+                                setValue('profile.ward', '')
+                              }}
                               value={value}
                             >
                               <FormControl>
@@ -403,14 +329,6 @@ const SelfAccount = () => {
                     />
                   </div>
                   <div>
-                    {/* <SelectField
-                    error={formState?.errors?.profile?.ward}
-                    registration={register('profile.ward')}
-                    options={wardList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.ward',
-                    )}
-                  /> */}
                     <FormField
                       control={form.control}
                       name="profile.ward"
@@ -448,17 +366,6 @@ const SelfAccount = () => {
                       )}
                     />
                   </div>
-                  {/* <div className="col-start-1 flex items-center justify-end">
-                  {t('form:enter_address')}
-                </div>
-                <div className="col-start-2 col-end-5">
-                  <InputField
-                    error={formState?.errors?.profile?.full_address}
-                    registration={register('profile.full_address')}
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center"
-                  />
-                </div> */}
                   <FormLabel className="col-start-1 flex items-center justify-end">
                     {t('form:enter_address')}
                   </FormLabel>

@@ -394,8 +394,13 @@ export function CreateTemplateLwM2M({
     }
   }, [isSuccessCreateTemplatelwm2m])
 
+  const resetForm = () => {
+    reset()
+    close()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -672,7 +677,7 @@ export function CreateTemplateLwM2M({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
