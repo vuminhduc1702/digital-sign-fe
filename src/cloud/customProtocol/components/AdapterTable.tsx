@@ -42,6 +42,7 @@ function AdapterTableContextMenu({
   port,
   configuration,
   schema,
+  encrypted,
 }: AdapterTableContextMenuProps) {
   const { t } = useTranslation()
 
@@ -76,37 +77,6 @@ function AdapterTableContextMenu({
             onClick={openDelete}
           />
         </div>
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex cursor-pointer justify-center p-3">
-              <LuMoreVertical 
-            className="text-lg text-gray-500 hover:text-black hover:scale-125 transition-all duration-200 ease-in-out"
-             />
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={open}>
-              <img src={btnEditIcon} alt="Edit adapter" className="h-5 w-5" />
-              {t('cloud:custom_protocol.adapter.table.edit')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleCopyId(id)}>
-              <img
-                src={btnCopyIdIcon}
-                alt="Copy adapter's ID"
-                className="h-5 w-5"
-              />
-              {t('table:copy_id')}
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={openDelete}>
-              <img
-                src={btnDeleteIcon}
-                alt="Delete adapter"
-                className="h-5 w-5"
-              />
-              {t('cloud:custom_protocol.adapter.table.delete_adapter')}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
       </div>
       <UpdateAdapter
         id={id}
@@ -121,6 +91,7 @@ function AdapterTableContextMenu({
         close={close}
         isOpen={isOpen}
         schema={schema}
+        encrypted={encrypted}
       />
       <ConfirmDialog
         icon="danger"
@@ -176,6 +147,7 @@ export function AdapterTable({ data, ...props }: AdapterTableProps) {
             port,
             configuration,
             schema,
+            encrypted,
           } = info.row.original
           return AdapterTableContextMenu({
             id,
@@ -188,6 +160,7 @@ export function AdapterTable({ data, ...props }: AdapterTableProps) {
             port,
             configuration,
             schema,
+            encrypted,
           })
         },
         header: () => null,
@@ -246,7 +219,7 @@ export function AdapterTable({ data, ...props }: AdapterTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [data],
   )
 
   return (

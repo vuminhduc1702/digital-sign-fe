@@ -1065,7 +1065,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <FormItem>
                                     <FormLabel>
                                       {t(
-                                        'cloud:org_manage.event_manage.add_event.condition.temp',
+                                        'cloud:org_manage.event_manage.add_event.condition.city',
                                       )}
                                     </FormLabel>
                                     <div>
@@ -1119,7 +1119,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <FormControl>
                                       <NewSelectDropdown
-                                        classnamefieldwrapper="h-9"
                                         options={
                                           watch('condition_event_type') ===
                                           'device_condition'

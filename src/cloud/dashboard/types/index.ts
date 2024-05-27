@@ -73,4 +73,5 @@ export const widgetCategorySchema = z.enum([
   'MAP',
   'TABLE',
   'CONTROLLER',
+  'CONTROLLER_FORM',
 ] as const)

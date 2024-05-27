@@ -20,6 +20,15 @@ import { useDisclosure } from '@/utils/hooks'
 
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 export const updateCustomerSchema = z.object({
   name: nameSchema,
@@ -50,9 +59,7 @@ export function UpdateCustomer({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
 
-  const { register, formState, handleSubmit } = useForm<
-    UpdateCustomerDTO['data']
-  >({
+  const form = useForm<UpdateCustomerDTO['data']>({
     resolver: updateCustomerSchema && zodResolver(updateCustomerSchema),
     defaultValues: {
       customerId,
@@ -61,6 +68,7 @@ export function UpdateCustomer({
       phone,
     },
   })
+  const { register, formState, handleSubmit, getValues } = form
 
   const { mutate, isLoading, isSuccess } = useUpdateCustomer()
   const {
@@ -74,6 +82,11 @@ export function UpdateCustomer({
       close()
     }
   }, [isSuccess])
+
+  const resetForm = () => {
+    close()
+    form.reset()
+  }
 
   // const [rowSelection, setRowSelection] = useState({})
   // const pdfHeader = useMemo(
@@ -100,7 +113,7 @@ export function UpdateCustomer({
   // )
 
   return (
-    <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
+    <Dialog isOpen={isOpen} onClose={resetForm} initialFocus={cancelButtonRef}>
       <div className="inline-block h-screen w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
@@ -110,60 +123,111 @@ export function UpdateCustomer({
             <div className="ml-3 flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                onClick={close}
+                onClick={resetForm}
               >
                 <span className="sr-only">Close panel</span>
                 <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
-          <form
-            id="update-customer"
-            className="mt-6 flex flex-col justify-between"
-            onSubmit={handleSubmit(values => {
-              mutate({
-                data: {
-                  name: values.name,
-                  email: values.email,
-                  phone: values.phone,
-                  password: values.password,
-                },
-                customerId,
-              })
-            })}
-          >
-            <div className="grid grid-cols-6 gap-4">
-              <div className="self-center text-right">Name</div>
-              <InputField registration={register('name')} disabled />
-              <div className="col-start-4 self-center text-right">Email</div>
-              <InputField
-                error={formState.errors['email']}
-                registration={register('email')}
-              />
-              <div className="col-start-1 self-center text-right">
-                {t('cloud:org_manage.org_manage.overview.name')}
+          <Form {...form}>
+            <form
+              id="update-customer"
+              className="mt-6 flex flex-col justify-between"
+              onSubmit={handleSubmit(values => {
+                mutate({
+                  data: {
+                    name: values.name,
+                    email: values.email,
+                    phone: values.phone,
+                    password: values.password,
+                  },
+                  customerId,
+                })
+              })}
+            >
+              <div className="grid grid-cols-6 gap-4">
+                <FormLabel className="self-center text-right">Name</FormLabel>
+                <FormControl>
+                  <Input disabled value={getValues('name')} />
+                </FormControl>
+                <FormLabel
+                  className={`col-start-4 self-center text-right ${formState.errors.email ? 'text-destructive' : ''}`}
+                >
+                  Email
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel
+                  className={`col-start-1 self-center text-right ${formState.errors.name ? 'text-destructive' : ''}`}
+                >
+                  {t('cloud:org_manage.org_manage.overview.name')}
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel
+                  className={`col-start-4 self-center text-right ${formState.errors.phone ? 'text-destructive' : ''}`}
+                >
+                  {t('cloud:org_manage.user_manage.add_user.phone')}
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormLabel className={`col-start-1 self-center text-right`}>
+                  {t('cloud:org_manage.user_manage.add_user.password')}
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div>
+                        <FormControl>
+                          <Input {...field} type="password" />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </div>
-              <InputField
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-              <div className="col-start-4 self-center text-right">
-                {t('cloud:org_manage.user_manage.add_user.phone')}
-              </div>
-              <InputField
-                error={formState.errors['phone']}
-                registration={register('phone')}
-              />
-              <div className="col-start-1 self-center text-right">
-                {t('cloud:org_manage.user_manage.add_user.password')}
-              </div>
-              <InputField
-                error={formState.errors['password']}
-                registration={register('password')}
-                type="password"
-              />
-            </div>
-          </form>
+            </form>
+          </Form>
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button
@@ -178,7 +242,7 @@ export function UpdateCustomer({
             type="button"
             variant="secondary"
             className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
-            onClick={close}
+            onClick={resetForm}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
