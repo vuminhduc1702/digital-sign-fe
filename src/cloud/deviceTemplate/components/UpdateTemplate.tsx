@@ -160,8 +160,14 @@ export function UpdateTemplate({
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+
+  const resetForm = () => {
+    close()
+    form.reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()

@@ -450,12 +450,19 @@ export function UpdateTemplateLwM2M({
     minDuration: 300,
   })
 
+  const resetForm = () => {
+    close()
+    form.reset()
+  }
+
+  console.log(filterLWM2M)
+
   return (
     <Sheet
       open={isOpen}
       onOpenChange={() => {
         setValue('rule_chain_id', selectedModuleNames)
-        close()
+        resetForm()
       }}
       modal={false}
     >

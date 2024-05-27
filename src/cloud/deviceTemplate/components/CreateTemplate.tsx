@@ -145,8 +145,13 @@ export default function CreateTemplate({
     }
   }, [isSuccessCreateTemplate])
 
+  const resetForm = () => {
+    close()
+    form.reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
