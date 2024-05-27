@@ -1242,6 +1242,8 @@
       "choose_widgetType": "Vui lòng chọn loại biểu đồ",
       "sma_window": "Số data point đường SMA",
       "choose_attr": "Vui lòng chọn thuộc tính",
+      "choose_label": "Vui lòng chọn nhãn",
+      "choose_color": "Vui lòng chọn màu sắc",
       "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
       "choose_endTime": "Vui lòng nhập thời gian kết thúc",
       "data_point": "Số data point",
@@ -1392,6 +1394,7 @@
     "name": "Tên"
   },
   "schema": {
+    "no_name": "Chưa nhập tên",
     "name_long": "Tên quá dài",
     "name_short": "Tên quá ngắn",
     "name_regex": "Tên service chỉ bao gồm chữ, số, hoặc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt",

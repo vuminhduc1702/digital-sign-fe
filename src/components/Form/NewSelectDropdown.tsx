@@ -45,7 +45,7 @@ export function NewSelectDropdown<
   return (
     <Select
       isMulti={isMulti}
-      // className={cn('h-9', classname)}
+      className={cn('w-full', classname)}
       ref={refSelect}
       isSearchable
       isClearable={isClearable}

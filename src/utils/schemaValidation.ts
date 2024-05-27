@@ -3,7 +3,7 @@ import i18n from '@/i18n'
 
 export const nameSchema = z
   .string()
-  .min(1, { message: i18n.t('schema:name_short') })
+  .min(0, { message: i18n.t('schema:name_short') })
   .max(64, { message: i18n.t('schema:name_long') })
 
 export const nameSchemaRegex = z
