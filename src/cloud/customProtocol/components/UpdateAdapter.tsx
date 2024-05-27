@@ -108,10 +108,10 @@ export function UpdateAdapter({
       port,
       configuration: configuration,
       schema: { fields: renderFields() },
-      encrypted,
       encrypted_select: encrypted ? 'option' : '',
     },
   })
+
   const {
     register,
     formState,
@@ -120,7 +120,10 @@ export function UpdateAdapter({
     watch,
     getValues,
     reset,
+    setValue,
   } = form
+
+  console.log(formState, 'encryptedencryptedencrypted')
 
   const { fields, append, remove } = useFieldArray({
     name: 'configuration.topic_filters',
@@ -171,6 +174,9 @@ export function UpdateAdapter({
   useEffect(() => {
     reset()
     setIsEncrypted(!!encrypted)
+    if (encrypted) {
+      setValue('encrypted', encrypted)
+    }
   }, [isOpen])
 
   const resetForm = () => {

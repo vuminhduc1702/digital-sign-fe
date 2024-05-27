@@ -118,7 +118,8 @@ export function UpdateDevice({
       key: keyDevice,
     },
   })
-  const { register, formState, control, setValue, handleSubmit, watch } = form
+  const { register, formState, control, setValue, handleSubmit, watch, reset } =
+    form
 
   const heartbeatForm = useForm<HeartBeatDTO['data']>({
     resolver: heartBeatSchema && zodResolver(heartBeatSchema),
@@ -163,8 +164,13 @@ export function UpdateDevice({
     null,
   )
 
+  const resetForm = () => {
+    close()
+    reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -477,7 +483,7 @@ export function UpdateDevice({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

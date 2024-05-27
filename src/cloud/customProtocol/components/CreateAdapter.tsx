@@ -183,12 +183,24 @@ export const adapterSchema = z
           fields: z.array(
             z.object({
               name: nameSchema,
-              start_byte: z.number().optional(),
-              length_byte: z.number().min(1, {
-                message: i18n.t(
-                  'cloud:custom_protocol.adapter.schema.length_byte_validate',
-                ),
-              }),
+              start_byte: z
+                .number({
+                  invalid_type_error: i18n.t(
+                    'cloud:custom_protocol.message.number',
+                  ),
+                })
+                .optional(),
+              length_byte: z
+                .number({
+                  invalid_type_error: i18n.t(
+                    'cloud:custom_protocol.message.number',
+                  ),
+                })
+                .min(1, {
+                  message: i18n.t(
+                    'cloud:custom_protocol.adapter.schema.length_byte_validate',
+                  ),
+                }),
             }),
           ),
         }),
@@ -246,6 +258,9 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
           password: '',
         },
       },
+      schema: {
+        fields: [],
+      },
     },
   })
   const {
@@ -292,11 +307,6 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
   const resetData = () => {
     reset()
     replace({ topic: '' })
-    replaceSchema({
-      name: '',
-      start_byte: 0,
-      length_byte: 1,
-    })
   }
 
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
@@ -326,7 +336,7 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
   }, [isOpen])
 
   const resetForm = () => {
-    close()
+    close?.()
     form.reset()
   }
 

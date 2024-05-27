@@ -451,19 +451,13 @@ export function UpdateTemplateLwM2M({
   })
 
   const resetForm = () => {
+    reset()
+    setValue('rule_chain_id', selectedModuleNames)
     close()
-    form.reset()
   }
 
   return (
-    <Sheet
-      open={isOpen}
-      onOpenChange={() => {
-        setValue('rule_chain_id', selectedModuleNames)
-        resetForm()
-      }}
-      modal={false}
-    >
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -855,7 +849,7 @@ export function UpdateTemplateLwM2M({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
