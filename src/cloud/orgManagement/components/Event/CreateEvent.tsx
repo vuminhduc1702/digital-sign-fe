@@ -404,7 +404,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     reset,
     resetField,
   } = form
-  // console.log('formState.errors', formState.errors)
+
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
   const {
     append: conditionAppend,
@@ -474,6 +474,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
           parseInt(watch('cmd.thing_id') as unknown as string) !== 0,
       },
     })
+
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
@@ -508,6 +509,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     serviceInput?.forEach((element, idx) => {
       setValue(`cmd.input.${idx}.name`, element.name)
       setValue(`cmd.input.${idx}.type`, element.type)
+      setValue(`cmd.input.${idx}.value`, '')
     })
   }, [serviceInput])
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
