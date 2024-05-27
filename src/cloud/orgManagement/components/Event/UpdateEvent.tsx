@@ -172,7 +172,7 @@ export function UpdateEvent({
 
   const form = useForm<UpdateEventDTO['data']>({
     resolver: updateEventSchema && zodResolver(updateEventSchema),
-    defaultValues: {
+    values: {
       onClick: data.onClick,
       name,
       action: dataAction,
@@ -342,6 +342,10 @@ export function UpdateEvent({
     delay: 150,
     minDuration: 300,
   })
+
+  useEffect(() => {
+    setTodos(dateArr)
+  }, [isOpen])
 
   const resetForm = () => {
     close()

@@ -603,6 +603,7 @@ export function DashboardDetail() {
                   detailDashboard?.dashboard_setting?.layout as RGL.Layout[],
                 )
                 setIsEditMode(false)
+                setIsEditControllerForm(false)
                 setIsStar(detailDashboard?.dashboard_setting?.starred || false)
                 triggerRerenderLayout()
               }}
@@ -620,6 +621,7 @@ export function DashboardDetail() {
               isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
+                setIsEditControllerForm(false)
                 close && close()
                 // resize bug?
                 if (detailDashboard != null) {

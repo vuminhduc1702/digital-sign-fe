@@ -259,8 +259,12 @@ export const attrWidgetSchema = z.array(
     label: z.string({ required_error: i18n.t('ws:filter.choose_label') }),
     color: z.string().optional(),
     unit: z.string().optional(),
-    max: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
-    min: z.number({ required_error: i18n.t('error:default_zod_err.number') }),
+    max: z.number({
+      invalid_type_error: i18n.t('error:default_zod_err.number'),
+    }),
+    min: z.number({
+      invalid_type_error: i18n.t('error:default_zod_err.number'),
+    }),
     deviceName: z.string().optional(),
   }),
 )
@@ -1321,14 +1325,11 @@ export function CreateWidget({
                                         <Input
                                           {...field}
                                           type="number"
-                                          onChange={e => {
-                                            const value = parseFloat(
-                                              e.target.value,
-                                            )
-                                            field.onChange(value)
-                                          }}
-                                          placeholder={t(
-                                            'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                          {...register(
+                                            `attributeConfig.${index}.min`,
+                                            {
+                                              valueAsNumber: true,
+                                            },
                                           )}
                                         />
                                       </FormControl>
@@ -1350,14 +1351,11 @@ export function CreateWidget({
                                         <Input
                                           {...field}
                                           type="number"
-                                          onChange={e => {
-                                            const value = parseFloat(
-                                              e.target.value,
-                                            )
-                                            field.onChange(value)
-                                          }}
-                                          placeholder={t(
-                                            'cloud:org_manage.event_manage.add_event.input_placeholder',
+                                          {...register(
+                                            `attributeConfig.${index}.max`,
+                                            {
+                                              valueAsNumber: true,
+                                            },
                                           )}
                                         />
                                       </FormControl>

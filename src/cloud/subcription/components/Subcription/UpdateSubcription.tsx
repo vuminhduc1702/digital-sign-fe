@@ -27,9 +27,12 @@ import {
 import { Input } from '@/components/ui/input'
 import { useDisclosure } from '@/utils/hooks'
 import { getVNDateFormat } from '@/utils/misc'
+import i18n from '@/i18n'
 
 export const entitySubcriptionUpdateSchema = z.object({
-  register: z.string(),
+  register: z.string().max(999, {
+    message: i18n.t('billing:subcription.popup.choose_quantity'),
+  }),
   c_name: z.string().optional(),
   c_customer_code: z.string().optional(),
   p_name: z.string().optional(),

@@ -19,7 +19,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 type SearchFieldProps = {
   setSearchValue?: React.Dispatch<React.SetStateAction<string>>
-  setSearchFieldName?: string
   searchField?: React.MutableRefObject<string>
   fieldOptions?: { value: string; label: string }[]
   setIsSearchData?: React.Dispatch<React.SetStateAction<boolean>>
@@ -27,11 +26,13 @@ type SearchFieldProps = {
   title?: string
   closeSearch?: boolean
   className?: string
+  searchByFieldClassName?: string
+  searchByNameClassName?: string
+  placeholderValueText?: string
 }
 
 export function SearchField({
   setSearchValue,
-  setSearchFieldName,
   searchField,
   fieldOptions,
   setIsSearchData,
@@ -39,6 +40,9 @@ export function SearchField({
   title,
   closeSearch,
   className,
+  searchByFieldClassName,
+  searchByNameClassName,
+  placeholderValueText,
 }: SearchFieldProps) {
   const { t } = useTranslation()
   const searchSchema = z.object({
@@ -53,7 +57,7 @@ export function SearchField({
     resolver: searchSchema && zodResolver(searchSchema),
     defaultValues: {
       searchByName: '',
-      searchByField: '' || setSearchFieldName,
+      searchByField: '',
     },
   })
 
@@ -97,10 +101,13 @@ export function SearchField({
                           <SelectTrigger
                             className={cn(
                               'h-[38px] min-w-[250px] px-[12px] py-[8px] text-sm',
+                              searchByFieldClassName,
                             )}
                           >
                             <SelectValue
-                              placeholder={t('table:search_field')}
+                              placeholder={
+                                placeholderValueText ?? t('table:search_field')
+                              }
                             />
                           </SelectTrigger>
                           <SelectContent className="bg-white">
@@ -140,6 +147,7 @@ export function SearchField({
                         className={cn(
                           'h-[38px] min-w-[250px] px-[12px] py-[8px] text-sm',
                           closeSearch ? 'pr-[36px]' : 'pr-[12px]',
+                          searchByNameClassName,
                         )}
                         placeholder={placeholder ?? t('search:title')}
                         endIcon={

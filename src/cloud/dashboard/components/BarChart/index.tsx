@@ -6,7 +6,6 @@ import { Spinner } from '@/components/Spinner'
 import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
 import refreshIcon from '@/assets/icons/table-refresh.svg'
-import * as d3 from 'd3'
 
 import {
   Chart,
