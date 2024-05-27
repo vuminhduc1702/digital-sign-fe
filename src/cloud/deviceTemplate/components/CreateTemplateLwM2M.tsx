@@ -399,8 +399,14 @@ export function CreateTemplateLwM2M({
     }
   }, [isSuccessCreateTemplatelwm2m])
 
+  const resetForm = () => {
+    close()
+    resetAllStates()
+    form.reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
