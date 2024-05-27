@@ -1399,7 +1399,7 @@
     "name_short": "Tên quá ngắn",
     "name_regex": "Tên service chỉ bao gồm chữ, số, hoặc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt",
     "encrypted_regex": "Encryption key phải là chuỗi dài 16 ký tự và chỉ bao gồm chữ hoa, chữ thường và số",
-    "version_scheam": "Please enter the version number in the form x.x.x | Example 1.0.0",
+    "version_scheam": "Vui lòng nhập số phiên bản theo dạng x.x.x | Ví dụ 1.0.0",
     "otp": "Vui lòng nhập đúng OTP",
     "wrong_email": "Nhập sai định dạng email",
     "email_long": "Email quá dài",

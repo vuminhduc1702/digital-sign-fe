@@ -162,8 +162,8 @@ export function UpdateTemplate({
   )
 
   const resetForm = () => {
+    reset()
     close()
-    form.reset()
   }
 
   return (
@@ -450,7 +450,7 @@ export function UpdateTemplate({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
