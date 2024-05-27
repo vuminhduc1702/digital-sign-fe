@@ -749,7 +749,14 @@
             "value": "Giá trị",
             "success": "Thực thi nghiệp vụ thành công.",
             "save": "Lưu",
-            "send": "Gửi"
+            "send": "Gửi",
+            "error": {
+              "name": "Nhập tên biến",
+              "thing_id": "Chưa chọn thing",
+              "service_name": "Chưa chọn nghiệp vụ",
+              "input": "Chưa nhập giá trị",
+              "unique_name": "Tên biến không được phép trùng nhau"
+            }
           }
         }
       },

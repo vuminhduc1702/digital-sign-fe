@@ -111,7 +111,7 @@ export function CreateControllerButton({
     label: service.name,
   }))
 
-  const { data: thingServiceData, isLoading: thingServiceIsLoading } =
+  const { data: thingServiceData, isLoading: isLoadingThingService } =
     useThingServiceById({
       thingId: watch('thing_id'),
       name: watch('handle_service'),
@@ -326,7 +326,7 @@ export function CreateControllerButton({
                               loadingMessage={() => t('loading:input')}
                               isLoading={
                                 watch('thing_id') && watch('handle_service')
-                                  ? thingServiceIsLoading
+                                  ? isLoadingThingService
                                   : false
                               }
                               placeholder={t(
