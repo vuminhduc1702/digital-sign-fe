@@ -347,10 +347,11 @@
           "HCM": "Hồ Chí Minh",
           "condition": {
             "title": "Điều kiện kích hoạt",
+            "city": "Thành phố",
             "onClick": "Onclick",
             "device": "Thiết bị",
             "attr": "Thuộc tính",
-            "temp": "Thời tiết",
+            "temp": "Nhiệt độ",
             "condition_type": {
               "title": "Kiểu điều kiện",
               "normal": "Normal",
@@ -403,6 +404,8 @@
       }
     },
     "device_template": {
+      "name": "Tên thiết bị",
+      "id": "ID thiết bị",
       "title": "Mẫu thiết bị",
       "default": "Default",
       "lwm2m": "LwM2M",
@@ -612,6 +615,8 @@
         "success_create": "Tạo adapter thành công",
         "success_update": "Sửa adapter thành công",
         "success_delete": "Xoá adapter thành công",
+        "encrypted": "Encryption key",
+        "encryption": "Encryption",
         "table": {
           "name": "Tên",
           "protocol": "Protocol",
@@ -640,6 +645,8 @@
         "port": "Port",
         "username": "Tài khoản",
         "pass": "Mật khẩu",
+        "option": "Tùy chọn",
+        "AES128": "AES128",
         "topic_list": "Danh sách Topic",
         "new_template": "Mẫu bản tin",
         "schema": {
@@ -654,6 +661,14 @@
           "success": "MQTT connection khả dụng",
           "failure": "MQTT connection không tồn tại"
         }
+      },
+      "message": {
+        "thing": "Vui lòng chọn thing",
+        "handle_service": "Vui lòng chọn nghiệp vụ",
+        "host": "Vui lòng nhập host",
+        "port": "Vui lòng nhập port",
+        "topic": "Vui lòng nhập topic",
+        "number": "Vui lòng nhập số"
       }
     },
     "dashboard": {
@@ -844,11 +859,11 @@
         "pre_pay": "trả trước",
         "post_paid": "trả sau",
         "type_period": "Loại chu kỳ tính tiền",
-        "periodic": "Định ký",
+        "periodic": "Định kỳ",
         "once": "Một lần",
         "period": "Chu kỳ tính tiền",
         "day": "ngày",
-        "week": "tuấn",
+        "week": "tuần",
         "month": "tháng",
         "year": "năm",
         "fix_cost": "Chi phí cố định hàng kỳ",
@@ -914,10 +929,11 @@
         "estimated_payment": "Số tiền thanh toán",
         "period": "Chu kỳ tính tiền",
         "choose_user": "Vui lòng chọn thông tin khách hàng",
-        "choose_plan": "Vui lòng gói cước",
+        "choose_plan": "Vui lòng chọn gói cước",
         "success_create": "Đăng ký dịch vụ thành công",
         "success_update": "Cập nhật dịch vụ thành công",
-        "success_delete": "Hủy đăng ký dịch vụ thành công"
+        "success_delete": "Hủy đăng ký dịch vụ thành công",
+        "choose_quantity": "Vượt quá số lượng được phép đăng ký"
       },
       "table": {
         "sub_code": "Mã đăng ký",
@@ -1011,6 +1027,7 @@
     "total_user": "Tổng số người dùng",
     "total_user_online": "Tổng số user online",
     "request_time": "Thời gian request",
+    "total_request": "Tổng số request",
     "success_rate": "Tỉ lệ thành công",
     "quick_link": "Quick Link",
     "setup_confirm": "Bạn có chắc chắn muốn cài đặt Mẫu thiết bị {{TITLE}}?"
@@ -1088,7 +1105,8 @@
       "select_all": "Tất cả"
     },
     "loading": "Xin vui lòng chờ...",
-    "search_field": "Tìm kiếm theo trường"
+    "search_field": "Tìm kiếm theo trường",
+    "search_field_custom": "Trường tìm kiếm"
   },
   "btn": {
     "create": "Tạo mới",
@@ -1116,7 +1134,8 @@
       "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ.",
       "authorization": "Lỗi 403: Bạn không có quyền truy cập vào trang này.",
       "server": "Lỗi 500: Server đang bị lỗi, vui lòng thử lại.",
-      "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này."
+      "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này.",
+      "500": "Lỗi unknown! Vui lòng refresh lại trang hoặc đăng xuất rồi đăng nhập lại."
     },
     "no_data_res": "Dữ liệu trả về không đúng.",
     "default_zod_err": {
@@ -1197,7 +1216,7 @@
     "no_org": "Không trực thuộc tổ chức",
     "no_group": "Không trực thuộc nhóm",
     "no_search_field": "Chưa nhập trường tìm kiếm",
-    "no_search_name": "Chưa nhập thông tin tìm kiếm"
+    "no_search_name": "Chưa nhập thông tin"
   },
   "user": {
     "login": "Đăng nhập",
@@ -1222,7 +1241,7 @@
   },
   "ws": {
     "connect_success": "Kết nối WS thành công",
-    "connect_error": "Không kết nối WS được, vui lòng refresh lại trang",
+    "connect_error": "Không kết nối WS được, vui lòng refresh lại trang hoặc đăng xuất rồi đăng nhập lại.",
     "filter": {
       "date": "Ngày",
       "group_interval": "Đơn vị thời gian",
@@ -1235,6 +1254,8 @@
       "choose_widgetType": "Vui lòng chọn loại biểu đồ",
       "sma_window": "Số data point đường SMA",
       "choose_attr": "Vui lòng chọn thuộc tính",
+      "choose_label": "Vui lòng chọn nhãn",
+      "choose_color": "Vui lòng chọn màu sắc",
       "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
       "choose_endTime": "Vui lòng nhập thời gian kết thúc",
       "data_point": "Số data point",
@@ -1303,129 +1324,6 @@
     "confirm_password": "Nhập lại mật khẩu",
     "pass_invalid": "Mật khẩu nhập lại không đúng",
     "back_to_home": "Trở về trang chủ"
-  },
-  "landingpage": {
-    "title": "Trang chủ | IoT Platform",
-    "logo": "viettel",
-    "introduction": "Giới thiệu",
-    "pack_of_data": "Gói cước",
-    "product": "Sản phẩm",
-    "Platform_IoT": "Platform IoT",
-    "CMP_system": "Hệ thống CMP",
-    "FAQ": "FAQ",
-    "category": "Category",
-    "register_now": "Đăng ký ngay",
-    "service_transmit_data": "Innoway IoT Platform",
-    "viettel_M2M": "Viettel M2M IoT ",
-    "experience_now": "Trải nghiệm ngay",
-    "user_manual": "Hướng dẫn sử dụng",
-    "pack_of_data_M2M": {
-      "title": "Sản phẩm gói cước M2M",
-      "variety": "Đa dạng gói cước phù hợp nhu cầu khách hàng",
-      "monthlyFee": "Miễn phí cước thuê báo tháng",
-      "offerCode": "Mã đăng ký: ",
-      "submit_now": "Đăng ký ngay",
-      "compare": "So Sánh gói cước",
-      "plan": "Gói cước : ",
-      "subscription": "Thuê bao : ",
-      "4G": "4G/5G",
-      "NB_IoT": "Nb-IoT",
-      "prepaid": "Trả trước",
-      "postpaid": "Trả sau",
-      "categories": {
-        "categories_1": "Đo lưu lượng (Metering)",
-        "categories_2": "Giám sát hành trình",
-        "categories_3": "Máy thanh toán POS",
-        "categories_5": "Màn hình quảng cáo",
-        "categories_6": "Camera",
-        "categories_7": "Ô tô",
-        "categories_8": "Thiết bị bán hàng",
-        "categories_9": "Tất cả"
-      }
-    },
-    "footer": {
-      "client_support": "Hỗ trợ khách hàng",
-      "full_name": "Họ tên*:",
-      "email": "Email*:",
-      "phone_number": "Số điện thoại:",
-      "support_content": "Nội dung cần hỗ trợ*:",
-      "send": "Gửi",
-      "company": "Tổng Công ty Công nghiệp công nghệ cao Viettel",
-      "responsible_person": "Chịu trách nhiệm nội dung: Ông Lê Ngọc Quý",
-      "cskh": "innoway@viettel.com.vn",
-      "follow": "Follow us:",
-      "phone_used": "0869 9999 904",
-      "cre": "Copyright Viettel High Tech"
-    },
-    "client": {
-      "partner": "Đối tác của chúng tôi"
-    },
-    "introduction_section": {
-      "view_product": "Xem sản phẩm",
-      "service_transmit_data_accurate": "Dịch vụ Sim Data truyền tải dữ liệu chính xác, tiết kiệm"
-    },
-    "news": {
-      "view_detail": "Xem chi tiết",
-      "news_": "Tin tức"
-    },
-    "order1": {
-      "M2M_manage_solution": "Giải pháp quản lý kết nối M2M",
-      "subscription_management": "Quản lý thuê bao",
-      "contract_management": "Quản lý hợp đồng",
-      "order_management": "Quản lý đơn hàng",
-      "payment_management": "Quản lý thanh toán",
-      "subscription_locating": "Định vị thuê bao"
-    },
-    "order": {
-      "manage_platform": "Nền tảng IoT Viettel ",
-      "manage_device": "Quản lý trạng thái thiết bị",
-      "business_model": "Triển khai mô hình nghiệp vụ no code - low code",
-      "data_security": "Bảo mật dữ liệu người dùng",
-      "support_protocol": "Hỗ trợ nhiều loại giao thức"
-    },
-    "section_product": {
-      "iot": "Sản phẩm IoT",
-      "variety": "Đa dạng sản phẩm phù hợp nhu cầu khách hàng",
-      "lauching": "Xem chi tiết",
-      "developing": "Đang phát triển",
-      "slide": {
-        "slide_1": {
-          "title_1": "Đồng hồ thông minh",
-          "title_2": "MyKID"
-        },
-        "slide_2": {
-          "title_1": "Quản lý tài sản",
-          "title_2": "IoT V-Tracking: Ô tô"
-        },
-        "slide_3": {
-          "title_1": "Ô tô thông minh",
-          "title_2": "Smart car"
-        },
-        "slide_4": {
-          "title_1": "Sức khỏe cá nhân",
-          "title_2": "Ourhealth"
-        },
-        "slide_5": {
-          "title_1": "Office thông minh",
-          "title_2": "Camera Al"
-        },
-        "slide_6": {
-          "title_1": "Căn hộ thông minh",
-          "title_2": "Home Camera"
-        },
-        "slide_7": {
-          "title_1": "Định vị thông minh",
-          "title_2": "vTag"
-        }
-      }
-    },
-    "Q_A": {
-      "question": "Câu hỏi thường gặp"
-    },
-    "solution": {
-      "value": "Giá trị đem lại của Giải pháp M2M/IoT",
-      "accuracy": "Tiết kiệm, chính xác và mang lại nhiều giá trị cho khách hàng"
-    }
   },
   "device": {
     "guide_device": "HƯỚNG DẪN TÍCH HỢP THIẾT BỊ",
@@ -1508,10 +1406,12 @@
     "name": "Tên"
   },
   "schema": {
+    "no_name": "Chưa nhập tên",
     "name_long": "Tên quá dài",
     "name_short": "Tên quá ngắn",
     "name_regex": "Tên service chỉ bao gồm chữ, số, hoặc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt",
-    "version_scheam": "Please enter the version number in the form x.x.x | Example 1.0.0",
+    "encrypted_regex": "Encryption key phải là chuỗi dài 16 ký tự và chỉ bao gồm chữ hoa, chữ thường và số",
+    "version_scheam": "Vui lòng nhập số phiên bản theo dạng x.x.x | Ví dụ 1.0.0",
     "otp": "Vui lòng nhập đúng OTP",
     "wrong_email": "Nhập sai định dạng email",
     "email_long": "Email quá dài",
@@ -1571,60 +1471,6 @@
     "smart_water_meter": "Giải pháp Smart Water Meter",
     "smart_farm": "Giải pháp Smart Farm",
     "smart_home": "Giải pháp Smarthome"
-  },
-  "landingpage_text": {
-    "index": "Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý ứng dụng.",
-    "introduction": {
-      "introduction_1": "M2M là công nghệ cho phép cho các thiết bị có thể trao đổi với các hệ thống thông qua kết nối mạng.",
-      "introduction_2": "Dịch vụ data M2M: Là dịch vụ trong đó sim data được sử dụng để truyền tải dữ liệu.",
-      "introduction_3": "M2M là công nghệ cho phép các thiết bị có thể trao đổi với các hệ thống thông qua kết nối mạng. Dịch vụ data M2M: Là dịch vụ trong đó sim data được sử dụng để truyền tải dữ liệu. Công nghệ IOT phát triển dựa trên nền tảng kết hợp công nghệ mạng Internet (mạng wifi, mạng viễn thông băng rộng 4G, 5G) và công nghệ vi cơ điện tử, giúp người dùng kiểm soát mọi vật tối ưu hơn chỉ bằng 1 thiết bị thông minh."
-    },
-    "slides": {
-      "slide_1": {
-        "text_1": "Tiết kiệm",
-        "text_2": "Giảm chi phí vận hành"
-      },
-      "slide_2": {
-        "text_1": "Chính xác",
-        "text_2": "Cung cấp thông tin chính xác, kịp thời"
-      },
-      "slide_3": {
-        "text_1": "Trải nghiệm",
-        "text_2": "Nâng cao trải nghiệm khách hàng"
-      },
-      "slide_4": {
-        "text_1": "An toàn",
-        "text_2": "Cải thiện độ an toàm"
-      }
-    },
-    "section_order": {
-      "text_1": "Nền tảng của chúng tôi đã hỗ trợ rút ngắn thời gian phát triểncác giải pháp IoT của Viettel tới 70%. Tiết kiệm chi phí vận hành tới 80%.",
-      "text_2": "Nếu các bạn có 1 ý tưởng cung cấp dịch vụ IoT xuất sắc, các bạn muốn thử nghiệm nhanh? chúng tôi sẽ giúp bạn miễn phí (dưới 100 thiết bị)",
-      "text_3": "Nếu dịch vụ của bạn đang dùng thiết bị nhập, phần mềm nước ngoài, hoàn toàn không kiểm soát được dữ liệu của khách hàng? Nền tảng của chúng tôi sẽ hỗ trợ tích hợp tất các thiết bị, với giao thức bất kỳ và đảm bảo dữ liệu được kiểm soát tuyệt đối theo yêu cầu.",
-      "text_4": "Nếu các bạn đang triển khai 1 dự án đầu tư công, mà các nhà cung cấp nền tảng nước ngoài không thể đáp ứng yêu cầu? Nền tảng của chúng tôi phát triển hoàn toàn bởi đội ngũ Viettel, hỗ trợ tùy biến không giới hạn, chúng tôi sẽ đồng hành cùng các bạn trọn vòng đời sản phẩm."
-    },
-    "section_order_1": {
-      "text_1": "Nền tảng tiên phong tại Việt Nam, cung cấp đồng thời 2 dịch vụ nền tảng quản lý kết nối (CMP) và quản lý ứng dụng (AEP). Hỗ trợ toàn trình cho các dịch vụ IoT dùng công nghệ cellular (2G/4G/Nb-IoT).",
-      "text_2": "Nền tảng quản lý kết nối của Viettel cho phép doanh nghiệp quản lý danh sách thuê bao, trình trạng cước thanh toán, định vị thuê bao... và nhiều tiện ích khác"
-    },
-    "q_a": {
-      "item_1": {
-        "trigger": "Làm sao để có thể Quản lý thông tin liên quan tới thuê bao mà doanh nghiệp đã đăng ký?",
-        "content": "- Để quản lý được thông tin liên quan tới thuê bao của doanh nghiệp một cách dễ dàng, anh/chị cần đăng ký tài khoản ở trên nền tảng IoT Innoway, đăng nhập và bổ sung thông tin GPKD của doanh nghiệp - Để nhận được sự hỗ trợ chi tiết, vui lòng gọi số ..."
-      },
-      "item_2": {
-        "trigger": "Khách hàng có thể quản lý những thông tin gì của thuê bao thuộc doanh nghiệp ?",
-        "content": "Hệ thống Telco của Viettel hỗ trợ doanh nghiệp các nghiệp vụ sau: - Xem thông tin thuê bao, hợp đồng , hóa đơn, đơn hàng của doanh nghiệp - Thực hiện đăng ký đơn mua hàng mua thuê bao mới một cách thuận tiện - Thực hiện đầu nối trực tuyến mộ cách đơn giản, thuận tiện - Thực hiện nạp tiền, thanh toán hóa đơn, đăng ký các gói dịch vụ giá trị gia tăng - Thực hiện chặn, mở thuê bao một các chủ động"
-      },
-      "item_3": {
-        "trigger": "Khách hàng có thể quản lý hệ thống thuê bao của mình trên hệ thống Telco không ?",
-        "content": "Hệ thống Telco của Viettel hỗ trợ doanh nghiệp quản lý các thuê bao doanh nghiệp, không hỗ trợ với khách hàng cá nhân"
-      },
-      "item_4": {
-        "trigger": "Dịch vụ data M2M là gì?",
-        "content": "Hệ thống Telco của Viettel hỗ trợ các doanh nghiệp đã đăng ký sử dụng thuê bao của Viettel quản lý thông tin thuê bao một cách miễn phí. Khách hàng chỉ cần tạo tài khoản và cung cấp thông tin GPKD để thực hiện quản lý."
-      }
-    }
   },
   "tree": {
     "no_selection_org": "Không trực thuộc tổ chức"

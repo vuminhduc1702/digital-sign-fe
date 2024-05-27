@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import * as z from 'zod'
@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
 import { Button } from '@/components/ui/button'
-import { InputField, SelectField } from '@/components/Form'
 import {
   emptyInputSchema,
   emptySelectSchema,
@@ -24,6 +23,22 @@ import { Spinner } from '@/components/Spinner'
 
 import narrowLeft from '@/assets/icons/narrow-left.svg'
 import { ContentLayout } from '@/layout/ContentLayout'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const selfInfoSchema = z.object({
   name: emptyInputSchema,
@@ -47,11 +62,18 @@ const SelfAccount = () => {
   //get user info
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({})
 
-  const { register, formState, handleSubmit, watch, reset, setValue } = useForm<
-    UpdateSelfAccountInfoDTO['data']
-  >({
+  const form = useForm<UpdateSelfAccountInfoDTO['data']>({
     resolver: selfInfoSchema && zodResolver(selfInfoSchema),
   })
+  const {
+    register,
+    formState,
+    handleSubmit,
+    watch,
+    reset,
+    setValue,
+    getValues,
+  } = form
 
   useEffect(() => {
     if (userInfoData != null) {
@@ -76,18 +98,18 @@ const SelfAccount = () => {
   })
 
   const { data: districtList } = useAreaList({
-    parentCode: watch('profile.province'),
+    parentCode: getValues('profile.province'),
     type: 'DISTRICT',
     config: {
-      enabled: !!watch('profile.province'),
+      enabled: !!getValues('profile.province'),
     },
   })
 
   const { data: wardList } = useAreaList({
-    parentCode: watch('profile.district'),
+    parentCode: getValues('profile.district'),
     type: 'WARD',
     config: {
-      enabled: !!watch('profile.district'),
+      enabled: !!getValues('profile.district'),
     },
   })
 
@@ -125,117 +147,247 @@ const SelfAccount = () => {
           </div>
         ) : (
           <>
-            <form
-              id="update-self-account-info"
-              onSubmit={handleSubmit(values =>
-                mutate({
-                  data: { ...values },
-                  tenant_id: userInfoData?.user_id as string,
-                }),
-              )}
-              className="w-full space-y-6 pr-32"
-            >
-              <div className="grid grid-cols-4 gap-4">
-                <div className="col-start-1 flex items-center justify-end">
-                  {t('form:enter_name')}{' '}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-2">
-                  <InputField
-                    classchild="w-full"
-                    classnamefieldwrapper="flex justify-end items-center"
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                </div>
-                <div className="col-start-3 flex items-center justify-end">
-                  {t('form:enter_tax')}{' '}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-4">
-                  <InputField
-                    type="number"
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center"
-                    error={formState?.errors?.profile?.tax_code}
-                    registration={register('profile.tax_code')}
-                  />
-                </div>
-                <div className="col-start-1 flex items-center justify-end">
-                  {t('form:enter_phone_num')}{' '}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-2">
-                  <InputField
-                    type="number"
-                    classchild="w-full"
-                    classnamefieldwrapper="flex flex justify-end items-center"
-                    error={formState.errors['phone']}
-                    registration={register('phone')}
-                  />
-                </div>
-                <div className="col-start-3 flex items-center justify-end">
-                  {t('form:email')} <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-4">
-                  <InputField
-                    registration={register('email')}
-                    disabled
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center"
-                  />
-                </div>
-                <div className="col-start-1 flex items-center justify-end">
-                  {t('cloud:org_manage.event_manage.add_event.action.address')}
-                  <span className="text-primary-400">*</span>
-                </div>
-                <div className="col-start-2">
-                  <SelectField
-                    error={formState?.errors?.profile?.province}
-                    registration={register('profile.province', {
-                      onChange: () =>
-                        setValue('profile.district', districtList?.[0]?.value),
-                    })}
-                    options={provinceList}
-                    classchild="w-full"
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.province',
+            <Form {...form}>
+              <form
+                id="update-self-account-info"
+                onSubmit={handleSubmit(values =>
+                  mutate({
+                    data: { ...values },
+                    tenant_id: userInfoData?.user_id as string,
+                  }),
+                )}
+                className="w-full space-y-6 pr-32"
+              >
+                <div className="grid grid-cols-4 gap-4">
+                  <FormLabel
+                    className={`col-start-1 flex items-center justify-end ${formState.errors.name ? 'text-destructive' : ''}`}
+                  >
+                    {t('form:enter_name')}
+                    <span className="text-red-600">*</span>
+                  </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
                     )}
                   />
-                </div>
-                <div>
-                  <SelectField
-                    error={formState?.errors?.profile?.district}
-                    registration={register('profile.district')}
-                    options={districtList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.district',
+                  <FormLabel
+                    className={`col-start-3 flex items-center justify-end ${formState.errors?.profile?.tax_code ? 'text-destructive' : ''}`}
+                  >
+                    {t('form:enter_tax')}
+                    <span className="text-red-600">*</span>
+                  </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="profile.tax_code"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <Input {...field} type="number" />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
                     )}
                   />
-                </div>
-                <div>
-                  <SelectField
-                    error={formState?.errors?.profile?.ward}
-                    registration={register('profile.ward')}
-                    options={wardList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.ward',
+                  <FormLabel
+                    className={`col-start-1 flex items-center justify-end ${formState.errors.phone ? 'text-destructive' : ''}`}
+                  >
+                    {t('form:enter_phone_num')}
+                    <span className="text-red-600">*</span>
+                  </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <Input {...field} type="number" />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
                     )}
                   />
-                </div>
-                <div className="col-start-1 flex items-center justify-end">
-                  {t('form:enter_address')}
-                </div>
-                <div className="col-start-2 col-end-5">
-                  <InputField
-                    error={formState?.errors?.profile?.full_address}
-                    registration={register('profile.full_address')}
-                    classchild="w-full"
-                    classnamefieldwrapper="flex items-center"
+                  <FormLabel
+                    className={`col-start-3 flex items-center justify-end ${formState.errors.email ? 'text-destructive' : ''}`}
+                  >
+                    {t('form:email')}
+                    <span className="text-red-600">*</span>
+                  </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <Input {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
+                  <FormLabel
+                    className={`col-start-1 flex items-center justify-end ${formState.errors?.profile?.province ? 'text-destructive' : ''}`}
+                  >
+                    {t(
+                      'cloud:org_manage.event_manage.add_event.action.address',
+                    )}
+                    <span className="text-red-600">*</span>
+                  </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="profile.province"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <div>
+                          <Select
+                            {...field}
+                            onValueChange={e => {
+                              onChange(e)
+                              setValue('profile.district', '')
+                              setValue('profile.ward', '')
+                            }}
+                            value={value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue
+                                  placeholder={t(
+                                    'cloud:org_manage.user_manage.add_user.province',
+                                  )}
+                                />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {provinceList?.map((template: any) => (
+                                <SelectItem
+                                  key={template.label}
+                                  value={template.value}
+                                >
+                                  {template.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="profile.district"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <div>
+                            <Select
+                              {...field}
+                              onValueChange={e => {
+                                onChange(e)
+                                setValue('profile.ward', '')
+                              }}
+                              value={value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={t(
+                                      'cloud:org_manage.user_manage.add_user.district',
+                                    )}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {districtList?.map((template: any) => (
+                                  <SelectItem
+                                    key={template.label}
+                                    value={template.value}
+                                  >
+                                    {template.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div>
+                    <FormField
+                      control={form.control}
+                      name="profile.ward"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <div>
+                            <Select
+                              {...field}
+                              onValueChange={e => onChange(e)}
+                              value={value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={t(
+                                      'cloud:org_manage.user_manage.add_user.ward',
+                                    )}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {wardList?.map((template: any) => (
+                                  <SelectItem
+                                    key={template.label}
+                                    value={template.value}
+                                  >
+                                    {template.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormLabel className="col-start-1 flex items-center justify-end">
+                    {t('form:enter_address')}
+                  </FormLabel>
+                  <div className="col-start-2 col-end-5">
+                    <FormField
+                      control={form.control}
+                      name="profile.full_address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div>
+                            <FormControl>
+                              <Input {...field} className="w-full" />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </Form>
 
             <div className="mt-4 flex justify-center">
               <Button

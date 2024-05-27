@@ -24,6 +24,15 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 export const updateeRowsSchema = z.record(z.string())
 
@@ -41,14 +50,14 @@ export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
   const [columns, setColumns] = useState<string[]>([])
 
   const { mutate, isLoading, isSuccess } = useUpdateRow()
-  const { register, formState, handleSubmit } = useForm<
-    UpdateRowDTO['data']['dataSendBE']['filter']
-  >({
+
+  const form = useForm<UpdateRowDTO['data']['dataSendBE']['filter']>({
     resolver: updateeRowsSchema && zodResolver(updateeRowsSchema),
     defaultValues: {
       ...row,
     },
   })
+  const { control, register, formState, handleSubmit } = form
 
   useEffect(() => {
     if (row) setColumns(Object.keys(row))
@@ -73,34 +82,46 @@ export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
           <SheetTitle>{t('cloud:db_template.add_db.update_row')}</SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            id="update-dashboard"
-            className="w-full space-y-6"
-            onSubmit={handleSubmit(values => {
-              mutate({
-                data: {
-                  table: tableName || '',
-                  dataSendBE: {
-                    values,
-                    filter: {
-                      ...row,
+          <Form {...form}>
+            <form
+              id="update-dashboard"
+              className="w-full space-y-6"
+              onSubmit={handleSubmit(values => {
+                mutate({
+                  data: {
+                    table: tableName || '',
+                    dataSendBE: {
+                      values,
+                      filter: {
+                        ...row,
+                      },
                     },
+                    project_id: projectId,
                   },
-                  project_id: projectId,
-                },
-              })
-            })}
-          >
-            <>
-              {columns?.map(item => (
-                <InputField
-                  label={item}
-                  error={formState?.errors?.[item]}
-                  registration={register(`${item}`)}
-                />
-              ))}
-            </>
-          </form>
+                })
+              })}
+            >
+              <>
+                {columns?.map(item => (
+                  <FormField
+                    control={form.control}
+                    name={item}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{item}</FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>

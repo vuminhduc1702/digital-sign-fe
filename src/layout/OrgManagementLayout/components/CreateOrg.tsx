@@ -115,8 +115,13 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
     }
   }, [isSuccessCreateOrg])
 
+  const resetForm = () => {
+    close()
+    reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -154,7 +159,7 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
                       name: dataCreateOrg.name,
                       description: dataCreateOrg.description,
                       org_id: dataCreateOrg.org_id,
-                      image: dataUploadImage.data.link,
+                      image: dataUploadImage.link,
                     },
                     org_id: dataCreateOrg.id,
                   })
@@ -294,6 +299,7 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
                                       .result as string
                                   }
                                 }
+                                event.target.value = ''
                               }}
                             />
                           </FormControl>
@@ -334,7 +340,7 @@ export function CreateOrg({ open, close, isOpen }: CreateOrgProps) {
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

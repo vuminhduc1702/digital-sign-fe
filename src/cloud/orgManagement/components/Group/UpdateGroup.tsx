@@ -102,10 +102,15 @@ export function UpdateGroup({
       org_id: organization,
     },
   })
-  const { register, formState, control, getValues, handleSubmit } = form
+  const { register, formState, control, getValues, handleSubmit, reset } = form
+
+  const resetForm = () => {
+    close()
+    reset()
+  }
 
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -263,7 +268,7 @@ export function UpdateGroup({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

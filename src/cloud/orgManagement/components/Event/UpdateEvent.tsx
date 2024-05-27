@@ -172,7 +172,7 @@ export function UpdateEvent({
 
   const form = useForm<UpdateEventDTO['data']>({
     resolver: updateEventSchema && zodResolver(updateEventSchema),
-    defaultValues: {
+    values: {
       onClick: data.onClick,
       name,
       action: dataAction,
@@ -204,6 +204,7 @@ export function UpdateEvent({
     getValues,
     setValue,
     resetField,
+    reset,
   } = form
 
   const {
@@ -342,8 +343,17 @@ export function UpdateEvent({
     minDuration: 300,
   })
 
+  useEffect(() => {
+    setTodos(dateArr)
+  }, [isOpen])
+
+  const resetForm = () => {
+    close()
+    reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -924,7 +934,7 @@ export function UpdateEvent({
                                     <FormItem>
                                       <FormLabel>
                                         {t(
-                                          'cloud:org_manage.event_manage.add_event.condition.temp',
+                                          'cloud:org_manage.event_manage.add_event.condition.city',
                                         )}
                                       </FormLabel>
                                       <div>
@@ -1666,7 +1676,7 @@ export function UpdateEvent({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

@@ -404,7 +404,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     reset,
     resetField,
   } = form
-  // console.log('formState.errors', formState.errors)
+
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
   const {
     append: conditionAppend,
@@ -474,6 +474,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
           parseInt(watch('cmd.thing_id') as unknown as string) !== 0,
       },
     })
+
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
@@ -508,6 +509,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     serviceInput?.forEach((element, idx) => {
       setValue(`cmd.input.${idx}.name`, element.name)
       setValue(`cmd.input.${idx}.type`, element.type)
+      setValue(`cmd.input.${idx}.value`, '')
     })
   }, [serviceInput])
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
@@ -524,10 +526,13 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     }
   }, [isSuccess])
 
-  console.log(getValues('type'))
+  const resetForm = () => {
+    close()
+    reset()
+  }
 
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -565,7 +570,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                   end_time: getValues('interval.end_time'),
                 }
 
-                console.log(values, 'valuesvaluesvalues')
                 const conditionArr =
                   ('condition' in values &&
                     values.condition.map(item => ({
@@ -1018,7 +1022,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                     <div>
                                       <FormControl>
                                         <NewSelectDropdown
-                                          classnamefieldwrapper="h-9"
                                           options={deviceSelectData}
                                           customOnChange={value => {
                                             const filter =
@@ -1066,13 +1069,12 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <FormItem>
                                     <FormLabel>
                                       {t(
-                                        'cloud:org_manage.event_manage.add_event.condition.temp',
+                                        'cloud:org_manage.event_manage.add_event.condition.city',
                                       )}
                                     </FormLabel>
                                     <div>
                                       <FormControl>
                                         <NewSelectDropdown
-                                          classnamefieldwrapper="h-9"
                                           options={deviceNameOptions}
                                           customOnChange={value => {
                                             setValue(
@@ -1121,7 +1123,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <FormControl>
                                       <NewSelectDropdown
-                                        classnamefieldwrapper="h-9"
                                         options={
                                           watch('condition_event_type') ===
                                           'device_condition'
@@ -1732,7 +1733,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
