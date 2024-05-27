@@ -33,7 +33,7 @@ export default function DevRole() {
     isOpen: isOpenCreateRole,
   } = useDisclosure()
 
-  const { data: projectsData } = useProjects()
+  const { data: projectsData } = useProjects({})
 
   const transformProjectArr = (arr: Project[]) => {
     const rs = arr.map(item => {

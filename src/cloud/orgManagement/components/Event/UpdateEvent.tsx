@@ -204,6 +204,7 @@ export function UpdateEvent({
     getValues,
     setValue,
     resetField,
+    reset,
   } = form
 
   const {
@@ -342,8 +343,13 @@ export function UpdateEvent({
     minDuration: 300,
   })
 
+  const resetForm = () => {
+    close()
+    reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -1666,7 +1672,7 @@ export function UpdateEvent({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

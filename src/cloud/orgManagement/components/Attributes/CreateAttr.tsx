@@ -98,8 +98,13 @@ export function CreateAttr({
     }
   }, [isSuccess])
 
+  const resetForm = () => {
+    close()
+    reset()
+  }
+
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -247,7 +252,7 @@ export function CreateAttr({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
