@@ -925,7 +925,8 @@
         "choose_plan": "Vui lòng chọn gói cước",
         "success_create": "Đăng ký dịch vụ thành công",
         "success_update": "Cập nhật dịch vụ thành công",
-        "success_delete": "Hủy đăng ký dịch vụ thành công"
+        "success_delete": "Hủy đăng ký dịch vụ thành công",
+        "choose_quantity": "Vượt quá số lượng được phép đăng ký"
       },
       "table": {
         "sub_code": "Mã đăng ký",
