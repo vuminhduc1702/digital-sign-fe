@@ -18,7 +18,7 @@ export const ChangePaswordSchema = z
   .superRefine(({ new_password_confirm, new_password }, ctx) => {
     if (new_password_confirm !== new_password) {
       ctx.addIssue({
-        path: ['confirmPassword'],
+        path: ['new_password_confirm'],
         code: 'custom',
         message: i18n.t('auth:pass_invalid'),
       })
