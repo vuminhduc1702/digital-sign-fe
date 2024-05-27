@@ -1,34 +1,32 @@
-import { useState, useEffect } from 'react'
+import clsx from 'clsx'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
-import clsx from 'clsx'
 
 import { Button } from '@/components/ui/button'
 
-import { useCopyId, useDisclosure } from '@/utils/hooks'
 import { PATHS } from '@/routes/PATHS'
-import CreateTemplate from './CreateTemplate'
-import { useDeleteTemplate } from '../api'
-import { UpdateTemplate } from './UpdateTemplate'
+import { useCopyId, useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
+import { useDeleteTemplate } from '../api'
+import CreateTemplate from './CreateTemplate'
+import { UpdateTemplate } from './UpdateTemplate'
 
 import { type Template } from '../types'
 
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import btnEditIcon from '@/assets/icons/btn-edit.svg'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
+import { BtnContextMenuIcon, PlusIcon } from '@/components/SVGIcons'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { SearchField } from '@/components/Input'
 import { useGetTemplates } from '../api'
-import { PlusIcon } from '@/components/SVGIcons'
 
 export function TemplateDefault() {
   const { t } = useTranslation()
@@ -52,6 +50,7 @@ export function TemplateDefault() {
 
   const { id: projectId } = storage.getProject()
   const [searchQuery, setSearchQuery] = useState('')
+  const searchField = useRef('')
   const { mutate, isLoading, isSuccess } = useDeleteTemplate()
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const [selectedUpdateTemplate, setSelectedUpdateTemplate] =
@@ -64,7 +63,7 @@ export function TemplateDefault() {
     protocol: 'default',
 
     search_str: searchQuery,
-    search_field: 'name',
+    search_field: searchField.current,
   })
   const handleCopyId = useCopyId()
   useEffect(() => {
@@ -99,8 +98,24 @@ export function TemplateDefault() {
         />
         <SearchField
           setSearchValue={setSearchQuery}
-          setSearchFieldName={'name'}
+          searchField={searchField}
+          fieldOptions={[
+            {
+              value: 'name,id',
+              label: t('search:all'),
+            },
+            {
+              value: 'name',
+              label: t('cloud:device_template.name'),
+            },
+            {
+              value: 'id',
+              label: t('cloud:device_template.id'),
+            },
+          ]}
           closeSearch={true}
+          searchByFieldClassName="min-w-[200px]"
+          searchByNameClassName="min-w-[150px]"
         />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">

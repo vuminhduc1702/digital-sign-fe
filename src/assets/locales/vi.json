@@ -404,6 +404,8 @@
       }
     },
     "device_template": {
+      "name": "Tên thiết bị",
+      "id": "ID thiết bị",
       "title": "Mẫu thiết bị",
       "default": "Default",
       "lwm2m": "LwM2M",
@@ -1095,7 +1097,8 @@
       "select_all": "Tất cả"
     },
     "loading": "Xin vui lòng chờ...",
-    "search_field": "Tìm kiếm theo trường"
+    "search_field": "Tìm kiếm theo trường",
+    "search_field_custom": "Trường tìm kiếm"
   },
   "btn": {
     "create": "Tạo mới",
@@ -1205,7 +1208,7 @@
     "no_org": "Không trực thuộc tổ chức",
     "no_group": "Không trực thuộc nhóm",
     "no_search_field": "Chưa nhập trường tìm kiếm",
-    "no_search_name": "Chưa nhập thông tin tìm kiếm"
+    "no_search_name": "Chưa nhập thông tin"
   },
   "user": {
     "login": "Đăng nhập",
