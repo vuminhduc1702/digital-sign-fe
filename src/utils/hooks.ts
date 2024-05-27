@@ -4,9 +4,13 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import * as z from 'zod'
+import { useNavigate } from 'react-router-dom'
 
 import { toast } from 'sonner'
 import i18n from '@/i18n'
+import storage from './storage'
+import { PATHS } from '@/routes/PATHS'
+import { useProjectIdStore } from '@/stores/project'
 
 export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false)
@@ -40,6 +44,12 @@ export const useWS = <T>(
   rerun?: boolean,
 ) => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const projectIdFromURL = window.location.pathname.split('/').at(-1)
+  const projectIdFromZustand = useProjectIdStore(state => state.projectId)
+  const projectId =
+    projectIdFromURL ?? projectIdFromZustand ?? storage.getProject()?.id
 
   useEffect(() => {
     sendMessageCallback()
@@ -52,15 +62,22 @@ export const useWS = <T>(
     lastJsonMessage,
     readyState,
   } = useWebSocket<T>(url, {
-    onError: () => toast.error(t('ws:connect_error')),
+    onError: () => {
+      toast.error(t('ws:connect_error'))
+    },
+    onClose: () => {
+      if (window.location.pathname.split('/')[4] != null) {
+        sendMessageCallback()
+      }
+    },
     shouldReconnect: closeEvent => true,
     reconnectAttempts: 5,
     // attemptNumber will be 0 the first time it attempts to reconnect, so this equation results in a reconnect pattern of 1 second, 2 seconds, 4 seconds, 8 seconds, and then caps at 10 seconds until the maximum number of attempts is reached
     reconnectInterval: attemptNumber =>
       Math.min(Math.pow(2, attemptNumber) * 1000, 10000),
-    onClose: () => {
-      if (window.location.pathname.split('/')[4] != null) {
-        sendMessageCallback()
+    onReconnectStop: () => {
+      if (storage.getIsPersistLogin() === 'true') {
+        navigate(`${PATHS.DASHBOARD}/${projectId}`)
       }
     },
     heartbeat: {
