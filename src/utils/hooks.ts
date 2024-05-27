@@ -154,7 +154,6 @@ export function useResetDefaultImage(
 
   function handleResetDefaultImage() {
     resetFieldUploadImage('file')
-    console.log(getValueUploadImage())
     setUploadImageErr('')
     if (avatarRef.current != null) {
       avatarRef.current.src = defaultImage

@@ -455,8 +455,6 @@ export function UpdateTemplateLwM2M({
     form.reset()
   }
 
-  console.log(filterLWM2M)
-
   return (
     <Sheet
       open={isOpen}

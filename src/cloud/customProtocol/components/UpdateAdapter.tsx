@@ -96,8 +96,6 @@ export function UpdateAdapter({
     label: thing.name,
   }))
 
-  console.log('encrypted', encrypted)
-
   const form = useForm<UpdateAdapterDTO['data']>({
     resolver: adapterSchema && zodResolver(adapterSchema),
     defaultValues: {

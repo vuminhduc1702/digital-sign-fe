@@ -524,8 +524,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     }
   }, [isSuccess])
 
-  console.log(getValues('type'))
-
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -565,7 +563,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                   end_time: getValues('interval.end_time'),
                 }
 
-                console.log(values, 'valuesvaluesvalues')
                 const conditionArr =
                   ('condition' in values &&
                     values.condition.map(item => ({

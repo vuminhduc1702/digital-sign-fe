@@ -130,7 +130,11 @@ export function TemplateLwM2M() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
           onClick={openTemplate}
         />
-        <SearchField setSearchValue={setSearchQuery} closeSearch={true} />
+        <SearchField
+          setSearchValue={setSearchQuery}
+          setSearchFieldName={'name'}
+          closeSearch={true}
+        />
         <Form {...form}>
           <form className="w-full" onSubmit={e => e.preventDefault()}>
             <FormField
@@ -227,7 +231,6 @@ export function TemplateLwM2M() {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          console.log('haaaaa')
                           openDelete()
                           setId(template.id)
                           setName(template.name)

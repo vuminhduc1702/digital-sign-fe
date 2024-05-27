@@ -96,7 +96,7 @@ export function CustomProtocolManage() {
           [] as Array<{ [key: string]: unknown }>,
         )
       : []
-  console.log(isOpenAdapter)
+
   return (
     <ContentLayout title={t('sidebar:cloud.custom_protocol')}>
       <div className="flex grow flex-col">
