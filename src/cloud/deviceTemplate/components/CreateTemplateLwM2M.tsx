@@ -1,9 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
-import { type SelectInstance } from 'react-select'
-import * as z from 'zod'
+import { InputField, type SelectOption } from '@/components/Form'
 import {
   Accordion,
   AccordionContent,
@@ -12,13 +7,14 @@ import {
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOption,
-} from '@/components/Form'
 import { nameSchema } from '@/utils/schemaValidation'
 import storage from '@/utils/storage'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { type SelectInstance } from 'react-select'
+import * as z from 'zod'
 import { useCreateTemplate, type CreateTemplateDTO } from '../api'
 import { useGetXMLdata } from '../api/getXMLdata'
 import {
@@ -28,24 +24,30 @@ import {
 } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
-import { LuChevronDown } from 'react-icons/lu'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { PlusIcon } from '@/components/SVGIcons'
+import { LuChevronDown } from 'react-icons/lu'
 
 import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
-import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
 import { CreateService } from '@/cloud/customProtocol/components/CreateService'
+import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
 
@@ -90,6 +92,11 @@ export function CreateTemplateLwM2M({
     isLoading: isLoadingCreateTemplatelwm2m,
     isSuccess: isSuccessCreateTemplatelwm2m,
   } = useCreateTemplate()
+
+  const form = useForm<CreateTemplateDTO['data']>({
+    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+  })
+
   const {
     register,
     formState,
@@ -98,9 +105,7 @@ export function CreateTemplateLwM2M({
     watch,
     reset,
     getValues,
-  } = useForm<CreateTemplateDTO['data']>({
-    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
-  })
+  } = form
 
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
     projectId,
@@ -132,10 +137,10 @@ export function CreateTemplateLwM2M({
     return formattedStr
   }
   const [openAccordion] = useState()
-  const [name, setName] = useState<string>('')
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value)
-  }
+  // const [name, setName] = useState<string>('')
+  // const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setName(event.target.value)
+  // }
   const [accordionStates, setAccordionStates] = useState<AccordionStates>({})
   const [selectAllAttributes, setSelectAllAttributes] =
     useState<CheckboxStates>({})
@@ -372,7 +377,7 @@ export function CreateTemplateLwM2M({
   }
   const selectedThing = watch('thing_id')
   const selectedService = watch('handle_msg_svc')
-
+  const name = watch('name')
   const transportConfig = {
     protocol: 'lwm2m',
     config: configData,
@@ -395,8 +400,9 @@ export function CreateTemplateLwM2M({
   }, [isSuccessCreateTemplatelwm2m])
 
   const resetForm = () => {
-    reset()
     close()
+    resetAllStates()
+    form.reset()
   }
 
   return (
@@ -413,262 +419,339 @@ export function CreateTemplateLwM2M({
           </SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            className="w-full space-y-5"
-            id="create-template"
-            onSubmit={handleSubmit(async () => {
-              await mutateAsyncCreateTemplatelwm2m({ data })
-            })}
-          >
-            <>
-              <InputField
-                label={t('cloud:device_template.add_template.name')}
-                value={name}
-                onChange={handleNameChange}
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-
-              <div className="relative w-full">
-                <div className="w-[calc(100%-2.5rem)]">
-                  <SelectDropdown
-                    label={t('cloud:custom_protocol.thing.id')}
-                    name="thing_id"
-                    control={control}
-                    options={thingSelectData}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:entity_thing') ||
-                      option.label === t('table:no_thing')
-                    }
-                    noOptionsMessage={() => t('table:no_thing')}
-                    loadingMessage={() => t('loading:entity_thing')}
-                    isLoading={AdapterIsLoading}
-                    placeholder={t('cloud:custom_protocol.thing.choose')}
-                    handleClearSelectDropdown={() =>
-                      selectDropdownServiceRef.current?.clearValue()
-                    }
-                    handleChangeSelect={() =>
-                      selectDropdownServiceRef.current?.clearValue()
-                    }
-                    // error={formState?.errors?.thing_id}
-                  />
-                </div>
-                <CreateThing
-                  thingType="thing"
-                  classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
-                />
-              </div>
-
-              <div className="relative w-full">
-                <div className="w-[calc(100%-2.5rem)]">
-                  <SelectDropdown
-                    refSelect={selectDropdownServiceRef}
-                    label={t('cloud:custom_protocol.service.title')}
-                    name="handle_msg_svc"
-                    control={control}
-                    options={serviceSelectData}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:service_thing') ||
-                      option.label === t('table:no_service')
-                    }
-                    isLoading={
-                      watch('thing_id') != null ? isLoadingService : false
-                    }
-                    loadingMessage={() => t('loading:service_thing')}
-                    noOptionsMessage={() => t('table:no_service')}
-                    placeholder={t('cloud:custom_protocol.service.choose')}
-                    // error={formState?.errors?.handle_msg_svc}
-                  />
-                </div>
-                <CreateService
-                  thingId={watch('thing_id')}
-                  classNameTriggerBtn="h-[38px] absolute right-0 bottom-0"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <SelectDropdown
-                  isClearable
-                  label={t('cloud:device_template.add_template.lwm2m')}
-                  name="rule_chain_id"
-                  control={control}
-                  options={LwM2MSelectOptions}
-                  isMulti
-                  closeMenuOnSelect={false}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:lwm2m_model')
-                  }
-                  noOptionsMessage={() => t('table:no_in_lwm2m_model')}
-                  handleClearSelectDropdown={handleClearSelectDropdown}
-                  placeholder={t(
-                    'cloud:device_template.add_template.choose_lwm2m_model',
+          <Form {...form}>
+            <form
+              className="w-full space-y-5"
+              id="create-template"
+              onSubmit={handleSubmit(async () => {
+                await mutateAsyncCreateTemplatelwm2m({ data })
+              })}
+            >
+              <>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:device_template.add_template.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={t(
+                              'cloud:org_manage.event_manage.add_event.input_placeholder',
+                            )}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
                   )}
                 />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.rule_chain_id?.message}
-                </p>
-              </div>
-              <div>
-                <Accordion
-                  type="multiple"
-                  value={openAccordion}
-                  onValueChange={handleAccordionChange}
-                  className="mb-2 rounded-md bg-gray-100 shadow-lg"
-                >
-                  {filterLWM2M.map((lw2m2, accordionIndex) => (
-                    <AccordionItem
-                      key={accordionIndex}
-                      value={lw2m2.LWM2M.Object.Name}
-                      className="border-b border-gray-300"
-                    >
-                      <AccordionTrigger className="ml-3 justify-start hover:no-underline">
-                        <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                        <p className="ml-2">
-                          {lw2m2.LWM2M.Object.Name} #
-                          {lw2m2.LWM2M.Object.ObjectID}
-                        </p>
-                      </AccordionTrigger>
-                      <AccordionContent className="overflow-hidden bg-slate-200 px-4 py-2">
-                        <div className="grid grow grid-cols-1 gap-2	border-b-2 border-gray-300 md:grid-cols-2">
-                          <div className="mb-2 flex">
-                            <div className="flex items-end">
-                              <p>{t('#ID Resource name')}</p>
-                            </div>
-                            <div className="ml-auto">
-                              <Checkbox
-                                customClassName="w-5 h-5"
-                                className="mb-1 ml-5 flex h-5 w-5 items-center justify-center"
-                                checked={
-                                  selectAllAttributes[
-                                    lw2m2.LWM2M.Object.ObjectID
-                                  ]
+
+                <div className="relative w-full">
+                  <div className="w-[calc(100%-2.5rem)]">
+                    <FormField
+                      control={form.control}
+                      name="thing_id"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('cloud:custom_protocol.thing.id')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <NewSelectDropdown
+                                customOnChange={onChange}
+                                options={thingSelectData}
+                                isClearable={true}
+                                isOptionDisabled={option =>
+                                  option.label === t('loading:entity_thing') ||
+                                  option.label === t('table:no_thing')
                                 }
-                                onCheckedChange={e =>
-                                  handleSelectAllAttributesChange(
-                                    accordionIndex,
-                                    lw2m2,
-                                    e,
-                                  )
+                                noOptionsMessage={() => t('table:no_thing')}
+                                loadingMessage={() => t('loading:entity_thing')}
+                                placeholder={t(
+                                  'cloud:custom_protocol.thing.choose',
+                                )}
+                                handleClearSelectDropdown={() =>
+                                  selectDropdownServiceRef.current?.clearValue()
                                 }
+                                handleChangeSelect={() =>
+                                  selectDropdownServiceRef.current?.clearValue()
+                                }
+                                isLoading={AdapterIsLoading}
+                                error={formState?.errors?.thing_id}
+                                {...field}
                               />
-                              {t('Attribute')}
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <CreateThing
+                    thingType="thing"
+                    classNameTriggerBtn="h-[34px] absolute right-0 bottom-0"
+                  />
+                </div>
+
+                <div className="relative w-full">
+                  <div className="w-[calc(100%-2.5rem)]">
+                    <FormField
+                      control={form.control}
+                      name="handle_msg_svc"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t('cloud:custom_protocol.service.title')}
+                          </FormLabel>
+                          <div>
+                            <FormControl>
+                              <NewSelectDropdown
+                                refSelect={selectDropdownServiceRef}
+                                customOnChange={onChange}
+                                options={serviceSelectData}
+                                isOptionDisabled={option =>
+                                  option.label === t('loading:service_thing') ||
+                                  option.label === t('table:no_service')
+                                }
+                                noOptionsMessage={() => t('table:no_service')}
+                                loadingMessage={() =>
+                                  t('loading:service_thing')
+                                }
+                                placeholder={t(
+                                  'cloud:custom_protocol.service.choose',
+                                )}
+                                isLoading={
+                                  watch('thing_id') != null
+                                    ? isLoadingService
+                                    : false
+                                }
+                                error={formState?.errors?.handle_msg_svc}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <CreateService
+                    thingId={watch('thing_id')}
+                    classNameTriggerBtn="h-[34px] absolute right-0 bottom-0"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <FormField
+                    control={form.control}
+                    name="rule_chain_id"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t('cloud:device_template.add_template.lwm2m')}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable
+                              customOnChange={onChange}
+                              options={LwM2MSelectOptions}
+                              isOptionDisabled={option =>
+                                option.label === t('loading:lwm2m_model')
+                              }
+                              noOptionsMessage={() =>
+                                t('table:no_in_lwm2m_model')
+                              }
+                              handleClearSelectDropdown={
+                                handleClearSelectDropdown
+                              }
+                              loadingMessage={() => t('loading:service_thing')}
+                              placeholder={t(
+                                'cloud:device_template.add_template.choose_lwm2m_model',
+                              )}
+                              isMulti
+                              closeMenuOnSelect={false}
+                              error={formState?.errors?.rule_chain_id?.message}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <Accordion
+                    type="multiple"
+                    value={openAccordion}
+                    onValueChange={handleAccordionChange}
+                    className="mb-2 rounded-md bg-gray-100 shadow-lg"
+                  >
+                    {filterLWM2M.map((lw2m2, accordionIndex) => (
+                      <AccordionItem
+                        key={accordionIndex}
+                        value={lw2m2.LWM2M.Object.Name}
+                        className="border-b border-gray-300"
+                      >
+                        <AccordionTrigger className="ml-3 justify-start hover:no-underline">
+                          <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                          <p className="ml-2">
+                            {lw2m2.LWM2M.Object.Name} #
+                            {lw2m2.LWM2M.Object.ObjectID}
+                          </p>
+                        </AccordionTrigger>
+                        <AccordionContent className="overflow-hidden bg-slate-200 px-4 py-2">
+                          <div className="grid grow grid-cols-1 gap-2	border-b-2 border-gray-300 md:grid-cols-2">
+                            <div className="mb-2 flex">
+                              <div className="flex items-end">
+                                <p>{t('#ID Resource name')}</p>
+                              </div>
+                              <div className="ml-auto">
+                                <Checkbox
+                                  customClassName="w-5 h-5"
+                                  className="mb-1 ml-5 flex h-5 w-5 items-center justify-center"
+                                  checked={
+                                    selectAllAttributes[
+                                      lw2m2.LWM2M.Object.ObjectID
+                                    ]
+                                  }
+                                  onCheckedChange={e =>
+                                    handleSelectAllAttributesChange(
+                                      accordionIndex,
+                                      lw2m2,
+                                      e,
+                                    )
+                                  }
+                                />
+                                {t('Attribute')}
+                              </div>
+                            </div>
+                            <div className="mb-2 ml-2 flex items-end">
+                              {t('Key name')}
                             </div>
                           </div>
-                          <div className="mb-2 ml-2 flex items-end">
-                            {t('Key name')}
-                          </div>
-                        </div>
-                        <div>
-                          {lw2m2.LWM2M.Object.Resources.Item.map(item => {
-                            if (
-                              item.Operations === 'RW' ||
-                              item.Operations === 'R'
-                            ) {
-                              const defaultItemName = item.Name
-                              const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
-                              return (
-                                <section key={item['@ID']} className="mt-3">
-                                  <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">
-                                    <div className="flex">
-                                      <div className="flex items-center justify-center">
-                                        #{item['@ID']} {item.Name}
+                          <div>
+                            {lw2m2.LWM2M.Object.Resources.Item.map(item => {
+                              if (
+                                item.Operations === 'RW' ||
+                                item.Operations === 'R'
+                              ) {
+                                const defaultItemName = item.Name
+                                const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                                return (
+                                  <section key={item['@ID']} className="mt-3">
+                                    <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">
+                                      <div className="flex">
+                                        <div className="flex items-center justify-center">
+                                          #{item['@ID']} {item.Name}
+                                        </div>
+                                        <Controller
+                                          control={control}
+                                          name={`transport_config.config`}
+                                          render={({
+                                            field: { onChange, ...field },
+                                          }) => {
+                                            return (
+                                              <Checkbox
+                                                className="ml-auto mr-3 mt-2 flex h-5 w-5 items-center justify-center"
+                                                {...field}
+                                                checked={checkboxStates[itemId]}
+                                                onCheckedChange={e => {
+                                                  const formattedName =
+                                                    formatString(
+                                                      defaultItemName,
+                                                    )
+                                                  const moduleObject = {
+                                                    id: lw2m2.LWM2M.Object
+                                                      .ObjectID,
+                                                    module_name:
+                                                      lw2m2.LWM2M.Object.Name,
+                                                    //allcheckbox: !selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
+                                                  }
+                                                  const itemObject = {
+                                                    action: item.Operations,
+                                                    id: `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
+                                                    kind: item.MultipleInstances,
+                                                    name:
+                                                      itemNames[
+                                                        `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                                                      ] || formattedName,
+                                                    type: item.Type,
+                                                  }
+                                                  if (typeof e === 'boolean') {
+                                                    setCheckboxStates(prev => ({
+                                                      ...prev,
+                                                      [itemId]: e,
+                                                    }))
+                                                  } else {
+                                                    setCheckboxStates(prev => ({
+                                                      ...prev,
+                                                      [itemId]:
+                                                        e.target.checked,
+                                                    }))
+                                                  }
+                                                  handleCheckboxChange(
+                                                    accordionIndex,
+                                                    moduleObject,
+                                                    itemObject,
+                                                    lw2m2.LWM2M.Object.Resources.Item.filter(
+                                                      item =>
+                                                        item.Operations ===
+                                                          'RW' ||
+                                                        item.Operations === 'R',
+                                                    ).length,
+                                                  )
+                                                  onChange(e)
+                                                }}
+                                                customClassName="w-5 h-5"
+                                              />
+                                            )
+                                          }}
+                                        />
                                       </div>
-                                      <Controller
-                                        control={control}
-                                        name={`transport_config.config`}
-                                        render={({
-                                          field: { onChange, ...field },
-                                        }) => {
-                                          return (
-                                            <Checkbox
-                                              className="ml-auto mr-3 mt-2 flex h-5 w-5 items-center justify-center"
-                                              {...field}
-                                              checked={checkboxStates[itemId]}
-                                              onCheckedChange={e => {
-                                                const formattedName =
-                                                  formatString(defaultItemName)
-                                                const moduleObject = {
-                                                  id: lw2m2.LWM2M.Object
-                                                    .ObjectID,
-                                                  module_name:
-                                                    lw2m2.LWM2M.Object.Name,
-                                                  //allcheckbox: !selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
-                                                }
-                                                const itemObject = {
-                                                  action: item.Operations,
-                                                  id: `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
-                                                  kind: item.MultipleInstances,
-                                                  name:
-                                                    itemNames[
-                                                      `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
-                                                    ] || formattedName,
-                                                  type: item.Type,
-                                                }
-                                                if (typeof e === 'boolean') {
-                                                  setCheckboxStates(prev => ({
-                                                    ...prev,
-                                                    [itemId]: e,
-                                                  }))
-                                                } else {
-                                                  setCheckboxStates(prev => ({
-                                                    ...prev,
-                                                    [itemId]: e.target.checked,
-                                                  }))
-                                                }
-                                                handleCheckboxChange(
-                                                  accordionIndex,
-                                                  moduleObject,
-                                                  itemObject,
-                                                  lw2m2.LWM2M.Object.Resources.Item.filter(
-                                                    item =>
-                                                      item.Operations ===
-                                                        'RW' ||
-                                                      item.Operations === 'R',
-                                                  ).length,
-                                                )
-                                                onChange(e)
-                                              }}
-                                              customClassName="w-5 h-5"
-                                            />
-                                          )
-                                        }}
-                                      />
+                                      <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
+                                        <InputField
+                                          className=""
+                                          value={
+                                            itemNames[
+                                              `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                                            ]
+                                          }
+                                          defaultValue={formatString(
+                                            defaultItemName,
+                                          )}
+                                          onChange={e =>
+                                            setItemNames(prev => ({
+                                              ...prev,
+                                              [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]:
+                                                e.target.value,
+                                            }))
+                                          }
+                                          disabled={checkboxStates[itemId]}
+                                        />
+                                      </div>
                                     </div>
-                                    <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
-                                      <InputField
-                                        className=""
-                                        value={
-                                          itemNames[
-                                            `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
-                                          ]
-                                        }
-                                        defaultValue={formatString(
-                                          defaultItemName,
-                                        )}
-                                        onChange={e =>
-                                          setItemNames(prev => ({
-                                            ...prev,
-                                            [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]:
-                                              e.target.value,
-                                          }))
-                                        }
-                                        disabled={checkboxStates[itemId]}
-                                      />
-                                    </div>
-                                  </div>
-                                </section>
-                              )
-                            }
-                            return null
-                          })}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            </>
-          </form>
+                                  </section>
+                                )
+                              }
+                              return null
+                            })}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </div>
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>
