@@ -118,7 +118,6 @@ export function CreateProject() {
                 description: values.description,
               },
             })
-            console.log('file', getValueUploadImage('file'))
             if (getValueUploadImage('file') != null) {
               const dataUploadImage = await mutateAsyncUploadImage({
                 data: {
@@ -126,7 +125,6 @@ export function CreateProject() {
                   file: getValueUploadImage('file'),
                 },
               })
-              console.log('dataUploadImage', dataUploadImage)
               mutateUpdateProject({
                 data: {
                   name: dataCreateProject.name,
@@ -233,7 +231,6 @@ export function CreateProject() {
                                 const reader = new FileReader()
                                 reader.readAsDataURL(file)
                                 reader.onload = e => {
-                                  console.log('Here')
                                   if (
                                     avatarRef.current != null &&
                                     e.target != null &&

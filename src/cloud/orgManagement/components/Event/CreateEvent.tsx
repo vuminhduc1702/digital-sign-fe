@@ -568,7 +568,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                   end_time: getValues('interval.end_time'),
                 }
 
-                console.log(values, 'valuesvaluesvalues')
                 const conditionArr =
                   ('condition' in values &&
                     values.condition.map(item => ({

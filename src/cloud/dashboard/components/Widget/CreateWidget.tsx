@@ -251,7 +251,6 @@ export const widgetAgg = [
   { label: 'Sum', value: 'SUM' },
   { label: 'Count', value: 'COUNT' },
 ] as const
-
 export const attrWidgetSchema = z.array(
   z.object({
     attribute_key: z
@@ -314,18 +313,18 @@ export const widgetCreateSchema = z.object({
   org_id: z.string({
     required_error: i18n.t('cloud:org_manage.org_manage.add_org.choose_org'),
   }),
-  device: z.array(
-    z.string({
+  device: z
+    .array(z.union([z.string(), z.undefined()]), {
       required_error: i18n.t(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
+    })
+    .refine(arr => !arr.includes(undefined), {
+      message: i18n.t(
+        'cloud:org_manage.device_manage.add_device.choose_device',
+      ),
+      path: [],
     }),
-    {
-      required_error: i18n.t(
-        'cloud:org_manage.device_manage.add_device.choose_device',
-      ),
-    },
-  ),
   attributeConfig: attrWidgetSchema,
   widgetSetting: z
     .object({
@@ -396,7 +395,6 @@ export const widgetDataTypeOptions = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
-
 export function CreateWidget({
   widgetType,
   widgetCategory,
