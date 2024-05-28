@@ -96,15 +96,14 @@ export function UpdateCustomerRole({
     }
   }, [isSuccess, closeRole])
 
-  const resetForm = () => {
-    closeRole()
+  useEffect(() => {
     form.reset()
-  }
+  }, [isOpenRole])
 
   return (
     <Dialog
       isOpen={isOpenRole}
-      onClose={resetForm}
+      onClose={closeRole}
       initialFocus={cancelButtonRef}
     >
       <div className="inline-block w-80 transform rounded-lg bg-white px-4 pb-4 pt-5">
@@ -116,7 +115,7 @@ export function UpdateCustomerRole({
             <div className="ml-3 flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                onClick={resetForm}
+                onClick={closeRole}
               >
                 <span className="sr-only">Close panel</span>
                 <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
@@ -233,7 +232,7 @@ export function UpdateCustomerRole({
             type="button"
             variant="secondary"
             className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
-            onClick={resetForm}
+            onClick={closeRole}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }

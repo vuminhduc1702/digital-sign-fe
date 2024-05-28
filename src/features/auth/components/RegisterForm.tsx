@@ -1,10 +1,9 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { Link } from '@/components/Link'
 import { useRegister } from '@/lib/auth'
-import { InputField } from '@/components/Form'
 import { Button } from '@/components/ui/button'
 import { PATHS } from '@/routes/PATHS'
 import { sentOTP } from '../api/otp'
@@ -23,6 +22,14 @@ import {
   EyeHide,
   EyeShow,
 } from '@/components/SVGIcons'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 const registerSchema = z
   .object({
@@ -92,170 +99,210 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
       })
     }, 1000)
   }
-  const { register, formState, handleSubmit, getValues } =
-    useForm<RegisterValues>({
-      resolver: registerSchema && zodResolver(registerSchema),
-      shouldUnregister: true,
-    })
+  const form = useForm<RegisterValues>({
+    resolver: registerSchema && zodResolver(registerSchema),
+    shouldUnregister: true,
+  })
+  const { register, handleSubmit, getValues } = form
   return (
     <div>
-      <form
-        className="w-full space-y-6"
-        onSubmit={handleSubmit(async values => {
-          const data = {
-            ...values,
-            otp: values?.otp?.trim(),
-          }
-          await registerMutation.mutateAsync(data)
-          onSuccess()
-        })}
-      >
-        <>
-          <InputField
-            type="email"
-            className="mt-5 bg-stone-300"
-            classnamefieldwrapper="relative"
-            placeholder={t('auth:require_email')}
-            error={formState.errors['email']}
-            registration={register('email', {
-              onChange: e => {
-                const emailValue = e.target.value
-                if (emailSchema.safeParse(emailValue).success) {
-                  setBtnOtpDisable(false)
-                } else {
-                  setBtnOtpDisable(true)
-                }
-              },
-            })}
-            startIcon={
-              <BtnUserLoginIcon
-                height={20}
-                width={20}
-                viewBox="0 0 20 20"
-                className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
-              />
+      <Form {...form}>
+        <form
+          className="w-full space-y-6"
+          onSubmit={handleSubmit(async values => {
+            const data = {
+              ...values,
+              otp: values?.otp?.trim(),
             }
-          />
-          <InputField
-            type={showPassword ? 'text' : 'password'}
-            className="bg-stone-300"
-            classnamefieldwrapper="relative"
-            placeholder={t('auth:require_password')}
-            error={formState.errors['password']}
-            registration={register('password')}
-            startIcon={
-              <BtnPasswordLoginIcon
-                height={20}
-                width={20}
-                viewBox="0 0 20 20"
-                className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
-              />
-            }
-            endIcon={
-              showPassword ? (
-                <EyeShow
-                  height={24}
-                  width={24}
-                  viewBox="0 0 24 24"
-                  className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
-                  onClick={togglePasswordVisibility}
-                />
-              ) : (
-                <EyeHide
-                  height={24}
-                  width={24}
-                  viewBox="0 0 24 24"
-                  className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
-                  onClick={togglePasswordVisibility}
-                />
-              )
-            }
-            autoComplete="new-password"
-          />
-          <InputField
-            type={showRePassword ? 'text' : 'password'}
-            className="bg-stone-300"
-            classnamefieldwrapper="relative"
-            error={formState.errors['confirmPassword']}
-            registration={register('confirmPassword')}
-            placeholder={t('auth:confirm_password')}
-            startIcon={
-              <BtnPasswordLoginIcon
-                height={20}
-                width={20}
-                viewBox="0 0 20 20"
-                className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
-              />
-            }
-            endIcon={
-              showRePassword ? (
-                <EyeShow
-                  height={24}
-                  width={24}
-                  viewBox="0 0 24 24"
-                  className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
-                  onClick={toggleRePasswordVisibility}
-                />
-              ) : (
-                <EyeHide
-                  height={24}
-                  width={24}
-                  viewBox="0 0 24 24"
-                  className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
-                  onClick={toggleRePasswordVisibility}
-                />
-              )
-            }
-            autoComplete="new-password"
-          />
-          <Button
-            variant="none"
-            className="!mt-2 ml-auto h-4 p-0 text-slate-800 underline"
-            disabled={btnOtpDisable}
-            onClick={() => {
-              setBtnOtpDisable(true)
-              if (getValues('email') !== '') {
-                sentOTP({
-                  email: getValues('email'),
-                })
-                  .then(() => {
-                    setCountdown(timeCountdown)
-                    setCheckCountdown(true)
-                    updateCountdown()
-                  })
-                  .catch(error => {
-                    setBtnOtpDisable(false)
-                  })
-              }
-            }}
-          >
-            {checkCountdown === true && (
-              <>
-                {countdown}
-                {'s '}
-              </>
-            )}
-            {t('auth:sent_otp')}
-          </Button>
-          <InputField
-            type="text"
-            error={formState.errors['otp']}
-            registration={register('otp')}
-            className="bg-stone-300"
-            placeholder={t('auth:require_otp')}
-            autoComplete="one-time-code"
-          />
-          <div className="container mx-auto text-center text-body-xs">
+            await registerMutation.mutateAsync(data)
+            onSuccess()
+          })}
+        >
+          <>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      {...register('email', {
+                        onChange: e => {
+                          const emailValue = e.target.value
+                          if (emailSchema.safeParse(emailValue).success) {
+                            setBtnOtpDisable(false)
+                          } else {
+                            setBtnOtpDisable(true)
+                          }
+                        },
+                      })}
+                      type="email"
+                      className="mt-5 bg-stone-300"
+                      placeholder={t('auth:require_email')}
+                      startIcon={
+                        <BtnUserLoginIcon
+                          height={20}
+                          width={20}
+                          viewBox="0 0 20 20"
+                          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+                        />
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder={t('auth:require_password')}
+                      className="bg-stone-300"
+                      startIcon={
+                        <BtnPasswordLoginIcon
+                          height={20}
+                          width={20}
+                          viewBox="0 0 20 20"
+                          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+                        />
+                      }
+                      endIcon={
+                        showPassword ? (
+                          <EyeShow
+                            height={24}
+                            width={24}
+                            viewBox="0 0 24 24"
+                            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
+                            onClick={togglePasswordVisibility}
+                          />
+                        ) : (
+                          <EyeHide
+                            height={24}
+                            width={24}
+                            viewBox="0 0 24 24"
+                            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
+                            onClick={togglePasswordVisibility}
+                          />
+                        )
+                      }
+                      autoComplete="new-password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type={showRePassword ? 'text' : 'password'}
+                      placeholder={t('auth:confirm_password')}
+                      className="bg-stone-300"
+                      startIcon={
+                        <BtnPasswordLoginIcon
+                          height={20}
+                          width={20}
+                          viewBox="0 0 20 20"
+                          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+                        />
+                      }
+                      endIcon={
+                        showRePassword ? (
+                          <EyeShow
+                            height={24}
+                            width={24}
+                            viewBox="0 0 24 24"
+                            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
+                            onClick={toggleRePasswordVisibility}
+                          />
+                        ) : (
+                          <EyeHide
+                            height={24}
+                            width={24}
+                            viewBox="0 0 24 24"
+                            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
+                            onClick={toggleRePasswordVisibility}
+                          />
+                        )
+                      }
+                      autoComplete="new-password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button
-              isLoading={registerMutation.isLoading}
-              type="submit"
-              className="w-full bg-primary-400"
+              variant="none"
+              className="!mt-2 ml-auto h-4 p-0 text-slate-800 underline"
+              disabled={btnOtpDisable}
+              onClick={() => {
+                setBtnOtpDisable(true)
+                if (getValues('email') !== '') {
+                  sentOTP({
+                    email: getValues('email'),
+                  })
+                    .then(() => {
+                      setCountdown(timeCountdown)
+                      setCheckCountdown(true)
+                      updateCountdown()
+                    })
+                    .catch(error => {
+                      setBtnOtpDisable(false)
+                    })
+                }
+              }}
             >
-              {t('user:register')}
+              {checkCountdown === true && (
+                <>
+                  {countdown}
+                  {'s '}
+                </>
+              )}
+              {t('auth:sent_otp')}
             </Button>
-          </div>
-        </>
-      </form>
+            <FormField
+              control={form.control}
+              name="otp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      className="bg-stone-300"
+                      placeholder={t('auth:require_otp')}
+                      autoComplete="one-time-code"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="container mx-auto text-center text-body-xs">
+              <Button
+                isLoading={registerMutation.isLoading}
+                type="submit"
+                className="w-full bg-primary-400"
+              >
+                {t('user:register')}
+              </Button>
+            </div>
+          </>
+        </form>
+      </Form>
       <div className="mt-8 flex justify-center">
         <div className="text-body-sm text-black">
           {t('auth:have_an_account')}{' '}

@@ -335,13 +335,8 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
     resetData()
   }, [isOpen])
 
-  const resetForm = () => {
-    close?.()
-    form.reset()
-  }
-
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -1069,7 +1064,7 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
