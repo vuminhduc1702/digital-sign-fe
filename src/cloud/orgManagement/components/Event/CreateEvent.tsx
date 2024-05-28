@@ -72,7 +72,7 @@ export const conditionEventOptions = [
     value: 'weather_condition',
   },
 ]
-export const deviceNameOptions = [
+export const cityNameOptions = [
   {
     label: i18n.t('cloud:org_manage.event_manage.add_event.HN'),
     value: '158119',
@@ -85,7 +85,7 @@ export const deviceNameOptions = [
     label: i18n.t('cloud:org_manage.event_manage.add_event.HCM'),
     value: '1580578',
   },
-]
+] as const
 export const logicalOperatorOption = [
   {
     label: i18n.t(
@@ -202,11 +202,7 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
-    device_name: z.string({
-      required_error: i18n.t(
-        'cloud:org_manage.device_manage.add_device.choose_device',
-      ),
-    }),
+    city_name: z.string().optional(),
     attribute_name: z.string({
       required_error: i18n.t(
         'cloud:org_manage.org_manage.add_attr.choose_attr',
@@ -398,7 +394,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     name: 'action',
     control,
   })
-  // console.log('formState.errors', formState.errors)
+  console.log('formState.errors', formState.errors)
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
 
@@ -542,7 +538,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                   ('condition' in values &&
                     values.condition.map(item => ({
                       device_id: item.device_id,
-                      device_name: item.device_name ?? '',
+                      city_name: item.city_name,
                       attribute_name: item.attribute_name,
                       condition_type: item.condition_type,
                       operator: item.operator,
@@ -682,6 +678,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                             <FormControl>
                               <NewSelectDropdown
                                 options={groupSelectOptions}
+                                customOnChange={onChange}
                                 isOptionDisabled={option =>
                                   option.label === t('loading:group') ||
                                   option.label === t('table:no_group')
@@ -689,7 +686,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                 noOptionsMessage={() => t('table:no_group')}
                                 loadingMessage={() => t('loading:group')}
                                 isLoading={groupIsLoading}
-                                error={formState?.errors?.group_id}
                                 {...field}
                               />
                             </FormControl>
@@ -991,21 +987,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       <FormControl>
                                         <NewSelectDropdown
                                           options={deviceSelectData}
-                                          customOnChange={value => {
-                                            const filter =
-                                              deviceSelectData?.filter(
-                                                item => item.value === value,
-                                              )
-                                            setValue(
-                                              `condition.${index}.device_id`,
-                                              value,
-                                            )
-                                            setValue(
-                                              `condition.${index}.device_name`,
-                                              filter?.[0]?.label ?? '',
-                                            )
-                                          }}
-                                          // customOnChange={onChange}
+                                          customOnChange={onChange}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:device') ||
@@ -1030,7 +1012,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                             ) : (
                               <FormField
                                 control={control}
-                                name={`condition.${index}.device_name`}
+                                name={`condition.${index}.city_name`}
                                 render={({
                                   field: { value, onChange, ...field },
                                 }) => (
@@ -1043,18 +1025,8 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                     <div>
                                       <FormControl>
                                         <NewSelectDropdown
-                                          options={deviceNameOptions}
-                                          customOnChange={value => {
-                                            setValue(
-                                              `condition.${index}.device_name`,
-                                              value,
-                                            )
-                                            setValue(
-                                              `condition.${index}.device_id`,
-                                              'weather',
-                                            )
-                                          }}
-                                          // customOnChange={onChange}
+                                          options={cityNameOptions}
+                                          customOnChange={onChange}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:device') ||
@@ -1104,12 +1076,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                                 },
                                               ]
                                         }
-                                        customOnChange={value =>
-                                          setValue(
-                                            `condition.${index}.attribute_name`,
-                                            value,
-                                          )
-                                        }
+                                        customOnChange={onChange}
                                         isOptionDisabled={option =>
                                           option.label === t('loading:attr') ||
                                           option.label === t('table:no_attr')
@@ -1393,10 +1360,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   <div>
                                     <NewSelectDropdown
                                       options={thingSelectData}
-                                      customOnChange={value =>
-                                        setValue('cmd.entity_id', value)
-                                      }
-                                      // customOnChange={onChange}
+                                      customOnChange={onChange}
                                       isOptionDisabled={option =>
                                         option.label ===
                                           t('loading:entity_thing') ||
@@ -1463,11 +1427,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                     <NewSelectDropdown
                                       refSelect={selectDropdownServiceRef}
                                       options={serviceSelectData}
-                                      customOnChange={value => {
-                                        setValue('cmd.name', value)
-                                        resetField(`cmd.input.${index}.value`)
-                                      }}
-                                      // customOnChange={onChange}
+                                      customOnChange={onChange}
                                       isOptionDisabled={option =>
                                         option.label ===
                                           t('loading:service_thing') ||

@@ -39,7 +39,7 @@ import {
   eventTypeSchema,
   eventConditionSchema,
   conditionEventOptions,
-  deviceNameOptions,
+  cityNameOptions,
 } from './CreateEvent'
 import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
@@ -386,7 +386,7 @@ export function UpdateEvent({
                   ('condition' in values &&
                     values.condition.map(item => ({
                       device_id: item.device_id,
-                      device_name: item.device_name ?? '',
+                      city_name: item.city_name,
                       attribute_name: item.attribute_name,
                       condition_type: item.condition_type,
                       operator: item.operator,
@@ -530,6 +530,7 @@ export function UpdateEvent({
                               <FormControl>
                                 <NewSelectDropdown
                                   options={groupSelectOptions}
+                                  customOnChange={onChange}
                                   isOptionDisabled={option =>
                                     option.label === t('loading:group') ||
                                     option.label === t('table:no_group')
@@ -541,7 +542,6 @@ export function UpdateEvent({
                                     item =>
                                       item.value === getValues('group_id'),
                                   )}
-                                  error={formState?.errors?.group_id}
                                   {...field}
                                 />
                               </FormControl>
@@ -834,22 +834,7 @@ export function UpdateEvent({
                                             <FormControl>
                                               <NewSelectDropdown
                                                 options={deviceSelectOptions}
-                                                customOnChange={value => {
-                                                  const filter =
-                                                    deviceSelectData?.filter(
-                                                      item =>
-                                                        item.value === value,
-                                                    )
-                                                  setValue(
-                                                    `condition.${index}.device_id`,
-                                                    value,
-                                                  )
-                                                  setValue(
-                                                    `condition.${index}.device_name`,
-                                                    filter?.[0]?.label ?? '',
-                                                  )
-                                                }}
-                                                // customOnChange={onChange}
+                                                customOnChange={onChange}
                                                 isOptionDisabled={option =>
                                                   option.label ===
                                                     t('loading:device') ||
@@ -870,16 +855,6 @@ export function UpdateEvent({
                                                       `condition.${index}.device_id`,
                                                     ),
                                                 )}
-                                                onChange={event => {
-                                                  setValue(
-                                                    `condition.${index}.device_id`,
-                                                    event.value,
-                                                  )
-                                                  setValue(
-                                                    `condition.${index}.device_name`,
-                                                    event.label,
-                                                  )
-                                                }}
                                                 {...field}
                                               />
                                             </FormControl>
@@ -893,7 +868,7 @@ export function UpdateEvent({
                               ) : (
                                 <FormField
                                   control={control}
-                                  name={`condition.${index}.device_name`}
+                                  name={`condition.${index}.city_name`}
                                   render={({
                                     field: { value, onChange, ...field },
                                   }) => (
@@ -906,22 +881,13 @@ export function UpdateEvent({
                                       <div>
                                         <FormControl>
                                           <NewSelectDropdown
-                                            options={deviceNameOptions}
-                                            customOnChange={value => {
-                                              setValue(
-                                                `condition.${index}.device_name`,
-                                                value,
-                                              )
-                                              setValue(
-                                                `condition.${index}.device_id`,
-                                                'weather',
-                                              )
-                                            }}
-                                            defaultValue={deviceNameOptions?.find(
+                                            options={cityNameOptions}
+                                            customOnChange={onChange}
+                                            defaultValue={cityNameOptions?.find(
                                               item =>
                                                 item.value ===
                                                 getValues(
-                                                  `condition.${index}.device_name`,
+                                                  `condition.${index}.city_name`,
                                                 ),
                                             )}
                                             isOptionDisabled={option =>
@@ -974,12 +940,7 @@ export function UpdateEvent({
                                                   },
                                                 ]
                                           }
-                                          customOnChange={value =>
-                                            setValue(
-                                              `condition.${index}.attribute_name`,
-                                              value,
-                                            )
-                                          }
+                                          customOnChange={onChange}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:attr') ||
@@ -1288,10 +1249,7 @@ export function UpdateEvent({
                                     <div>
                                       <NewSelectDropdown
                                         options={thingSelectData}
-                                        customOnChange={value =>
-                                          setValue('cmd.entity_id', value)
-                                        }
-                                        // customOnChange={onChange}
+                                        customOnChange={onChange}
                                         isOptionDisabled={option =>
                                           option.label ===
                                             t('loading:entity_thing') ||
@@ -1365,13 +1323,7 @@ export function UpdateEvent({
                                         <NewSelectDropdown
                                           refSelect={selectDropdownServiceRef}
                                           options={serviceSelectData}
-                                          customOnChange={value => {
-                                            setValue('cmd.name', value)
-                                            resetField(
-                                              `cmd.input.${index}.value`,
-                                            )
-                                          }}
-                                          // customOnChange={onChange}
+                                          customOnChange={onChange}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:service_thing') ||
