@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { nameSchema } from '@/utils/schemaValidation'
+import { AttrList, nameSchema } from '@/utils/schemaValidation'
 import storage from '@/utils/storage'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useRef, useState } from 'react'
@@ -18,6 +18,7 @@ import * as z from 'zod'
 import { useCreateTemplate, type CreateTemplateDTO } from '../api'
 import { useGetXMLdata } from '../api/getXMLdata'
 import {
+  type AttrLwM2MList,
   type LWM2MResponse,
   type ModuleConfig,
   type TransportConfigAttribute,
@@ -33,6 +34,7 @@ import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { CreateService } from '@/cloud/customProtocol/components/CreateService'
 import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
 import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
+import { valueTypeList } from '@/cloud/orgManagement/components/Attributes'
 import {
   Form,
   FormControl,
@@ -137,15 +139,12 @@ export function CreateTemplateLwM2M({
     return formattedStr
   }
   const [openAccordion] = useState()
-  // const [name, setName] = useState<string>('')
-  // const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setName(event.target.value)
-  // }
   const [accordionStates, setAccordionStates] = useState<AccordionStates>({})
   const [selectAllAttributes, setSelectAllAttributes] =
     useState<CheckboxStates>({})
   const [checkboxStates, setCheckboxStates] = useState<CheckboxStates>({})
   const [configData, setConfigData] = useState({})
+  const [AttrData, setAttrData] = useState()
   const [itemNames, setItemNames] = useState<ItemNames>({})
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
@@ -225,6 +224,7 @@ export function CreateTemplateLwM2M({
     accordionIndex: number,
     module: ModuleConfig,
     item: TransportConfigAttribute,
+    attributesitem: AttrLwM2MList,
     totalItemCount: number,
   ) => {
     setAccordionStates(prevStates => {
@@ -249,6 +249,7 @@ export function CreateTemplateLwM2M({
             id: module.id,
             module_name: module.module_name,
             attribute_info: [item],
+            attributes: [attributesitem],
             numberOfAttributes: attributesCount,
             last_update_ts: currentTimestamp,
             allcheckbox: allCheckbox,
@@ -262,9 +263,16 @@ export function CreateTemplateLwM2M({
             updatedCheckboxStates[item.id] === true
           ) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
+            newStates[accordionIndex][moduleIndex].attributes.push(
+              attributesitem,
+            )
           }
           if (updatedCheckboxStates[item.id] === false) {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(
+              attributeIndex,
+              1,
+            )
+            newStates[accordionIndex][moduleIndex].attributes.splice(
               attributeIndex,
               1,
             )
@@ -341,10 +349,19 @@ export function CreateTemplateLwM2M({
                 formatString(item.Name),
               type: item.Type,
             }
+            const attributes = {
+              attribute_key:
+                itemNames[`${moduleId}-${item['@ID']}`] ||
+                formatString(item.Name),
+              value: '',
+              logged: true,
+              value_t: getValueType(item.Type),
+            }
             handleCheckboxChange(
               accordionIndex,
               moduleObject,
               itemObject,
+              attributes,
               lw2m2.LWM2M.Object.Resources.Item.filter(
                 item => item.Operations === 'RW' || item.Operations === 'R',
               ).length,
@@ -365,6 +382,23 @@ export function CreateTemplateLwM2M({
     })
     setConfigData(newConfigData)
   }, [accordionStates])
+
+  useEffect(() => {
+    const accordionArray = Object.values(accordionStates).flat()
+    const newAttrData: AttrLwM2MList[] = []
+    accordionArray.forEach(accordionItem => {
+      accordionItem.attributes.forEach(attribute => {
+        newAttrData.push({
+          attribute_key: attribute.attribute_key,
+          logged: attribute.logged,
+          value: attribute.value,
+          value_t: attribute.value_t,
+        })
+      })
+    })
+    setAttrData(newAttrData)
+  }, [accordionStates])
+
   const resetAllStates = () => {
     setCheckboxStates({})
     setItemNames({})
@@ -388,6 +422,7 @@ export function CreateTemplateLwM2M({
   const data = {
     name: name,
     project_id: projectId,
+    attributes: AttrData,
     transport_config: transportConfig,
     thing_id: selectedThing,
     handle_msg_svc: selectedService,
@@ -403,6 +438,11 @@ export function CreateTemplateLwM2M({
     close()
     resetAllStates()
     form.reset()
+  }
+
+  const getValueType = (type: string) => {
+    const valueType = valueTypeList.find(value => value.name === type)
+    return valueType ? valueType.type : 'STR'
   }
 
   return (
@@ -483,7 +523,6 @@ export function CreateTemplateLwM2M({
                                   selectDropdownServiceRef.current?.clearValue()
                                 }
                                 isLoading={AdapterIsLoading}
-                                error={formState?.errors?.thing_id}
                                 {...field}
                               />
                             </FormControl>
@@ -531,7 +570,6 @@ export function CreateTemplateLwM2M({
                                     ? isLoadingService
                                     : false
                                 }
-                                error={formState?.errors?.handle_msg_svc}
                                 {...field}
                               />
                             </FormControl>
@@ -577,7 +615,6 @@ export function CreateTemplateLwM2M({
                               )}
                               isMulti
                               closeMenuOnSelect={false}
-                              error={formState?.errors?.rule_chain_id?.message}
                               {...field}
                             />
                           </FormControl>
@@ -685,6 +722,17 @@ export function CreateTemplateLwM2M({
                                                       ] || formattedName,
                                                     type: item.Type,
                                                   }
+                                                  const attributes = {
+                                                    attribute_key:
+                                                      itemNames[
+                                                        `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                                                      ] || formattedName,
+                                                    value: '',
+                                                    logged: true,
+                                                    value_t: getValueType(
+                                                      item.Type,
+                                                    ),
+                                                  }
                                                   if (typeof e === 'boolean') {
                                                     setCheckboxStates(prev => ({
                                                       ...prev,
@@ -701,6 +749,7 @@ export function CreateTemplateLwM2M({
                                                     accordionIndex,
                                                     moduleObject,
                                                     itemObject,
+                                                    attributes,
                                                     lw2m2.LWM2M.Object.Resources.Item.filter(
                                                       item =>
                                                         item.Operations ===
