@@ -1,29 +1,24 @@
-import { useTranslation } from 'react-i18next'
-import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import {
   useCreateEntityThing,
-  type CreateEntityThingDTO,
   useGetEntityThings,
+  type CreateEntityThingDTO,
 } from '@/cloud/customProtocol/api/entityThing'
 import { thingTypeList } from '@/cloud/customProtocol/components'
-import { Button } from '@/components/ui/button'
-import {
-  FieldWrapper,
-  InputField,
-  SelectDropdown,
-  SelectField,
-} from '@/components/Form'
 import { FormDialog } from '@/components/FormDialog'
-import storage from '@/utils/storage'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/utils/misc'
+import storage from '@/utils/storage'
 
 import { type EntityThingType } from '@/cloud/customProtocol'
 import { nameSchema } from '@/utils/schemaValidation'
 
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 import { PlusIcon } from '@/components/SVGIcons'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -35,7 +30,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 import { Textarea } from '@/components/ui/textarea'
 
 export const entityThingSchema = z
