@@ -99,7 +99,7 @@ export function CreateControllerButton({
       controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
   })
 
-  const { register, formState, control, handleSubmit, watch } = form
+  const { setValue, formState, control, handleSubmit, watch, reset } = form
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
@@ -121,7 +121,7 @@ export function CreateControllerButton({
     label: service.name,
   }))
 
-  const { data: thingServiceData, isLoading: thingServiceIsLoading } =
+  const { data: thingServiceData, isLoading: isLoadingThingService } =
     useThingServiceById({
       thingId: watch('thing_id'),
       name: watch('handle_service'),
@@ -168,6 +168,13 @@ export function CreateControllerButton({
       return 'number'
     }
   }
+
+  useEffect(() => {
+    setValue('title', '')
+    setValue('handle_service', '')
+    setValue('thing_id', '')
+    setValue('input', [{ name: '', value: '' }])
+  }, [isOpen])
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -227,8 +234,6 @@ export function CreateControllerButton({
                   ...prev,
                   ...{ [widgetId]: controllerBtn },
                 }))
-
-                close()
               })}
             >
               <>
@@ -415,7 +420,7 @@ export function CreateControllerButton({
                                           isLoading={
                                             watch('thing_id') &&
                                             watch('handle_service')
-                                              ? thingServiceIsLoading
+                                              ? isLoadingThingService
                                               : false
                                           }
                                           placeholder={t(

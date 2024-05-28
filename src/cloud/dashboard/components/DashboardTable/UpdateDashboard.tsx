@@ -61,13 +61,12 @@ export function UpdateDashboard({
     }
   }, [isSuccess])
 
-  const resetForm = () => {
+  useEffect(() => {
     reset()
-    close()
-  }
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -116,7 +115,7 @@ export function UpdateDashboard({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
