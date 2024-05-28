@@ -77,10 +77,9 @@ export function UpdateFirmWare({
     }
   }, [isSuccess])
 
-  const resetForm = () => {
-    close()
+  useEffect(() => {
     form.reset()
-  }
+  }, [isOpen])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -93,7 +92,7 @@ export function UpdateFirmWare({
             <div className="ml-3 flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                onClick={resetForm}
+                onClick={close}
               >
                 <span className="sr-only">Close panel</span>
                 <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
@@ -221,7 +220,7 @@ export function UpdateFirmWare({
             type="button"
             variant="secondary"
             className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
-            onClick={resetForm}
+            onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }

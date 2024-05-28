@@ -405,6 +405,10 @@ export function CreateTemplateLwM2M({
     form.reset()
   }
 
+  useEffect(() => {
+    reset()
+  }, [isOpen])
+
   return (
     <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
