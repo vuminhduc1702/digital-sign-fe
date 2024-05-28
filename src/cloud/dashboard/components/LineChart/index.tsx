@@ -68,6 +68,7 @@ export function LineChart({
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<Array<{ ts: number; value: string | number }>>
   >([])
+  // const maxDataFeedToChart = useRef<number>(100)
   const [dataNameList, setDataNameList] = useState<string[]>([])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
@@ -193,6 +194,14 @@ export function LineChart({
       result.push(tempArr)
     })
     setDataTransformedFeedToChart(result)
+
+    // for (let i = 0; i < result.length; i++) {
+    //   for (let j = 0; j < result[i].length; j++) {
+    //     if (result[i][j].value > maxDataFeedToChart.current) {
+    //       maxDataFeedToChart.current = result[i][j].value
+    //     }
+    //   }
+    // }
   }
 
   // refresh static chart
@@ -222,6 +231,7 @@ export function LineChart({
               backgroundColor: key?.color,
               data: dataTransformedFeedToChart[index],
               borderWidth: 1,
+              yAxisId: 'y',
             }
           } else {
             return {
@@ -230,6 +240,7 @@ export function LineChart({
               backgroundColor: key?.color,
               data: [],
               borderWidth: 1,
+              yAxisId: 'y',
             }
           }
         })
@@ -416,6 +427,24 @@ export function LineChart({
             borderColor: 'black',
           },
         },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          ticks: {
+            max: 100,
+            min: 0,
+            callback: function (value) {
+              return `${value * 100}%`
+              // const percentage = (value / maxDataFeedToChart.current) * 10000
+              // return `${percentage.toFixed(2)}%`
+            },
+            color: 'black',
+          },
+          grid: {
+            drawOnChartArea: false,
+            borderColor: 'black',
+          },
+        },
       },
       plugins: {
         zoom: realtimeZoomOptions,
@@ -485,6 +514,25 @@ export function LineChart({
                       color: 'black',
                     },
                     grid: {
+                      borderColor: 'black',
+                    },
+                  },
+                  y1: {
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                      max: 100,
+                      min: 0,
+                      callback: function (value) {
+                        return `${value * 100}%`
+                        // const percentage =
+                        //   (value / maxDataFeedToChart.current) * 100
+                        // return `${percentage.toFixed(2)}%`
+                      },
+                      color: 'black',
+                    },
+                    grid: {
+                      drawOnChartArea: false,
                       borderColor: 'black',
                     },
                   },
