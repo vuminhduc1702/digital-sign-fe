@@ -2,17 +2,13 @@ import { useMemo, useRef, useState } from 'react'
 
 import storage from '@/utils/storage'
 
+import { searchSubcriptionSchema } from '@/cloud/subcription/routes/SubcriptionTemplate'
+import { SearchField } from '@/components/Input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { searchSubcriptionSchema } from '@/cloud/subcription/routes/SubcriptionTemplate'
-import { Button } from '@/components/ui/button'
-import { InputField, SelectDropdown } from '@/components/Form'
-import { SearchIcon } from '@/components/SVGIcons'
-import { ExportTable } from '@/components/Table/components/ExportTable'
-import { useGetCustomers, type SearchFilter } from '../api/customerManageAPI'
+import { useGetCustomers } from '../api/customerManageAPI'
 import { CustomerTable } from '../components/Customer'
-import { SearchField } from '@/components/Input'
 
 export function CustomerManageTemplate() {
   const { t } = useTranslation()

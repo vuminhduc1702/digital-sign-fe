@@ -4,30 +4,12 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
 import storage from '@/utils/storage'
-import { useAddColumn, useCreateDataBase, type AddColumnDTO } from '../api'
 
-import { nameSchema } from '@/utils/schemaValidation'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
-import { useParams } from 'react-router-dom'
-import { type AddRowsDTO, useAddRows } from '../api/addRows'
-import { useEffect, useState } from 'react'
-import { type FieldsRows } from '../types'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import { cn } from '@/utils/misc'
 import {
   Form,
   FormControl,
@@ -37,6 +19,18 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import { cn } from '@/utils/misc'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useAddRows, type AddRowsDTO } from '../api/addRows'
+import { type FieldsRows } from '../types'
 
 export const createRowsSchema = z.object({
   fields: z.array(z.record(z.string().optional())),

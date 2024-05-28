@@ -60,7 +60,7 @@ export const useGetEntityThings = ({
   limit = limitPagination,
   search_str,
   search_field,
-  share,
+  share = true,
   config,
 }: UseEntityThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
