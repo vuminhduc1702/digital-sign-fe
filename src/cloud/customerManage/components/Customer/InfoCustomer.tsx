@@ -1,17 +1,8 @@
-import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from 'react-i18next'
 
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
 import narrowLeft from '@/assets/icons/narrow-left.svg'
 import { useGetSubcriptons } from '@/cloud/subcription/api/subcriptionAPI'
-import { InputField } from '@/components/Form'
-import { useDisclosure } from '@/utils/hooks'
-import storage from '@/utils/storage'
-import { useGetCustomers } from '../../api/customerManageAPI'
-import { type Customer } from '../../types'
-import { PlanTable } from './PlanTable'
-import { ViewPopup } from './ViewPopup'
 import {
   Form,
   FormControl,
@@ -21,7 +12,15 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useDisclosure } from '@/utils/hooks'
+import storage from '@/utils/storage'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useGetCustomers } from '../../api/customerManageAPI'
+import { type Customer } from '../../types'
+import { PlanTable } from './PlanTable'
+import { ViewPopup } from './ViewPopup'
 
 export function InfoCustomer() {
   const { t } = useTranslation()
