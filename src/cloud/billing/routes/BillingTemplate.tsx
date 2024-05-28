@@ -23,6 +23,22 @@ import { useGetBillings, type SearchFilter } from '../api/billingAPI'
 import { BillingTable } from '../components/Billing'
 import { ExportTable } from '@/components/Table/components/ExportTable'
 import { convertEpochToDate } from '@/utils/transformFunc'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const transformStatus = stt => {
   switch (stt) {
@@ -66,10 +82,12 @@ export function BillingTemplate() {
     setsearchData(newObj)
   }
 
-  const { register, formState, control, handleSubmit } = useForm({
+  const form = useForm({
     resolver: searchSubcriptionSchema && zodResolver(searchSubcriptionSchema),
     defaultValues: { value: '', key: '' },
   })
+
+  const { register, formState, control, handleSubmit } = form
 
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
@@ -122,99 +140,136 @@ export function BillingTemplate() {
       {/* <TitleBar title={t('sidebar:payment.plhd')} /> */}
       <div className="relative flex grow flex-col rounded-md bg-gray-50 px-9 py-3 shadow-lg">
         <div className="mb-5 flex justify-between">
-          <form
-            id="search-subcription"
-            className="flex flex-col justify-between space-y-6"
-            onSubmit={handleSubmit(values => {
-              const newObj: SearchFilter = {}
-              newObj[values.key] = values.value
-              setStartTime(
-                date?.from?.getTime() && date?.from?.getTime() / 1000,
-              )
-              setEndTime(date?.to?.getTime() && date?.to?.getTime() / 1000)
-              setSearchFilter(newObj)
-            })}
-          >
-            <div className="flex items-center gap-x-3">
-              <SelectDropdown
-                className="relative mt-1 h-[37px] w-[500px] justify-start rounded-md text-left font-normal"
-                isClearable={false}
-                name="key"
-                control={control}
-                options={[
-                  { label: t('schema:bill'), value: 'id' },
-                  { label: t('schema:customer_name'), value: 'customer_name' },
-                ]}
-                // error={formState?.errors?.key}
-              />
-              <InputField
-                className="mt-1 h-[37px]"
-                error={formState.errors['value']}
-                registration={register('value')}
-              />
-              <div className={cn('grid gap-2')}>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      id="date"
-                      variant="trans"
-                      className={cn(
-                        'relative mt-1 h-[37px] w-[300px] justify-start rounded-md text-left font-normal ',
-                        !date && 'text-muted-foreground',
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date?.from ? (
-                        date.to ? (
-                          <>
-                            {format(date.from, 'dd MM, y')} -{' '}
-                            {format(date.to, 'dd MM, y')}
-                          </>
+          <Form {...form}>
+            <form
+              id="search-subcription"
+              className="flex flex-col justify-between space-y-6"
+              onSubmit={handleSubmit(values => {
+                const newObj: SearchFilter = {}
+                newObj[values.key] = values.value
+                setStartTime(
+                  date?.from?.getTime() && date?.from?.getTime() / 1000,
+                )
+                setEndTime(date?.to?.getTime() && date?.to?.getTime() / 1000)
+                setSearchFilter(newObj)
+              })}
+            >
+              <div className="flex gap-x-3">
+                <FormField
+                  control={form.control}
+                  name="key"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem className="h-[38px] min-w-[250px]">
+                      <FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={onChange}
+                          value={value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t('placeholder:select')}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {[
+                              { label: t('schema:bill'), value: 'id' },
+                              {
+                                label: t('schema:customer_name'),
+                                value: 'customer_name',
+                              },
+                            ].map(option => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="value"
+                  render={({ field }) => (
+                    <FormItem className="h-[38px] min-w-[250px]">
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className={cn('grid gap-2')}>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="date"
+                        variant="trans"
+                        className={cn(
+                          'h-[36px] w-[300px] justify-start rounded-md text-left font-normal ',
+                          !date && 'text-muted-foreground',
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {date?.from ? (
+                          date.to ? (
+                            <>
+                              {format(date.from, 'dd MM, y')} -{' '}
+                              {format(date.to, 'dd MM, y')}
+                            </>
+                          ) : (
+                            format(date.from, 'dd MM, y')
+                          )
                         ) : (
-                          format(date.from, 'dd MM, y')
-                        )
-                      ) : (
-                        <span>
-                          {t('cloud:dashboard.config_chart.pick_date')}
-                        </span>
-                      )}
-                      {date?.from && (
-                        <HiOutlineXMark
-                          onClick={() =>
-                            setDate({
-                              from: undefined,
-                              to: undefined,
-                            })
-                          }
-                          className="absolute right-3 top-2.5 h-4 w-4 "
-                        />
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={date?.from}
-                      selected={date}
-                      onSelect={setDate}
-                      numberOfMonths={2}
-                    />
-                  </PopoverContent>
-                </Popover>
+                          <span>
+                            {t('cloud:dashboard.config_chart.pick_date')}
+                          </span>
+                        )}
+                        {date?.from && (
+                          <HiOutlineXMark
+                            onClick={() =>
+                              setDate({
+                                from: undefined,
+                                to: undefined,
+                              })
+                            }
+                            className="absolute right-3 top-2.5 h-4 w-4 "
+                          />
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={date?.from}
+                        selected={date}
+                        onSelect={setDate}
+                        numberOfMonths={2}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+                <Button
+                  className="rounded-md"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
+                  }
+                  form="search-subcription"
+                  type="submit"
+                />
               </div>
-              <Button
-                className="rounded-md"
-                variant="trans"
-                size="square"
-                startIcon={
-                  <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-                }
-                form="search-subcription"
-                type="submit"
-              />
-            </div>
-          </form>
+            </form>
+          </Form>
         </div>
         <BillingTable
           data={data?.data?.data || []}

@@ -210,7 +210,7 @@ export const adapterSchema = z
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
-  description: z.string(),
+  description: z.string().optional(),
   input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
   code: z.string().optional(),
