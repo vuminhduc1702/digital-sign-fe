@@ -1,5 +1,5 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import React, { useEffect, useMemo, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
@@ -14,19 +14,8 @@ import i18n from '@/i18n'
 
 import { type Action, type Condition, type EventType } from '../../types'
 
-import btnCopyIdIcon from '@/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { LuPen, LuTrash2, LuFiles } from 'react-icons/lu'
 
 export const initialTodos = [
   {
@@ -87,7 +76,7 @@ function EventTableContextMenu({
   const [conditionData, setConditionData] = useState<Condition[] | null>([])
   const [startTime, setStartTime] = useState<string>()
   const [endTime, setEndTime] = useState<string>()
-  const [typeEvent, setTypeEvent] = useState<string>('')
+  const [typeEvent, setTypeEvent] = useState<'schedule' | 'event'>('schedule')
   const [todos, setTodos] = useState(initialTodos)
 
   useEffect(() => {
