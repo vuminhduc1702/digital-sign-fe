@@ -1,18 +1,16 @@
-import { useMemo, useRef, useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { Button } from '@/components/ui/button'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 import TitleBar from '@/components/Head/TitleBar'
-import { ExportTable } from '@/components/Table/components/ExportTable'
+import { SearchField } from '@/components/Input'
+import { Switch } from '@/components/ui/switch'
+import { useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
 import { useDeleteMultipleThings } from '../api/thingAPI/deleteMultipleThings'
 import { CreateThing, ThingTable } from '../components/Attributes'
-import { SearchField } from '@/components/Input'
-import { useDisclosure } from '@/utils/hooks'
-import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { Switch } from '@/components/ui/switch'
 
 export function ThingTemplate() {
   const { t } = useTranslation()

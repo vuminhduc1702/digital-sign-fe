@@ -410,6 +410,10 @@ export function CreateTemplateLwM2M({
     resetAllStates()
   }
   const selectedThing = watch('thing_id')
+  const selectedThingName = thingSelectData?.find(
+    option => option.value === values.thing_id,
+  )
+  const thing_name = selectedThingName ? selectedThingName.label : ''
   const selectedService = watch('handle_msg_svc')
   const name = watch('name')
   const transportConfig = {

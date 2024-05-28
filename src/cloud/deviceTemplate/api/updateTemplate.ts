@@ -15,6 +15,7 @@ export type UpdateTemplateDTO = {
     transport_config?: TransportConfig
     attributes?: AttrList
     thing_id: string
+    thing_name: string
     handle_msg_svc: string
   }
   templateId: string

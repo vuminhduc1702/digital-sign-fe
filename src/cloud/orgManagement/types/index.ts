@@ -27,6 +27,8 @@ export type Device = {
   org_id: string
   org_name: string
   template_name: string
+  thing_name: string
+  handle_message_svc: string
   status: 'offline' | 'online' | 'block'
   additional_info: DeviceAdditionalInfo
   attributes: Attribute[]

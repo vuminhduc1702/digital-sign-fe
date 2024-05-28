@@ -249,6 +249,8 @@
           "token": "Token",
           "name": "Tên",
           "group": "Nhóm",
+          "thing": "Thing",
+          "service": "Nghiệp vụ",
           "device_type": "Mẫu thiết bị",
           "org_name": "Tổ chức",
           "key": "Key",

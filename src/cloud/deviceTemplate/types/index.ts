@@ -58,6 +58,7 @@ export type Template = {
   transport_config: TransportConfig
   attributes: AttrList
   thing_id: string
+  thing_name: string
   handle_message_svc: string
 }
 export type TemplateLwM2MList = {
