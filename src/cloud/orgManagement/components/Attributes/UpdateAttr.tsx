@@ -51,6 +51,15 @@ export function UpdateAttr({
   isOpen,
 }: UpdateAttrProps) {
   const { t } = useTranslation()
+  const dataDefault = {
+    attribute_key: attributeKey,
+    logged: String(logged) === 'true',
+    value:
+      JSON.parse(JSON.stringify(value)) === ''
+        ? undefined
+        : JSON.stringify(value),
+    value_t: value_type,
+  }
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
@@ -59,15 +68,7 @@ export function UpdateAttr({
     z.infer<typeof attrSchema>
   >({
     resolver: attrSchema && zodResolver(attrSchema),
-    defaultValues: {
-      attribute_key: attributeKey,
-      logged: String(logged) === 'true',
-      value:
-        JSON.parse(JSON.stringify(value)) === ''
-          ? undefined
-          : JSON.stringify(value),
-      value_t: value_type,
-    },
+    defaultValues: dataDefault,
   })
 
   useEffect(
@@ -90,12 +91,13 @@ export function UpdateAttr({
     }
   }, [isSuccess])
 
-  useEffect(() => {
-    reset()
-  }, [isOpen])
+  const resetForm = () => {
+    close()
+    reset(dataDefault)
+  }
 
   return (
-    <Sheet open={isOpen} onOpenChange={close} modal={false}>
+    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -204,7 +206,7 @@ export function UpdateAttr({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={resetForm}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

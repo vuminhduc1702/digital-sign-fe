@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
-import { InputField, type SelectOption } from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import {
   type UpdateAdapterDTO,
   useUpdateAdapter,
@@ -741,38 +741,6 @@ export function UpdateAdapter({
                                 )
                               }}
                             />
-                            {/* <InputField
-                            label={t(
-                              'cloud:custom_protocol.adapter.schema.start_byte',
-                            )}
-                            error={
-                              formState.errors?.schema?.fields?.[index]
-                                ?.start_byte
-                            }
-                            type="number"
-                            registration={register(
-                              `schema.fields.${index}.start_byte` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                          />
-                          <InputField
-                            label={t(
-                              'cloud:custom_protocol.adapter.schema.length_byte',
-                            )}
-                            error={
-                              formState.errors?.schema?.fields?.[index]
-                                ?.length_byte
-                            }
-                            type="number"
-                            registration={register(
-                              `schema.fields.${index}.length_byte` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                          /> */}
                           </div>
                           <Button
                             type="button"

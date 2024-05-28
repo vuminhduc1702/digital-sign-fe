@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
-import { InputField, SelectField } from '@/components/Form'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 import { entityTypeList } from './CreateGroup'
@@ -102,7 +101,7 @@ export function UpdateGroup({
       org_id: organization,
     },
   })
-  const { register, formState, control, getValues, handleSubmit, reset } = form
+  const { formState, getValues, handleSubmit, reset } = form
 
   useEffect(() => {
     reset()
