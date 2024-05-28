@@ -386,7 +386,7 @@ export function UpdateEvent({
                   ('condition' in values &&
                     values.condition.map(item => ({
                       device_id: item.device_id,
-                      city_name: item.city_name,
+                      device_name: item.device_name ?? '',
                       attribute_name: item.attribute_name,
                       condition_type: item.condition_type,
                       operator: item.operator,
@@ -834,7 +834,21 @@ export function UpdateEvent({
                                             <FormControl>
                                               <NewSelectDropdown
                                                 options={deviceSelectOptions}
-                                                customOnChange={onChange}
+                                                customOnChange={value => {
+                                                  const filter =
+                                                    deviceSelectData?.filter(
+                                                      item =>
+                                                        item.value === value,
+                                                    )
+                                                  setValue(
+                                                    `condition.${index}.device_id`,
+                                                    value,
+                                                  )
+                                                  setValue(
+                                                    `condition.${index}.device_name`,
+                                                    filter?.[0]?.label ?? '',
+                                                  )
+                                                }}
                                                 isOptionDisabled={option =>
                                                   option.label ===
                                                     t('loading:device') ||
@@ -868,7 +882,7 @@ export function UpdateEvent({
                               ) : (
                                 <FormField
                                   control={control}
-                                  name={`condition.${index}.city_name`}
+                                  name={`condition.${index}.device_name`}
                                   render={({
                                     field: { value, onChange, ...field },
                                   }) => (
@@ -882,12 +896,21 @@ export function UpdateEvent({
                                         <FormControl>
                                           <NewSelectDropdown
                                             options={cityNameOptions}
-                                            customOnChange={onChange}
+                                            customOnChange={value => {
+                                              setValue(
+                                                `condition.${index}.device_name`,
+                                                value,
+                                              )
+                                              setValue(
+                                                `condition.${index}.device_id`,
+                                                'weather',
+                                              )
+                                            }}
                                             defaultValue={cityNameOptions?.find(
                                               item =>
                                                 item.value ===
                                                 getValues(
-                                                  `condition.${index}.city_name`,
+                                                  `condition.${index}.device_name`,
                                                 ),
                                             )}
                                             isOptionDisabled={option =>

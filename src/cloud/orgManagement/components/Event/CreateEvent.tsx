@@ -71,7 +71,7 @@ export const conditionEventOptions = [
     label: i18n.t('cloud:org_manage.event_manage.add_event.weather_condition'),
     value: 'weather_condition',
   },
-]
+] as const
 export const cityNameOptions = [
   {
     label: i18n.t('cloud:org_manage.event_manage.add_event.HN'),
@@ -202,7 +202,11 @@ export const eventConditionSchema = z.array(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
-    city_name: z.string().optional(),
+    device_name: z.string({
+      required_error: i18n.t(
+        'cloud:org_manage.device_manage.add_device.choose_device',
+      ),
+    }),
     attribute_name: z.string({
       required_error: i18n.t(
         'cloud:org_manage.org_manage.add_attr.choose_attr',
@@ -538,7 +542,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                   ('condition' in values &&
                     values.condition.map(item => ({
                       device_id: item.device_id,
-                      city_name: item.city_name,
+                      device_name: item.device_name ?? '',
                       attribute_name: item.attribute_name,
                       condition_type: item.condition_type,
                       operator: item.operator,
@@ -987,7 +991,20 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       <FormControl>
                                         <NewSelectDropdown
                                           options={deviceSelectData}
-                                          customOnChange={onChange}
+                                          customOnChange={value => {
+                                            const filter =
+                                              deviceSelectData?.filter(
+                                                item => item.value === value,
+                                              )
+                                            setValue(
+                                              `condition.${index}.device_id`,
+                                              value,
+                                            )
+                                            setValue(
+                                              `condition.${index}.device_name`,
+                                              filter?.[0]?.label ?? '',
+                                            )
+                                          }}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:device') ||
@@ -1012,7 +1029,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                             ) : (
                               <FormField
                                 control={control}
-                                name={`condition.${index}.city_name`}
+                                name={`condition.${index}.device_name`}
                                 render={({
                                   field: { value, onChange, ...field },
                                 }) => (
@@ -1026,7 +1043,16 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                       <FormControl>
                                         <NewSelectDropdown
                                           options={cityNameOptions}
-                                          customOnChange={onChange}
+                                          customOnChange={value => {
+                                            setValue(
+                                              `condition.${index}.device_name`,
+                                              value,
+                                            )
+                                            setValue(
+                                              `condition.${index}.device_id`,
+                                              'weather',
+                                            )
+                                          }}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:device') ||
