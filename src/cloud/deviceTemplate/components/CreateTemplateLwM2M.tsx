@@ -444,6 +444,9 @@ export function CreateTemplateLwM2M({
     const valueType = valueTypeList.find(value => value.name === type)
     return valueType ? valueType.type : 'STR'
   }
+  useEffect(() => {
+    reset()
+  }, [isOpen])
 
   return (
     <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>

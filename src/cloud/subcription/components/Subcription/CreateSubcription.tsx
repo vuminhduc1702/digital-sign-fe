@@ -42,7 +42,12 @@ export const entitySubcriptionSchema = z.object({
   user_id: z
     .string()
     .min(1, { message: i18n.t('billing:subcription.popup.choose_user') }),
-  register: z.string().optional(),
+  register: z
+    .string()
+    .max(999, {
+      message: i18n.t('billing:subcription.popup.choose_quantity'),
+    })
+    .optional(),
   customer_code: z.string().optional(),
   customer_name: z.string().optional(),
   price_method: z.string().optional(),

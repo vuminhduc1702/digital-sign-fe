@@ -83,10 +83,9 @@ export function UpdateCustomer({
     }
   }, [isSuccess])
 
-  const resetForm = () => {
-    close()
+  useEffect(() => {
     form.reset()
-  }
+  }, [isOpen])
 
   // const [rowSelection, setRowSelection] = useState({})
   // const pdfHeader = useMemo(
@@ -113,7 +112,7 @@ export function UpdateCustomer({
   // )
 
   return (
-    <Dialog isOpen={isOpen} onClose={resetForm} initialFocus={cancelButtonRef}>
+    <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block h-screen w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
@@ -123,7 +122,7 @@ export function UpdateCustomer({
             <div className="ml-3 flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                onClick={resetForm}
+                onClick={close}
               >
                 <span className="sr-only">Close panel</span>
                 <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
@@ -242,7 +241,7 @@ export function UpdateCustomer({
             type="button"
             variant="secondary"
             className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
-            onClick={resetForm}
+            onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }

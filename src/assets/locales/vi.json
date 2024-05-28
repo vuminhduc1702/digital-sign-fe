@@ -764,7 +764,14 @@
             "value": "Giá trị",
             "success": "Thực thi nghiệp vụ thành công.",
             "save": "Lưu",
-            "send": "Gửi"
+            "send": "Gửi",
+            "error": {
+              "name": "Nhập tên biến",
+              "thing_id": "Chưa chọn thing",
+              "service_name": "Chưa chọn nghiệp vụ",
+              "input": "Chưa nhập giá trị",
+              "unique_name": "Tên biến không được phép trùng nhau"
+            }
           }
         }
       },
@@ -925,7 +932,8 @@
         "choose_plan": "Vui lòng chọn gói cước",
         "success_create": "Đăng ký dịch vụ thành công",
         "success_update": "Cập nhật dịch vụ thành công",
-        "success_delete": "Hủy đăng ký dịch vụ thành công"
+        "success_delete": "Hủy đăng ký dịch vụ thành công",
+        "choose_quantity": "Vượt quá số lượng được phép đăng ký"
       },
       "table": {
         "sub_code": "Mã đăng ký",
