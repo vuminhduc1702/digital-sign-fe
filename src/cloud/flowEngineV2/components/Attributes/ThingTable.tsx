@@ -52,7 +52,7 @@ function ThingTableContextMenu({
         ?.map(device => device.name)
         .join(', ')
       toast.error(
-        `${t('Một số mẫu thiết bị đang được liên kết với Thing này, vui lòng sửa hoặc xoá các mẫu thiết bị sau để tiếp tục thao tác')}: ${deviceNames}`,
+        `${t('cloud:custom_protocol.thing.delete_thing_error')}: [ ${deviceNames} ]`,
       )
     } else {
       mutate({ id })
