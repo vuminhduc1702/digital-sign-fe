@@ -26,7 +26,7 @@ import { type SendMessage } from 'react-use-websocket/dist/lib/types'
 import { LuTrash2, LuPlusCircle } from 'react-icons/lu'
 import { cn } from '@/utils/misc'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SelectDropdown } from '@/components/Form'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 import { type SelectInstance } from 'react-select'
 import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
@@ -193,18 +193,24 @@ export function ControllerForm({
   useEffect(() => {
     if (variableListRerender) {
       remove()
-      inputSelectData?.forEach((item, index) => {
-        append({ name: item.value, value: '' })
-      })
+      if (inputSelectData?.length === 0) {
+        append({ name: '', value: '' })
+      } else {
+        inputSelectData?.forEach((item, index) => {
+          append({ name: item.value, value: '' })
+        })
+      }
       setVariableListRerender(false)
     }
   }, [inputSelectData])
+
+  console.log(watch())
 
   return (
     <div className="relative mt-6 h-[calc(100%_-_24px)] bg-white p-6">
       <Form {...form}>
         <form
-          className="box-border max-h-[80%] overflow-y-auto"
+          className="box-border max-h-[90%] overflow-y-auto"
           onSubmit={handleSubmit(values => {
             const controllerBtn = {
               title: values.name,
@@ -260,10 +266,10 @@ export function ControllerForm({
                         <FormItem>
                           <FormControl>
                             <div className="grid grid-cols-[1fr_2fr] gap-[10px]">
-                              <div className="flex items-center gap-[10px]">
+                              <FormLabel className="flex items-center gap-[10px]">
                                 {t('cloud:dashboard.config_chart.name')}
                                 <span className="text-primary-400">*</span>
-                              </div>
+                              </FormLabel>
                               <div>
                                 <Input
                                   {...field}
@@ -284,85 +290,111 @@ export function ControllerForm({
                     />
                   </>
                   <>
-                    <div className="grid grid-cols-[1fr_2fr] gap-[10px]">
-                      <div className="flex items-center gap-[10px]">
-                        {t('cloud:custom_protocol.thing.choose')}
-                        <span className="text-primary-400">*</span>
-                      </div>
-                      <SelectDropdown
-                        name="thing_id"
-                        control={control}
-                        options={thingSelectData}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:entity_thing') ||
-                          option.label === t('table:no_thing')
-                        }
-                        noOptionsMessage={() => t('table:no_thing')}
-                        loadingMessage={() => t('loading:entity_thing')}
-                        isLoading={isLoadingThing}
-                        defaultValue={thingSelectData?.find(
-                          item => item.value === watch('thing_id'),
-                        )}
-                        placeholder={t('cloud:custom_protocol.thing.choose')}
-                        handleClearSelectDropdown={() =>
-                          selectDropdownServiceRef.current?.clearValue()
-                        }
-                        handleChangeSelect={() =>
-                          selectDropdownServiceRef.current?.clearValue()
-                        }
-                        error={formState?.errors?.thing_id}
-                        className="h-[36px] w-[90%] rounded-md focus:ring-2 focus:ring-blue-500"
-                        customOnChange={value => {
-                          setValue('service_name', '')
-                          setValue('input', [
-                            {
-                              name: '',
-                              value: '',
-                            },
-                          ])
-                        }}
-                      />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name="thing_id"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="grid grid-cols-[1fr_2fr] gap-[10px]">
+                              <FormLabel className="flex items-center gap-[10px]">
+                                {t('cloud:custom_protocol.thing.choose')}
+                                <span className="text-primary-400">*</span>
+                              </FormLabel>
+                              <NewSelectDropdown
+                                options={thingSelectData}
+                                isOptionDisabled={option =>
+                                  option.label === t('loading:entity_thing') ||
+                                  option.label === t('table:no_thing')
+                                }
+                                noOptionsMessage={() => t('table:no_thing')}
+                                loadingMessage={() => t('loading:entity_thing')}
+                                isLoading={isLoadingThing}
+                                defaultValue={thingSelectData?.find(
+                                  item => item.value === watch('thing_id'),
+                                )}
+                                placeholder={t(
+                                  'cloud:custom_protocol.thing.choose',
+                                )}
+                                // handleClearNewSelectDropdown={() =>
+                                //   selectDropdownServiceRef.current?.clearValue()
+                                // }
+                                handleChangeSelect={() =>
+                                  selectDropdownServiceRef.current?.clearValue()
+                                }
+                                className="h-[36px] w-[90%] rounded-md focus:ring-2 focus:ring-blue-500"
+                                customOnChange={value => {
+                                  setValue('service_name', '')
+                                  setValue('input', [
+                                    {
+                                      name: '',
+                                      value: '',
+                                    },
+                                  ])
+                                  onChange(value)
+                                }}
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </>
                   <>
-                    <div className="grid grid-cols-[1fr_2fr] gap-[10px]">
-                      <div className="flex items-center gap-[10px]">
-                        {t('cloud:custom_protocol.service.title')}
-                        <span className="text-primary-400">*</span>
-                      </div>
-                      <SelectDropdown
-                        refSelect={selectDropdownServiceRef}
-                        name="service_name"
-                        control={control}
-                        options={serviceSelectData}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:service_thing') ||
-                          option.label === t('table:no_service')
-                        }
-                        isLoading={
-                          watch('thing_id') != null ? isLoadingService : false
-                        }
-                        defaultValue={serviceSelectData?.find(
-                          item => item.value === watch('service_name'),
-                        )}
-                        loadingMessage={() => t('loading:service_thing')}
-                        noOptionsMessage={() => t('table:no_service')}
-                        placeholder={t('cloud:custom_protocol.service.choose')}
-                        error={formState?.errors?.service_name}
-                        className="h-[36px] w-[90%] rounded-md focus:ring-2 focus:ring-blue-500"
-                        customOnChange={value => {
-                          if (value) {
-                            setVariableListRerender(true)
-                          }
-                          setValue('input', [
-                            {
-                              name: '',
-                              value: '',
-                            },
-                          ])
-                        }}
-                      />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name="service_name"
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="grid grid-cols-[1fr_2fr] gap-[10px]">
+                              <FormLabel className="flex items-center gap-[10px]">
+                                {t('cloud:custom_protocol.service.title')}
+                                <span className="text-primary-400">*</span>
+                              </FormLabel>
+                              <NewSelectDropdown
+                                refSelect={selectDropdownServiceRef}
+                                options={serviceSelectData}
+                                isOptionDisabled={option =>
+                                  option.label === t('loading:service_thing') ||
+                                  option.label === t('table:no_service')
+                                }
+                                isLoading={
+                                  watch('thing_id') != null
+                                    ? isLoadingService
+                                    : false
+                                }
+                                defaultValue={serviceSelectData?.find(
+                                  item => item.value === watch('service_name'),
+                                )}
+                                loadingMessage={() =>
+                                  t('loading:service_thing')
+                                }
+                                noOptionsMessage={() => t('table:no_service')}
+                                placeholder={t(
+                                  'cloud:custom_protocol.service.choose',
+                                )}
+                                className="h-[36px] w-[90%] rounded-md focus:ring-2 focus:ring-blue-500"
+                                customOnChange={value => {
+                                  if (value) {
+                                    setVariableListRerender(true)
+                                  }
+                                  setValue('input', [
+                                    {
+                                      name: '',
+                                      value: '',
+                                    },
+                                  ])
+                                  onChange(value)
+                                }}
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </>
                 </div>
               </div>
@@ -404,7 +436,7 @@ export function ControllerForm({
                         <Spinner size="xl" />
                       </div>
                     ) : (
-                      fields?.map((item, index) => {
+                      watch('input')?.map((item, index) => {
                         return (
                           <div
                             key={index}
@@ -415,41 +447,60 @@ export function ControllerForm({
                           >
                             <div className="flex items-center justify-center">
                               <div className="h-[36px] w-3/4 rounded-md focus:ring-2 focus:ring-blue-500">
-                                <SelectDropdown
+                                <FormField
+                                  control={form.control}
                                   name={`input.${index}.name`}
-                                  control={control}
-                                  options={inputSelectData}
-                                  // value={watch(`input.${index}.name`)}
-                                  isOptionDisabled={option =>
-                                    option.label === t('loading:input') ||
-                                    option.label === t('table:no_input')
-                                  }
-                                  noOptionsMessage={() => t('table:no_input')}
-                                  loadingMessage={() => t('loading:input')}
-                                  isLoading={
-                                    watch('thing_id') && watch('service_name')
-                                      ? isLoadingThingService
-                                      : false
-                                  }
-                                  defaultValue={inputSelectData?.find(
-                                    item =>
-                                      item.value ===
-                                      watch(`input.${index}.name`),
+                                  render={({
+                                    field: { onChange, value, ...field },
+                                  }) => (
+                                    <FormItem>
+                                      <FormControl>
+                                        <NewSelectDropdown
+                                          options={inputSelectData}
+                                          customOnChange={onChange}
+                                          isOptionDisabled={option =>
+                                            option.label ===
+                                              t('loading:input') ||
+                                            option.label === t('table:no_input')
+                                          }
+                                          noOptionsMessage={() =>
+                                            t('table:no_input')
+                                          }
+                                          loadingMessage={() =>
+                                            t('loading:input')
+                                          }
+                                          isLoading={
+                                            watch('thing_id') &&
+                                            watch('service_name')
+                                              ? isLoadingThingService
+                                              : false
+                                          }
+                                          defaultValue={inputSelectData?.find(
+                                            item =>
+                                              item.value ===
+                                              watch(`input.${index}.name`),
+                                          )}
+                                          // value={
+                                          //   watch(`input.${index}.name`) === ''
+                                          //     ? null
+                                          //     : inputSelectData?.find(
+                                          //         item =>
+                                          //           item.value ===
+                                          //           watch(
+                                          //             `input.${index}.name`,
+                                          //           ),
+                                          //       )
+                                          // }
+                                          placeholder={''}
+                                          // error={
+                                          //   formState?.errors?.input?.[index]?.name
+                                          // }
+                                          isDisabled={!isEdit}
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                    </FormItem>
                                   )}
-                                  value={
-                                    watch(`input.${index}.name`) === ''
-                                      ? null
-                                      : inputSelectData?.find(
-                                          item =>
-                                            item.value ===
-                                            watch(`input.${index}.name`),
-                                        )
-                                  }
-                                  placeholder={''}
-                                  error={
-                                    formState?.errors?.input?.[index]?.name
-                                  }
-                                  isDisabled={!isEdit}
                                 />
                               </div>
                             </div>
