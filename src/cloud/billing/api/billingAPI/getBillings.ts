@@ -5,14 +5,10 @@ import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type BasePagination, type BaseAPIRes } from '@/types'
 import { type Billing } from '../../types'
 
-export interface SearchFilter {
-  [key: string]: string
-}
-
 type GetBillings = {
   projectId: string
-  searchFilter?: SearchFilter
-  searchData?: SearchFilter
+  searchFilter?: string
+  searchData?: string
   start_time?: number
   end_time?: number
 }
@@ -30,14 +26,23 @@ export const getBillings = ({
   start_time,
   end_time,
 }: GetBillings): Promise<GetBillingtonRes> => {
+  const params = new URLSearchParams({
+    project_id: projectId,
+    // start_time: String(start_time),
+    // end_time: String(end_time),
+  })
+
+  params.set(searchFilter || 'customer_name', searchData || '')
+
   return axios.get(`/api/priceplan/bill`, {
-    params: {
-      project_id: projectId,
-      start_time,
-      end_time,
-      ...searchFilter,
-      ...searchData,
-    },
+    params,
+    // params: {
+    //   project_id: projectId,
+    //   start_time,
+    //   end_time,
+    //   ...searchFilter,
+    //   ...searchData,
+    // },
   })
 }
 

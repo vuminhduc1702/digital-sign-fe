@@ -31,10 +31,15 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useAddRows, type AddRowsDTO } from '../api/addRows'
 import { type FieldsRows } from '../types'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export const createRowsSchema = z.object({
-  fields: z.array(z.record(z.string().optional())),
+  fields: z.array(
+    z.record(z.string().or(z.boolean()).or(z.number()).optional()),
+  ),
 })
+
+export const numberInput = ['real', 'integer', 'bigint']
 
 export default function CreateRows({
   columnsProp,
@@ -42,12 +47,14 @@ export default function CreateRows({
   close,
   isOpen,
   onClose,
+  columnsType,
 }: {
   columnsProp: string[]
   open?: () => void
   close?: () => void
   isOpen?: boolean
   onClose: () => void
+  columnsType: string[]
 }) {
   const { t } = useTranslation()
 
@@ -82,6 +89,25 @@ export default function CreateRows({
       onClose?.()
     }
   }, [isSuccess])
+
+  const renderType = (type: string) => {
+    let result = ''
+    switch (type) {
+      case 'boolean':
+        return (result = 'Boolean')
+      case 'real':
+        return (result = 'f64')
+      case 'character varying':
+        return (result = 'String')
+      case 'integer':
+        return (result = 'i32')
+      case 'bigint':
+        return (result = 'i64')
+      case 'jsonb':
+        return (result = 'JSON')
+    }
+    return result
+  }
 
   return (
     <Sheet
@@ -137,23 +163,62 @@ export default function CreateRows({
                     className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
                   >
                     <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                      {columnsProp?.map(item => (
-                        <FormField
-                          control={form.control}
-                          name={`fields.${index}.${item}`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{item}</FormLabel>
-                              <div>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-                      ))}
+                      {columnsProp?.map((item, i) => {
+                        return (
+                          <>
+                            {columnsType[i] === 'boolean' ? (
+                              <FormField
+                                control={form.control}
+                                name={`fields.${index}.${item}`}
+                                render={({
+                                  field: { onChange, value, ...field },
+                                }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {item} {`(${renderType(columnsType[i])})`}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Checkbox
+                                          {...field}
+                                          checked={value as boolean}
+                                          onCheckedChange={onChange}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
+                            ) : (
+                              <FormField
+                                control={form.control}
+                                name={`fields.${index}.${item}`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {item} {`(${renderType(columnsType[i])})`}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Input
+                                          type={
+                                            numberInput.includes(columnsType[i])
+                                              ? 'number'
+                                              : 'text'
+                                          }
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
+                            )}
+                          </>
+                        )
+                      })}
                     </div>
                     <Button
                       type="button"
