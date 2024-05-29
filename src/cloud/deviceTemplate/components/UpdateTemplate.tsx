@@ -138,6 +138,7 @@ export function UpdateTemplate({
         name: selectedUpdateTemplate.name,
         rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
         thing_id: selectedUpdateTemplate?.thing_id,
+        thing_name: selectedUpdateTemplate?.thing_name,
         handle_msg_svc: selectedUpdateTemplate?.handle_message_svc,
         attributes: attrData?.attributes.map((attribute: Attribute) => ({
           attribute_key: attribute.attribute_key,
@@ -189,6 +190,10 @@ export function UpdateTemplate({
                 className="w-full space-y-5"
                 id="update-template"
                 onSubmit={handleSubmit(values => {
+                  const selectedThing = thingSelectData?.find(
+                    option => option.value === values.thing_id,
+                  )
+                  const thing_name = selectedThing ? selectedThing.label : ''
                   const data = {
                     name: values.name,
                     rule_chain_id: values.rule_chain_id || '',
@@ -197,6 +202,7 @@ export function UpdateTemplate({
                         ? values.attributes
                         : undefined,
                     thing_id: values.thing_id || '',
+                    thing_name: thing_name,
                     handle_msg_svc: values.handle_msg_svc || '',
                   }
                   mutate({

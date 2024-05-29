@@ -1,7 +1,7 @@
 {
   "name": "iot-react",
   "private": true,
-  "version": "0.5.36",
+  "version": "0.5.40",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -81,6 +81,7 @@
     "react-checkbox-tree": "^1.8.0",
     "react-complex-tree": "^2.3.4",
     "react-d3-tree": "^3.6.2",
+    "react-datepicker": "^6.9.0",
     "react-day-picker": "^8.8.1",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",

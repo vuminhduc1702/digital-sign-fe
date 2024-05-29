@@ -94,11 +94,6 @@ export type WidgetAttrDeviceType = Array<{
   deviceId: string
 }>
 
-const { token } = storage.getToken()
-export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
-  `Bearer ${token}`,
-)}`
-
 export function DashboardDetail() {
   const { t } = useTranslation()
 
@@ -150,6 +145,10 @@ export function DashboardDetail() {
     widgetListRef.current = Object.keys(widgetList)
   }, [widgetList])
 
+  const { token } = storage.getToken()
+  const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
+    `Bearer ${token}`,
+  )}`
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(
       WEBSOCKET_URL,

@@ -9,9 +9,17 @@ export type TransportConfigAttribute = {
   type: string
 }
 
+export type AttrLwM2MList = {
+  attribute_key: string
+  value: string | undefined
+  logged: boolean
+  value_t: string
+}
+
 export type ModuleConfig = {
   Observe?: boolean
   attribute_info: TransportConfigAttribute[]
+  attributes: AttrLwM2MList[]
   last_update_ts: number
   id: string
   module_name: string
@@ -50,6 +58,7 @@ export type Template = {
   transport_config: TransportConfig
   attributes: AttrList
   thing_id: string
+  thing_name: string
   handle_message_svc: string
 }
 export type TemplateLwM2MList = {

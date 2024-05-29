@@ -174,7 +174,7 @@ export function LwM2M() {
                 ) : null}
               </div>
             </div>
-            {attrsData?.attributes?.length ? (
+            {attrsData?.attributes?.length && !LwM2MDataById ? (
               <AttrTable
                 data={attrsData?.attributes ?? []}
                 entityId={templateId}

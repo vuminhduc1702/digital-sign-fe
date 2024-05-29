@@ -83,6 +83,11 @@ function App() {
     console.debug = () => {}
   }
 
+  // Auto reload page when failing to load dynamic imports
+  window.addEventListener('vite:preloadError', () => {
+    window.location.reload()
+  })
+
   return (
     <Suspense
       fallback={
