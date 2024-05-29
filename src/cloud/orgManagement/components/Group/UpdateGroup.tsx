@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
-import { InputField, SelectField } from '@/components/Form'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 import { entityTypeList } from './CreateGroup'
@@ -102,15 +101,14 @@ export function UpdateGroup({
       org_id: organization,
     },
   })
-  const { register, formState, control, getValues, handleSubmit, reset } = form
+  const { formState, getValues, handleSubmit, reset } = form
 
-  const resetForm = () => {
-    close()
+  useEffect(() => {
     reset()
-  }
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -268,7 +266,7 @@ export function UpdateGroup({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

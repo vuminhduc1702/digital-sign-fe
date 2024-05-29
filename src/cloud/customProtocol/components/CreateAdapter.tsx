@@ -36,7 +36,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import {
   Form,
@@ -55,7 +54,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { InputField, type SelectOption } from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import { Switch } from '@/components/ui/switch'
 
 export const protocolList = [
@@ -210,7 +209,7 @@ export const adapterSchema = z
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
-  description: z.string(),
+  description: z.string().optional(),
   input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
   code: z.string().optional(),
@@ -335,13 +334,8 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
     resetData()
   }, [isOpen])
 
-  const resetForm = () => {
-    close?.()
-    form.reset()
-  }
-
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -1069,7 +1063,7 @@ export function CreateAdapter({ open, close, isOpen }: CreateAdapterProps) {
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

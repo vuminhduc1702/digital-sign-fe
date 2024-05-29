@@ -1,30 +1,40 @@
+import { useDisclosure } from '@/utils/hooks'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { useDisclosure } from '@/utils/hooks'
 
 import TitleBar from '@/components/Head/TitleBar'
 import { ContentLayout } from '@/layout/ContentLayout'
 import storage from '@/utils/storage'
 import { DataBaseSidebar, DataBaseTable } from '../components'
 
-import { type DataSearchTable, useSelectDataBase } from '../api/selectDataBase'
+import { type SelectOption } from '@/components/Form'
+import { PlusIcon, SearchIcon } from '@/components/SVGIcons'
+import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { useSelectDataBase, type DataSearchTable } from '../api/selectDataBase'
 import CreateColumn from '../components/CreateColumn'
 import CreateRows from '../components/CreateRows'
 import { type FieldsRows } from '../types'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOption,
-} from '@/components/Form'
-import { Button } from '@/components/ui/button'
-import { SearchIcon } from '@/components/SVGIcons'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Switch } from '@/components/ui/switch'
-import * as z from 'zod'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { PlusIcon } from '@/components/SVGIcons'
 
 export const searchDataBaseSchema = z.object({
   key: z.string().optional(),
@@ -72,11 +82,13 @@ export function DataBaseTemplateManage() {
     { label: 'ONLY', value: '$only' },
   ]
 
+  const form = useForm({
+    resolver: searchDataBaseSchema && zodResolver(searchDataBaseSchema),
+    values: { limit: '', key: '$and' },
+  })
+
   const { register, formState, control, handleSubmit, setValue, getValues } =
-    useForm({
-      resolver: searchDataBaseSchema && zodResolver(searchDataBaseSchema),
-      values: { limit: '', key: '$and' },
-    })
+    form
 
   useEffect(() => {
     if (tableName) {
@@ -120,7 +132,14 @@ export function DataBaseTemplateManage() {
       for (var i = 0; i < lr; i++) {
         var dataRow = data?.data?.rows?.[i]
         const row: FieldsRows = {}
-        for (var j = 0; j < lc; j++) row[data?.data?.columns?.[j]] = dataRow[j]
+        for (var j = 0; j < lc; j++) {
+          if (typeof dataRow[j] === 'object') {
+            const parseRow = JSON.stringify(dataRow[j])
+            row[data?.data?.columns?.[j]] = parseRow
+          } else {
+            row[data?.data?.columns?.[j]] = dataRow[j] ?? ''
+          }
+        }
         result.push(row)
       }
       setFilteredComboboxData(result)
@@ -193,152 +212,181 @@ export function DataBaseTemplateManage() {
                 </div>
               </div>
               <div className="mt-2 flex justify-end">
-                <form
-                  id="search-subcription"
-                  className="flex flex-col justify-between space-y-6"
-                  onSubmit={handleSubmit(values => {
-                    setIsShow(true)
-                    let data: DataSearchTable = {}
-                    if (values.key === '$and' || values.key === '$or') {
-                      data = {
-                        struct_scan: false,
-                        limit: parseInt(values.limit) || null,
-                        filter: {
-                          [values.key]: searchExact ? dataExact : dataLike,
-                        },
-                      }
-                      if (searchExact) {
-                        const checkData = dataExact?.map(
-                          (item, index) => item[keySearch[index]],
-                        )
-                        const checkDataValue = checkData?.filter(item => item)
-                        if (checkDataValue?.length < 2) {
-                          setTextValidate(
-                            '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
-                          )
-                        } else {
-                          setTextValidate('')
-                          mutate({
-                            table: tableName,
-                            project_id: projectId,
-                            data,
-                          })
+                <Form {...form}>
+                  <form
+                    id="search-subcription"
+                    className="flex flex-col justify-between space-y-6"
+                    onSubmit={handleSubmit(values => {
+                      setIsShow(true)
+                      let data: DataSearchTable = {}
+                      if (values.key === '$and' || values.key === '$or') {
+                        data = {
+                          struct_scan: false,
+                          limit: parseInt(values.limit) || null,
+                          filter: {
+                            [values.key]: searchExact ? dataExact : dataLike,
+                          },
                         }
-                      } else {
-                        const checkData = dataLike?.map(
-                          (item, index) => item[keySearch[index]],
-                        )
-                        const checkDataValue = checkData?.filter(
-                          item => item.$like,
-                        )
-                        if (checkDataValue?.length < 2) {
-                          setTextValidate(
-                            '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
+                        if (searchExact) {
+                          const checkData = dataExact?.map(
+                            (item, index) => item[keySearch[index]],
                           )
-                        } else {
-                          setTextValidate('')
-                          mutate({
-                            table: tableName,
-                            project_id: projectId,
-                            data,
-                          })
-                        }
-                      }
-                    } else if (values.key === '$only') {
-                      data = {
-                        struct_scan: false,
-                        limit: parseInt(values.limit) || null,
-                        filter: searchExact ? dataExact[0] : dataLike[0],
-                      }
-                      if (searchExact) {
-                        const checkData = dataExact?.map(
-                          (item, index) => item[keySearch[index]],
-                        )
-                        const checkDataValue = checkData?.filter(item => item)
-                        if (checkDataValue?.length === 1) {
-                          setTextValidate('')
-                          mutate({
-                            table: tableName,
-                            project_id: projectId,
-                            data,
-                          })
-                        } else {
-                          setTextValidate(
-                            '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
-                          )
-                        }
-                      } else {
-                        const checkData = dataLike?.map(
-                          (item, index) => item[keySearch[index]],
-                        )
-                        const checkDataValue = checkData?.filter(
-                          item => item.$like,
-                        )
-                        if (checkDataValue?.length === 1) {
-                          setTextValidate('')
-                          mutate({
-                            table: tableName,
-                            project_id: projectId,
-                            data,
-                          })
-                        } else {
-                          setTextValidate(
-                            '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
-                          )
-                        }
-                      }
-                    }
-                  })}
-                >
-                  <div className="mr-[42px] flex items-center gap-x-3">
-                    <SelectDropdown
-                      isClearable={false}
-                      name="key"
-                      control={control}
-                      value={key}
-                      customOnChange={e => {
-                        const result = keySelect.find(item => item.value === e)
-                        setKey(result)
-                      }}
-                      options={keySelect}
-                    />
-                    <InputField
-                      className="h-[37px]"
-                      error={formState.errors['limit']}
-                      registration={register('limit')}
-                      type="number"
-                      min={1}
-                      placeholder={t('cloud:db_template.add_db.limit')}
-                    />
-                    {/* <Switch
-                          onCheckedChange={checked =>
-                            setIsShow(checked)
+                          const checkDataValue = checkData?.filter(item => item)
+                          if (checkDataValue?.length < 2) {
+                            setTextValidate(
+                              '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
+                            )
+                          } else {
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
                           }
-                          checked={isShow}
-                        /> */}
-                    <Switch
-                      onCheckedChange={checked => setSearchExact(checked)}
-                      checked={searchExact}
-                    />
-                    <span className="relative w-3/4">
-                      {t('cloud:db_template.add_db.search_exact')}
-                    </span>
-                    <Button
-                      className="rounded-md"
-                      variant="trans"
-                      size="square"
-                      startIcon={
-                        <SearchIcon
-                          width={16}
-                          height={16}
-                          viewBox="0 0 16 16"
-                        />
+                        } else {
+                          const checkData = dataLike?.map(
+                            (item, index) => item[keySearch[index]],
+                          )
+                          const checkDataValue = checkData?.filter(
+                            item => item.$like,
+                          )
+                          if (checkDataValue?.length < 2) {
+                            setTextValidate(
+                              '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
+                            )
+                          } else {
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
+                          }
+                        }
+                      } else if (values.key === '$only') {
+                        data = {
+                          struct_scan: false,
+                          limit: parseInt(values.limit) || null,
+                          filter: searchExact ? dataExact[0] : dataLike[0],
+                        }
+                        if (searchExact) {
+                          const checkData = dataExact?.map(
+                            (item, index) => item[keySearch[index]],
+                          )
+                          const checkDataValue = checkData?.filter(item => item)
+                          if (checkDataValue?.length === 1) {
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
+                          } else {
+                            setTextValidate(
+                              '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
+                            )
+                          }
+                        } else {
+                          const checkData = dataLike?.map(
+                            (item, index) => item[keySearch[index]],
+                          )
+                          const checkDataValue = checkData?.filter(
+                            item => item.$like,
+                          )
+                          if (checkDataValue?.length === 1) {
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
+                          } else {
+                            setTextValidate(
+                              '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
+                            )
+                          }
+                        }
                       }
-                      form="search-subcription"
-                      type="submit"
-                    />
-                  </div>
-                </form>
+                    })}
+                  >
+                    <div className="mr-[42px] flex items-center gap-x-3">
+                      <FormField
+                        control={form.control}
+                        name="key"
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem className="h-[38px] min-w-[100px]">
+                            <FormControl>
+                              <Select
+                                {...field}
+                                onValueChange={onChange}
+                                value={value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue
+                                      placeholder={t('placeholder:select')}
+                                    />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {keySelect.map(option => (
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="limit"
+                        render={({ field }) => (
+                          <FormItem className="h-[38px] min-w-[100px]">
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="number"
+                                min={1}
+                                placeholder={t(
+                                  'cloud:db_template.add_db.limit',
+                                )}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Switch
+                        onCheckedChange={checked => setSearchExact(checked)}
+                        checked={searchExact}
+                      />
+                      <span className="relative">
+                        {t('cloud:db_template.add_db.search_exact')}
+                      </span>
+                      <Button
+                        className="rounded-md"
+                        variant="trans"
+                        size="square"
+                        startIcon={
+                          <SearchIcon
+                            width={16}
+                            height={16}
+                            viewBox="0 0 16 16"
+                          />
+                        }
+                        form="search-subcription"
+                        type="submit"
+                      />
+                    </div>
+                  </form>
+                </Form>
               </div>
               {textValidate && (
                 <div className="mt-2 text-red-500">{textValidate}</div>
@@ -350,6 +398,7 @@ export function DataBaseTemplateManage() {
                   data={filteredComboboxData}
                   onClose={refetchData}
                   onSearch={onSearch}
+                  columnsType={data?.data?.column_types || []}
                 />
               )}
               <CreateColumn
@@ -363,6 +412,7 @@ export function DataBaseTemplateManage() {
               <CreateRows
                 onClose={refetchData}
                 columnsProp={data?.data?.columns || []}
+                columnsType={data?.data?.column_types || []}
                 close={closeCreateRow}
                 open={openCreateRow}
                 isOpen={isOpenCreateRow}

@@ -53,6 +53,8 @@ function DeviceTableContextMenu({
   org_id,
   group_id,
   template_id,
+  thing_name,
+  handle_message_svc,
   token,
   status,
   additional_info,
@@ -63,6 +65,8 @@ function DeviceTableContextMenu({
   org_id: string
   group_id: string
   template_id: string
+  thing_name: string
+  handle_message_svc: string
   token: string
   status: string
   additional_info: DeviceAdditionalInfo
@@ -270,6 +274,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
     token: false,
     org_id: false,
     template_id: false,
+    thing_name: true,
+    handle_message_svc: true,
     device_type: true,
     key: true,
     created_at: true,
@@ -307,6 +313,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             org_id,
             group_id,
             template_id,
+            thing_name,
+            handle_message_svc,
             token,
             status,
           } = info.row.original
@@ -317,6 +325,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             key,
             org_id,
             template_id,
+            thing_name,
+            handle_message_svc,
             token,
             status,
             group_id,
@@ -350,6 +360,20 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           <span>{t('cloud:org_manage.device_manage.table.group')}</span>
         ),
         cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('thing_name', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.thing')}</span>
+        ),
+        cell: info => info.row.original.thing_name,
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('handle_message_svc', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.service')}</span>
+        ),
+        cell: info => info.row.original.handle_message_svc,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('status', {

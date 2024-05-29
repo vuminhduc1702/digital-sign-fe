@@ -1,7 +1,6 @@
 import { useState, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
-import { InputField, SelectField } from '@/components/Form'
 import { SearchIcon } from '@/components/SVGIcons'
 import { useCustomerList } from './api/getTenantListApi'
 import { TenantTable } from './components/TenantTable'

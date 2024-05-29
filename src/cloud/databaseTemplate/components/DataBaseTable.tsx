@@ -14,7 +14,6 @@ import storage from '@/utils/storage'
 import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
-import { InputField } from '@/components/Form'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,14 +21,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { Input } from '@/components/ui/input'
 
 function DataBaseTableContextMenu({
   row,
   onClose,
+  columnsType,
   ...props
 }: {
   row: FieldsRows
   onClose: () => void
+  columnsType?: string[]
 }) {
   const { t } = useTranslation()
 
@@ -84,6 +86,7 @@ function DataBaseTableContextMenu({
         onClose={onClose}
         isOpen={isOpen}
         row={row}
+        columnsType={columnsType}
         {...props}
       />
       <ConfirmDialog
@@ -120,6 +123,7 @@ export function DataBaseTable({
   data,
   onClose,
   onSearch,
+  columnsType,
   ...props
 }: {
   isShow: boolean
@@ -127,6 +131,7 @@ export function DataBaseTable({
   data: any[]
   onClose: () => void
   onSearch: (value: FieldsRows) => void
+  columnsType: string[]
 }) {
   const { t } = useTranslation()
   const [filter, setFilter] = useState<FieldsRows>({})
@@ -157,7 +162,7 @@ export function DataBaseTable({
             <div>
               <span className="text-table-header">{item}</span>
               {isShow && (
-                <InputField
+                <Input
                   onClick={e => e.stopPropagation()}
                   onChange={e => handleSearch(item, e.target.value)}
                 />
@@ -179,6 +184,7 @@ export function DataBaseTable({
           return DataBaseTableContextMenu({
             row: info.row.original,
             onClose,
+            columnsType,
           })
         },
         header: () => null,

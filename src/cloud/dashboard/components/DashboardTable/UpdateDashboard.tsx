@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
 
 import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
 import { dashboardSchema } from '.'
@@ -22,6 +21,15 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 type UpdateDashboardProps = {
   id: string
@@ -40,20 +48,21 @@ export function UpdateDashboard({
 }: UpdateDashboardProps) {
   const { t } = useTranslation()
 
-  const { mutateAsync, isLoading, isSuccess } = useUpdateDashboard()
-  const { register, formState, handleSubmit, reset } = useForm<
-    UpdateDashboardDTO['data']
-  >({
-    resolver: dashboardSchema && zodResolver(dashboardSchema),
-    defaultValues: {
-      title,
-      configuration: {
-        description,
-        widgets: null,
-      },
-      dashboard_setting: null,
+  const dataDefault = {
+    title,
+    configuration: {
+      description,
+      widgets: null,
     },
+    dashboard_setting: null,
+  }
+
+  const { mutateAsync, isLoading, isSuccess } = useUpdateDashboard()
+  const form = useForm<UpdateDashboardDTO['data']>({
+    resolver: dashboardSchema && zodResolver(dashboardSchema),
+    defaultValues: dataDefault,
   })
+  const { register, formState, handleSubmit, reset } = form
 
   useEffect(() => {
     if (isSuccess && close) {
@@ -61,13 +70,12 @@ export function UpdateDashboard({
     }
   }, [isSuccess])
 
-  const resetForm = () => {
-    reset()
-    close()
-  }
+  useEffect(() => {
+    reset(dataDefault)
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -78,36 +86,66 @@ export function UpdateDashboard({
           <SheetTitle>{t('cloud:dashboard.add_dashboard.edit')}</SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            id="update-dashboard"
-            className="w-full space-y-6"
-            onSubmit={handleSubmit(async values => {
-              await mutateAsync({
-                data: {
-                  title: values.title,
-                  configuration: {
-                    description: values.configuration.description,
-                    widgets: null,
+          <Form {...form}>
+            <form
+              id="update-dashboard"
+              className="w-full space-y-6"
+              onSubmit={handleSubmit(async values => {
+                await mutateAsync({
+                  data: {
+                    title: values.title,
+                    configuration: {
+                      description: values.configuration.description,
+                      widgets: null,
+                    },
+                    dashboard_setting: null,
                   },
-                  dashboard_setting: null,
-                },
-                dashboardId: id,
-              })
-            })}
-          >
-            <>
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.name')}
-                error={formState.errors['title']}
-                registration={register('title')}
-              />
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.description')}
-                error={formState?.errors?.configuration?.description}
-                registration={register('configuration.description')}
-              />
-            </>
-          </form>
+                  dashboardId: id,
+                })
+              })}
+            >
+              <>
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field: { onChange, value, ...field } }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:dashboard.add_dashboard.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={value}
+                            onChange={e => onChange(e)}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="configuration.description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:dashboard.add_dashboard.description')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>
@@ -116,7 +154,7 @@ export function UpdateDashboard({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

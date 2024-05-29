@@ -138,6 +138,7 @@ export function UpdateTemplate({
         name: selectedUpdateTemplate.name,
         rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
         thing_id: selectedUpdateTemplate?.thing_id,
+        thing_name: selectedUpdateTemplate?.thing_name,
         handle_msg_svc: selectedUpdateTemplate?.handle_message_svc,
         attributes: attrData?.attributes.map((attribute: Attribute) => ({
           attribute_key: attribute.attribute_key,
@@ -161,13 +162,12 @@ export function UpdateTemplate({
     null,
   )
 
-  const resetForm = () => {
+  useEffect(() => {
     reset()
-    close()
-  }
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -190,6 +190,10 @@ export function UpdateTemplate({
                 className="w-full space-y-5"
                 id="update-template"
                 onSubmit={handleSubmit(values => {
+                  const selectedThing = thingSelectData?.find(
+                    option => option.value === values.thing_id,
+                  )
+                  const thing_name = selectedThing ? selectedThing.label : ''
                   const data = {
                     name: values.name,
                     rule_chain_id: values.rule_chain_id || '',
@@ -198,6 +202,7 @@ export function UpdateTemplate({
                         ? values.attributes
                         : undefined,
                     thing_id: values.thing_id || '',
+                    thing_name: thing_name,
                     handle_msg_svc: values.handle_msg_svc || '',
                   }
                   mutate({
@@ -207,11 +212,6 @@ export function UpdateTemplate({
                 })}
               >
                 <>
-                  {/* <InputField
-                    label={t('cloud:device_template.add_template.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  /> */}
                   <FormField
                     control={form.control}
                     name="name"
@@ -450,7 +450,7 @@ export function UpdateTemplate({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

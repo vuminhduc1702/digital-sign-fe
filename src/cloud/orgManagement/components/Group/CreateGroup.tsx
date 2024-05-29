@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField, SelectField } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema } from '@/utils/schemaValidation'
@@ -100,13 +99,12 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
     }
   }, [isSuccess])
 
-  const resetForm = () => {
-    close()
+  useEffect(() => {
     reset()
-  }
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -253,7 +251,7 @@ export function CreateGroup({ open, close, isOpen }: CreateGroupProps) {
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

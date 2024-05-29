@@ -5,10 +5,6 @@ import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
 import { type BasePagination, type BaseAPIRes } from '@/types'
 import { type Customer } from '../../types'
 
-export interface SearchFilter {
-  [key: string]: string
-}
-
 type GetCustomers = {
   projectId: string
   search_field?: string

@@ -2,10 +2,8 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '@/components/Table'
+import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { useDisclosure } from '@/utils/hooks'
-
-import { type BaseTableProps } from '@/components/Table'
 import { getVNDateFormat } from '@/utils/misc'
 import { DownloadIcon } from '@radix-ui/react-icons'
 import { PDFDownloadLink } from '@react-pdf/renderer'
@@ -73,30 +71,6 @@ export function BillingTable({
     setStatus('')
     setPlan('')
   }, [status, plan])
-
-  const planArr = data?.filter((obj, index) => {
-    return index === data.findIndex(o => obj.plan_name === o.plan_name)
-  })
-
-  const statusArr = data?.filter((obj, index) => {
-    return index === data.findIndex(o => obj.status === o.status)
-  })
-
-  const handleSearch = (
-    e: React.MouseEvent<HTMLInputElement>,
-    field: string,
-    value: any,
-    id: string,
-  ) => {
-    e.stopPropagation()
-    setPlan(id)
-    setStatus(id)
-    if (!id) {
-      handleField?.('', '')
-    } else {
-      handleField?.(field, value)
-    }
-  }
 
   const offsetPrev = useRef<number>(props.offset)
 

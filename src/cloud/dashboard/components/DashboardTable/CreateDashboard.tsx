@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
 import {
   type CreateDashboardDTO,
   useCreateDashboard,
@@ -13,21 +12,26 @@ import {
 import { widgetListSchema } from '../Widget'
 import { nameSchema } from '@/utils/schemaValidation'
 
-import { PlusIcon } from '@/components/SVGIcons'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
 import { useEffect } from 'react'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 export const dashboardSchema = z.object({
   id: z.string().optional(),
@@ -64,11 +68,10 @@ export function CreateDashboard({
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useCreateDashboard()
-  const { register, formState, handleSubmit, reset } = useForm<
-    CreateDashboardDTO['data']
-  >({
+  const form = useForm<CreateDashboardDTO['data']>({
     resolver: dashboardSchema && zodResolver(dashboardSchema),
   })
+  const { register, formState, handleSubmit, reset } = form
 
   useEffect(() => {
     if (isSuccess && close) {
@@ -76,13 +79,12 @@ export function CreateDashboard({
     }
   }, [isSuccess])
 
-  const resetForm = () => {
+  useEffect(() => {
     reset()
-    close()
-  }
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -93,36 +95,62 @@ export function CreateDashboard({
           <SheetTitle>{t('cloud:dashboard.add_dashboard.title')}</SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            id="create-dashboard"
-            className="w-full space-y-6"
-            onSubmit={handleSubmit(values => {
-              mutate({
-                data: {
-                  title: values.title,
-                  project_id: projectId,
-                  configuration: {
-                    description: values.configuration.description,
-                    widgets: null,
+          <Form {...form}>
+            <form
+              id="create-dashboard"
+              className="w-full space-y-6"
+              onSubmit={handleSubmit(values => {
+                mutate({
+                  data: {
+                    title: values.title,
+                    project_id: projectId,
+                    configuration: {
+                      description: values.configuration.description,
+                      widgets: null,
+                    },
+                    dashboard_setting: null,
                   },
-                  dashboard_setting: null,
-                },
-              })
-            })}
-          >
-            <>
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.name')}
-                error={formState.errors['title']}
-                registration={register('title')}
-              />
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.description')}
-                error={formState?.errors?.configuration?.description}
-                registration={register('configuration.description')}
-              />
-            </>
-          </form>
+                })
+              })}
+            >
+              <>
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:dashboard.add_dashboard.name')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="configuration.description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('cloud:dashboard.add_dashboard.description')}
+                      </FormLabel>
+                      <div>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>
@@ -131,7 +159,7 @@ export function CreateDashboard({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

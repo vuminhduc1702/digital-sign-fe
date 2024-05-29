@@ -49,6 +49,8 @@ export const valueTypeList = [
   { type: 'STR', name: 'String' },
   { type: 'BOOL', name: 'Boolean' },
   { type: 'LONG', name: 'Long' },
+  { type: 'LONG', name: 'Integer' },
+  { type: 'LONG', name: 'Unsigned Integer' },
   { type: 'DBL', name: 'Double' },
   { type: 'JSON', name: 'JSON' },
 ] as const
@@ -98,13 +100,12 @@ export function CreateAttr({
     }
   }, [isSuccess])
 
-  const resetForm = () => {
-    close()
+  useEffect(() => {
     reset()
-  }
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -252,7 +253,7 @@ export function CreateAttr({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

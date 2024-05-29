@@ -51,6 +51,15 @@ export function UpdateAttr({
   isOpen,
 }: UpdateAttrProps) {
   const { t } = useTranslation()
+  const dataDefault = {
+    attribute_key: attributeKey,
+    logged: String(logged) === 'true',
+    value:
+      JSON.parse(JSON.stringify(value)) === ''
+        ? undefined
+        : JSON.stringify(value),
+    value_t: value_type,
+  }
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
@@ -59,15 +68,7 @@ export function UpdateAttr({
     z.infer<typeof attrSchema>
   >({
     resolver: attrSchema && zodResolver(attrSchema),
-    defaultValues: {
-      attribute_key: attributeKey,
-      logged: String(logged) === 'true',
-      value:
-        JSON.parse(JSON.stringify(value)) === ''
-          ? undefined
-          : JSON.stringify(value),
-      value_t: value_type,
-    },
+    defaultValues: dataDefault,
   })
 
   useEffect(
@@ -92,7 +93,7 @@ export function UpdateAttr({
 
   const resetForm = () => {
     close()
-    reset()
+    reset(dataDefault)
   }
 
   return (

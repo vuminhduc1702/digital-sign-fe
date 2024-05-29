@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { FieldWrapper, InputField } from '@/components/Form'
+import { FieldWrapper } from '@/components/Form'
 import { Link } from '@/components/Link'
 import { useLogin } from '@/lib/auth'
 import { PATHS } from '@/routes/PATHS'
@@ -19,6 +19,14 @@ import {
   EyeHide,
   EyeShow,
 } from '@/components/SVGIcons'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 const loginSchema = z.object({
   identifier: emailSchema,
@@ -42,132 +50,152 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
-  const { register, formState, handleSubmit, control } =
-    useForm<LoginCredentialsDTO>({
-      resolver: loginSchema && zodResolver(loginSchema),
-      values: {
-        password: userStorage?.password,
-        identifier: userStorage?.identifier,
-        checked: userStorage?.checked,
-        isPersistLogin: storage.getIsPersistLogin() === 'true' ? true : false,
-      },
-    })
+  const form = useForm<LoginCredentialsDTO>({
+    resolver: loginSchema && zodResolver(loginSchema),
+    values: {
+      password: userStorage?.password,
+      identifier: userStorage?.identifier,
+      checked: userStorage?.checked,
+      isPersistLogin: storage.getIsPersistLogin() === 'true' ? true : false,
+    },
+  })
+  const { handleSubmit, control } = form
   return (
     <div>
-      <form
-        className="w-full space-y-6"
-        onSubmit={handleSubmit(async values => {
-          await login.mutateAsync(values)
-          onSuccess()
-        })}
-      >
-        <>
-          <InputField
-            type="email"
-            className="mt-10 bg-stone-300"
-            classnamefieldwrapper="relative"
-            placeholder={t('auth:require_email')}
-            startIcon={
-              <BtnUserLoginIcon
-                height={20}
-                width={20}
-                viewBox="0 0 20 20"
-                className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
-              />
-            }
-            error={formState.errors['identifier']}
-            registration={register('identifier')}
-            autoComplete="off"
-          />
-          <InputField
-            type={showPassword ? 'text' : 'password'}
-            placeholder={t('user:password')}
-            className="bg-stone-300"
-            classnamefieldwrapper="relative"
-            startIcon={
-              <BtnPasswordLoginIcon
-                height={20}
-                width={20}
-                viewBox="0 0 20 20"
-                className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
-              />
-            }
-            endIcon={
-              showPassword ? (
-                <EyeShow
-                  height={24}
-                  width={24}
-                  viewBox="0 0 24 24"
-                  className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                />
-              ) : (
-                <EyeHide
-                  height={24}
-                  width={24}
-                  viewBox="0 0 24 24"
-                  className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                />
-              )
-            }
-            error={formState.errors['password']}
-            registration={register('password')}
-            autoComplete="nope"
-          />
-
-          <FieldWrapper
-            className="mt-2 flex h-8 w-fit flex-row-reverse items-center justify-end gap-x-2"
-            label={t('auth:checkbox')}
-          >
-            <Controller
-              control={control}
-              name="checked"
-              render={({ field: { onChange, value, ...field } }) => {
-                return (
-                  <Checkbox
-                    {...field}
-                    className="h-6 w-6"
-                    checked={value}
-                    onCheckedChange={onChange}
-                  />
-                )
-              }}
+      <Form {...form}>
+        <form
+          className="w-full space-y-6"
+          onSubmit={handleSubmit(async values => {
+            await login.mutateAsync(values)
+            onSuccess()
+          })}
+        >
+          <>
+            <FormField
+              control={form.control}
+              name="identifier"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="email"
+                      className="mt-10 bg-stone-300"
+                      placeholder={t('auth:require_email')}
+                      autoComplete="off"
+                      startIcon={
+                        <BtnUserLoginIcon
+                          height={20}
+                          width={20}
+                          viewBox="0 0 20 20"
+                          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+                        />
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </FieldWrapper>
-
-          <FieldWrapper
-            className="mt-2 flex h-8 w-fit flex-row-reverse items-center justify-end gap-x-2"
-            label={t('auth:persist_login')}
-          >
-            <Controller
-              control={control}
-              name="isPersistLogin"
-              render={({ field: { onChange, value, ...field } }) => {
-                return (
-                  <Checkbox
-                    {...field}
-                    className="h-6 w-6"
-                    checked={value}
-                    onCheckedChange={onChange}
-                  />
-                )
-              }}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder={t('user:password')}
+                      className="bg-stone-300"
+                      autoComplete="nope"
+                      startIcon={
+                        <BtnPasswordLoginIcon
+                          height={20}
+                          width={20}
+                          viewBox="0 0 20 20"
+                          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+                        />
+                      }
+                      endIcon={
+                        showPassword ? (
+                          <EyeShow
+                            height={24}
+                            width={24}
+                            viewBox="0 0 24 24"
+                            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
+                            onClick={togglePasswordVisibility}
+                          />
+                        ) : (
+                          <EyeHide
+                            height={24}
+                            width={24}
+                            viewBox="0 0 24 24"
+                            className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
+                            onClick={togglePasswordVisibility}
+                          />
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </FieldWrapper>
 
-          <div>
-            <Button
-              isLoading={login.isLoading}
-              type="submit"
-              className="w-full bg-primary-400"
-              variant="primary"
+            <FieldWrapper
+              className="mt-2 flex h-8 w-fit flex-row-reverse items-center justify-end gap-x-2"
+              label={t('auth:checkbox')}
             >
-              {t('user:login')}
-            </Button>
-          </div>
-        </>
-      </form>
+              <Controller
+                control={control}
+                name="checked"
+                render={({ field: { onChange, value, ...field } }) => {
+                  return (
+                    <Checkbox
+                      {...field}
+                      className="h-6 w-6"
+                      checked={value}
+                      onCheckedChange={onChange}
+                    />
+                  )
+                }}
+              />
+            </FieldWrapper>
+
+            <FieldWrapper
+              className="mt-2 flex h-8 w-fit flex-row-reverse items-center justify-end gap-x-2"
+              label={t('auth:persist_login')}
+            >
+              <Controller
+                control={control}
+                name="isPersistLogin"
+                render={({ field: { onChange, value, ...field } }) => {
+                  return (
+                    <Checkbox
+                      {...field}
+                      className="h-6 w-6"
+                      checked={value}
+                      onCheckedChange={onChange}
+                    />
+                  )
+                }}
+              />
+            </FieldWrapper>
+
+            <div>
+              <Button
+                isLoading={login.isLoading}
+                type="submit"
+                className="w-full bg-primary-400"
+                variant="primary"
+              >
+                {t('user:login')}
+              </Button>
+            </div>
+          </>
+        </form>
+      </Form>
 
       <div className="py-[13%]">
         <div className="container mx-auto text-center">

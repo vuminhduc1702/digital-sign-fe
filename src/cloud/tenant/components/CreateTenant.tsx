@@ -47,6 +47,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 
 export const entityCustomerSchema = z
   .object({
@@ -262,33 +263,20 @@ export function CreateCustomer() {
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <div>
-                        <Select
-                          {...field}
-                          onValueChange={e => {
-                            onChange(e)
-                            setProvinceCode(e)
-                            setValue('district', '')
-                            setValue('ward', '')
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue
-                                placeholder={t('form:province_city')}
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {provinceList?.map((template: any) => (
-                              <SelectItem
-                                key={template.label}
-                                value={template.value}
-                              >
-                                {template.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <NewSelectDropdown
+                            isClearable={true}
+                            customOnChange={(e: string) => {
+                              onChange(e)
+                              setProvinceCode(e)
+                              setValue('district', '')
+                              setValue('ward', '')
+                            }}
+                            options={provinceList}
+                            placeholder={t('form:province_city')}
+                            {...field}
+                          />
+                        </FormControl>
                         <FormMessage />
                       </div>
                     </FormItem>
@@ -300,31 +288,19 @@ export function CreateCustomer() {
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <div>
-                        <Select
-                          {...field}
-                          onValueChange={e => {
-                            onChange(e)
-                            setDistrictCode(e)
-                            setValue('ward', '')
-                          }}
-                          value={value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder={t('form:district')} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {districtList?.map((template: any) => (
-                              <SelectItem
-                                key={template.label}
-                                value={template.value}
-                              >
-                                {template.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <NewSelectDropdown
+                            isClearable={true}
+                            customOnChange={(e: string) => {
+                              onChange(e)
+                              setDistrictCode(e)
+                              setValue('ward', '')
+                            }}
+                            options={districtList}
+                            placeholder={t('form:district')}
+                            {...field}
+                          />
+                        </FormControl>
                         <FormMessage />
                       </div>
                     </FormItem>
@@ -336,30 +312,18 @@ export function CreateCustomer() {
                   render={({ field: { onChange, value, ...field } }) => (
                     <FormItem>
                       <div>
-                        <Select
-                          {...field}
-                          onValueChange={e => {
-                            onChange(e)
-                            setDistrictCode(e)
-                          }}
-                          value={value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder={t('form:village')} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {wardList?.map((template: any) => (
-                              <SelectItem
-                                key={template.label}
-                                value={template.value}
-                              >
-                                {template.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <NewSelectDropdown
+                            isClearable={true}
+                            customOnChange={(e: string) => {
+                              onChange(e)
+                              setValue('ward', '')
+                            }}
+                            options={wardList}
+                            placeholder={t('form:village')}
+                            {...field}
+                          />
+                        </FormControl>
                         <FormMessage />
                       </div>
                     </FormItem>

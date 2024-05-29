@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
 
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
@@ -33,17 +32,28 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
+import { numberInput } from './CreateRows'
 
-export const updateeRowsSchema = z.record(z.string())
+export const updateeRowsSchema = z.record(
+  z.string().or(z.boolean()).or(z.number()).optional(),
+)
 
 type UpdateRowProps = {
   onClose: () => void
   close: () => void
   isOpen: boolean
   row: FieldsRows
+  columnsType: string
 }
 
-export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
+export function UpdateRow({
+  onClose,
+  close,
+  isOpen,
+  row,
+  columnsType,
+}: UpdateRowProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const { tableName } = useParams()
@@ -69,6 +79,25 @@ export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
       onClose()
     }
   }, [isSuccess, close])
+
+  const renderType = (type: string) => {
+    let result = ''
+    switch (type) {
+      case 'boolean':
+        return (result = 'Boolean')
+      case 'real':
+        return (result = 'f64')
+      case 'character varying':
+        return (result = 'String')
+      case 'integer':
+        return (result = 'i32')
+      case 'bigint':
+        return (result = 'i64')
+      case 'jsonb':
+        return (result = 'JSON')
+    }
+    return result
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
@@ -102,22 +131,57 @@ export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
               })}
             >
               <>
-                {columns?.map(item => (
-                  <FormField
-                    control={form.control}
-                    name={item}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{item}</FormLabel>
-                        <div>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </div>
-                      </FormItem>
+                {columns?.map((item, index) => (
+                  <>
+                    {columnsType[index] === 'boolean' ? (
+                      <FormField
+                        control={form.control}
+                        name={item}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {item} {`(${renderType(columnsType[index])})`}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Checkbox
+                                  {...field}
+                                  checked={value as boolean}
+                                  onCheckedChange={onChange}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    ) : (
+                      <FormField
+                        control={form.control}
+                        name={item}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {item} {`(${renderType(columnsType[index])})`}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input
+                                  type={
+                                    numberInput.includes(columnsType[index])
+                                      ? 'number'
+                                      : 'text'
+                                  }
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
                     )}
-                  />
+                  </>
                 ))}
               </>
             </form>

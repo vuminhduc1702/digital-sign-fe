@@ -27,6 +27,8 @@ export type Device = {
   org_id: string
   org_name: string
   template_name: string
+  thing_name: string
+  handle_message_svc: string
   status: 'offline' | 'online' | 'block'
   additional_info: DeviceAdditionalInfo
   attributes: Attribute[]
@@ -121,8 +123,8 @@ export type EventType = {
   metadata: null
   retry: number
   cmd: {
-    thing_id: string
-    service_name: string
+    entity_id: string
+    name: string
     project_id: string
     input: {
       [key: string]: number | string | boolean

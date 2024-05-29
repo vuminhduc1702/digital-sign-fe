@@ -4,30 +4,12 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
 import storage from '@/utils/storage'
-import { useAddColumn, useCreateDataBase, type AddColumnDTO } from '../api'
 
-import { nameSchema } from '@/utils/schemaValidation'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import { PlusIcon } from '@/components/SVGIcons'
-import { useParams } from 'react-router-dom'
-import { type AddRowsDTO, useAddRows } from '../api/addRows'
-import { useEffect, useState } from 'react'
-import { type FieldsRows } from '../types'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import { cn } from '@/utils/misc'
 import {
   Form,
   FormControl,
@@ -37,10 +19,27 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import { cn } from '@/utils/misc'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useAddRows, type AddRowsDTO } from '../api/addRows'
+import { type FieldsRows } from '../types'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export const createRowsSchema = z.object({
-  fields: z.array(z.record(z.string().optional())),
+  fields: z.array(
+    z.record(z.string().or(z.boolean()).or(z.number()).optional()),
+  ),
 })
+
+export const numberInput = ['real', 'integer', 'bigint']
 
 export default function CreateRows({
   columnsProp,
@@ -48,12 +47,14 @@ export default function CreateRows({
   close,
   isOpen,
   onClose,
+  columnsType,
 }: {
   columnsProp: string[]
   open?: () => void
   close?: () => void
   isOpen?: boolean
   onClose: () => void
+  columnsType: string[]
 }) {
   const { t } = useTranslation()
 
@@ -88,6 +89,25 @@ export default function CreateRows({
       onClose?.()
     }
   }, [isSuccess])
+
+  const renderType = (type: string) => {
+    let result = ''
+    switch (type) {
+      case 'boolean':
+        return (result = 'Boolean')
+      case 'real':
+        return (result = 'f64')
+      case 'character varying':
+        return (result = 'String')
+      case 'integer':
+        return (result = 'i32')
+      case 'bigint':
+        return (result = 'i64')
+      case 'jsonb':
+        return (result = 'JSON')
+    }
+    return result
+  }
 
   return (
     <Sheet
@@ -143,23 +163,62 @@ export default function CreateRows({
                     className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
                   >
                     <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                      {columnsProp?.map(item => (
-                        <FormField
-                          control={form.control}
-                          name={`fields.${index}.${item}`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{item}</FormLabel>
-                              <div>
-                                <FormControl>
-                                  <Input {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-                      ))}
+                      {columnsProp?.map((item, i) => {
+                        return (
+                          <>
+                            {columnsType[i] === 'boolean' ? (
+                              <FormField
+                                control={form.control}
+                                name={`fields.${index}.${item}`}
+                                render={({
+                                  field: { onChange, value, ...field },
+                                }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {item} {`(${renderType(columnsType[i])})`}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Checkbox
+                                          {...field}
+                                          checked={value as boolean}
+                                          onCheckedChange={onChange}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
+                            ) : (
+                              <FormField
+                                control={form.control}
+                                name={`fields.${index}.${item}`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>
+                                      {item} {`(${renderType(columnsType[i])})`}
+                                    </FormLabel>
+                                    <div>
+                                      <FormControl>
+                                        <Input
+                                          type={
+                                            numberInput.includes(columnsType[i])
+                                              ? 'number'
+                                              : 'text'
+                                          }
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
+                            )}
+                          </>
+                        )
+                      })}
                     </div>
                     <Button
                       type="button"

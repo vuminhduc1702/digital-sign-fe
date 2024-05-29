@@ -35,8 +35,10 @@ import { type SelectInstance } from 'react-select'
 import { useSpinDelay } from 'spin-delay'
 import * as z from 'zod'
 import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
+import { valueTypeList } from '@/cloud/orgManagement/components/Attributes'
 import { useTemplateById } from '../api/getTemplateById'
 import {
+  type AttrLwM2MList,
   type LWM2MResponse,
   type ModuleConfig,
   type Template,
@@ -100,6 +102,7 @@ export function UpdateTemplateLwM2M({
     useState<CheckboxStates>({})
   const [checkboxStates, setCheckboxStates] = useState<CheckboxStates>({})
   const [configData, setConfigData] = useState({})
+  const [AttrData, setAttrData] = useState()
   const [itemNames, setItemNames] = useState<ItemNames>({})
   const [selectedModuleNames, setSelectedModuleNames] = useState<string[]>([])
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
@@ -225,6 +228,7 @@ export function UpdateTemplateLwM2M({
     accordionIndex: number,
     module: ModuleConfig,
     item: TransportConfigAttribute,
+    attributesitem: AttrLwM2MList,
     totalItemCount: number,
   ) => {
     setAccordionStates(prevStates => {
@@ -249,6 +253,7 @@ export function UpdateTemplateLwM2M({
             id: module.id,
             module_name: module.module_name,
             attribute_info: [item],
+            attributes: [attributesitem],
             numberOfAttributes: attributesCount,
             last_update_ts: currentTimestamp,
             allcheckbox: allCheckbox,
@@ -262,10 +267,17 @@ export function UpdateTemplateLwM2M({
             updatedCheckboxStates[item.id] === true
           ) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
+            newStates[accordionIndex][moduleIndex].attributes.push(
+              attributesitem,
+            )
           }
 
           if (updatedCheckboxStates[item.id] === false) {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(
+              attributeIndex,
+              1,
+            )
+            newStates[accordionIndex][moduleIndex].attributes.splice(
               attributeIndex,
               1,
             )
@@ -343,10 +355,19 @@ export function UpdateTemplateLwM2M({
                 formatString(item.Name),
               type: item.Type,
             }
+            const attributes = {
+              attribute_key:
+                itemNames[`${moduleId}-${item['@ID']}`] ||
+                formatString(item.Name),
+              value: '',
+              logged: true,
+              value_t: getValueType(item.Type),
+            }
             handleCheckboxChange(
               accordionIndex,
               moduleObject,
               itemObject,
+              attributes,
               lw2m2.LWM2M.Object.Resources.Item.filter(
                 item => item.Operations === 'RW' || item.Operations === 'R',
               ).length,
@@ -359,13 +380,30 @@ export function UpdateTemplateLwM2M({
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     const newConfigData: { [key: string]: string } = {}
-    accordionArray.forEach(accordionItem => {
-      accordionItem.attribute_info.forEach(attribute => {
+    accordionArray?.forEach(accordionItem => {
+      accordionItem.attribute_info?.forEach(attribute => {
         newConfigData[attribute.id] = attribute.name
       })
     })
     setConfigData(newConfigData)
   }, [accordionStates])
+
+  useEffect(() => {
+    const accordionArray = Object.values(accordionStates).flat()
+    const newAttrData: AttrLwM2MList[] = []
+    accordionArray?.forEach(accordionItem => {
+      accordionItem.attributes?.forEach(attribute => {
+        newAttrData.push({
+          attribute_key: attribute.attribute_key,
+          logged: attribute.logged,
+          value: attribute.value,
+          value_t: attribute.value_t,
+        })
+      })
+    })
+    setAttrData(newAttrData)
+  }, [accordionStates])
+
   const resetAllStates = () => {
     setCheckboxStates({})
     setItemNames({})
@@ -378,6 +416,10 @@ export function UpdateTemplateLwM2M({
   }
   const name = watch('name')
   const selectedThing = watch('thing_id')
+  const selectedThingName = thingSelectData?.find(
+    option => option.value === selectedThing,
+  )
+  const thing_name = selectedThingName ? selectedThingName.label : ''
   const selectedService = watch('handle_msg_svc')
 
   const transportConfig = {
@@ -390,7 +432,9 @@ export function UpdateTemplateLwM2M({
   const data = {
     name: name,
     project_id: projectId,
+    attributes: AttrData,
     transport_config: transportConfig,
+    thing_name: thing_name,
     thing_id: selectedThing,
     handle_msg_svc: selectedService,
   }
@@ -412,7 +456,7 @@ export function UpdateTemplateLwM2M({
       const newCheckboxStates: CheckboxStates = {}
       const newItemNames: ItemNames = {}
       const newSelectAllAttributes: CheckboxStates = {}
-      module_config.forEach((moduleItem, accordionIndex) => {
+      module_config?.forEach((moduleItem, accordionIndex) => {
         if (!newAccordionStates[accordionIndex]) {
           newAccordionStates[accordionIndex] = []
         }
@@ -450,14 +494,24 @@ export function UpdateTemplateLwM2M({
     minDuration: 300,
   })
 
-  const resetForm = () => {
-    reset()
-    setValue('rule_chain_id', selectedModuleNames)
-    close()
+  const getValueType = (type: string) => {
+    const valueType = valueTypeList.find(value => value.name === type)
+    return valueType ? valueType.type : 'STR'
   }
 
+  useEffect(() => {
+    reset()
+  }, [isOpen])
+
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet
+      open={isOpen}
+      onOpenChange={() => {
+        close()
+        setValue('rule_chain_id', selectedModuleNames)
+      }}
+      modal={false}
+    >
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -549,7 +603,6 @@ export function UpdateTemplateLwM2M({
                                   handleChangeSelect={() =>
                                     selectDropdownServiceRef.current?.clearValue()
                                   }
-                                  error={formState?.errors?.thing_id}
                                   {...field}
                                 />
                               </FormControl>
@@ -604,8 +657,6 @@ export function UpdateTemplateLwM2M({
                                         service.value ===
                                         selectedUpdateTemplate.handle_message_svc,
                                     )}
-                                    error={formState?.errors?.handle_msg_svc}
-                                    {...field}
                                   />
                                 </FormControl>
                                 <FormMessage />
@@ -655,9 +706,6 @@ export function UpdateTemplateLwM2M({
                                 defaultValue={LwM2MSelectOptions.filter(item =>
                                   idArray.includes(item.value),
                                 )}
-                                error={
-                                  formState?.errors?.rule_chain_id?.message
-                                }
                                 {...field}
                               />
                             </FormControl>
@@ -766,6 +814,17 @@ export function UpdateTemplateLwM2M({
                                                         ] || formattedName,
                                                       type: item.Type,
                                                     }
+                                                    const attributes = {
+                                                      attribute_key:
+                                                        itemNames[
+                                                          `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                                                        ] || formattedName,
+                                                      value: '',
+                                                      logged: true,
+                                                      value_t: getValueType(
+                                                        item.Type,
+                                                      ),
+                                                    }
                                                     if (
                                                       typeof e === 'boolean'
                                                     ) {
@@ -788,6 +847,7 @@ export function UpdateTemplateLwM2M({
                                                       accordionIndex,
                                                       moduleObject,
                                                       itemObject,
+                                                      attributes,
                                                       lw2m2.LWM2M.Object.Resources.Item.filter(
                                                         item =>
                                                           item.Operations ===
@@ -849,7 +909,7 @@ export function UpdateTemplateLwM2M({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

@@ -7,11 +7,7 @@ import { z } from 'zod'
 import { type SelectInstance } from 'react-select'
 
 import { Button } from '@/components/ui/button'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOption,
-} from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useUpdateDevice, type UpdateDeviceDTO } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
@@ -108,15 +104,17 @@ export function UpdateDevice({
     : false
   const [offset, setOffset] = useState(0)
 
+  const dataDefault = {
+    name,
+    org_id: org_id,
+    group_id: group_id,
+    template_id: template_id,
+    key: keyDevice,
+  }
+
   const form = useForm<UpdateDeviceDTO['data']>({
     resolver: updateDeviceSchema && zodResolver(updateDeviceSchema),
-    defaultValues: {
-      name,
-      org_id: org_id,
-      group_id: group_id,
-      template_id: template_id,
-      key: keyDevice,
-    },
+    defaultValues: dataDefault,
   })
   const { register, formState, control, setValue, handleSubmit, watch, reset } =
     form
@@ -164,13 +162,12 @@ export function UpdateDevice({
     null,
   )
 
-  const resetForm = () => {
-    close()
-    reset()
-  }
+  useEffect(() => {
+    reset(dataDefault)
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -483,7 +480,7 @@ export function UpdateDevice({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

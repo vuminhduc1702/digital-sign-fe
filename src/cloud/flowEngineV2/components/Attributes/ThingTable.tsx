@@ -1,30 +1,20 @@
-import { useNavigate } from 'react-router-dom'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
-import { Link } from '@/components/Link'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { PATHS } from '@/routes/PATHS'
 import { useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
 import { useDeleteThing } from '../../api/thingAPI'
 import { UpdateThing } from './UpdateThing'
-
+import { toast } from 'sonner'
 import { type EntityThing } from '@/cloud/customProtocol'
-import { type BaseTablePagination } from '@/types'
 
-import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { LuPen, LuTrash2 } from 'react-icons/lu'
+import { useGetTemplates } from '@/cloud/deviceTemplate/api'
 
 function ThingTableContextMenu({
   id,
@@ -36,7 +26,7 @@ function ThingTableContextMenu({
   description: string
 }) {
   const { t } = useTranslation()
-
+  const { id: projectId } = storage.getProject()
   const { close, open, isOpen } = useDisclosure()
   const {
     close: closeDelete,
@@ -44,7 +34,30 @@ function ThingTableContextMenu({
     isOpen: isOpenDelete,
   } = useDisclosure()
 
+  const { data: templatesData } = useGetTemplates({
+    projectId,
+    search_str: id,
+    search_field: 'thing_id',
+  })
+
   const { mutate, isLoading, isSuccess } = useDeleteThing()
+
+  const checkConditionBeforeDelete = () => {
+    return templatesData?.templates && templatesData?.templates.length > 0
+  }
+
+  const handleDelete = () => {
+    if (checkConditionBeforeDelete()) {
+      const deviceNames = templatesData?.templates
+        ?.map(device => device.name)
+        .join(', ')
+      toast.error(
+        `${t('cloud:custom_protocol.thing.delete_thing_error')}: [ ${deviceNames} ]`,
+      )
+    } else {
+      mutate({ id })
+    }
+  }
 
   return (
     <>
@@ -80,9 +93,7 @@ function ThingTableContextMenu({
         close={closeDelete}
         isOpen={isOpenDelete}
         isSuccessDelete={isSuccess}
-        handleSubmit={() => {
-          mutate({ id })
-        }}
+        handleSubmit={handleDelete}
         isLoading={isLoading}
       />
     </>

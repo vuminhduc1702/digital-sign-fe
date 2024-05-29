@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField, SelectDropdown, SelectField } from '@/components/Form'
+import { SelectField } from '@/components/Form'
 import { useUpdateUser, type UpdateUserDTO } from '../../api/userAPI'
 import i18n from '@/i18n'
 import storage from '@/utils/storage'
@@ -119,6 +119,7 @@ export function UpdateUser({
     getValues,
     watch,
     reset,
+    setValue,
   } = form
 
   const projectId = storage.getProject()?.id
@@ -162,13 +163,19 @@ export function UpdateUser({
     setShowPassword(prev => !prev)
   }
 
-  const resetForm = () => {
-    close()
-    reset()
-  }
+  useEffect(() => {
+    reset({
+      name,
+      email,
+      phone,
+      org_id,
+      role_id,
+      profile,
+    })
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -446,32 +453,91 @@ export function UpdateUser({
                 />
 
                 <div className="grid grid-cols-3 gap-x-2">
-                  <div className="col-start-1 col-end-4">
+                  <FormLabel className="col-start-1 col-end-4 mb-2">
                     {t('cloud:org_manage.user_manage.add_user.address')}
-                  </div>
-                  <SelectField
-                    error={formState?.errors?.profile?.province}
-                    registration={register('profile.province')}
-                    options={provinceList}
-                    classchild="w-full"
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.province',
+                  </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="profile.province"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable={true}
+                              customOnChange={(e: string) => {
+                                onChange(e)
+                                setValue('profile.district', '')
+                                setValue('profile.ward', '')
+                              }}
+                              options={provinceList}
+                              placeholder={t(
+                                'cloud:org_manage.user_manage.add_user.province',
+                              )}
+                              value={provinceList?.find(
+                                (item: any) =>
+                                  item.value === getValues('profile.province'),
+                              )}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                      </FormItem>
                     )}
                   />
-                  <SelectField
-                    error={formState?.errors?.profile?.district}
-                    registration={register('profile.district')}
-                    options={districtList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.district',
+                  <FormField
+                    control={form.control}
+                    name="profile.district"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable={true}
+                              customOnChange={(e: string) => {
+                                onChange(e)
+                                setValue('profile.ward', '')
+                              }}
+                              options={districtList}
+                              placeholder={t(
+                                'cloud:org_manage.user_manage.add_user.district',
+                              )}
+                              value={districtList?.find(
+                                (item: any) =>
+                                  item.value === getValues('profile.district'),
+                              )}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                      </FormItem>
                     )}
                   />
-                  <SelectField
-                    error={formState?.errors?.profile?.ward}
-                    registration={register('profile.ward')}
-                    options={wardList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.ward',
+                  <FormField
+                    control={form.control}
+                    name="profile.ward"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable={true}
+                              customOnChange={(e: string) => {
+                                onChange(e)
+                              }}
+                              options={wardList}
+                              placeholder={t(
+                                'cloud:org_manage.user_manage.add_user.ward',
+                              )}
+                              value={wardList?.find(
+                                (item: any) =>
+                                  item.value === getValues('profile.ward'),
+                              )}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                      </FormItem>
                     )}
                   />
                 </div>
@@ -501,7 +567,7 @@ export function UpdateUser({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

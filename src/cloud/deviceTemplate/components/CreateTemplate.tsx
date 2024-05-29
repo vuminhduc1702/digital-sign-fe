@@ -127,6 +127,7 @@ export default function CreateTemplate({
         enabled: !!getValues('thing_id'),
       },
     })
+
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
@@ -145,13 +146,12 @@ export default function CreateTemplate({
     }
   }, [isSuccessCreateTemplate])
 
-  const resetForm = () => {
+  useEffect(() => {
     reset()
-    close()
-  }
+  }, [isOpen])
 
   return (
-    <Sheet open={isOpen} onOpenChange={resetForm} modal={false}>
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -169,6 +169,10 @@ export default function CreateTemplate({
               className="w-full space-y-5"
               id="create-template"
               onSubmit={handleSubmit(async values => {
+                const selectedThing = thingSelectData?.find(
+                  option => option.value === values.thing_id,
+                )
+                const thing_name = selectedThing ? selectedThing.label : ''
                 const dataCreateTemplate = await mutateAsyncCreateTemplate({
                   data: {
                     project_id: projectId,
@@ -176,6 +180,7 @@ export default function CreateTemplate({
                     name: values.name,
                     attributes: values.attributes,
                     thing_id: values.thing_id,
+                    thing_name: thing_name,
                     handle_msg_svc: values.handle_msg_svc,
                     transport_config: {
                       protocol: protocol ?? '',
@@ -188,6 +193,7 @@ export default function CreateTemplate({
                     rule_chain_id: dataCreateTemplate.rule_chain_id,
                     attributes: dataCreateTemplate.attributes,
                     thing_id: dataCreateTemplate.thing_id,
+                    thing_name: dataCreateTemplate.thing_name,
                     handle_msg_svc: dataCreateTemplate.handle_message_svc,
                   },
                   templateId: dataCreateTemplate.id,
@@ -435,7 +441,7 @@ export default function CreateTemplate({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={resetForm}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
