@@ -91,6 +91,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { DateTime } from '@/components/DateTime'
 
 type UpdateEventProps = {
   eventId: string
@@ -350,6 +351,18 @@ export function UpdateEvent({
   const resetForm = () => {
     close()
     reset()
+  }
+
+  const convertDateToHourMinute = (date: Date) => {
+    return `${date.getHours()}:${date.getMinutes()}`
+  }
+
+  const convertHourMinuteToDate = (time: string) => {
+    const splitTimeArray = time?.split(':')
+    const date = new Date()
+    date.setHours(parseInt(splitTimeArray[0]))
+    date.setMinutes(parseInt(splitTimeArray[1]))
+    return date
   }
 
   return (
@@ -751,7 +764,18 @@ export function UpdateEvent({
                             </FormLabel>
                             <div>
                               <FormControl>
-                                <Input type="time" {...field} />
+                                {/* <Input type="time" {...field} /> */}
+
+                                <DateTime
+                                  value={convertHourMinuteToDate(
+                                    field.value || '00:00',
+                                  )}
+                                  onChange={date => {
+                                    field.onChange(
+                                      convertDateToHourMinute(date),
+                                    )
+                                  }}
+                                />
                               </FormControl>
                               <FormMessage />
                             </div>
@@ -768,9 +792,21 @@ export function UpdateEvent({
                             </FormLabel>
                             <div>
                               <FormControl>
-                                <Input
+                                {/* <Input
                                   type="time"
                                   {...field}
+                                  disabled={watch('type') === 'schedule'}
+                                /> */}
+
+                                <DateTime
+                                  value={convertHourMinuteToDate(
+                                    field.value || '00:00',
+                                  )}
+                                  onChange={date => {
+                                    field.onChange(
+                                      convertDateToHourMinute(date),
+                                    )
+                                  }}
                                   disabled={watch('type') === 'schedule'}
                                 />
                               </FormControl>

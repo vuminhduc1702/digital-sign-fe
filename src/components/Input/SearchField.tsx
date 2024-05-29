@@ -59,6 +59,8 @@ export function SearchField({
   placeholderValueText,
 }: SearchFieldProps) {
   const { t } = useTranslation()
+  const defaultFieldOption =
+    fieldOptions && fieldOptions.length > 0 ? fieldOptions[0].value : ''
   const searchSchema = z.object({
     searchByField: z.string({
       required_error: i18n.t('search:no_search_field'),
@@ -73,7 +75,7 @@ export function SearchField({
     resolver: searchSchema && zodResolver(searchSchema),
     defaultValues: {
       searchByName: '',
-      searchByField: '',
+      searchByField: defaultFieldOption,
     },
   })
 
