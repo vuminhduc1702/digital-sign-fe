@@ -16,7 +16,7 @@ env:
   repo-infra-name: gitlabvht.innoway.vn/minhhk1/viot-app-chart.git
   repo-infra-branch: main
   repo-folder: viot-app-chart
-
+#test
 jobs:
   # Job 1: build && test
   build:
