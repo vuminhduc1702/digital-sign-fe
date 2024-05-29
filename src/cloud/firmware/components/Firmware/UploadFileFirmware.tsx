@@ -13,12 +13,12 @@ import {
   useUploadFileFireWare,
 } from '../../api/firmwareAPI/uploadFileFirmware'
 import i18n from '@/i18n'
-import { InputField } from '@/components/Form'
 
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { UploadIcon } from '@radix-ui/react-icons'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { Input } from '@/components/ui/input'
 
 type UploadFileFirmWareProps = {
   firmwareId: string
@@ -117,7 +117,7 @@ export function UploadFileFirmWare({
                     </button>
                   )}
                 </div>
-                <InputField
+                <Input
                   id="file"
                   type="file"
                   onChange={e => {
@@ -127,7 +127,6 @@ export function UploadFileFirmWare({
                       setError('file', { message: '' })
                     }
                   }}
-                  classnamefieldwrapper="hidden"
                 />
               </div>
               {formState?.errors?.file?.message && (

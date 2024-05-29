@@ -3,12 +3,7 @@ import {
   numberInput,
   valueTypeList,
 } from '@/cloud/orgManagement/components/Attributes'
-import {
-  FieldWrapper,
-  InputField,
-  SelectField,
-  type SelectOption,
-} from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -23,7 +18,7 @@ import { Input } from '@/components/ui/input'
 import storage from '@/utils/storage'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useRef } from 'react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type SelectInstance } from 'react-select'
 import * as z from 'zod'
@@ -51,6 +46,13 @@ import {
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
 import { attrSchema, nameSchema } from '@/utils/schemaValidation'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
@@ -105,15 +107,7 @@ export default function CreateTemplate({
     },
   })
 
-  const {
-    register,
-    formState,
-    watch,
-    handleSubmit,
-    getValues,
-    control,
-    reset,
-  } = form
+  const { formState, watch, handleSubmit, getValues, control, reset } = form
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
@@ -341,78 +335,156 @@ export default function CreateTemplate({
                     className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
                   >
                     <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-                      <InputField
-                        label={t('cloud:org_manage.org_manage.add_attr.name')}
-                        error={
-                          formState?.errors?.attributes?.[index]?.attribute_key
-                        }
-                        registration={register(
-                          `attributes.${index}.attribute_key` as const,
+                      <FormField
+                        control={form.control}
+                        name={`attributes.${index}.attribute_key`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:org_manage.org_manage.add_attr.name')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
                         )}
                       />
-                      <SelectField
-                        className="h-[36px] py-1"
-                        label={t(
-                          'cloud:org_manage.org_manage.add_attr.value_type',
+                      <FormField
+                        control={form.control}
+                        name={`attributes.${index}.value_t`}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t(
+                                'cloud:org_manage.org_manage.add_attr.value_type',
+                              )}
+                            </FormLabel>
+                            <div>
+                              <Select
+                                {...field}
+                                onValueChange={e => onChange(e)}
+                                value={value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue
+                                      placeholder={t('placeholder:select')}
+                                    />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {valueTypeOptions.map(attr => (
+                                    <SelectItem
+                                      key={attr.label}
+                                      value={attr.value}
+                                    >
+                                      {attr.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
                         )}
-                        error={formState?.errors?.attributes?.[index]?.value_t}
-                        registration={register(
-                          `attributes.${index}.value_t` as const,
-                        )}
-                        options={valueTypeOptions}
                       />
                       {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
-                        <SelectField
-                          className="h-[36px] py-1"
-                          label={t(
-                            'cloud:org_manage.org_manage.add_attr.value',
-                          )}
-                          error={formState?.errors?.attributes?.[index]?.value}
-                          registration={register(
-                            `attributes.${index}.value` as const,
-                          )}
-                          options={booleanSelectOption}
-                        />
-                      ) : (
-                        <InputField
-                          label={t(
-                            'cloud:org_manage.org_manage.add_attr.value',
-                          )}
-                          error={formState?.errors?.attributes?.[index]?.value}
-                          registration={register(
-                            `attributes.${index}.value` as const,
-                          )}
-                          step={0.01}
-                          type={
-                            numberInput.includes(
-                              watch(`attributes.${index}.value_t`),
-                            )
-                              ? 'number'
-                              : 'text'
-                          }
-                        />
-                      )}
-                      <FieldWrapper
-                        className="w-fit space-y-2"
-                        label={t('cloud:org_manage.org_manage.add_attr.logged')}
-                        error={formState?.errors?.attributes?.[index]?.logged}
-                      >
-                        <Controller
-                          control={control}
-                          name={`attributes.${index}.logged`}
+                        <FormField
+                          control={form.control}
+                          name={`attributes.${index}.value`}
                           render={({
                             field: { onChange, value, ...field },
-                          }) => {
-                            return (
-                              <Checkbox
-                                {...field}
-                                checked={value}
-                                onCheckedChange={onChange}
-                              />
-                            )
-                          }}
+                          }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {t(
+                                  'cloud:org_manage.org_manage.add_attr.value',
+                                )}
+                              </FormLabel>
+                              <div>
+                                <Select
+                                  {...field}
+                                  onValueChange={e => onChange(e)}
+                                  value={value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue
+                                        placeholder={t('placeholder:select')}
+                                      />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {booleanSelectOption.map(attr => (
+                                      <SelectItem
+                                        key={attr.label}
+                                        value={attr.value}
+                                      >
+                                        {attr.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
                         />
-                      </FieldWrapper>
+                      ) : (
+                        <FormField
+                          control={form.control}
+                          name={`attributes.${index}.value`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {t(
+                                  'cloud:org_manage.org_manage.add_attr.value',
+                                )}
+                              </FormLabel>
+                              <div>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    step={0.01}
+                                    type={
+                                      numberInput.includes(
+                                        watch(`attributes.${index}.value_t`),
+                                      )
+                                        ? 'number'
+                                        : 'text'
+                                    }
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                      <FormField
+                        control={form.control}
+                        name={`attributes.${index}.logged`}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem className="flex flex-col justify-around">
+                            <FormLabel>
+                              {t('cloud:org_manage.org_manage.add_attr.logged')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Checkbox
+                                  {...field}
+                                  checked={value}
+                                  onCheckedChange={onChange}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
                     </div>
                     <Button
                       type="button"
