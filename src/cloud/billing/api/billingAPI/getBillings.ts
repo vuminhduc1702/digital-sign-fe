@@ -11,8 +11,8 @@ export interface SearchFilter {
 
 type GetBillings = {
   projectId: string
-  searchFilter?: SearchFilter
-  searchData?: SearchFilter
+  searchFilter?: string
+  searchData?: string
   start_time?: number
   end_time?: number
 }
@@ -30,14 +30,23 @@ export const getBillings = ({
   start_time,
   end_time,
 }: GetBillings): Promise<GetBillingtonRes> => {
+  const params = new URLSearchParams({
+    project_id: projectId,
+    // start_time: String(start_time),
+    // end_time: String(end_time),
+  })
+
+  params.set(searchFilter || 'customer_name', searchData || '')
+
   return axios.get(`/api/priceplan/bill`, {
-    params: {
-      project_id: projectId,
-      start_time,
-      end_time,
-      ...searchFilter,
-      ...searchData,
-    },
+    params,
+    // params: {
+    //   project_id: projectId,
+    //   start_time,
+    //   end_time,
+    //   ...searchFilter,
+    //   ...searchData,
+    // },
   })
 }
 

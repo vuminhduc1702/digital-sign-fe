@@ -210,6 +210,7 @@ export const BarChart = ({
               backgroundColor: key?.color,
               data: dataTransformedFeedToChart[index],
               borderWidth: 1,
+              yAxisId: 'y',
             }
           } else {
             return {
@@ -398,6 +399,24 @@ export const BarChart = ({
             borderColor: 'black',
           },
         },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          ticks: {
+            max: 100,
+            min: 0,
+            callback: function (value) {
+              return `${value * 100}%`
+              // const percentage = (value / maxDataFeedToChart.current) * 10000
+              // return `${percentage.toFixed(2)}%`
+            },
+            color: 'black',
+          },
+          grid: {
+            drawOnChartArea: false,
+            borderColor: 'black',
+          },
+        },
       },
       plugins: {
         zoom: realtimeZoomOptions,
@@ -467,6 +486,24 @@ export const BarChart = ({
                     color: 'black',
                   },
                   grid: {
+                    borderColor: 'black',
+                  },
+                },
+                y1: {
+                  type: 'linear',
+                  position: 'right',
+                  ticks: {
+                    max: 100,
+                    min: 0,
+                    callback: function (value) {
+                      return `${value * 100}%`
+                      // const percentage = (value / maxDataFeedToChart.current) * 10000
+                      // return `${percentage.toFixed(2)}%`
+                    },
+                    color: 'black',
+                  },
+                  grid: {
+                    drawOnChartArea: false,
                     borderColor: 'black',
                   },
                 },
