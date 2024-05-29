@@ -128,8 +128,6 @@ export default function CreateTemplate({
       },
     })
 
-  console.log('thing_id', watch('thing_id'))
-
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,

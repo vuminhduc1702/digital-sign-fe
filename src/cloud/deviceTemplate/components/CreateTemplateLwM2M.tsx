@@ -375,7 +375,7 @@ export function CreateTemplateLwM2M({
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     const newConfigData: { [key: string]: string } = {}
-    accordionArray.forEach(accordionItem => {
+    accordionArray?.forEach(accordionItem => {
       accordionItem.attribute_info.forEach(attribute => {
         newConfigData[attribute.id] = attribute.name
       })
@@ -386,7 +386,7 @@ export function CreateTemplateLwM2M({
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     const newAttrData: AttrLwM2MList[] = []
-    accordionArray.forEach(accordionItem => {
+    accordionArray?.forEach(accordionItem => {
       accordionItem.attributes.forEach(attribute => {
         newAttrData.push({
           attribute_key: attribute.attribute_key,
@@ -410,11 +410,10 @@ export function CreateTemplateLwM2M({
     resetAllStates()
   }
   const selectedThing = watch('thing_id')
-  // const selectedThingName = thingSelectData?.find(
-  //   option => option.value === values.thing_id,
-  // )
-  // const thing_name = selectedThingName ? selectedThingName.label : ''
-  // console.log('thing', thing_name)
+  const selectedThingName = thingSelectData?.find(
+    option => option.value === selectedThing,
+  )
+  const thing_name = selectedThingName ? selectedThingName.label : ''
   const selectedService = watch('handle_msg_svc')
   const name = watch('name')
   const transportConfig = {
@@ -430,6 +429,7 @@ export function CreateTemplateLwM2M({
     attributes: AttrData,
     transport_config: transportConfig,
     thing_id: selectedThing,
+    thing_name: thing_name,
     handle_msg_svc: selectedService,
   }
 
