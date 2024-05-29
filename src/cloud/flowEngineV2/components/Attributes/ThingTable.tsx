@@ -9,12 +9,13 @@ import { useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
 import { useDeleteThing } from '../../api/thingAPI'
 import { UpdateThing } from './UpdateThing'
-
+import { toast } from 'sonner'
 import { type EntityThing } from '@/cloud/customProtocol'
 
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { LuPen, LuTrash2 } from 'react-icons/lu'
 import { type UserInfo } from '@/cloud/orgManagement/api/userAPI'
+import { useGetTemplates } from '@/cloud/deviceTemplate/api'
 
 function ThingTableContextMenu({
   id,
@@ -26,7 +27,7 @@ function ThingTableContextMenu({
   description: string
 }) {
   const { t } = useTranslation()
-
+  const { id: projectId } = storage.getProject()
   const { close, open, isOpen } = useDisclosure()
   const {
     close: closeDelete,
@@ -34,7 +35,30 @@ function ThingTableContextMenu({
     isOpen: isOpenDelete,
   } = useDisclosure()
 
+  const { data: templatesData } = useGetTemplates({
+    projectId,
+    search_str: id,
+    search_field: 'thing_id',
+  })
+
   const { mutate, isLoading, isSuccess } = useDeleteThing()
+
+  const checkConditionBeforeDelete = () => {
+    return templatesData?.templates && templatesData?.templates.length > 0
+  }
+
+  const handleDelete = () => {
+    if (checkConditionBeforeDelete()) {
+      const deviceNames = templatesData?.templates
+        ?.map(device => device.name)
+        .join(', ')
+      toast.error(
+        `${t('cloud:custom_protocol.thing.delete_thing_error')}: [ ${deviceNames} ]`,
+      )
+    } else {
+      mutate({ id })
+    }
+  }
 
   return (
     <>
@@ -70,9 +94,7 @@ function ThingTableContextMenu({
         close={closeDelete}
         isOpen={isOpenDelete}
         isSuccessDelete={isSuccess}
-        handleSubmit={() => {
-          mutate({ id })
-        }}
+        handleSubmit={handleDelete}
         isLoading={isLoading}
       />
     </>

@@ -1,29 +1,24 @@
-import { useMemo, useRef, useState, useEffect } from 'react'
+import TitleBar from '@/components/Head/TitleBar'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import TitleBar from '@/components/Head/TitleBar'
-import { ExportTable } from '@/components/Table/components/ExportTable'
-import { type DeviceAttrLog } from '../api/attrAPI'
 import { AttrTable, CreateAttr } from '../components/Attributes'
 import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 import { DeviceBreadcrumbs } from '../components/Device'
 
 import { Button } from '@/components/ui/button'
 
+import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { SearchField } from '@/components/Input'
 import { DeviceListIcon, DeviceLogIcon } from '@/components/SVGIcons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useDisclosure } from '@/utils/hooks'
 import { convertEpochToDate, convertType } from '@/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 import { useAttrLog } from '../api/attrAPI/getAttrLog'
-import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
 import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
-import { SearchField } from '@/components/Input'
-import { useDisclosure } from '@/utils/hooks'
-import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { AttrLwM2MTable } from '@/cloud/deviceTemplate/components/AttrLwM2MTable'
-import { useTemplateById } from '@/cloud/deviceTemplate/api/getTemplateById'
+import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -64,49 +59,6 @@ export function DeviceDetail() {
     entityId: deviceId,
     key_search: searchQueryAttrs,
   })
-
-  const {
-    data: LwM2MDataById,
-    isPreviousData: isPreviousLwM2MDataById,
-    isLoading: isLoadingLwM2MDataById,
-  } = useTemplateById({
-    templateId: templateId,
-  })
-
-  const moduleConfig = LwM2MDataById?.transport_config?.info?.module_config
-
-  const attrsLwM2MData = moduleConfig?.flatMap(module => module.attribute_info)
-
-  // attrLwM2MData
-  const [rowSelectionAttrLwM2M, setRowSelectionAttrLwM2M] = useState({})
-  const pdfHeaderAttr = useMemo(
-    () => [
-      t('table:no'),
-      t('cloud:org_manage.org_manage.table.attr_key'),
-      t('cloud:org_manage.org_manage.table.value_type'),
-      t('cloud:org_manage.org_manage.table.id'),
-    ],
-    [],
-  )
-  const rowSelectionKeyAttr = Object.keys(rowSelectionAttrLwM2M)
-  const formatExcelAttrLwM2M =
-    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
-      (acc, curr, index) => {
-        curr.attribute_info?.forEach((attr, index) => {
-          if (rowSelectionKeyAttr.includes(attr.id)) {
-            const temp = {
-              [t('table:no')]: (index + 1).toString(),
-              [t('cloud:org_manage.org_manage.table.attr_key')]: attr.name,
-              [t('cloud:org_manage.org_manage.table.value_type')]: attr.type,
-              [t('cloud:org_manage.org_manage.table.id')]: attr.id,
-            }
-            acc.push(temp)
-          }
-        })
-        return acc
-      },
-      [] as Array<{ [key: string]: unknown }>,
-    )
 
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeaderAttrs = useMemo(
@@ -282,7 +234,7 @@ export function DeviceDetail() {
         </TabsList>
         <TabsContent value="attr_list" className="mt-2 flex grow flex-col">
           <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
-            {attrsData && !attrsLwM2MData ? (
+            {attrsData ? (
               <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
                   <div className="flex w-full items-center justify-between gap-x-3">
@@ -326,29 +278,6 @@ export function DeviceDetail() {
                       </div>
                     )
                   }
-                />
-              </div>
-            ) : null}
-            {attrsLwM2MData ? (
-              <div className="relative flex h-full grow flex-col gap-5 px-9 py-3 shadow-lg">
-                <div className="flex justify-between">
-                  <div className="flex w-full items-center justify-between gap-x-3">
-                    <SearchField
-                      setSearchValue={setSearchQuery}
-                      setIsSearchData={setIsSearchData}
-                      closeSearch={true}
-                    />
-                  </div>
-                </div>
-                <AttrLwM2MTable
-                  attributeInfo={attrsLwM2MData ?? []}
-                  rowSelection={rowSelectionAttrLwM2M}
-                  setRowSelection={setRowSelectionAttrLwM2M}
-                  isPreviousData={isPreviousLwM2MDataById}
-                  isLoading={isLoadingLwM2MDataById}
-                  pdfHeader={pdfHeaderAttr}
-                  formatExcel={formatExcelAttrLwM2M}
-                  isSearchData={searchQuery.length > 0 && isSearchData}
                 />
               </div>
             ) : null}

@@ -66,6 +66,8 @@ export function DeviceManage() {
       t('table:no'),
       t('cloud:org_manage.device_manage.table.name'),
       t('cloud:org_manage.device_manage.table.group'),
+      t('cloud:org_manage.device_manage.table.thing'),
+      t('cloud:org_manage.device_manage.table.service'),
       t('cloud:org_manage.device_manage.table.status'),
       t('sidebar:cloud.device_template'),
       t('cloud:org_manage.device_manage.table.key'),
@@ -82,6 +84,9 @@ export function DeviceManage() {
             [t('table:no')]: (index + 1 + offset).toString(),
             [t('cloud:org_manage.device_manage.table.name')]: curr.name,
             [t('cloud:org_manage.device_manage.table.group')]: curr.group_name,
+            [t('cloud:org_manage.device_manage.table.thing')]: curr.thing_name,
+            [t('cloud:org_manage.device_manage.table.service')]:
+              curr.handle_message_svc,
             [t('cloud:org_manage.device_manage.table.status')]: curr.status,
             [t('sidebar:cloud.device_template')]: curr.template_name,
             [t('cloud:org_manage.device_manage.table.key')]: curr.key,

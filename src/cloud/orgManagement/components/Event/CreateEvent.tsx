@@ -58,6 +58,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
+import { DateTime } from '@/components/DateTime'
 
 export const conditionEventOptions = [
   {
@@ -496,6 +497,23 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     setActionType('sms')
   }, [isOpen])
 
+  const convertDateToHourMinute = (date: Date) => {
+    const hour = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
+    const minute =
+      date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+    return `${hour}:${minute}`
+  }
+
+  const convertHourMinuteToDate = (time: string) => {
+    const [hour, minute] = time?.split(':')
+    const date = new Date()
+    date.setHours(parseInt(hour))
+    date.setMinutes(parseInt(minute))
+    return date
+  }
+
+  console.log(watch())
+
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -916,7 +934,15 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           </FormLabel>
                           <div>
                             <FormControl>
-                              <Input type="time" {...field} />
+                              {/* <Input type="time" {...field} /> */}
+                              <DateTime
+                                value={convertHourMinuteToDate(
+                                  field.value || '00:00',
+                                )}
+                                onChange={date => {
+                                  field.onChange(convertDateToHourMinute(date))
+                                }}
+                              />
                             </FormControl>
                             <FormMessage />
                           </div>
@@ -933,9 +959,19 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                           </FormLabel>
                           <div>
                             <FormControl>
-                              <Input
+                              {/* <Input
                                 type="time"
                                 {...field}
+                                disabled={watch('type') === 'schedule'}
+                              /> */}
+
+                              <DateTime
+                                value={convertHourMinuteToDate(
+                                  field.value || '00:00',
+                                )}
+                                onChange={date => {
+                                  field.onChange(convertDateToHourMinute(date))
+                                }}
                                 disabled={watch('type') === 'schedule'}
                               />
                             </FormControl>

@@ -427,24 +427,24 @@ export function LineChart({
             borderColor: 'black',
           },
         },
-        y1: {
-          type: 'linear',
-          position: 'right',
-          ticks: {
-            max: 100,
-            min: 0,
-            callback: function (value) {
-              return `${value * 100}%`
-              // const percentage = (value / maxDataFeedToChart.current) * 10000
-              // return `${percentage.toFixed(2)}%`
-            },
-            color: 'black',
-          },
-          grid: {
-            drawOnChartArea: false,
-            borderColor: 'black',
-          },
-        },
+        // y1: {
+        //   type: 'linear',
+        //   position: 'right',
+        //   ticks: {
+        //     max: 100,
+        //     min: 0,
+        //     callback: function (value) {
+        //       return `${value * 100}%`
+        //       // const percentage = (value / maxDataFeedToChart.current) * 10000
+        //       // return `${percentage.toFixed(2)}%`
+        //     },
+        //     color: 'black',
+        //   },
+        //   grid: {
+        //     drawOnChartArea: false,
+        //     borderColor: 'black',
+        //   },
+        // },
       },
       plugins: {
         zoom: realtimeZoomOptions,
@@ -517,25 +517,25 @@ export function LineChart({
                       borderColor: 'black',
                     },
                   },
-                  y1: {
-                    type: 'linear',
-                    position: 'right',
-                    ticks: {
-                      max: 100,
-                      min: 0,
-                      callback: function (value) {
-                        return `${value * 100}%`
-                        // const percentage =
-                        //   (value / maxDataFeedToChart.current) * 100
-                        // return `${percentage.toFixed(2)}%`
-                      },
-                      color: 'black',
-                    },
-                    grid: {
-                      drawOnChartArea: false,
-                      borderColor: 'black',
-                    },
-                  },
+                  // y1: {
+                  //   type: 'linear',
+                  //   position: 'right',
+                  //   ticks: {
+                  //     max: 100,
+                  //     min: 0,
+                  //     callback: function (value) {
+                  //       return `${value * 100}%`
+                  //       // const percentage =
+                  //       //   (value / maxDataFeedToChart.current) * 100
+                  //       // return `${percentage.toFixed(2)}%`
+                  //     },
+                  //     color: 'black',
+                  //   },
+                  //   grid: {
+                  //     drawOnChartArea: false,
+                  //     borderColor: 'black',
+                  //   },
+                  // },
                 },
                 plugins: {
                   zoom: zoomOptions,

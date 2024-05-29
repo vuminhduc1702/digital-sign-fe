@@ -59,6 +59,8 @@ export function SearchField({
   placeholderValueText,
 }: SearchFieldProps) {
   const { t } = useTranslation()
+  const defaultFieldOption =
+    fieldOptions && fieldOptions.length > 0 ? fieldOptions[0].value : ''
   const searchSchema = z.object({
     searchByField: z.string({
       required_error: i18n.t('search:no_search_field'),
@@ -73,13 +75,14 @@ export function SearchField({
     resolver: searchSchema && zodResolver(searchSchema),
     defaultValues: {
       searchByName: '',
-      searchByField: '',
+      searchByField: defaultFieldOption,
     },
   })
 
   const {
     handleSubmit,
     formState: { errors },
+    watch,
   } = form
 
   function onSubmit() {
@@ -247,8 +250,6 @@ export function SearchField({
           <Button
             type="submit"
             className="h-[38px] w-[50px] items-center bg-[#DBDADE]"
-            // onClick={() => {
-            // }}
           >
             <LuSearch className="h-5 w-5 text-[#4B465C]" />
           </Button>
