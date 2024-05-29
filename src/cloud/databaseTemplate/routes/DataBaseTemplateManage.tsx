@@ -1,36 +1,21 @@
+import { useDisclosure } from '@/utils/hooks'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { useDisclosure } from '@/utils/hooks'
 
 import TitleBar from '@/components/Head/TitleBar'
 import { ContentLayout } from '@/layout/ContentLayout'
 import storage from '@/utils/storage'
 import { DataBaseSidebar, DataBaseTable } from '../components'
 
-import { type DataSearchTable, useSelectDataBase } from '../api/selectDataBase'
-import CreateColumn from '../components/CreateColumn'
-import CreateRows from '../components/CreateRows'
-import { type FieldsRows } from '../types'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOption,
-} from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
+import { PlusIcon, SearchIcon } from '@/components/SVGIcons'
 import { Button } from '@/components/ui/button'
-import { SearchIcon } from '@/components/SVGIcons'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Switch } from '@/components/ui/switch'
-import * as z from 'zod'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { PlusIcon } from '@/components/SVGIcons'
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -41,6 +26,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { useSelectDataBase, type DataSearchTable } from '../api/selectDataBase'
+import CreateColumn from '../components/CreateColumn'
+import CreateRows from '../components/CreateRows'
+import { type FieldsRows } from '../types'
 
 export const searchDataBaseSchema = z.object({
   key: z.string().optional(),
@@ -138,8 +132,14 @@ export function DataBaseTemplateManage() {
       for (var i = 0; i < lr; i++) {
         var dataRow = data?.data?.rows?.[i]
         const row: FieldsRows = {}
-        for (var j = 0; j < lc; j++)
-          row[data?.data?.columns?.[j]] = dataRow[j] ?? ''
+        for (var j = 0; j < lc; j++) {
+          if (typeof dataRow[j] === 'object') {
+            const parseRow = JSON.stringify(dataRow[j])
+            row[data?.data?.columns?.[j]] = parseRow
+          } else {
+            row[data?.data?.columns?.[j]] = dataRow[j] ?? ''
+          }
+        }
         result.push(row)
       }
       setFilteredComboboxData(result)
