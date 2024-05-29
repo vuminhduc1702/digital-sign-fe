@@ -108,15 +108,6 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
     },
   })
 
-  // const { register, formState, control, handleSubmit, watch, setValue } =
-  //   useForm<CreateServiceThingDTO['data']>({
-  //     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
-  //     values: {
-  //       ...thingServiceData?.data,
-  //       description: thingServiceData?.data?.description || '',
-  //     },
-  //   })
-
   const form = useForm<CreateServiceThingDTO['data']>({
     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
     values: {
@@ -330,15 +321,6 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                         </FormItem>
                       )}
                     />
-                    {/* <SelectField
-                      label={t(
-                        'cloud:custom_protocol.service.service_input.type',
-                      )}
-                      require={true}
-                      error={formState.errors['output']}
-                      registration={register('output')}
-                      options={outputList}
-                    /> */}
                     <FormField
                       control={form.control}
                       name="output"
