@@ -2,29 +2,13 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BaseTable } from '@/components/Table'
+import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { useDisclosure } from '@/utils/hooks'
-import { type BaseTableProps } from '@/components/Table'
 
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import { cn, getVNDateFormat } from '@/utils/misc'
+import { getVNDateFormat } from '@/utils/misc'
+import { LuPen } from 'react-icons/lu'
 import { type Subcription } from '../../types'
 import { UpdateSubcription } from './UpdateSubcription'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
-import btnFilterIcon from '@/assets/icons/btn-filter.svg'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()

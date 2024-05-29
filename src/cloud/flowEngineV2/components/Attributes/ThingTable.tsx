@@ -1,9 +1,8 @@
-import { useNavigate } from 'react-router-dom'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
-import { Link } from '@/components/Link'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { PATHS } from '@/routes/PATHS'
 import { useDisclosure } from '@/utils/hooks'
@@ -12,19 +11,10 @@ import { useDeleteThing } from '../../api/thingAPI'
 import { UpdateThing } from './UpdateThing'
 
 import { type EntityThing } from '@/cloud/customProtocol'
-import { type BaseTablePagination } from '@/types'
 
-import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { LuPen, LuTrash2 } from 'react-icons/lu'
+import { type UserInfo } from '@/cloud/orgManagement/api/userAPI'
 
 function ThingTableContextMenu({
   id,

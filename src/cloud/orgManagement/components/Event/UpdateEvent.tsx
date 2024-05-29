@@ -1532,12 +1532,12 @@ export function UpdateEvent({
                                                         ? 'text'
                                                         : 'number'
                                                     }
+                                                    {...field}
                                                     defaultValue={
                                                       inputDataProp?.[
                                                         element.name
                                                       ]
                                                     }
-                                                    {...field}
                                                   />
                                                 </FormControl>
                                                 <FormMessage />

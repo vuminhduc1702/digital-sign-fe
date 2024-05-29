@@ -44,7 +44,7 @@ type UpdateRowProps = {
   close: () => void
   isOpen: boolean
   row: FieldsRows
-  columnsType: string
+  columnsType: string[]
 }
 
 export function UpdateRow({
@@ -67,7 +67,7 @@ export function UpdateRow({
       ...row,
     },
   })
-  const { control, register, formState, handleSubmit } = form
+  const { control, register, formState, handleSubmit, reset } = form
 
   useEffect(() => {
     if (row) setColumns(Object.keys(row))
@@ -79,6 +79,10 @@ export function UpdateRow({
       onClose()
     }
   }, [isSuccess, close])
+
+  useEffect(() => {
+    reset()
+  }, [isOpen])
 
   const renderType = (type: string) => {
     let result = ''
