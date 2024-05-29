@@ -86,6 +86,7 @@ export function ControllerForm({
   isEdit,
   setIsEdit,
   setWidgetList,
+  mutableWidgetList,
   widgetInfo,
   widgetId,
 }: {
@@ -94,7 +95,8 @@ export function ControllerForm({
   sendMessage: SendMessage
   isEdit: boolean
   setIsEdit: (value: boolean) => void
-  setWidgetList: (value: any) => void
+  setWidgetList?: (value: any) => void
+  mutableWidgetList: React.MutableRefObject<Set<string>>
   widgetInfo?: z.infer<typeof controllerBtnSchema>
   widgetId: string
 }) {
@@ -102,7 +104,6 @@ export function ControllerForm({
   const projectId = storage.getProject()?.id
   const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
   const { input, service_name, thing_id } = JSON.parse(data).executorCmds[0]
-  const [variableListRerender, setVariableListRerender] = useState(false)
   const selectDropdownServiceRef = useRef<SelectInstance | null>(null)
 
   function getDefaultInput() {
@@ -176,14 +177,17 @@ export function ControllerForm({
   }))
 
   // select variable list
-  const { data: thingServiceData, isLoading: isLoadingService } =
-    useThingServiceById({
-      thingId: watch('thing_id'),
-      name: watch('service_name'),
-      config: {
-        enabled: !!watch('thing_id') && !!watch('service_name'),
-      },
-    })
+  const {
+    data: thingServiceData,
+    isLoading: isLoadingService,
+    isPreviousData: isPreviousService,
+  } = useThingServiceById({
+    thingId: watch('thing_id'),
+    name: watch('service_name'),
+    config: {
+      enabled: !!watch('thing_id') && !!watch('service_name'),
+    },
+  })
   const inputSelectData = thingServiceData?.data?.input?.map(input => ({
     value: input.name,
     label: input.name,
@@ -191,20 +195,24 @@ export function ControllerForm({
   }))
 
   useEffect(() => {
-    if (variableListRerender) {
-      remove()
-      if (inputSelectData?.length === 0) {
-        append({ name: '', value: '' })
+    remove()
+    if (inputSelectData?.length === 0) {
+      append({ name: '', value: '' })
+    } else {
+      if (
+        thing_id === watch('thing_id') &&
+        service_name === watch('service_name')
+      ) {
+        Object.entries(input).forEach(([key, value]) => {
+          append({ name: key, value: value })
+        })
       } else {
-        inputSelectData?.forEach((item, index) => {
-          append({ name: item.value, value: '' })
+        inputSelectData?.forEach(item => {
+          append({ name: item.label, value: '' })
         })
       }
-      setVariableListRerender(false)
     }
-  }, [inputSelectData])
-
-  console.log(watch())
+  }, [thingServiceData])
 
   return (
     <div className="relative mt-6 h-[calc(100%_-_24px)] bg-white p-6">
@@ -247,17 +255,19 @@ export function ControllerForm({
               ...prev,
               ...{ [widgetId]: controllerBtn },
             }))
+            mutableWidgetList.current &&
+              mutableWidgetList.current?.add(widgetId)
 
             setIsEdit(false)
           })}
         >
-          <div className="grid grid-cols-1 gap-4 rounded-lg">
+          <div className="grid grid-cols-1 gap-2 rounded-lg">
             {isEdit && (
-              <div className="mr-5 flex flex-col gap-[16px] rounded-lg border p-[10px]">
+              <div className="mr-5 flex flex-col gap-[10px] rounded-lg border p-[10px]">
                 <div className="flex items-center rounded-lg bg-[#ECECEE] px-[12px] py-[8px] text-lg font-bold text-[#001737]">
                   {t('cloud:dashboard.config_chart.show')}
                 </div>
-                <div className="flex flex-col gap-[16px] text-sm">
+                <div className="flex flex-col gap-[10px] text-sm">
                   <>
                     <FormField
                       control={form.control}
@@ -377,15 +387,6 @@ export function ControllerForm({
                                 )}
                                 className="h-[36px] w-[90%] rounded-md focus:ring-2 focus:ring-blue-500"
                                 customOnChange={value => {
-                                  if (value) {
-                                    setVariableListRerender(true)
-                                  }
-                                  setValue('input', [
-                                    {
-                                      name: '',
-                                      value: '',
-                                    },
-                                  ])
                                   onChange(value)
                                 }}
                                 {...field}
@@ -408,7 +409,7 @@ export function ControllerForm({
               <>
                 <div
                   className={cn(
-                    `m-2 grid items-center gap-4 rounded-md border-b p-4`,
+                    `grid items-center gap-2 rounded-md border-b p-2`,
                     isEdit ? 'grid-cols-3' : 'grid-cols-2',
                   )}
                 >
@@ -431,17 +432,17 @@ export function ControllerForm({
                 </div>
                 <div className="box-border w-full">
                   <>
-                    {variableListRerender ? (
+                    {isLoadingService ? (
                       <div className="flex h-full items-center justify-center">
                         <Spinner size="xl" />
                       </div>
                     ) : (
-                      watch('input')?.map((item, index) => {
+                      fields?.map((item, index) => {
                         return (
                           <div
                             key={index}
                             className={cn(
-                              `m-2 grid items-center gap-4 p-4`,
+                              `grid items-center gap-2 p-2`,
                               isEdit ? 'grid-cols-3' : 'grid-cols-2',
                             )}
                           >
@@ -480,17 +481,17 @@ export function ControllerForm({
                                               item.value ===
                                               watch(`input.${index}.name`),
                                           )}
-                                          // value={
-                                          //   watch(`input.${index}.name`) === ''
-                                          //     ? null
-                                          //     : inputSelectData?.find(
-                                          //         item =>
-                                          //           item.value ===
-                                          //           watch(
-                                          //             `input.${index}.name`,
-                                          //           ),
-                                          //       )
-                                          // }
+                                          value={
+                                            watch(`input.${index}.name`) === ''
+                                              ? null
+                                              : inputSelectData?.find(
+                                                  item =>
+                                                    item.value ===
+                                                    watch(
+                                                      `input.${index}.name`,
+                                                    ),
+                                                )
+                                          }
                                           placeholder={''}
                                           // error={
                                           //   formState?.errors?.input?.[index]?.name
@@ -510,9 +511,9 @@ export function ControllerForm({
                               render={({ field }) => (
                                 <FormItem className="flex items-center justify-center">
                                   <FormControl>
-                                    <div className="flex w-3/4 items-center justify-center">
+                                    <div className="w-3/4">
                                       <Input
-                                        className="h-[36px] rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500"
+                                        className="block h-[36px] rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500"
                                         disabled={!isEdit}
                                         value={watch(`input.${index}.value`)}
                                         onChange={e =>
