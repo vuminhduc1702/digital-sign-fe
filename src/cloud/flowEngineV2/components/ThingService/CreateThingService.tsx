@@ -1,51 +1,37 @@
-import { type RefObject, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import * as z from 'zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState, type RefObject } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import * as z from 'zod'
 
-import { Button } from '@/components/ui/button'
-import {
-  FieldWrapper,
-  InputField,
-  SelectField,
-  TextAreaField,
-} from '@/components/Form'
-import { nameSchemaRegex } from '@/utils/schemaValidation'
-import {
-  useCreateServiceThing,
-  type CreateServiceThingDTO,
-} from '../../api/thingServiceAPI'
-import { cn } from '@/utils/misc'
 import { CodeSandboxEditor } from '@/cloud/customProtocol/components/CodeSandboxEditor'
+import { outputList } from '@/cloud/customProtocol/components/CreateService'
 import { FormDialog } from '@/components/FormDialog'
-import { PlusIcon } from '@/components/SVGIcons'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Switch } from '@/components/ui/switch'
-import storage from '@/utils/storage'
-import { useExecuteService } from '../../api/thingServiceAPI/executeService'
-import { type InputService, type ThingService } from '../../types'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { Checkbox } from '@/components/ui/checkbox'
-import { outputList } from '@/cloud/customProtocol/components/CreateService'
+import { cn } from '@/utils/misc'
+import { nameSchemaRegex } from '@/utils/schemaValidation'
+import storage from '@/utils/storage'
+import {
+  useCreateServiceThing,
+  type CreateServiceThingDTO,
+} from '../../api/thingServiceAPI'
+import { useExecuteService } from '../../api/thingServiceAPI/executeService'
+import { type InputService, type ThingService } from '../../types'
 
 import btnAddIcon from '@/assets/icons/btn-add.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnFullScreen from '@/assets/icons/btn-fullscreen.svg'
 import btnRunCode from '@/assets/icons/btn-run-code.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { LuChevronDown } from 'react-icons/lu'
-import { type ImperativePanelHandle } from 'react-resizable-panels'
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from '@/components/ui/resizable'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,7 +47,11 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/components/ui/resizable'
 import {
   Select,
   SelectContent,
@@ -69,6 +59,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { LuChevronDown } from 'react-icons/lu'
+import { type ImperativePanelHandle } from 'react-resizable-panels'
 
 export const inputSchema = z.object({
   name: z

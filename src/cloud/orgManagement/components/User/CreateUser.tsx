@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { InputField, SelectDropdown, SelectField } from '@/components/Form'
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
 import {
   emailSchema,
@@ -38,24 +37,14 @@ import {
 } from '@/components/ui/popover'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn, flattenOrgs } from '@/utils/misc'
 import { Input } from '@/components/ui/input'
 import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 
 export const userInfoSchema = z.object({
   name: nameSchema,
@@ -68,9 +57,9 @@ export const userInfoSchema = z.object({
   project_id: z.string().optional(),
   profile: z
     .object({
-      province: z.string(),
-      district: z.string(),
-      ward: z.string(),
+      province: z.string().optional(),
+      district: z.string().optional(),
+      ward: z.string().optional(),
       full_address: z.string(),
     })
     .optional(),
@@ -99,7 +88,8 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
   const form = useForm<CreateUserDTO['data']>({
     resolver: userSchema && zodResolver(userSchema),
   })
-  const { register, formState, handleSubmit, control, watch, reset } = form
+  const { register, formState, handleSubmit, control, watch, reset, setValue } =
+    form
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateUser()
@@ -431,32 +421,79 @@ export function CreateUser({ open, close, isOpen }: CreateUserProps) {
                 />
 
                 <div className="grid grid-cols-3 gap-x-2">
-                  <div className="col-start-1 col-end-4">
+                  <FormLabel className="col-start-1 col-end-4 mb-2">
                     {t('cloud:org_manage.user_manage.add_user.address')}
-                  </div>
-                  <SelectField
-                    error={formState?.errors?.profile?.province}
-                    registration={register('profile.province')}
-                    options={provinceList}
-                    classchild="w-full"
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.province',
+                  </FormLabel>
+                  <FormField
+                    control={form.control}
+                    name="profile.province"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable={true}
+                              customOnChange={(e: string) => {
+                                onChange(e)
+                                setValue('profile.district', '')
+                                setValue('profile.ward', '')
+                              }}
+                              options={provinceList}
+                              placeholder={t(
+                                'cloud:org_manage.user_manage.add_user.province',
+                              )}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                      </FormItem>
                     )}
                   />
-                  <SelectField
-                    error={formState?.errors?.profile?.district}
-                    registration={register('profile.district')}
-                    options={districtList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.district',
+                  <FormField
+                    control={form.control}
+                    name="profile.district"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable={true}
+                              customOnChange={(e: string) => {
+                                onChange(e)
+                                setValue('profile.ward', '')
+                              }}
+                              options={districtList}
+                              placeholder={t(
+                                'cloud:org_manage.user_manage.add_user.district',
+                              )}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                      </FormItem>
                     )}
                   />
-                  <SelectField
-                    error={formState?.errors?.profile?.ward}
-                    registration={register('profile.ward')}
-                    options={wardList}
-                    placeholder={t(
-                      'cloud:org_manage.user_manage.add_user.ward',
+                  <FormField
+                    control={form.control}
+                    name="profile.ward"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem>
+                        <div>
+                          <FormControl>
+                            <NewSelectDropdown
+                              isClearable={true}
+                              customOnChange={(e: string) => {
+                                onChange(e)
+                              }}
+                              options={wardList}
+                              placeholder={t(
+                                'cloud:org_manage.user_manage.add_user.ward',
+                              )}
+                              {...field}
+                            />
+                          </FormControl>
+                        </div>
+                      </FormItem>
                     )}
                   />
                 </div>

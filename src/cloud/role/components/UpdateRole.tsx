@@ -97,7 +97,7 @@ export function UpdateRole({
   }, [isSuccess])
 
   useEffect(() => {
-    form.reset()
+    !isOpen && form.reset()
   }, [isOpen])
 
   const policiesCurrent =

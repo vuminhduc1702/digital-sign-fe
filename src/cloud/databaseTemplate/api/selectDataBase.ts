@@ -9,6 +9,7 @@ export type DataSelectTable = {
   data: {
     columns: string[]
     rows: [][]
+    column_types?: string[]
   }
 }
 

@@ -4,36 +4,14 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField, SelectField } from '@/components/Form'
 import storage from '@/utils/storage'
 import { useAddColumn, type AddColumnDTO } from '../api'
 
-import { useParams } from 'react-router-dom'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { PlusIcon } from '@/components/SVGIcons'
-import { nameSchema } from '@/utils/schemaValidation'
-import { useEffect } from 'react'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import { cn } from '@/utils/misc'
-import i18n from '@/i18n'
 import { outputList } from '@/cloud/customProtocol/components/CreateService'
+import { PlusIcon } from '@/components/SVGIcons'
 import {
   Form,
   FormControl,
@@ -50,6 +28,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import i18n from '@/i18n'
+import { cn } from '@/utils/misc'
+import { nameSchema } from '@/utils/schemaValidation'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
 export const createColumnSchema = z.object({
   fields: z.array(

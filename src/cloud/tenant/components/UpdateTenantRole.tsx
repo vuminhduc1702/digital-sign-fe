@@ -58,16 +58,18 @@ export function UpdateCustomerRole({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
 
+  const dataDefault = {
+    tenant_id: customerId,
+    project_id: project_id ? project_id : '',
+    role_id: roleIdProps ? roleIdProps : '',
+  }
+
   const form = useForm<
     UpdateEntityCustomerRoleDTO['data']['project_permission'][0]
   >({
     resolver:
       updateEntityCustomerSchema && zodResolver(updateEntityCustomerSchema),
-    defaultValues: {
-      tenant_id: customerId,
-      project_id: project_id ? project_id : '',
-      role_id: roleIdProps ? roleIdProps : '',
-    },
+    defaultValues: dataDefault,
   })
   const { handleSubmit, watch, getValues } = form
 
@@ -97,7 +99,7 @@ export function UpdateCustomerRole({
   }, [isSuccess, closeRole])
 
   useEffect(() => {
-    form.reset()
+    form.reset(dataDefault)
   }, [isOpenRole])
 
   return (

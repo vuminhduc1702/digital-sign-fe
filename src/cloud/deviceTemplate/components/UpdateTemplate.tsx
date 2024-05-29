@@ -212,11 +212,6 @@ export function UpdateTemplate({
                 })}
               >
                 <>
-                  {/* <InputField
-                    label={t('cloud:device_template.add_template.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  /> */}
                   <FormField
                     control={form.control}
                     name="name"

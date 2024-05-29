@@ -1,20 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateAttrChart } from '@/cloud/dashboard/api'
 import { useSpinDelay } from 'spin-delay'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
 import { Button } from '@/components/ui/button'
-import {
-  FieldWrapper,
-  InputField,
-  SelectDropdown,
-  SelectField,
-  type SelectOption,
-} from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import TitleBar from '@/components/Head/TitleBar'
 import storage from '@/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
@@ -45,7 +39,7 @@ import {
   eventTypeSchema,
   eventConditionSchema,
   conditionEventOptions,
-  deviceNameOptions,
+  cityNameOptions,
 } from './CreateEvent'
 import { useGetEntityThings } from '@/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
@@ -101,7 +95,7 @@ type UpdateEventProps = {
   dataAction: Action[]
   conditionData: Condition[] | null
   dateArr: any[]
-  type: string
+  type: 'schedule' | 'event'
   startTimeProps?: string
   endTimeProps?: string
 }
@@ -156,8 +150,8 @@ export function UpdateEvent({
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const actionTypeProp: ActionType = data.action[0].action_type
-  const thingIdOptionProp = data.cmd.thing_id
-  const serviceOptionProp = data.cmd.service_name
+  const thingIdOptionProp = data.cmd.entity_id
+  const serviceOptionProp = data.cmd.name
   const inputDataProp = data.cmd.input
 
   const [actionType, setActionType] = useState<ActionType>(actionTypeProp)
@@ -184,8 +178,8 @@ export function UpdateEvent({
       org_id: data.org_id,
       group_id: data.group_id,
       cmd: {
-        thing_id: thingIdOptionProp,
-        handle_service: serviceOptionProp ?? '',
+        entity_id: thingIdOptionProp,
+        name: serviceOptionProp ?? '',
         input: inputDataProp ?? {},
       },
       condition_event_type:
@@ -265,11 +259,11 @@ export function UpdateEvent({
 
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
-      thingId: watch('cmd.thing_id') ?? '',
+      thingId: watch('cmd.entity_id') ?? '',
       config: {
         enabled:
-          !!watch('cmd.thing_id') &&
-          parseInt(watch('cmd.thing_id') as unknown as string) !== 0,
+          !!watch('cmd.entity_id') &&
+          parseInt(watch('cmd.entity_id') as unknown as string) !== 0,
       },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -277,7 +271,7 @@ export function UpdateEvent({
     label: service.name,
   }))
   const serviceInput = serviceData?.data?.find(
-    item => item.name === watch('cmd.handle_service'),
+    item => item.name === watch('cmd.name'),
   )?.input
 
   const todoClicked = (e: any) => {
@@ -311,7 +305,7 @@ export function UpdateEvent({
       )
       setValue(`cmd.input.${idx}.value`, inputDataProp?.[element.name])
     })
-  }, [watch('cmd.handle_service')])
+  }, [watch('cmd.name')])
 
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
@@ -344,11 +338,8 @@ export function UpdateEvent({
   })
 
   useEffect(() => {
-    setTodos(dateArr)
-  }, [isOpen])
-
-  useEffect(() => {
     reset()
+    setTodos(dateArr)
   }, [isOpen])
 
   return (
@@ -400,12 +391,20 @@ export function UpdateEvent({
                       logical_operator: item.logical_operator,
                     }))) ||
                   []
-                const actionArr = values.action?.map(item => ({
-                  action_type: item.action_type,
-                  receiver: item.receiver,
-                  message: item.message,
-                  subject: item.subject,
-                }))
+                const actionArr = values.action?.map(item => {
+                  if (item.action_type === 'report') {
+                    return {
+                      action_type: item.action_type,
+                    }
+                  } else {
+                    return {
+                      action_type: item.action_type,
+                      receiver: item.receiver,
+                      message: item.message,
+                      subject: item.subject,
+                    }
+                  }
+                })
                 mutate({
                   data: {
                     project_id: projectId,
@@ -421,8 +420,8 @@ export function UpdateEvent({
                     interval,
                     type: getValues('type'),
                     cmd: {
-                      thing_id: values?.cmd?.thing_id,
-                      service_name: values?.cmd?.handle_service,
+                      entity_id: values?.cmd?.entity_id,
+                      name: values?.cmd?.name,
                       project_id: projectId,
                       input: values?.cmd?.input,
                     },
@@ -528,6 +527,7 @@ export function UpdateEvent({
                               <FormControl>
                                 <NewSelectDropdown
                                   options={groupSelectOptions}
+                                  customOnChange={onChange}
                                   isOptionDisabled={option =>
                                     option.label === t('loading:group') ||
                                     option.label === t('table:no_group')
@@ -539,7 +539,6 @@ export function UpdateEvent({
                                     item =>
                                       item.value === getValues('group_id'),
                                   )}
-                                  error={formState?.errors?.group_id}
                                   {...field}
                                 />
                               </FormControl>
@@ -808,40 +807,6 @@ export function UpdateEvent({
                         return (
                           <section className="!mt-3 space-y-2" key={field.id}>
                             <div className="grid grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                              {/* <SelectDropdown
-                                label={t(
-                                  'cloud:org_manage.event_manage.add_event.condition.device',
-                                )}
-                                name={`condition.${index}.device_id`}
-                                control={control}
-                                options={deviceSelectOptions}
-                                isOptionDisabled={option =>
-                                  option.label === t('loading:device') ||
-                                  option.label === t('table:no_device')
-                                }
-                                noOptionsMessage={() => t('table:no_device')}
-                                loadingMessage={() => t('loading:device')}
-                                isLoading={deviceIsLoading}
-                                defaultValue={deviceSelectOptions?.find(
-                                  item =>
-                                    item.value ===
-                                    getValues(`condition.${index}.device_id`),
-                                )}
-                                onChange={event => {
-                                  setValue(
-                                    `condition.${index}.device_id`,
-                                    event.value,
-                                  )
-                                  setValue(
-                                    `condition.${index}.device_name`,
-                                    event.label,
-                                  )
-                                }}
-                                error={
-                                  formState?.errors?.condition?.[index]
-                                    ?.device_id
-                                }
-                              /> */}
                               {watch('condition_event_type') ===
                               'device_condition' ? (
                                 <FormField
@@ -865,7 +830,6 @@ export function UpdateEvent({
                                           <div>
                                             <FormControl>
                                               <NewSelectDropdown
-                                                classnamefieldwrapper="h-9"
                                                 options={deviceSelectOptions}
                                                 customOnChange={value => {
                                                   const filter =
@@ -882,7 +846,6 @@ export function UpdateEvent({
                                                     filter?.[0]?.label ?? '',
                                                   )
                                                 }}
-                                                // customOnChange={onChange}
                                                 isOptionDisabled={option =>
                                                   option.label ===
                                                     t('loading:device') ||
@@ -903,16 +866,6 @@ export function UpdateEvent({
                                                       `condition.${index}.device_id`,
                                                     ),
                                                 )}
-                                                onChange={event => {
-                                                  setValue(
-                                                    `condition.${index}.device_id`,
-                                                    event.value,
-                                                  )
-                                                  setValue(
-                                                    `condition.${index}.device_name`,
-                                                    event.label,
-                                                  )
-                                                }}
                                                 {...field}
                                               />
                                             </FormControl>
@@ -939,8 +892,7 @@ export function UpdateEvent({
                                       <div>
                                         <FormControl>
                                           <NewSelectDropdown
-                                            classnamefieldwrapper="h-9"
-                                            options={deviceNameOptions}
+                                            options={cityNameOptions}
                                             customOnChange={value => {
                                               setValue(
                                                 `condition.${index}.device_name`,
@@ -951,7 +903,7 @@ export function UpdateEvent({
                                                 'weather',
                                               )
                                             }}
-                                            defaultValue={deviceNameOptions?.find(
+                                            defaultValue={cityNameOptions?.find(
                                               item =>
                                                 item.value ===
                                                 getValues(
@@ -995,7 +947,6 @@ export function UpdateEvent({
                                     <div>
                                       <FormControl>
                                         <NewSelectDropdown
-                                          classnamefieldwrapper="h-9"
                                           options={
                                             watch('condition_event_type') ===
                                             'device_condition'
@@ -1009,12 +960,7 @@ export function UpdateEvent({
                                                   },
                                                 ]
                                           }
-                                          customOnChange={value =>
-                                            setValue(
-                                              `condition.${index}.attribute_name`,
-                                              value,
-                                            )
-                                          }
+                                          customOnChange={onChange}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:attr') ||
@@ -1311,7 +1257,7 @@ export function UpdateEvent({
                           {actionType === 'report' ? (
                             <FormField
                               control={form.control}
-                              name="cmd.thing_id"
+                              name="cmd.entity_id"
                               render={({
                                 field: { value, onChange, ...field },
                               }) => (
@@ -1323,10 +1269,7 @@ export function UpdateEvent({
                                     <div>
                                       <NewSelectDropdown
                                         options={thingSelectData}
-                                        customOnChange={value =>
-                                          setValue('cmd.thing_id', value)
-                                        }
-                                        // customOnChange={onChange}
+                                        customOnChange={onChange}
                                         isOptionDisabled={option =>
                                           option.label ===
                                             t('loading:entity_thing') ||
@@ -1387,7 +1330,7 @@ export function UpdateEvent({
                             isLoadingService ? null : (
                               <FormField
                                 control={form.control}
-                                name="cmd.handle_service"
+                                name="cmd.name"
                                 render={({
                                   field: { value, onChange, ...field },
                                 }) => (
@@ -1400,16 +1343,7 @@ export function UpdateEvent({
                                         <NewSelectDropdown
                                           refSelect={selectDropdownServiceRef}
                                           options={serviceSelectData}
-                                          customOnChange={value => {
-                                            setValue(
-                                              'cmd.handle_service',
-                                              value,
-                                            )
-                                            resetField(
-                                              `cmd.input.${index}.value`,
-                                            )
-                                          }}
-                                          // customOnChange={onChange}
+                                          customOnChange={onChange}
                                           isOptionDisabled={option =>
                                             option.label ===
                                               t('loading:service_thing') ||
@@ -1417,7 +1351,7 @@ export function UpdateEvent({
                                               t('table:no_service')
                                           }
                                           isLoading={
-                                            watch('cmd.thing_id') != null
+                                            watch('cmd.entity_id') != null
                                               ? isLoadingService
                                               : false
                                           }

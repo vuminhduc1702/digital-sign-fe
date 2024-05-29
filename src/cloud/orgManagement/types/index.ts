@@ -123,8 +123,8 @@ export type EventType = {
   metadata: null
   retry: number
   cmd: {
-    thing_id: string
-    service_name: string
+    entity_id: string
+    name: string
     project_id: string
     input: {
       [key: string]: number | string | boolean

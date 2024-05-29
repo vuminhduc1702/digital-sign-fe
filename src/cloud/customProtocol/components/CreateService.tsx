@@ -16,9 +16,26 @@ import {
 } from '@/cloud/flowEngineV2/api/thingServiceAPI'
 
 import { inputService } from '../types'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 import { PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const outputList = [
   {
@@ -60,11 +77,14 @@ export function CreateService({
 }) {
   const { t } = useTranslation()
 
-  const { register, formState, handleSubmit } = useForm<
-    CreateServiceThingDTO['data']
-  >({
+  const form = useForm<CreateServiceThingDTO['data']>({
     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
+    defaultValues: {
+      output: 'json',
+    },
   })
+
+  const { register, formState, handleSubmit } = form
 
   const [codeInput, setCodeInput] = useState('')
 
@@ -79,45 +99,104 @@ export function CreateService({
       isDone={isSuccessService}
       title={t('cloud:custom_protocol.service.create')}
       body={
-        <form
-          id="create-serviceThing"
-          className="flex flex-col justify-between space-y-6"
-          onSubmit={handleSubmit(values => {
-            mutateService({
-              data: {
-                name: values.name,
-                description: values.description,
-                output: values.output,
-                input: inputService,
-                code: codeInput,
-              },
-              thingId,
-            })
-          })}
-        >
-          <>
-            <InputField
-              label={t('cloud:custom_protocol.service.name')}
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <SelectField
-              label={t('cloud:custom_protocol.service.output')}
-              error={formState.errors['output']}
-              registration={register('output')}
-              options={outputList}
-            />
-            <InputField
-              label={t('cloud:custom_protocol.service.description')}
-              error={formState.errors['description']}
-              registration={register('description')}
-            />
-            <CodeEditor
-              label={t('cloud:custom_protocol.service.code')}
-              setCodeInput={setCodeInput}
-            />
-          </>
-        </form>
+        <Form {...form}>
+          <form
+            id="create-serviceThing"
+            className="flex flex-col justify-between space-y-6"
+            onSubmit={handleSubmit(values => {
+              mutateService({
+                data: {
+                  name: values.name,
+                  description: values.description,
+                  output: values.output,
+                  input: inputService,
+                  code: codeInput,
+                },
+                thingId,
+              })
+            })}
+          >
+            <>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:custom_protocol.service.name')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="output"
+                render={({ field: { onChange, value, ...field } }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:custom_protocol.service.output')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Select
+                          {...field}
+                          onValueChange={onChange}
+                          value={value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t('placeholder:select')}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {outputList.map(option => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t('cloud:custom_protocol.service.description')}
+                    </FormLabel>
+                    <div>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <CodeEditor
+                label={t('cloud:custom_protocol.service.code')}
+                setCodeInput={setCodeInput}
+              />
+            </>
+          </form>
+        </Form>
       }
       triggerButton={
         <Button

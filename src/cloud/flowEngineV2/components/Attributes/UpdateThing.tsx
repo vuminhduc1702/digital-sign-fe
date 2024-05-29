@@ -1,17 +1,15 @@
-import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { InputField } from '@/components/Form'
-import { useUpdateThing, type UpdateThingDTO } from '../../api/thingAPI'
 import { Dialog, DialogTitle } from '@/components/ui/dialog'
+import { useUpdateThing, type UpdateThingDTO } from '../../api/thingAPI'
 
 import { nameSchema } from '@/utils/schemaValidation'
 
-import { HiOutlineXMark } from 'react-icons/hi2'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import {
@@ -24,6 +22,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { HiOutlineXMark } from 'react-icons/hi2'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
