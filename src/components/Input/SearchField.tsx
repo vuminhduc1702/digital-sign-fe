@@ -1,10 +1,4 @@
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import i18n from '@/i18n'
 import {
   Select,
@@ -194,7 +188,6 @@ export function SearchField({
                       )}
                     </div>
                   </FormControl>
-                  {/* <FormMessage/> */}
                 </FormItem>
               )}
             />
@@ -255,8 +248,6 @@ export function SearchField({
           <Button
             type="submit"
             className="h-[38px] w-[50px] items-center bg-[#DBDADE]"
-            // onClick={() => {
-            // }}
           >
             <LuSearch className="h-5 w-5 text-[#4B465C]" />
           </Button>
