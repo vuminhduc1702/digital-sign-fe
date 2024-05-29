@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTitle } from '@/components/ui/dialog'
-import { InputField } from '@/components/Form'
 import { useUpdateCustomer, type UpdateCustomerDTO } from '../api/updateTenant'
 import * as z from 'zod'
 import {
@@ -59,14 +58,16 @@ export function UpdateCustomer({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
 
+  const dataDefault = {
+    customerId,
+    name,
+    email,
+    phone,
+  }
+
   const form = useForm<UpdateCustomerDTO['data']>({
     resolver: updateCustomerSchema && zodResolver(updateCustomerSchema),
-    defaultValues: {
-      customerId,
-      name,
-      email,
-      phone,
-    },
+    defaultValues: dataDefault,
   })
   const { register, formState, handleSubmit, getValues } = form
 
@@ -84,7 +85,7 @@ export function UpdateCustomer({
   }, [isSuccess])
 
   useEffect(() => {
-    form.reset()
+    form.reset(dataDefault)
   }, [isOpen])
 
   // const [rowSelection, setRowSelection] = useState({})

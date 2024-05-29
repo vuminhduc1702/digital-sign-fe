@@ -36,7 +36,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import {
   Form,
@@ -55,7 +54,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { InputField, type SelectOption } from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import { Switch } from '@/components/ui/switch'
 
 export const protocolList = [

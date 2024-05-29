@@ -338,11 +338,8 @@ export function UpdateEvent({
   })
 
   useEffect(() => {
-    setTodos(dateArr)
-  }, [isOpen])
-
-  useEffect(() => {
     reset()
+    setTodos(dateArr)
   }, [isOpen])
 
   return (
