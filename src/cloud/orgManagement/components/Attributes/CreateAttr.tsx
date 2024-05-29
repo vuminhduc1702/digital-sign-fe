@@ -49,6 +49,8 @@ export const valueTypeList = [
   { type: 'STR', name: 'String' },
   { type: 'BOOL', name: 'Boolean' },
   { type: 'LONG', name: 'Long' },
+  { type: 'LONG', name: 'Integer' },
+  { type: 'LONG', name: 'Unsigned Integer' },
   { type: 'DBL', name: 'Double' },
   { type: 'JSON', name: 'JSON' },
 ] as const

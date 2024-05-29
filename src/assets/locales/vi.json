@@ -249,6 +249,8 @@
           "token": "Token",
           "name": "Tên",
           "group": "Nhóm",
+          "thing": "Thing",
+          "service": "Nghiệp vụ",
           "device_type": "Mẫu thiết bị",
           "org_name": "Tổ chức",
           "key": "Key",
@@ -604,7 +606,8 @@
         "delete": "Xóa Thing",
         "edit": " Sửa Thing",
         "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?",
-        "delete_multiple_thing_confirm": "Bạn có chắc chắn muốn xóa các thing đã chọn?"
+        "delete_multiple_thing_confirm": "Bạn có chắc chắn muốn xóa các thing đã chọn?",
+        "delete_thing_error": "Các mẫu thiết bị có tên sau đang được liên kết với Thing này, vui lòng sửa Thing hoặc xoá các mẫu thiết bị đó để tiếp tục thao tác: "
       },
       "adapter": {
         "id": "ID",

@@ -1,4 +1,10 @@
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
 import i18n from '@/i18n'
 import {
   Select,
@@ -80,6 +86,7 @@ export function SearchField({
   const {
     handleSubmit,
     formState: { errors },
+    watch,
   } = form
 
   function onSubmit() {
@@ -187,6 +194,7 @@ export function SearchField({
                       )}
                     </div>
                   </FormControl>
+                  {/* <FormMessage/> */}
                 </FormItem>
               )}
             />
