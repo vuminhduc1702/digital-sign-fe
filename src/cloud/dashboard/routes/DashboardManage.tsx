@@ -14,6 +14,7 @@ import { CreateDashboard } from '../components/DashboardTable/CreateDashboard'
 import { SearchField } from '@/components/Input'
 import { useDisclosure } from '@/utils/hooks'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
+import { useSearchParams } from 'react-router-dom'
 
 export function DashboardManage() {
   const { t } = useTranslation()
@@ -21,6 +22,7 @@ export function DashboardManage() {
   const ref = useRef(null)
 
   const projectId = storage.getProject()?.id
+  const [searchParams] = useSearchParams()
 
   const [offset, setOffset] = useState(0)
   const searchField = useRef('')
@@ -36,6 +38,12 @@ export function DashboardManage() {
     open: openDashboard,
     isOpen: isOpenDashboard,
   } = useDisclosure()
+
+  useEffect(() => {
+    if (searchParams.get('openDrawer')) {
+      openDashboard()
+    }
+  }, [])
 
   const {
     data: dashboardData,

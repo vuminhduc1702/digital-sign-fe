@@ -77,7 +77,7 @@ export function DashboardTable({ data, ...props }: DashboardTableProps) {
       columns={columns}
       isAbsoluteBtn={false}
       onDataText={t('table:no_dashboard')}
-      isHiddenCheckbox={true}
+      isCheckbox={false}
       filterBtnClassName=""
       {...props}
     />
