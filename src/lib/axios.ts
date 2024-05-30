@@ -221,6 +221,8 @@ axios.interceptors.response.use(
       case 5004:
         message = i18n.t('error:server_res_status.5004')
         break
+      case 2019:
+        return logoutFn()
       default:
         message = errRes?.data?.message ?? error.message
     }
