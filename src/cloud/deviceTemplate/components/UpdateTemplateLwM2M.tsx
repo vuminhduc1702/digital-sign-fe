@@ -130,15 +130,28 @@ export function UpdateTemplateLwM2M({
     getValues,
   } = form
 
-  const { data: serviceData, isLoading: isLoadingService } =
-    useGetServiceThings({
-      thingId: getValues('thing_id'),
-      config: {
-        enabled: !!getValues('thing_id'),
-      },
-    })
+  const [serviceData, setServiceData] = useState(null)
+  const [isLoadingService, setIsLoadingService] = useState(false)
+  useEffect(() => {
+    const thingid = getValues('thing_id')
+    if (thingid !== 'undefined' && thingid !== undefined) {
+      const fetchData = async () => {
+        try {
+          setIsLoadingService(true)
+          const response = await axios.get(`/api/fe/thing/${thingid}/service`)
+          const fetchedServiceData = response?.data
+          setServiceData(fetchedServiceData)
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        } finally {
+          setIsLoadingService(false)
+        }
+      }
+      fetchData()
+    }
+  }, [getValues('thing_id')])
 
-  const serviceSelectData = serviceData?.data?.map(service => ({
+  const serviceSelectData = serviceData?.map(service => ({
     value: service.name,
     label: service.name,
   }))
@@ -273,11 +286,11 @@ export function UpdateTemplateLwM2M({
           }
 
           if (updatedCheckboxStates[item.id] === false) {
-            newStates[accordionIndex][moduleIndex].attribute_info.splice(
+            newStates[accordionIndex][moduleIndex].attribute_info?.splice(
               attributeIndex,
               1,
             )
-            newStates[accordionIndex][moduleIndex].attributes.splice(
+            newStates[accordionIndex][moduleIndex].attributes?.splice(
               attributeIndex,
               1,
             )
@@ -438,55 +451,69 @@ export function UpdateTemplateLwM2M({
     thing_id: selectedThing,
     handle_msg_svc: selectedService,
   }
-  const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateById({
+  const {
+    data: LwM2MData,
+    isLoading: LwM2MLoading,
+    refetch,
+  } = useTemplateById({
     templateId: selectedUpdateTemplate?.id,
   })
+
+  useEffect(() => {
+    refetch()
+  }, [isOpen])
+
   const transport_Config = selectedUpdateTemplate?.transport_config
   // ? const transportConfigdata = JSON.parse(transport_Config)
   const transportConfigdata = transport_Config
   const idArray = transportConfigdata?.info?.module_config?.map(
     (attribute_info: []) => attribute_info.id,
   )
+
+  const setDataDefault = () => {
+    const { name, transport_config } = LwM2MData
+    const { module_config } = transport_config.info
+    setValue('name', name)
+    const newAccordionStates: AccordionStates = {}
+    const newCheckboxStates: CheckboxStates = {}
+    const newItemNames: ItemNames = {}
+    const newSelectAllAttributes: CheckboxStates = {}
+    module_config?.forEach((moduleItem, accordionIndex) => {
+      if (!newAccordionStates[accordionIndex]) {
+        newAccordionStates[accordionIndex] = []
+      }
+      newAccordionStates[accordionIndex].push({
+        id: moduleItem.id,
+        module_name: moduleItem.module_name,
+        attribute_info: moduleItem.attribute_info,
+        numberOfAttributes: moduleItem.numberOfAttributes,
+        last_update_ts: moduleItem.last_update_ts,
+        allcheckbox: moduleItem.allcheckbox,
+      })
+      moduleItem.attribute_info.forEach(attribute => {
+        newCheckboxStates[attribute.id] = true
+        newItemNames[attribute.id] = attribute.name
+      })
+      newSelectAllAttributes[moduleItem.id] = moduleItem.allcheckbox
+    })
+    setItemNames(newItemNames)
+    setAccordionStates(newAccordionStates)
+    setCheckboxStates(newCheckboxStates)
+    setSelectAllAttributes(newSelectAllAttributes)
+    const allid = (Object.values(newAccordionStates) as { id: string }[][])
+      .flat()
+      .map(moduleItem => moduleItem.id)
+    setSelectedModuleNames(allid)
+    reset({
+      name: name,
+      thing_id: selectedUpdateTemplate.thing_id,
+      handle_msg_svc: selectedUpdateTemplate.handle_message_svc,
+    })
+  }
+
   useEffect(() => {
     if (LwM2MData != null) {
-      const { name, transport_config } = LwM2MData
-      const { module_config } = transport_config.info
-      setValue('name', name)
-      const newAccordionStates: AccordionStates = {}
-      const newCheckboxStates: CheckboxStates = {}
-      const newItemNames: ItemNames = {}
-      const newSelectAllAttributes: CheckboxStates = {}
-      module_config?.forEach((moduleItem, accordionIndex) => {
-        if (!newAccordionStates[accordionIndex]) {
-          newAccordionStates[accordionIndex] = []
-        }
-        newAccordionStates[accordionIndex].push({
-          id: moduleItem.id,
-          module_name: moduleItem.module_name,
-          attribute_info: moduleItem.attribute_info,
-          numberOfAttributes: moduleItem.numberOfAttributes,
-          last_update_ts: moduleItem.last_update_ts,
-          allcheckbox: moduleItem.allcheckbox,
-        })
-        moduleItem.attribute_info.forEach(attribute => {
-          newCheckboxStates[attribute.id] = true
-          newItemNames[attribute.id] = attribute.name
-        })
-        newSelectAllAttributes[moduleItem.id] = moduleItem.allcheckbox
-      })
-      setItemNames(newItemNames)
-      setAccordionStates(newAccordionStates)
-      setCheckboxStates(newCheckboxStates)
-      setSelectAllAttributes(newSelectAllAttributes)
-      const allid = (Object.values(newAccordionStates) as { id: string }[][])
-        .flat()
-        .map(moduleItem => moduleItem.id)
-      setSelectedModuleNames(allid)
-      reset({
-        name: name,
-        thing_id: selectedUpdateTemplate.thing_id,
-        handle_msg_svc: selectedUpdateTemplate.handle_message_svc,
-      })
+      setDataDefault()
     }
   }, [LwM2MData])
   const showSpinner = useSpinDelay(LwM2MLoading, {
@@ -499,16 +526,13 @@ export function UpdateTemplateLwM2M({
     return valueType ? valueType.type : 'STR'
   }
 
-  useEffect(() => {
-    reset()
-  }, [isOpen])
-
   return (
     <Sheet
       open={isOpen}
       onOpenChange={() => {
         close()
         setValue('rule_chain_id', selectedModuleNames)
+        setDataDefault()
       }}
       modal={false}
     >
@@ -884,6 +908,24 @@ export function UpdateTemplateLwM2M({
                                             }
                                             disabled={checkboxStates[itemId]}
                                           />
+                                          {/* <Input
+                                            value={
+                                              itemNames[
+                                                `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                                              ]
+                                            }
+                                            defaultValue={formatString(
+                                              defaultItemName,
+                                            )}
+                                            onChange={e =>
+                                              setItemNames(prev => ({
+                                                ...prev,
+                                                [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]:
+                                                  e.target.value,
+                                              }))
+                                            }
+                                            disabled={checkboxStates[itemId]}
+                                          /> */}
                                         </div>
                                       </div>
                                     </section>
@@ -909,7 +951,10 @@ export function UpdateTemplateLwM2M({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={() => {
+                setDataDefault()
+                close()
+              }}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

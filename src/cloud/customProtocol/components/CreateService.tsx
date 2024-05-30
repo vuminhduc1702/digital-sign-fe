@@ -1,21 +1,19 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
-import { InputField, SelectField } from '@/components/Form'
+import {
+  useCreateServiceThing,
+  type CreateServiceThingDTO,
+} from '@/cloud/flowEngineV2/api/thingServiceAPI'
 import { FormDialog } from '@/components/FormDialog'
-import { serviceThingSchema } from './CreateAdapter'
-import { CodeEditor } from './CodeEditor'
 import { Button } from '@/components/ui/button'
 import i18n from '@/i18n'
 import { cn } from '@/utils/misc'
-import {
-  type CreateServiceThingDTO,
-  useCreateServiceThing,
-} from '@/cloud/flowEngineV2/api/thingServiceAPI'
+import { CodeEditor } from './CodeEditor'
+import { serviceThingSchema } from './CreateAdapter'
 
-import { inputService } from '../types'
 import {
   Form,
   FormControl,
@@ -25,10 +23,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { inputService } from '../types'
 
-import { PlusIcon } from '@/components/SVGIcons'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { Textarea } from '@/components/ui/textarea'
+import { PlusIcon } from '@/components/SVGIcons'
 import {
   Select,
   SelectContent,
@@ -36,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 export const outputList = [
   {

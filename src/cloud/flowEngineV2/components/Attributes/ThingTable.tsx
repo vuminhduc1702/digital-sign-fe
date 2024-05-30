@@ -14,6 +14,7 @@ import { type EntityThing } from '@/cloud/customProtocol'
 
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { LuPen, LuTrash2 } from 'react-icons/lu'
+import { type UserInfo } from '@/cloud/orgManagement/api/userAPI'
 import { useGetTemplates } from '@/cloud/deviceTemplate/api'
 
 function ThingTableContextMenu({

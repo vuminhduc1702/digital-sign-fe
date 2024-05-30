@@ -18,7 +18,7 @@ export function DateTime({
         showTimeSelectOnly
         dateFormat="HH:mm"
         timeFormat="HH:mm"
-        timeIntervals={1}
+        timeIntervals={30}
         onChange={onChange}
         selected={value}
         {...props}

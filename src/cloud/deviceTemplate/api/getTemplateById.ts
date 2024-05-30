@@ -25,7 +25,7 @@ export const useTemplateById = ({
   config,
 }: UseTemplateByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['templatesbyId', templateId],
+    queryKey: ['templates', templateId],
     queryFn: () => getTemplateById({ templateId }),
     enabled: !!templateId,
     ...config,

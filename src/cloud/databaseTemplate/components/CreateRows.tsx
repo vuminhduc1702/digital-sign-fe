@@ -90,6 +90,10 @@ export default function CreateRows({
     }
   }, [isSuccess])
 
+  useEffect(() => {
+    reset()
+  }, [isOpen])
+
   const renderType = (type: string) => {
     let result = ''
     switch (type) {
@@ -110,14 +114,7 @@ export default function CreateRows({
   }
 
   return (
-    <Sheet
-      open={isOpen}
-      onOpenChange={() => {
-        close?.()
-        reset()
-      }}
-      modal={false}
-    >
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -247,10 +244,7 @@ export default function CreateRows({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={() => {
-                close?.()
-                reset()
-              }}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
