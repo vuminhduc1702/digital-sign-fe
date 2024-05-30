@@ -97,6 +97,9 @@ export function CreateTemplateLwM2M({
 
   const form = useForm<CreateTemplateDTO['data']>({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+    defaultValues: {
+      name: '',
+    },
   })
 
   const {
@@ -774,8 +777,26 @@ export function CreateTemplateLwM2M({
                                         />
                                       </div>
                                       <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
-                                        <InputField
+                                        {/* <InputField
                                           className=""
+                                          value={
+                                            itemNames[
+                                              `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                                            ]
+                                          }
+                                          defaultValue={formatString(
+                                            defaultItemName,
+                                          )}
+                                          onChange={e =>
+                                            setItemNames(prev => ({
+                                              ...prev,
+                                              [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]:
+                                                e.target.value,
+                                            }))
+                                          }
+                                          disabled={checkboxStates[itemId]}
+                                        /> */}
+                                        <Input
                                           value={
                                             itemNames[
                                               `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
