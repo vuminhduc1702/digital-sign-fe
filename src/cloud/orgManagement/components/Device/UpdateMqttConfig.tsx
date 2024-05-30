@@ -3,28 +3,33 @@ import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import btnCancelIcon from '@/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { FieldWrapper, InputField } from '@/components/Form'
 import { z } from 'zod'
 import {
   type MqttConfigDTO,
   useUpdateMqttConfig,
 } from '../../api/deviceAPI/updateMqttConfig'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox } from '@/components/ui/checkbox'
 
 import { type DeviceAdditionalInfo } from '../../types'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 
 export const mqttConfigSchema = z.object({
   clean_session: z.boolean(),
@@ -50,16 +55,7 @@ export function UpdateMqttConfig({
   const { mutate, isLoading, isSuccess } = useUpdateMqttConfig()
 
   const MqttConfig = additional_info.mqtt_config || {}
-  const {
-    register,
-    formState,
-    setValue,
-    handleSubmit,
-    watch,
-    resetField,
-    control,
-    getValues,
-  } = useForm<MqttConfigDTO['data']>({
+  const form = useForm<MqttConfigDTO['data']>({
     resolver: mqttConfigSchema && zodResolver(mqttConfigSchema),
     defaultValues: {
       clean_session: MqttConfig.clean_session || false,
@@ -70,6 +66,7 @@ export function UpdateMqttConfig({
       will_topic: MqttConfig.will_topic || '',
     },
   })
+  const { register, formState, handleSubmit, control } = form
   useEffect(() => {
     if (isSuccess && close) {
       close()
@@ -89,108 +86,168 @@ export function UpdateMqttConfig({
           </SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            id="update-mqtt"
-            className="mt-6"
-            onSubmit={handleSubmit(values => {
-              mutate({
-                data: {
-                  clean_session: values.clean_session,
-                  keepalive: values.keepalive,
-                  will_message: values.will_message,
-                  will_qos: values.will_qos,
-                  will_retain: values.will_retain,
-                  will_topic: values.will_topic,
-                },
-                deviceId,
-              })
-            })}
-          >
-            <>
-              <div className="mb-3 flex">
-                <FieldWrapper
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.clean_session',
-                  )}
-                  error={formState?.errors['clean_session']}
-                  className="w-fit"
-                >
-                  <Controller
-                    control={control}
-                    name={'clean_session'}
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          checked={value}
-                          onCheckedChange={onChange}
-                        />
-                      )
-                    }}
+          <Form {...form}>
+            <form
+              id="update-mqtt"
+              className="mt-6"
+              onSubmit={handleSubmit(values => {
+                mutate({
+                  data: {
+                    clean_session: values.clean_session,
+                    keepalive: values.keepalive,
+                    will_message: values.will_message,
+                    will_qos: values.will_qos,
+                    will_retain: values.will_retain,
+                    will_topic: values.will_topic,
+                  },
+                  deviceId,
+                })
+              })}
+            >
+              <>
+                <div className="mb-3 flex">
+                  <FormField
+                    control={form.control}
+                    name="clean_session"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem className="relative w-full">
+                        <FormLabel>
+                          {t(
+                            'cloud:org_manage.device_manage.mqtt_config.clean_session',
+                          )}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Checkbox
+                              {...field}
+                              checked={value}
+                              onCheckedChange={onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
-                </FieldWrapper>
-                <FieldWrapper
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.will_retain',
-                  )}
-                  error={formState?.errors['will_retain']}
-                  className="w-fit"
-                >
-                  <Controller
-                    control={control}
-                    name={'will_retain'}
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          checked={value}
-                          onCheckedChange={onChange}
-                        />
-                      )
-                    }}
+                  <FormField
+                    control={form.control}
+                    name="will_retain"
+                    render={({ field: { onChange, value, ...field } }) => (
+                      <FormItem className="relative w-full">
+                        <FormLabel>
+                          {t(
+                            'cloud:org_manage.device_manage.mqtt_config.will_retain',
+                          )}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Checkbox
+                              {...field}
+                              checked={value}
+                              onCheckedChange={onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
                   />
-                </FieldWrapper>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.keepalive',
-                  )}
-                  type="number"
-                  error={formState.errors['keepalive']}
-                  registration={register('keepalive', {
-                    valueAsNumber: true,
-                  })}
-                />
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.will_message',
-                  )}
-                  error={formState.errors['will_message']}
-                  registration={register('will_message')}
-                />
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.will_qos',
-                  )}
-                  error={formState.errors['will_qos']}
-                  registration={register('will_qos', {
-                    valueAsNumber: true,
-                  })}
-                  type="number"
-                  min={0}
-                  max={2}
-                />
-                <InputField
-                  label={t(
-                    'cloud:org_manage.device_manage.mqtt_config.will_topic',
-                  )}
-                  error={formState.errors['will_topic']}
-                  registration={register('will_topic')}
-                />
-              </div>
-            </>
-          </form>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="keepalive"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t(
+                            'cloud:org_manage.device_manage.mqtt_config.keepalive',
+                          )}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              {...register('keepalive', {
+                                valueAsNumber: true,
+                              })}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="will_message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t(
+                            'cloud:org_manage.device_manage.mqtt_config.will_message',
+                          )}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="will_qos"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t(
+                            'cloud:org_manage.device_manage.mqtt_config.will_qos',
+                          )}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="number"
+                              {...register('will_qos', {
+                                valueAsNumber: true,
+                              })}
+                              min={0}
+                              max={2}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="will_topic"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          {t(
+                            'cloud:org_manage.device_manage.mqtt_config.will_topic',
+                          )}
+                        </FormLabel>
+                        <div>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>

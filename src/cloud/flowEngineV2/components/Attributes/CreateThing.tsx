@@ -177,6 +177,7 @@ export function CreateThing({
                     <div>
                       <FormControl>
                         <NewSelectDropdown
+                          isPosition={false}
                           defaultValue={
                             thingTypeList
                               .filter(item => item.value === thingType)
@@ -207,6 +208,7 @@ export function CreateThing({
                       <div>
                         <FormControl>
                           <NewSelectDropdown
+                            isPosition={false}
                             customOnChange={onChange}
                             isClearable={false}
                             options={thingSelectData}
@@ -235,6 +237,7 @@ export function CreateThing({
                       <div>
                         <FormControl>
                           <NewSelectDropdown
+                            isPosition={false}
                             customOnChange={onChange}
                             isClearable={false}
                             options={thingSelectData}

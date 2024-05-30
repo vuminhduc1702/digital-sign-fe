@@ -695,6 +695,7 @@ export function UpdateEvent({
                       <FormField
                         control={form.control}
                         name="condition_event_type"
+                        disabled={getValues('type') === 'schedule'}
                         render={({ field: { onChange, value, ...field } }) => (
                           <FormItem>
                             <FormLabel>
@@ -1344,6 +1345,26 @@ export function UpdateEvent({
                                       <FormMessage />
                                     </div>
                                   </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          ) : actionType === 'sms' ? (
+                            <FormField
+                              control={control}
+                              name={`action.${index}.receiver`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t(
+                                      'cloud:org_manage.event_manage.add_event.action.action_type.phone',
+                                    )}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <Input {...field} type="number" />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </div>
                                 </FormItem>
                               )}
                             />
