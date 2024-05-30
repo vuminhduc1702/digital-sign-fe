@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, type CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   useReactTable,
@@ -16,6 +16,7 @@ import {
   getFilteredRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
+  type Column,
 } from '@tanstack/react-table'
 import {
   Table,
@@ -118,6 +119,8 @@ export function BaseTable<T extends Record<string, any>>({
 }: BaseTableProps<T>) {
   const { t } = useTranslation()
   const ref = useRef(null)
+  const refScroll = useRef(null)
+  const refAction = useRef<HTMLButtonElement | null>(null)
 
   const tableIndex = useRef(0)
 
@@ -125,7 +128,7 @@ export function BaseTable<T extends Record<string, any>>({
   const [columnVisibility, setColumnVisibility] =
     useState<VisibilityState>(colsVisibility)
 
-  const getCommonPinningStyles = (column: Column): CSSProperties => {
+  const getCommonPinningStyles = (column: Column<any>): CSSProperties => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
       isPinned === 'left' && column.getIsLastColumn('left')
@@ -142,8 +145,9 @@ export function BaseTable<T extends Record<string, any>>({
       right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
       opacity: isPinned ? 0.95 : 1,
       position: isPinned ? 'sticky' : 'relative',
-      width: column.getSize(),
+      // width: column.getSize(),
       zIndex: isPinned ? 1 : 0,
+      background: isPinned ? 'white' : '',
     }
   }
 
@@ -182,6 +186,12 @@ export function BaseTable<T extends Record<string, any>>({
       ),
     })
   }
+
+  useEffect(() => {
+    if (refScroll?.current?.scrollWidth < ref?.current?.scrollWidth) {
+      refAction?.current?.click()
+    }
+  }, [])
 
   if (isCheckbox && !columns.find(col => col.id === 'select')) {
     addCheckbox()
@@ -313,6 +323,7 @@ export function BaseTable<T extends Record<string, any>>({
           'relative z-30 mt-2 flex h-[calc(100vh_-_370px)] grow flex-col justify-between',
           className,
         )}
+        ref={refScroll}
       >
         {isPreviousData && offset == 0 ? null : (
           <>
@@ -329,6 +340,7 @@ export function BaseTable<T extends Record<string, any>>({
                   return (
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map(header => {
+                        const { column } = header
                         return (
                           <TableHead
                             key={header.id}
@@ -340,6 +352,7 @@ export function BaseTable<T extends Record<string, any>>({
                                   ? 'px-[32px]'
                                   : 'min-w-[80px] truncate overflow-ellipsis whitespace-nowrap break-words px-0 text-left text-sm',
                             )}
+                            style={{ ...getCommonPinningStyles(column) }}
                           >
                             {header.id === 'contextMenu' && t('table:action')}
                             <div
@@ -356,6 +369,22 @@ export function BaseTable<T extends Record<string, any>>({
                                 header.getContext(),
                               )}
                             </div>
+                            {!header.isPlaceholder &&
+                              column.getCanPin() &&
+                              header.id === 'contextMenu' && (
+                                <div className="hidden">
+                                  {column.getIsPinned() !== 'right' ? (
+                                    <button
+                                      onClick={() => {
+                                        column.pin('right')
+                                      }}
+                                      ref={refAction}
+                                    >
+                                      {'=>'}
+                                    </button>
+                                  ) : null}
+                                </div>
+                              )}
                           </TableHead>
                         )
                       })}
@@ -383,6 +412,7 @@ export function BaseTable<T extends Record<string, any>>({
                               cell.column.columnDef.cell,
                               cell.getContext(),
                             )
+                            const { column } = cell
                             return (
                               <TableCell
                                 key={index}
@@ -395,6 +425,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       : undefined
                                     : undefined
                                 }
+                                style={{ ...getCommonPinningStyles(column) }}
                               >
                                 {cellContent}
                               </TableCell>

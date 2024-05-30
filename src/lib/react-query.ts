@@ -23,13 +23,13 @@ function retryQuery(failureCount: number, error: any) {
     return true
   }
 
-  const shouldRetry =
-    error.response?.status !== 403 &&
-    error.response?.status !== 401 &&
-    error.response?.status != null &&
-    failureCount < FAILURE_COUNT
+  // const shouldRetry =
+  //   error.response?.status !== 403 &&
+  //   error.response?.status !== 401 &&
+  //   error.response?.status != null &&
+  //   failureCount < FAILURE_COUNT
 
-  return shouldRetry
+  return false
 }
 const queryConfig: DefaultOptions = {
   queries: {

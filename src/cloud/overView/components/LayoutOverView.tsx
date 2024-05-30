@@ -140,10 +140,10 @@ export function LayoutOverView() {
       content: t('sidebar:cloud.device_template'),
       link: `${PATHS.DEVICE_TEMPLATE}/${projectId}`,
     },
-    {
-      content: t('sidebar:cloud.flow_engine'),
-      link: `${PATHS.FLOW_ENGINE}/${projectId}`,
-    },
+    // {
+    //   content: t('sidebar:cloud.flow_engine'),
+    //   link: `${PATHS.FLOW_ENGINE}/${projectId}`,
+    // },
     {
       content: t('sidebar:cloud.dashboard'),
       link: `${PATHS.DASHBOARD}/${projectId}`,
@@ -291,7 +291,7 @@ export function LayoutOverView() {
           </div>
         </div>
       </div>
-      <div>
+      {/* <div>
         <Tabs defaultValue="tab1">
           <TabsList className="flex justify-end gap-x-2 bg-secondary-500 px-10">
             <TabsTrigger value="tab1">
@@ -436,9 +436,9 @@ export function LayoutOverView() {
             </div>
           </TabsContent>
         </Tabs>
-      </div>
+      </div> */}
       <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 p-2">
+        <div className="max-h-[68vh] overflow-auto rounded-md bg-secondary-500 p-2">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -496,7 +496,7 @@ export function LayoutOverView() {
             />
           )}
         </div>
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
+        <div className="max-h-[68vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
             <p className="text-table-header">{t('overView:quick_link')}</p>
           </div>
