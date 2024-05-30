@@ -91,15 +91,12 @@ export default function CreateColumn({
     }
   }, [isSuccess])
 
+  useEffect(() => {
+    reset()
+  }, [isOpen])
+
   return (
-    <Sheet
-      open={isOpen}
-      onOpenChange={() => {
-        close?.()
-        reset()
-      }}
-      modal={false}
-    >
+    <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
         onInteractOutside={e => {
           e.preventDefault()
@@ -181,19 +178,21 @@ export default function CreateColumn({
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white">
-                                    {outputList?.map(
-                                      (option: {
-                                        value: string
-                                        label: string
-                                      }) => (
-                                        <SelectItem
-                                          key={option.value}
-                                          value={option.value}
-                                        >
-                                          {option.label}
-                                        </SelectItem>
-                                      ),
-                                    )}
+                                    {outputList
+                                      ?.filter(item => item.value !== 'json')
+                                      ?.map(
+                                        (option: {
+                                          value: string
+                                          label: string
+                                        }) => (
+                                          <SelectItem
+                                            key={option.value}
+                                            value={option.value}
+                                          >
+                                            {option.label}
+                                          </SelectItem>
+                                        ),
+                                      )}
                                   </SelectContent>
                                 </Select>
                               </FormControl>
@@ -229,10 +228,7 @@ export default function CreateColumn({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={() => {
-                close?.()
-                reset()
-              }}
+              onClick={close}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }

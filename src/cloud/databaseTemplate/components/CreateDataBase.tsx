@@ -196,19 +196,21 @@ export default function CreateDataBase({
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white">
-                                    {outputList?.map(
-                                      (option: {
-                                        value: string
-                                        label: string
-                                      }) => (
-                                        <SelectItem
-                                          key={option.value}
-                                          value={option.value}
-                                        >
-                                          {option.label}
-                                        </SelectItem>
-                                      ),
-                                    )}
+                                    {outputList
+                                      ?.filter(item => item.value !== 'json')
+                                      ?.map(
+                                        (option: {
+                                          value: string
+                                          label: string
+                                        }) => (
+                                          <SelectItem
+                                            key={option.value}
+                                            value={option.value}
+                                          >
+                                            {option.label}
+                                          </SelectItem>
+                                        ),
+                                      )}
                                   </SelectContent>
                                 </Select>
                               </FormControl>

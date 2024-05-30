@@ -2,26 +2,16 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { Button } from '@/components/ui/button'
 
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { BaseTable } from '@/components/Table'
+import { Input } from '@/components/ui/input'
 import { useDisclosure } from '@/utils/hooks'
 import storage from '@/utils/storage'
+import { LuPen, LuTrash2 } from 'react-icons/lu'
 import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { Input } from '@/components/ui/input'
 
 function DataBaseTableContextMenu({
   row,
@@ -31,7 +21,7 @@ function DataBaseTableContextMenu({
 }: {
   row: FieldsRows
   onClose: () => void
-  columnsType?: string[]
+  columnsType: string[]
 }) {
   const { t } = useTranslation()
 
@@ -55,32 +45,20 @@ function DataBaseTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit DataBase" className="h-5 w-5" />
-            {t('cloud:db_template.add_db.update_row')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img
-              src={btnDeleteIcon}
-              alt="Delete DataBase"
-              className="h-5 w-5"
-            />
-            {t('cloud:db_template.add_db.delete_row')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={open}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2
+            className="text-lg text-gray-500 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black"
+            onClick={openDelete}
+          />
+        </div>
+      </div>
       <UpdateRow
         close={close}
         onClose={onClose}
@@ -89,6 +67,7 @@ function DataBaseTableContextMenu({
         columnsType={columnsType}
         {...props}
       />
+
       <ConfirmDialog
         icon="danger"
         title={t('cloud:db_template.add_db.delete_row')}
@@ -156,6 +135,18 @@ export function DataBaseTable({
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          return DataBaseTableContextMenu({
+            row: info.row.original,
+            onClose,
+            columnsType,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
       ...columnsProp?.map(item =>
         columnHelper.accessor(item, {
           header: () => (
@@ -178,20 +169,8 @@ export function DataBaseTable({
           footer: info => info.column.id,
         }),
       ),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          return DataBaseTableContextMenu({
-            row: info.row.original,
-            onClose,
-            columnsType,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
     ],
-    [columnsProp, isShow],
+    [columnsProp, isShow, data],
   )
 
   return (

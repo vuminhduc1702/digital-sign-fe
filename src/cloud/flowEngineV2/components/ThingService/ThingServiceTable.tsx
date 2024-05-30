@@ -1,30 +1,17 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo, useState, useRef, useEffect } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { Button } from '@/components/ui/button'
 
 import { BaseTable } from '@/components/Table'
 import { useDisclosure } from '@/utils/hooks'
 import { useDeleteThingService } from '../../api/thingServiceAPI'
 
-import { type BaseTablePagination } from '@/types'
-import { type ThingService } from '../../types'
-import { type BaseTableProps } from '@/components/Table'
-import { useParams } from 'react-router-dom'
-import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
-import btnEditIcon from '@/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '@/components/SVGIcons'
-import { UpdateThingService } from './UpdateThingService'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { type BaseTableProps } from '@/components/Table'
+import { LuPen, LuTrash2 } from 'react-icons/lu'
+import { useParams } from 'react-router-dom'
+import { type ThingService } from '../../types'
+import { UpdateThingService } from './UpdateThingService'
 
 function ThingServiceTableContextMenu({
   thingId,
