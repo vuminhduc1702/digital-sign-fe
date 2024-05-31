@@ -746,7 +746,10 @@
         "widget_config": "Cài đặt biểu đồ",
         "max": "Max",
         "min": "Min",
-        "required": "Vui lòng không bỏ trống mục này"
+        "required": "Vui lòng không bỏ trống mục này",
+        "axis": "Trục tung",
+        "axis_left": "Trục trái",
+        "axis_right": "Trục phải"
       },
       "detail_dashboard": {
         "add_widget": {

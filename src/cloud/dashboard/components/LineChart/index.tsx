@@ -6,14 +6,11 @@ import { Spinner } from '@/components/Spinner'
 import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
 import refreshIcon from '@/assets/icons/table-refresh.svg'
-
-import * as d3 from 'd3'
 import { useTranslation } from 'react-i18next'
-import 'chartjs-adapter-date-fns'
 import i18n from '@/i18n'
-import moment from 'moment'
-import 'moment/locale/vi'
-import 'moment/locale/en-gb'
+import 'chartjs-adapter-date-fns'
+import { vi } from 'date-fns/locale/vi'
+import { enUS } from 'date-fns/locale/en-US'
 
 import {
   Chart,
@@ -68,19 +65,23 @@ export function LineChart({
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<Array<{ ts: number; value: string | number }>>
   >([])
-  // const maxDataFeedToChart = useRef<number>(100)
-  const [dataNameList, setDataNameList] = useState<string[]>([])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
-  // useEffect(() => {
-  //   if (i18n.language === 'vi') {
-  //     moment.locale('vi')
-  //   } else {
-  //     moment.locale('en')
-  //   }
-  // }, [i18n.language])
+  // const yAxisName = useMemo(() => {
+  //   const yAxis = widgetInfo?.attribute_config.find(
+  //     item => item.axis === 'y' && item.unit,
+  //   )
+  //   return yAxis?.unit
+  // }, [widgetInfo])
 
-  // combine new data with previous data
+  // const y1AxisName = useMemo(() => {
+  //   const yAxis = widgetInfo?.attribute_config.find(
+  //     item => item.axis === 'y1' && item.unit,
+  //   )
+  //   return yAxis?.unit
+  // }, [widgetInfo])
+
+  // combine new data with predeous data
   useEffect(() => {
     if (
       data &&
@@ -140,7 +141,6 @@ export function LineChart({
   // filter data from START_DATE to END_DATE
   function dataManipulation() {
     const result: { ts: number; value: string | number }[][] = []
-    const keyResult: string[] = []
     Object.entries(prevValuesRef.current || []).forEach(([key, items]) => {
       const tempArr: {
         ts: number
@@ -161,11 +161,21 @@ export function LineChart({
           })
         }
       })
-      result.push(tempArr)
-      keyResult.push(key)
+
+      tempArr.sort((a, b) => a.ts - b.ts)
+
+      // map to the correct index in widgetInfo
+      const splitKey = key.split(' - ')
+      widgetInfo.attribute_config.forEach((config, index) => {
+        if (
+          config.attribute_key === splitKey[0] &&
+          config.label === splitKey[2]
+        ) {
+          result[index] = tempArr
+        }
+      })
     })
     setDataTransformedFeedToChart(result)
-    setDataNameList(keyResult)
   }
 
   // data manipulation for realtime chart
@@ -190,18 +200,21 @@ export function LineChart({
           })
         }
       })
+
       tempArr.sort((a, b) => a.ts - b.ts)
-      result.push(tempArr)
+
+      // map to the correct index in widgetInfo
+      const splitKey = key.split(' - ')
+      widgetInfo.attribute_config.forEach((config, index) => {
+        if (
+          config.attribute_key === splitKey[0] &&
+          config.label === splitKey[2]
+        ) {
+          result[index] = tempArr
+        }
+      })
     })
     setDataTransformedFeedToChart(result)
-
-    // for (let i = 0; i < result.length; i++) {
-    //   for (let j = 0; j < result[i].length; j++) {
-    //     if (result[i][j].value > maxDataFeedToChart.current) {
-    //       maxDataFeedToChart.current = result[i][j].value
-    //     }
-    //   }
-    // }
   }
 
   // refresh static chart
@@ -226,21 +239,22 @@ export function LineChart({
         .map((key, index) => {
           if (dataTransformedFeedToChart[index]) {
             return {
-              label: key?.attribute_key,
+              label: `${key?.attribute_key} ${key?.unit ? `(${key?.unit})` : ''}`,
               borderColor: key?.color,
               backgroundColor: key?.color,
               data: dataTransformedFeedToChart[index],
               borderWidth: 1,
-              yAxisId: 'y',
+              radius: dataTransformedFeedToChart[index]?.length <= 1 ? 2 : 0,
+              yAxisID: key?.axis || 'y',
             }
           } else {
             return {
-              label: key?.attribute_key,
+              label: `${key?.attribute_key} ${key?.unit ? `(${key?.unit})` : ''}`,
               borderColor: key?.color,
               backgroundColor: key?.color,
               data: [],
               borderWidth: 1,
-              yAxisId: 'y',
+              yAxisID: key?.axis || 'y',
             }
           }
         })
@@ -256,27 +270,27 @@ export function LineChart({
           ) {
             return [
               {
-                label: key?.attribute_key,
+                label: `${key?.attribute_key} ${key?.unit ? `(${key?.unit})` : ''}`,
                 borderColor: key?.color,
                 backgroundColor: key?.color,
                 data: dataTransformedFeedToChart[index],
                 borderWidth: 1,
-                radius: dataTransformedFeedToChart[index].length === 1 ? 2 : 0,
+                radius: dataTransformedFeedToChart[index]?.length <= 1 ? 2 : 0,
+                yAxisID: key?.axis || 'y',
               },
               {
-                label:
-                  key?.attribute_key + ' ' + widgetInfo?.config.aggregation,
+                label: `${key?.attribute_key + ' ' + widgetInfo?.config?.aggregation} ${key?.unit ? `(${key?.unit})` : ''}`,
                 borderColor:
                   key?.color === ''
                     ? 'rgba(0, 0, 0, 0.5)'
-                    : key?.color.replace(
+                    : key?.color?.replace(
                         /rgba\(([^)]+), [^)]+\)/,
                         'rgba($1, 0.5)',
                       ),
                 backgroundColor:
                   key?.color === ''
                     ? 'rgba(0, 0, 0, 0.5)'
-                    : key?.color.replace(
+                    : key?.color?.replace(
                         /rgba\(([^)]+), [^)]+\)/,
                         'rgba($1, 0.5)',
                       ),
@@ -287,39 +301,41 @@ export function LineChart({
                 radius:
                   dataTransformedFeedToChart[
                     dataTransformedFeedToChart.length / 2 + index
-                  ].length === 1
+                  ].length <= 1
                     ? 2
                     : 0,
+                yAxisID: key?.axis || 'y',
               },
             ]
           } else {
             return [
               {
-                label: key?.attribute_key,
+                label: `${key?.attribute_key} ${key?.unit ? `(${key?.unit})` : ''}`,
                 borderColor: key?.color,
                 backgroundColor: key?.color,
                 data: [],
                 borderWidth: 1,
+                yAxisID: key?.axis || 'y',
               },
               {
-                label:
-                  key?.attribute_key + ' ' + widgetInfo?.config.aggregation,
+                label: `${key?.attribute_key + ' ' + widgetInfo?.config?.aggregation} ${key?.unit ? `(${key?.unit})` : ''}`,
                 borderColor:
                   key?.color === ''
                     ? 'rgba(0, 0, 0, 0.5)'
-                    : key?.color.replace(
+                    : key?.color?.replace(
                         /rgba\(([^)]+), [^)]+\)/,
                         'rgba($1, 0.5)',
                       ),
                 backgroundColor:
                   key?.color === ''
                     ? 'rgba(0, 0, 0, 0.5)'
-                    : key?.color.replace(
+                    : key?.color?.replace(
                         /rgba\(([^)]+), [^)]+\)/,
                         'rgba($1, 0.5)',
                       ),
                 data: [],
                 borderWidth: 1,
+                yAxisID: key?.axis || 'y',
               },
             ]
           }
@@ -352,6 +368,95 @@ export function LineChart({
     },
   }
 
+  // static chart options
+  const staticOption = useMemo(
+    () => ({
+      maintainAspectRatio: false,
+      parsing: {
+        xAxisKey: 'ts',
+        yAxisKey: 'value',
+      },
+      scales: {
+        x: {
+          adapters: {
+            date: {
+              locale: i18n.language === 'vi' ? vi : enUS,
+            },
+          },
+          time: {
+            displayFormats: {
+              hour: 'HH',
+              minute: 'HH:mm',
+              second: 'HH:mm:ss',
+              milisecond: 'HH:mm:ss',
+            },
+          },
+          type: 'time',
+          title: {
+            display: true,
+            text: t('cloud:dashboard.time'),
+            color: 'black',
+          },
+          ticks: {
+            color: 'black',
+          },
+          grid: {
+            borderColor: 'black',
+          },
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: {
+            display: true,
+            text: t('cloud:dashboard.value'),
+            color: 'black',
+          },
+          ticks: {
+            color: 'black',
+          },
+          grid: {
+            borderColor: 'black',
+          },
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: {
+            display: true,
+            color: 'black',
+          },
+          ticks: {
+            color: 'black',
+          },
+          grid: {
+            drawOnChartArea: false,
+            borderColor: 'black',
+          },
+        },
+      },
+      plugins: {
+        zoom: zoomOptions,
+      },
+      interaction: {
+        mode: 'nearest',
+        axis: 'x',
+        intersect: false,
+      },
+      elements: {
+        line: {
+          tension: 0.1,
+        },
+        point: {
+          radius: 0,
+          hoverRadius: 2,
+        },
+      },
+    }),
+    [i18n.language],
+  )
+
   // realtime chart zoom options
   const realtimeZoomOptions = {
     pan: {
@@ -377,6 +482,7 @@ export function LineChart({
     },
   }
 
+  // realtime chart options
   const realtimeOption = useMemo(
     () => ({
       maintainAspectRatio: false,
@@ -394,6 +500,19 @@ export function LineChart({
       },
       scales: {
         x: {
+          adapters: {
+            date: {
+              locale: i18n.language === 'vi' ? vi : enUS,
+            },
+          },
+          time: {
+            displayFormats: {
+              hour: 'HH',
+              minute: 'HH:mm',
+              second: 'HH:mm:ss',
+              milisecond: 'HH:mm:ss',
+            },
+          },
           type: 'realtime',
           realtime: {
             delay: 0,
@@ -415,9 +534,9 @@ export function LineChart({
           },
         },
         y: {
+          position: 'left',
           title: {
             display: true,
-            text: t('cloud:dashboard.value'),
             color: 'black',
           },
           ticks: {
@@ -427,28 +546,24 @@ export function LineChart({
             borderColor: 'black',
           },
         },
-        // y1: {
-        //   type: 'linear',
-        //   position: 'right',
-        //   ticks: {
-        //     max: 100,
-        //     min: 0,
-        //     callback: function (value) {
-        //       return `${value * 100}%`
-        //       // const percentage = (value / maxDataFeedToChart.current) * 10000
-        //       // return `${percentage.toFixed(2)}%`
-        //     },
-        //     color: 'black',
-        //   },
-        //   grid: {
-        //     drawOnChartArea: false,
-        //     borderColor: 'black',
-        //   },
-        // },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: {
+            display: true,
+            color: 'black',
+          },
+          ticks: {
+            color: 'black',
+          },
+          grid: {
+            drawOnChartArea: false,
+            borderColor: 'black',
+          },
+        },
       },
       plugins: {
         zoom: realtimeZoomOptions,
-        beforeDraw: function (chart) {},
       },
       interaction: {
         mode: 'nearest',
@@ -456,7 +571,7 @@ export function LineChart({
         intersect: false,
       },
     }),
-    [TIME_PERIOD, TICK_INTERVAL],
+    [TIME_PERIOD, TICK_INTERVAL, i18n.language],
   )
 
   return (
@@ -480,81 +595,7 @@ export function LineChart({
               data={{
                 datasets: getDataset(),
               }}
-              options={{
-                maintainAspectRatio: false,
-                parsing: {
-                  xAxisKey: 'ts',
-                  yAxisKey: 'value',
-                },
-                scales: {
-                  x: {
-                    type: 'time',
-                    title: {
-                      display: true,
-                      text: t('cloud:dashboard.time'),
-                      color: 'black',
-                    },
-                    ticks: {
-                      color: 'black',
-                    },
-                    grid: {
-                      borderColor: 'black',
-                    },
-                  },
-                  y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    title: {
-                      display: true,
-                      text: t('cloud:dashboard.value'),
-                      color: 'black',
-                    },
-                    ticks: {
-                      color: 'black',
-                    },
-                    grid: {
-                      borderColor: 'black',
-                    },
-                  },
-                  // y1: {
-                  //   type: 'linear',
-                  //   position: 'right',
-                  //   ticks: {
-                  //     max: 100,
-                  //     min: 0,
-                  //     callback: function (value) {
-                  //       return `${value * 100}%`
-                  //       // const percentage =
-                  //       //   (value / maxDataFeedToChart.current) * 100
-                  //       // return `${percentage.toFixed(2)}%`
-                  //     },
-                  //     color: 'black',
-                  //   },
-                  //   grid: {
-                  //     drawOnChartArea: false,
-                  //     borderColor: 'black',
-                  //   },
-                  // },
-                },
-                plugins: {
-                  zoom: zoomOptions,
-                },
-                interaction: {
-                  mode: 'nearest',
-                  axis: 'x',
-                  intersect: false,
-                },
-                elements: {
-                  line: {
-                    tension: 0.1,
-                  },
-                  point: {
-                    radius: 0,
-                    hoverRadius: 2,
-                  },
-                },
-              }}
+              options={staticOption}
               className="!h-[98%] !w-[98%] pt-8"
             />
           </>

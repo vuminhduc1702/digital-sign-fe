@@ -266,6 +266,7 @@ export const attrWidgetSchema = z.array(
       invalid_type_error: i18n.t('error:default_zod_err.number'),
     }),
     deviceName: z.string().optional(),
+    axis: z.enum(['y', 'y1'] as const).optional(),
   }),
 )
 export const widgetDataTypeSchema = z.enum(['REALTIME', 'HISTORY'] as const, {
@@ -853,6 +854,7 @@ export function CreateWidget({
                     label: item.label,
                     min: item.min,
                     unit: item.unit,
+                    axis: item.axis,
                   })),
                   config:
                     widgetType === 'TIMESERIES'
@@ -1081,6 +1083,7 @@ export function CreateWidget({
                               unit: '',
                               max: 100,
                               min: 0,
+                              axis: 'y',
                             })
                           }
                         />
@@ -1092,7 +1095,15 @@ export function CreateWidget({
                         className="!mt-2 flex justify-between gap-x-2"
                         key={field.id}
                       >
-                        <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
+                        <div
+                          className={cn(
+                            `grid w-full grid-cols-1 gap-x-4 px-2`,
+                            widgetCategory === 'LINE' ||
+                              widgetCategory === 'BAR'
+                              ? 'md:grid-cols-5'
+                              : 'md:grid-cols-4',
+                          )}
+                        >
                           {widgetCategory === 'MAP' ? (
                             <FormField
                               control={form.control}
@@ -1365,6 +1376,52 @@ export function CreateWidget({
                                 )}
                               />
                             </>
+                          )}
+                          {(widgetCategory === 'LINE' ||
+                            widgetCategory === 'BAR') && (
+                            <FormField
+                              control={form.control}
+                              name={`attributeConfig.${index}.axis`}
+                              render={({
+                                field: { onChange, value, ...field },
+                              }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    {t('cloud:dashboard.config_chart.axis')}
+                                  </FormLabel>
+                                  <div>
+                                    <FormControl>
+                                      <NewSelectDropdown
+                                        customOnChange={onChange}
+                                        defaultValue={{
+                                          value: 'y',
+                                          label: t(
+                                            'cloud:dashboard.config_chart.axis_left',
+                                          ),
+                                        }}
+                                        options={[
+                                          {
+                                            value: 'y',
+                                            label: t(
+                                              'cloud:dashboard.config_chart.axis_left',
+                                            ),
+                                          },
+                                          {
+                                            value: 'y1',
+                                            label: t(
+                                              'cloud:dashboard.config_chart.axis_right',
+                                            ),
+                                          },
+                                        ]}
+                                        isClearable={false}
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </div>
+                                </FormItem>
+                              )}
+                            />
                           )}
                         </div>
                         {isMultipleAttr ? (
