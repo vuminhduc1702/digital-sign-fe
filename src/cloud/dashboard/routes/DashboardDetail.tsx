@@ -83,6 +83,7 @@ import BD_06 from '@/assets/images/landingpage/BD_06.png'
 import BD_07 from '@/assets/images/landingpage/BD_07.png'
 import BD_08 from '@/assets/images/landingpage/BD_08.png'
 import BD_09 from '@/assets/images/landingpage/BD_09.png'
+import BD_10 from '@/assets/images/landingpage/BD_10.png'
 import { queryClient } from '@/lib/react-query'
 import { DashboardTooltip } from './DashboardTooltip'
 import { ControllerForm } from '../components/ControllerForm'
@@ -114,8 +115,6 @@ export function DashboardDetail() {
   const [isMultipleDevice, setIsMultipleDevice] = useState(true)
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
   const [isShowCreateControllerBtn, setIsShowCreateControllerBtn] =
-    useState(false)
-  const [isShowCreateControllerForm, setIsShowCreateControlForm] =
     useState(false)
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
@@ -282,7 +281,7 @@ export function DashboardDetail() {
     }
   }, [widgetList, lastJsonMessage])
 
-  function combinedObject(data: any[]) {
+  function combinedObject(data: any[], emptyObj: boolean = true) {
     let combinedObject: any = {}
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
@@ -293,11 +292,13 @@ export function DashboardDetail() {
             }
             result[key] = result[key].concat(obj[key])
           }
+          if (obj[key] == null && !emptyObj) {
+            result[key] = []
+          }
         }
         return result
       }, {})
     }
-
     return combinedObject
   }
 
@@ -399,6 +400,7 @@ export function DashboardDetail() {
                           }
                           return modifiedTimeseries
                         }),
+                        false,
                       )
                     : {}
                 const lastestValueOneDevice: LatestData =
@@ -843,7 +845,7 @@ export function DashboardDetail() {
                             </span>
                           </Button>
                         }
-                        image={<img src={BD_05} alt="" className="w-full" />}
+                        image={<img src={BD_10} alt="" className="w-full" />}
                       />
                     </div>
                     <div className="w-full space-y-6">

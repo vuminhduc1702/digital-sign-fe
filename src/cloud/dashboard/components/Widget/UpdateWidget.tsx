@@ -80,7 +80,7 @@ export function UpdateWidget({
   widgetListRef?: React.MutableRefObject<string[]>
 }) {
   const { t } = useTranslation()
-
+  console.log(widgetInfo)
   const projectId = storage.getProject()?.id
   const { orgId } = useParams()
 
@@ -583,6 +583,7 @@ export function UpdateWidget({
                   min: item.min || 0,
                   label: item.label,
                   unit: item.unit,
+                  axis: item.axis,
                 })),
                 config:
                   widgetInfoMemo?.type === 'TIMESERIES'
@@ -810,6 +811,7 @@ export function UpdateWidget({
                             unit: '',
                             max: 100,
                             min: 0,
+                            axis: 'y',
                           })
                         }
                       />
@@ -821,7 +823,15 @@ export function UpdateWidget({
                       className="!mt-2 flex justify-between gap-x-2"
                       key={field.id}
                     >
-                      <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
+                      <div
+                        className={cn(
+                          `grid w-full grid-cols-1 gap-x-4 px-2`,
+                          widgetInfoMemo?.description === 'LINE' ||
+                            widgetInfoMemo?.description === 'BAR'
+                            ? 'md:grid-cols-5'
+                            : 'md:grid-cols-4',
+                        )}
+                      >
                         <div className="w-full">
                           {widgetInfoMemo?.description === 'MAP' ? (
                             <FormField
@@ -1117,6 +1127,72 @@ export function UpdateWidget({
                               )}
                             />
                           </>
+                        )}
+                        {(widgetInfoMemo?.description === 'LINE' ||
+                          widgetInfoMemo?.description === 'BAR') && (
+                          <FormField
+                            control={form.control}
+                            name={`attributeConfig.${index}.axis`}
+                            render={({
+                              field: { onChange, value, ...field },
+                            }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  {t('cloud:dashboard.config_chart.axis')}
+                                </FormLabel>
+                                <div>
+                                  <FormControl>
+                                    <NewSelectDropdown
+                                      customOnChange={onChange}
+                                      defaultValue={
+                                        widgetInfoMemo?.attribute_config[index]
+                                          ?.axis
+                                          ? {
+                                              value:
+                                                widgetInfoMemo
+                                                  ?.attribute_config[index]
+                                                  ?.axis,
+                                              label:
+                                                widgetInfoMemo
+                                                  ?.attribute_config[index]
+                                                  ?.axis === 'y1'
+                                                  ? t(
+                                                      'cloud:dashboard.config_chart.axis_right',
+                                                    )
+                                                  : t(
+                                                      'cloud:dashboard.config_chart.axis_left',
+                                                    ),
+                                            }
+                                          : {
+                                              value: 'y',
+                                              label: t(
+                                                'cloud:dashboard.config_chart.axis_left',
+                                              ),
+                                            }
+                                      }
+                                      options={[
+                                        {
+                                          value: 'y',
+                                          label: t(
+                                            'cloud:dashboard.config_chart.axis_left',
+                                          ),
+                                        },
+                                        {
+                                          value: 'y1',
+                                          label: t(
+                                            'cloud:dashboard.config_chart.axis_right',
+                                          ),
+                                        },
+                                      ]}
+                                      isClearable={false}
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </div>
+                              </FormItem>
+                            )}
+                          />
                         )}
                       </div>
                       {!(
