@@ -118,8 +118,8 @@ export function BaseTable<T extends Record<string, any>>({
   pdfHeader,
 }: BaseTableProps<T>) {
   const { t } = useTranslation()
-  const ref = useRef<HTMLElement>(null)
-  const refScroll = useRef<HTMLElement>(null)
+  const ref = useRef<HTMLTableElement>(null)
+  const refScroll = useRef<HTMLDivElement>(null)
   const refAction = useRef<HTMLButtonElement | null>(null)
 
   const tableIndex = useRef(0)
