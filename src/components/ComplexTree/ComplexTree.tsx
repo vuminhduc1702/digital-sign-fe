@@ -11,11 +11,7 @@ import {
 } from 'react-complex-tree'
 import 'react-complex-tree/lib/style-modern.css'
 import { type Org } from '@/layout/MainLayout/types'
-import {
-  FieldWrapper,
-  type FieldWrapperPassThroughProps,
-  InputField,
-} from '../Form'
+import { FieldWrapper, type FieldWrapperPassThroughProps } from '../Form'
 import { SearchIcon } from '../SVGIcons'
 import { useTranslation } from 'react-i18next'
 import {
@@ -30,6 +26,7 @@ import { Button } from '@/components/ui/button'
 import btnRemoveIcon from '@/assets/icons/btn-remove.svg'
 import storage from '@/utils/storage'
 import { useGetOrgs } from '@/layout/MainLayout/api'
+import { Input } from '../ui/input'
 
 type ComplexTreeProps<TFormValues extends FieldValues> = {
   options?: Org[]
@@ -284,7 +281,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                 align="start"
               >
                 <div className="flex gap-x-1">
-                  <InputField
+                  <Input
                     className="flex"
                     type="text"
                     value={search}
@@ -293,6 +290,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                       setFindOrgMsg('')
                     }}
                   />
+
                   {search.length > 0 ? (
                     <img
                       height={12}

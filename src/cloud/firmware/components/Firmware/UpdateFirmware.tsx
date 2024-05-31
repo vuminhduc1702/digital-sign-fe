@@ -130,6 +130,7 @@ export function UpdateFirmWare({
                       <div>
                         <FormControl>
                           <NewSelectDropdown
+                            isPosition={false}
                             customOnChange={onChange}
                             options={firmwareData}
                             isClearable={false}

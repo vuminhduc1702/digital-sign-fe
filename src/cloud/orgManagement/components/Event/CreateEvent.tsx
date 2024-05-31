@@ -11,7 +11,11 @@ import { type SelectOption } from '@/components/Form'
 import TitleBar from '@/components/Head/TitleBar'
 import i18n from '@/i18n'
 import { useGetOrgs } from '@/layout/MainLayout/api'
-import { nameSchema } from '@/utils/schemaValidation'
+import {
+  emailSchema,
+  nameSchema,
+  phoneSchemaRegex,
+} from '@/utils/schemaValidation'
 import storage from '@/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
@@ -259,7 +263,7 @@ const eventIntervalSchema = z.object({
 export const eventActionSchema = z.array(
   z.discriminatedUnion('action_type', [
     z.object({
-      action_type: z.enum(['sms', 'mqtt', 'fcm', 'event', 'email'] as const),
+      action_type: z.enum(['mqtt', 'fcm', 'event'] as const),
       message: z.string().min(1, {
         message: i18n
           .t('placeholder:input_text_value')
@@ -277,6 +281,46 @@ export const eventActionSchema = z.array(
           ),
       }),
       receiver: z.string(),
+    }),
+    z.object({
+      action_type: z.enum(['email'] as const),
+      message: z.string().min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+          ),
+      }),
+      subject: z.string().min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t('cloud:org_manage.event_manage.add_event.action.subject'),
+          ),
+      }),
+      receiver: emailSchema,
+    }),
+    z.object({
+      action_type: z.enum(['sms'] as const),
+      message: z.string().min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+          ),
+      }),
+      subject: z.string().min(1, {
+        message: i18n
+          .t('placeholder:input_text_value')
+          .replace(
+            '{{VALUE}}',
+            i18n.t('cloud:org_manage.event_manage.add_event.action.subject'),
+          ),
+      }),
+      receiver: phoneSchemaRegex,
     }),
     z.object({
       action_type: z.enum(['report'] as const),
@@ -377,6 +421,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     getValues,
     reset,
     resetField,
+    clearErrors,
   } = form
 
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
@@ -396,7 +441,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     name: 'action',
     control,
   })
-  console.log('formState.errors', formState.errors)
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
 
@@ -512,8 +556,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
     return date
   }
 
-  console.log(watch())
-
   return (
     <Sheet open={isOpen} onOpenChange={close} modal={false}>
       <SheetContent
@@ -533,7 +575,6 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
               id="create-event"
               className="w-full space-y-5"
               onSubmit={handleSubmit(values => {
-                // console.log('check values submit form:', values)
                 const dataFilter = todos.filter(item => item.selected)
                 let repeat = ''
                 dataFilter.map(item => {
@@ -837,6 +878,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                     <FormField
                       control={form.control}
                       name="condition_event_type"
+                      disabled={getValues('type') === 'schedule'}
                       render={({ field: { onChange, value, ...field } }) => (
                         <FormItem>
                           <FormLabel>
@@ -1375,6 +1417,7 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                   onValueChange={e => {
                                     onChange(e)
                                     setActionType(e)
+                                    clearErrors(`action.${index}.receiver`)
                                   }}
                                   value={value}
                                 >
@@ -1446,6 +1489,26 @@ export function CreateEvent({ open, close, isOpen }: CreateEventProps) {
                                     <FormMessage />
                                   </div>
                                 </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        ) : actionType === 'sms' ? (
+                          <FormField
+                            control={control}
+                            name={`action.${index}.receiver`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  {t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.phone',
+                                  )}
+                                </FormLabel>
+                                <div>
+                                  <FormControl>
+                                    <Input {...field} type="number" />
+                                  </FormControl>
+                                  <FormMessage />
+                                </div>
                               </FormItem>
                             )}
                           />

@@ -20,6 +20,7 @@ type SelectProps<
   icon?: React.ReactElement
   isWrappedArray?: boolean
   isClearable?: boolean
+  isPosition?: boolean
 } & Props<Option, IsMulti, Group>
 
 export function NewSelectDropdown<
@@ -37,6 +38,7 @@ export function NewSelectDropdown<
   isWrappedArray,
   refSelect,
   isClearable = true,
+  isPosition = true,
   ...props
 }: SelectProps<Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -50,6 +52,7 @@ export function NewSelectDropdown<
       isSearchable
       isClearable={isClearable}
       placeholder={placeholder ?? t('placeholder:select')}
+      menuPosition={isPosition ? 'fixed' : undefined}
       onChange={(e, { action }) => {
         const option =
           (e as unknown as SelectOption[])?.length > 0

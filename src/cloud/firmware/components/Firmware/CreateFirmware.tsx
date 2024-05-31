@@ -92,6 +92,7 @@ export function CreateFirmWare() {
                       <div>
                         <FormControl>
                           <NewSelectDropdown
+                            isPosition={false}
                             isClearable={false}
                             customOnChange={onChange}
                             options={templateSelectOptions}
