@@ -104,19 +104,6 @@ export function TenantRoleTable({ data, ...props }: CustomerRoleTableProps) {
   const columns = useMemo<ColumnDef<PermissionEntityTable, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { project_id, role_id } = info.row.original
-          return CustomerTableContextMenu({
-            project_id,
-            customerId,
-            role_id,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           const orderId = parseInt(info.row.id) + 1
@@ -133,6 +120,19 @@ export function TenantRoleTable({ data, ...props }: CustomerRoleTableProps) {
       columnHelper.accessor('role_id', {
         header: () => <span>{t('cloud:tenant.table.role')}</span>,
         cell: info => <div>{info.getValue()}</div>,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { project_id, role_id } = info.row.original
+          return CustomerTableContextMenu({
+            project_id,
+            customerId,
+            role_id,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

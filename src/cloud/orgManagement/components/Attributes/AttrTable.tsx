@@ -142,22 +142,6 @@ export function AttrTable({
   const columns = useMemo<ColumnDef<Attribute, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { attribute_key, value, value_type, logged } = info.row.original
-          return AttrTableContextMenu({
-            entityId,
-            entityType,
-            attribute_key,
-            value,
-            value_type,
-            logged,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
@@ -241,6 +225,22 @@ export function AttrTable({
           <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
         ),
         cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { attribute_key, value, value_type, logged } = info.row.original
+          return AttrTableContextMenu({
+            entityId,
+            entityType,
+            attribute_key,
+            value,
+            value_type,
+            logged,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

@@ -127,35 +127,6 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
   const columns = useMemo<ColumnDef<UserInfo, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const {
-            name,
-            email,
-            user_id,
-            org_id,
-            org_name,
-            role_id,
-            role_name,
-            phone,
-            profile,
-          } = info.row.original
-          return UserTableContextMenu({
-            name,
-            email,
-            user_id,
-            org_id,
-            org_name,
-            role_id,
-            role_name,
-            phone,
-            profile,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
@@ -187,6 +158,35 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
           <span>{t('cloud:org_manage.user_manage.table.activate')}</span>
         ),
         cell: info => STATUS[info.getValue()],
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const {
+            name,
+            email,
+            user_id,
+            org_id,
+            org_name,
+            role_id,
+            role_name,
+            phone,
+            profile,
+          } = info.row.original
+          return UserTableContextMenu({
+            name,
+            email,
+            user_id,
+            org_id,
+            org_name,
+            role_id,
+            role_name,
+            phone,
+            profile,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

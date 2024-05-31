@@ -130,19 +130,6 @@ export function DashboardTable({
   const columns = useMemo<ColumnDef<DashboardRes, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { id, title, configuration } = info.row.original
-          return DashboardTableContextMenu({
-            id,
-            title,
-            description: configuration.description,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -173,6 +160,19 @@ export function DashboardTable({
         header: () => <span>{t('cloud:dashboard.table.create_time')}</span>,
         cell: info =>
           getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { id, title, configuration } = info.row.original
+          return DashboardTableContextMenu({
+            id,
+            title,
+            description: configuration.description,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

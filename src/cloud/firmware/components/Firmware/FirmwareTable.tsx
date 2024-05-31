@@ -154,33 +154,6 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
   const columns = useMemo<ColumnDef<FirmWare, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const {
-            name,
-            id,
-            description,
-            tag,
-            version,
-            template_name,
-            template_id,
-            link,
-          } = info.row.original
-          return FireWareTableContextMenu({
-            name,
-            id,
-            description,
-            version,
-            tag,
-            template_name,
-            template_id,
-            link,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -224,6 +197,33 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
       columnHelper.accessor('description', {
         header: () => <span>{t('cloud:firmware.table.description')}</span>,
         cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const {
+            name,
+            id,
+            description,
+            tag,
+            version,
+            template_name,
+            template_id,
+            link,
+          } = info.row.original
+          return FireWareTableContextMenu({
+            name,
+            id,
+            description,
+            version,
+            tag,
+            template_name,
+            template_id,
+            link,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

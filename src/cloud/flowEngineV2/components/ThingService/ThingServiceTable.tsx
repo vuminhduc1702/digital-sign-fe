@@ -107,20 +107,6 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
   const columns = useMemo<ColumnDef<ThingService, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { name, description } = info.row.original
-          return ThingServiceTableContextMenu({
-            thingId,
-            name,
-            description,
-            data,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -140,6 +126,20 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
           <span>{t('cloud:custom_protocol.thing.description')}</span>
         ),
         cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { name, description } = info.row.original
+          return ThingServiceTableContextMenu({
+            thingId,
+            name,
+            description,
+            data,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],
