@@ -135,37 +135,38 @@ export function DataBaseTable({
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          return DataBaseTableContextMenu({
-            row: info.row.original,
-            onClose,
-            columnsType,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      ...columnsProp?.map(item =>
-        columnHelper.accessor(item, {
-          header: () => (
-            <div>
-              <span className="text-table-header">{item}</span>
-              {isShow && (
-                <Input
-                  onClick={e => e.stopPropagation()}
-                  onChange={e => handleSearch(item, e.target.value)}
-                />
-              )}
-            </div>
-          ),
-          cell: info =>
-            typeof info.getValue() === 'boolean'
-              ? info.getValue()
-                ? 'true'
-                : 'false'
-              : info.getValue(),
+      ...columnsProp?.map(
+        item =>
+          columnHelper.accessor(item, {
+            header: () => (
+              <div>
+                <span className="text-table-header">{item}</span>
+                {isShow && (
+                  <Input
+                    onClick={e => e.stopPropagation()}
+                    onChange={e => handleSearch(item, e.target.value)}
+                  />
+                )}
+              </div>
+            ),
+            cell: info =>
+              typeof info.getValue() === 'boolean'
+                ? info.getValue()
+                  ? 'true'
+                  : 'false'
+                : info.getValue(),
+            footer: info => info.column.id,
+          }),
+        columnHelper.display({
+          id: 'contextMenu',
+          cell: info => {
+            return DataBaseTableContextMenu({
+              row: info.row.original,
+              onClose,
+              columnsType,
+            })
+          },
+          header: () => null,
           footer: info => info.column.id,
         }),
       ),

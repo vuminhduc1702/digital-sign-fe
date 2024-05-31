@@ -98,17 +98,6 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
   const columns = useMemo<ColumnDef<Customer, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { user_id } = info.row.original
-          return CustomerTableContextMenu({
-            id: user_id,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -150,6 +139,17 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
       columnHelper.accessor('org_name', {
         header: () => <span>{t('billing:customer_manage.table.parent')}</span>,
         cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { user_id } = info.row.original
+          return CustomerTableContextMenu({
+            id: user_id,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

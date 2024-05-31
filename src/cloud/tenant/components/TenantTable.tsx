@@ -111,21 +111,6 @@ export function TenantTable({ data, ...props }: BillingCustomerTableProps) {
   const columns = useMemo<ColumnDef<BillingCustomerEntity, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { id, name, email, phone, permissions } = info.row.original
-          return CustomerTableContextMenu({
-            id,
-            name,
-            email,
-            phone,
-            permissions,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -148,6 +133,21 @@ export function TenantTable({ data, ...props }: BillingCustomerTableProps) {
       columnHelper.accessor('email', {
         header: () => <span>{t('cloud:tenant.table.email')}</span>,
         cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { id, name, email, phone, permissions } = info.row.original
+          return CustomerTableContextMenu({
+            id,
+            name,
+            email,
+            phone,
+            permissions,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

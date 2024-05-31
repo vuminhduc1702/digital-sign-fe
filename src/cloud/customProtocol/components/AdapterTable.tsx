@@ -134,39 +134,6 @@ export function AdapterTable({ data, ...props }: AdapterTableProps) {
   const columns = useMemo<ColumnDef<Adapter, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const {
-            id,
-            name,
-            content_type,
-            protocol,
-            thing_id,
-            handle_service,
-            host,
-            port,
-            configuration,
-            schema,
-            encrypted,
-          } = info.row.original
-          return AdapterTableContextMenu({
-            id,
-            name,
-            content_type,
-            protocol,
-            thing_id,
-            handle_service,
-            host,
-            port,
-            configuration,
-            schema,
-            encrypted,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -216,6 +183,39 @@ export function AdapterTable({ data, ...props }: AdapterTableProps) {
           <span>{t('cloud:custom_protocol.adapter.table.port')}</span>
         ),
         cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const {
+            id,
+            name,
+            content_type,
+            protocol,
+            thing_id,
+            handle_service,
+            host,
+            port,
+            configuration,
+            schema,
+            encrypted,
+          } = info.row.original
+          return AdapterTableContextMenu({
+            id,
+            name,
+            content_type,
+            protocol,
+            thing_id,
+            handle_service,
+            host,
+            port,
+            configuration,
+            schema,
+            encrypted,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

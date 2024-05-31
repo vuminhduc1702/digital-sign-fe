@@ -84,17 +84,6 @@ export function BillingTable({
   const columns = useMemo<ColumnDef<Billing, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { id } = info.row.original
-          return SubcriptionTableContextMenu({
-            id: id,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -180,6 +169,17 @@ export function BillingTable({
           }
           return valueStatus()
         },
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { id } = info.row.original
+          return SubcriptionTableContextMenu({
+            id: id,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

@@ -130,21 +130,6 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
   const columns = useMemo<ColumnDef<Role, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const role = info.row.original
-          const { name, id } = info.row.original
-          return RoleTableContextMenu({
-            id,
-            name,
-            role,
-            project_id: props.project_id,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -175,6 +160,21 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
           )?.toString()
           return actions
         },
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const role = info.row.original
+          const { name, id } = info.row.original
+          return RoleTableContextMenu({
+            id,
+            name,
+            role,
+            project_id: props.project_id,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],
