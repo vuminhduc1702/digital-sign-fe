@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
-import { FieldWrapper, InputField, SelectField } from '@/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
@@ -21,16 +20,29 @@ import btnSubmitIcon from '@/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '@/assets/icons/btn-delete.svg'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
 import { cn } from '@/utils/misc'
 import { useEffect } from 'react'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type CreateAttrProps = {
   entityId: string
@@ -49,6 +61,14 @@ export const valueTypeList = [
   { type: 'STR', name: 'String' },
   { type: 'BOOL', name: 'Boolean' },
   { type: 'LONG', name: 'Long' },
+  { type: 'DBL', name: 'Double' },
+  { type: 'JSON', name: 'JSON' },
+] as const
+
+export const valueConvertTypeList = [
+  { type: 'STR', name: 'String' },
+  { type: 'BOOL', name: 'Boolean' },
+  { type: 'LONG', name: 'Long' },
   { type: 'LONG', name: 'Integer' },
   { type: 'LONG', name: 'Unsigned Integer' },
   { type: 'DBL', name: 'Double' },
@@ -60,7 +80,7 @@ export const booleanSelectOption = [
   { label: 'True', value: 'true' },
 ] as const
 
-export const numberInput = ['DBL', 'LONG'] as const
+export const numberInput = ['DBL', 'LONG']
 
 export function CreateAttr({
   entityId,
@@ -78,9 +98,7 @@ export function CreateAttr({
     value: valueType.type,
   }))
 
-  const { register, formState, control, watch, handleSubmit, reset } = useForm<
-    CreateAttrDTO['data']
-  >({
+  const form = useForm<CreateAttrDTO['data']>({
     resolver: attrListCreateSchema && zodResolver(attrListCreateSchema),
     defaultValues: {
       entity_id: entityId,
@@ -88,6 +106,7 @@ export function CreateAttr({
       attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
     },
   })
+  const { control, watch, handleSubmit, reset } = form
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
@@ -118,133 +137,219 @@ export function CreateAttr({
           </SheetTitle>
         </SheetHeader>
         <div className="max-h-[85%] min-h-[85%] overflow-y-auto pr-2">
-          <form
-            id="create-attr"
-            className="w-full space-y-5"
-            onSubmit={handleSubmit(values => {
-              mutate({
-                data: {
-                  entity_id: entityId,
-                  entity_type: entityType,
-                  attributes: [...values.attributes],
-                },
-              })
-            })}
-          >
-            <>
-              <div className="flex justify-between space-x-3">
-                <TitleBar
-                  title={t('cloud:org_manage.org_manage.attr_list')}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
-                />
-                <Button
-                  className="rounded-md"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-                  }
-                  onClick={() =>
-                    append({
-                      attribute_key: '',
-                      value: '',
-                      logged: true,
-                      value_t: '',
-                    })
-                  }
-                />
-              </div>
-              {fields.map((field, index) => (
-                <section
-                  className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
-                  key={field.id}
-                >
-                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-                    <InputField
-                      label={t('cloud:org_manage.org_manage.add_attr.name')}
-                      error={
-                        formState?.errors?.attributes?.[index]?.attribute_key
-                      }
-                      registration={register(
-                        `attributes.${index}.attribute_key` as const,
-                      )}
-                    />
-                    <SelectField
-                      className={`h-[36px] py-1`}
-                      label={t(
-                        'cloud:org_manage.org_manage.add_attr.value_type',
-                      )}
-                      error={formState?.errors?.attributes?.[index]?.value_t}
-                      registration={register(
-                        `attributes.${index}.value_t` as const,
-                      )}
-                      options={valueTypeOptions}
-                    />
-                    {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
-                      <SelectField
-                        className={`h-[36px] py-1`}
-                        label={t('cloud:org_manage.org_manage.add_attr.value')}
-                        error={formState?.errors?.attributes?.[index]?.value}
-                        registration={register(
-                          `attributes.${index}.value` as const,
-                        )}
-                        options={booleanSelectOption}
-                      />
-                    ) : (
-                      <InputField
-                        label={t('cloud:org_manage.org_manage.add_attr.value')}
-                        error={formState?.errors?.attributes?.[index]?.value}
-                        registration={register(
-                          `attributes.${index}.value` as const,
-                        )}
-                        step={0.000001}
-                        type={
-                          numberInput.includes(
-                            watch(`attributes.${index}.value_t`),
-                          )
-                            ? 'number'
-                            : 'text'
-                        }
-                      />
-                    )}
-                    <FieldWrapper
-                      className="w-fit space-y-2"
-                      label={t('cloud:org_manage.org_manage.add_attr.logged')}
-                      error={formState?.errors?.attributes?.[index]?.logged}
-                    >
-                      <Controller
-                        control={control}
-                        name={`attributes.${index}.logged`}
-                        render={({ field: { onChange, value, ...field } }) => {
-                          return (
-                            <Checkbox
-                              {...field}
-                              checked={value}
-                              onCheckedChange={onChange}
-                            />
-                          )
-                        }}
-                      />
-                    </FieldWrapper>
-                  </div>
+          <Form {...form}>
+            <form
+              id="create-attr"
+              className="w-full space-y-5"
+              onSubmit={handleSubmit(values => {
+                mutate({
+                  data: {
+                    entity_id: entityId,
+                    entity_type: entityType,
+                    attributes: [...values.attributes],
+                  },
+                })
+              })}
+            >
+              <>
+                <div className="flex justify-between space-x-3">
+                  <TitleBar
+                    title={t('cloud:org_manage.org_manage.attr_list')}
+                    className="w-full rounded-md bg-secondary-700 pl-3"
+                  />
                   <Button
-                    type="button"
-                    size="square"
+                    className="rounded-md"
                     variant="trans"
-                    className="mt-3 border-none"
-                    onClick={() => remove(index)}
+                    size="square"
                     startIcon={
-                      <img
-                        src={btnDeleteIcon}
-                        alt="Delete device template"
-                        className="h-8 w-8"
-                      />
+                      <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                    }
+                    onClick={() =>
+                      append({
+                        attribute_key: '',
+                        value: '',
+                        logged: true,
+                        value_t: '',
+                      })
                     }
                   />
-                </section>
-              ))}
-            </>
-          </form>
+                </div>
+                {fields.map((field, index) => (
+                  <section
+                    className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
+                    key={field.id}
+                  >
+                    <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+                      <FormField
+                        control={form.control}
+                        name={`attributes.${index}.attribute_key`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t('cloud:org_manage.org_manage.add_attr.name')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`attributes.${index}.value_t`}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem>
+                            <FormLabel>
+                              {t(
+                                'cloud:org_manage.org_manage.add_attr.value_type',
+                              )}
+                            </FormLabel>
+                            <div>
+                              <Select
+                                {...field}
+                                onValueChange={e => onChange(e)}
+                                value={value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue
+                                      placeholder={t('placeholder:select')}
+                                    />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  {valueTypeOptions.map(template => (
+                                    <SelectItem
+                                      key={template.label}
+                                      value={template.value}
+                                    >
+                                      {template.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
+                        <FormField
+                          control={form.control}
+                          name={`attributes.${index}.value`}
+                          render={({
+                            field: { onChange, value, ...field },
+                          }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {t(
+                                  'cloud:org_manage.org_manage.add_attr.value',
+                                )}
+                              </FormLabel>
+                              <div>
+                                <Select
+                                  {...field}
+                                  onValueChange={e => onChange(e)}
+                                  value={value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger>
+                                      <SelectValue
+                                        placeholder={t('placeholder:select')}
+                                      />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {booleanSelectOption.map(template => (
+                                      <SelectItem
+                                        key={template.label}
+                                        value={template.value}
+                                      >
+                                        {template.label}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      ) : (
+                        <FormField
+                          control={form.control}
+                          name={`attributes.${index}.value`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                {t(
+                                  'cloud:org_manage.org_manage.add_attr.value',
+                                )}
+                              </FormLabel>
+                              <div>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    step={0.000001}
+                                    type={
+                                      numberInput.includes(
+                                        watch(`attributes.${index}.value_t`),
+                                      )
+                                        ? 'number'
+                                        : 'text'
+                                    }
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      )}
+                      <FormField
+                        control={form.control}
+                        name={`attributes.${index}.logged`}
+                        render={({ field: { onChange, value, ...field } }) => (
+                          <FormItem className="flex flex-col justify-around">
+                            <FormLabel>
+                              {t('cloud:org_manage.org_manage.add_attr.logged')}
+                            </FormLabel>
+                            <div>
+                              <FormControl>
+                                <Checkbox
+                                  {...field}
+                                  checked={value}
+                                  onCheckedChange={onChange}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      size="square"
+                      variant="trans"
+                      className="mt-3 border-none"
+                      onClick={() => remove(index)}
+                      startIcon={
+                        <img
+                          src={btnDeleteIcon}
+                          alt="Delete device template"
+                          className="h-8 w-8"
+                        />
+                      }
+                    />
+                  </section>
+                ))}
+              </>
+            </form>
+          </Form>
         </div>
 
         <SheetFooter>

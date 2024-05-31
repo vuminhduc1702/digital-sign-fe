@@ -87,17 +87,6 @@ export function SubcriptionTable({
   const columnHelper = createColumnHelper<Subcription>()
   const columns = useMemo<ColumnDef<Subcription, any>[]>(
     () => [
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { s_id } = info.row.original
-          return SubcriptionTableContextMenu({
-            id: s_id,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
       columnHelper.accessor('s_id', {
         header: () => <span>{t('billing:subcription.table.sub_code')}</span>,
         cell: info => info.getValue(),
@@ -229,6 +218,17 @@ export function SubcriptionTable({
           }
           return valueStatus()
         },
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { s_id } = info.row.original
+          return SubcriptionTableContextMenu({
+            id: s_id,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

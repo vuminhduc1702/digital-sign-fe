@@ -1,8 +1,7 @@
-import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { InputField } from '@/components/Form'
 import { SearchIcon } from '@/components/SVGIcons'
 import { ContentLayout } from '@/layout/ContentLayout'
+import { Input } from '@/components/ui/input'
 
 export function Devkit() {
   const devkits = ['Espressif Systems', 'Simcom']
@@ -49,10 +48,9 @@ export function Devkit() {
         <div className="flex h-[84vh] p-1">
           <div className="mr-3 w-1/4 rounded-md bg-[#eceff1] shadow-md">
             <div className="p-[10px]">
-              <InputField
+              <Input
                 type="text"
                 className="h-[37.6px] rounded bg-stone-300"
-                classnamefieldwrapper="relative"
                 startIcon={
                   <SearchIcon
                     height={20}

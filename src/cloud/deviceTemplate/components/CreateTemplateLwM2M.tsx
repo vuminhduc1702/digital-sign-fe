@@ -1,4 +1,4 @@
-import { InputField, type SelectOption } from '@/components/Form'
+import { type SelectOption } from '@/components/Form'
 import {
   Accordion,
   AccordionContent,
@@ -34,7 +34,7 @@ import { useGetServiceThings } from '@/cloud/customProtocol/api/serviceThing'
 import { CreateService } from '@/cloud/customProtocol/components/CreateService'
 import { CreateThing } from '@/cloud/flowEngineV2/components/Attributes'
 import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
-import { valueTypeList } from '@/cloud/orgManagement/components/Attributes'
+import { valueConvertTypeList } from '@/cloud/orgManagement/components/Attributes'
 import {
   Form,
   FormControl,
@@ -358,7 +358,7 @@ export function CreateTemplateLwM2M({
                 formatString(item.Name),
               value: '',
               logged: true,
-              value_t: getValueType(item.Type),
+              value_t: getValueType(item.Type, item.MultipleInstances),
             }
             handleCheckboxChange(
               accordionIndex,
@@ -448,8 +448,11 @@ export function CreateTemplateLwM2M({
     form.reset()
   }
 
-  const getValueType = (type: string) => {
-    const valueType = valueTypeList.find(value => value.name === type)
+  const getValueType = (type: string, kind: string) => {
+    if (kind === 'Multiple') {
+      return 'STR'
+    }
+    const valueType = valueConvertTypeList.find(value => value.name === type)
     return valueType ? valueType.type : 'STR'
   }
   useEffect(() => {
@@ -742,6 +745,7 @@ export function CreateTemplateLwM2M({
                                                     logged: true,
                                                     value_t: getValueType(
                                                       item.Type,
+                                                      item.MultipleInstances,
                                                     ),
                                                   }
                                                   if (typeof e === 'boolean') {
@@ -777,25 +781,6 @@ export function CreateTemplateLwM2M({
                                         />
                                       </div>
                                       <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
-                                        {/* <InputField
-                                          className=""
-                                          value={
-                                            itemNames[
-                                              `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
-                                            ]
-                                          }
-                                          defaultValue={formatString(
-                                            defaultItemName,
-                                          )}
-                                          onChange={e =>
-                                            setItemNames(prev => ({
-                                              ...prev,
-                                              [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]:
-                                                e.target.value,
-                                            }))
-                                          }
-                                          disabled={checkboxStates[itemId]}
-                                        /> */}
                                         <Input
                                           value={
                                             itemNames[

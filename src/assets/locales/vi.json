@@ -378,6 +378,7 @@
             "action_type": {
               "title": "Hành động",
               "sms": "SMS",
+              "phone": "Số điện thoại",
               "email": "Email",
               "mqtt": "MQTT",
               "fcm": "FCM",

@@ -190,16 +190,6 @@ export function EventTable({ data, ...props }: EventTableProps) {
   const columns = useMemo<ColumnDef<EventType, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const dataRow = info.row.original
-          const { name, id } = info.row.original
-          return EventTableContextMenu({ name, id, dataRow })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
@@ -258,6 +248,16 @@ export function EventTable({ data, ...props }: EventTableProps) {
           <span>{t('cloud:org_manage.event_manage.table.status')}</span>
         ),
         cell: info => info.getValue().toString(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const dataRow = info.row.original
+          const { name, id } = info.row.original
+          return EventTableContextMenu({ name, id, dataRow })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

@@ -232,15 +232,6 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
   const columns = useMemo<ColumnDef<Group, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { name, id, organization, entity_type } = info.row.original
-          return GroupTableContextMenu({ name, id, organization, entity_type })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -275,6 +266,15 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
           <span>{t('cloud:org_manage.group_manage.table.org_name')}</span>
         ),
         cell: info => info.row.original.org_name || t('table:no_in_org'),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { name, id, organization, entity_type } = info.row.original
+          return GroupTableContextMenu({ name, id, organization, entity_type })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

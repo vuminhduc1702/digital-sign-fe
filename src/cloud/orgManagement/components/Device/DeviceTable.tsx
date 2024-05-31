@@ -304,39 +304,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
   const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
       columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const {
-            name,
-            id,
-            key,
-            org_id,
-            group_id,
-            template_id,
-            thing_name,
-            handle_message_svc,
-            token,
-            status,
-          } = info.row.original
-
-          return DeviceTableContextMenu({
-            name,
-            id,
-            key,
-            org_id,
-            template_id,
-            thing_name,
-            handle_message_svc,
-            token,
-            status,
-            group_id,
-            additional_info: info.row.original.additional_info,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'stt',
         cell: info => {
           return !props.isPreviousData
@@ -623,6 +590,39 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         ),
         cell: info =>
           getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const {
+            name,
+            id,
+            key,
+            org_id,
+            group_id,
+            template_id,
+            thing_name,
+            handle_message_svc,
+            token,
+            status,
+          } = info.row.original
+
+          return DeviceTableContextMenu({
+            name,
+            id,
+            key,
+            org_id,
+            template_id,
+            thing_name,
+            handle_message_svc,
+            token,
+            status,
+            group_id,
+            additional_info: info.row.original.additional_info,
+          })
+        },
+        header: () => null,
         footer: info => info.column.id,
       }),
     ],

@@ -118,8 +118,8 @@ export function BaseTable<T extends Record<string, any>>({
   pdfHeader,
 }: BaseTableProps<T>) {
   const { t } = useTranslation()
-  const ref = useRef(null)
-  const refScroll = useRef(null)
+  const ref = useRef<HTMLElement>(null)
+  const refScroll = useRef<HTMLElement>(null)
   const refAction = useRef<HTMLButtonElement | null>(null)
 
   const tableIndex = useRef(0)
@@ -188,7 +188,11 @@ export function BaseTable<T extends Record<string, any>>({
   }
 
   useEffect(() => {
-    if (refScroll?.current?.scrollWidth < ref?.current?.scrollWidth) {
+    if (
+      refScroll?.current?.scrollWidth &&
+      ref?.current?.scrollWidth &&
+      refScroll?.current?.scrollWidth < ref?.current?.scrollWidth
+    ) {
       refAction?.current?.click()
     }
   }, [])
