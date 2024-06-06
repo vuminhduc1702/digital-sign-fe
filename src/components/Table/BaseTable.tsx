@@ -76,7 +76,7 @@ export type BaseTableProps<T extends Record<string, any>> = {
   onDataText?: string
   refreshBtn?: boolean
   rowSelection?: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
+  setRowSelection?: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
   formatExcel?: Array<{ [key: string]: unknown }>

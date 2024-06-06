@@ -1,16 +1,15 @@
-import { type Project } from '@/cloud/project/routes/ProjectManage'
 import { type LoginCredentialsDTO } from '@/features/auth'
 import { type RoleTypes } from '@/lib/authorization'
 
-const storagePrefix = 'iot_platform_'
+const storagePrefix = 'digital_sign_'
 
 export type UserStorage = {
   token: string
-  refresh_token: string
-  system_role: RoleTypes
-  timestamp: Date
-  device_token: string
-  user_id: string
+  // refresh_token: string
+  // system_role: RoleTypes
+  // timestamp: Date
+  // device_token: string
+  // user_id: string
 }
 
 const storage = {
@@ -39,21 +38,6 @@ const storage = {
   },
   clearUserLogin: () => {
     window.localStorage.removeItem(`${storagePrefix}user_login`)
-  },
-
-  getProject: (): Project => {
-    return JSON.parse(
-      window.localStorage.getItem(`${storagePrefix}project`) as string,
-    )
-  },
-  setProject: (project: Project) => {
-    window.localStorage.setItem(
-      `${storagePrefix}project`,
-      JSON.stringify(project),
-    )
-  },
-  clearProject: () => {
-    window.localStorage.removeItem(`${storagePrefix}project`)
   },
 
   getIsPersistLogin: () => {

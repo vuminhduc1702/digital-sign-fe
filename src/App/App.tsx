@@ -22,72 +22,7 @@ const { ErrorFallback } = lazyImport(
   'ErrorFallback',
 )
 
-const ReactQueryDevtoolsProduction = lazy(() =>
-  import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(d => ({
-    default: d.ReactQueryDevtools,
-  })),
-)
-
 function App() {
-  const { t } = useTranslation()
-
-  // Dev tools
-  const [showDevtools, setShowDevtools] = useState(false)
-  useEffect(() => {
-    // @ts-ignore
-    window.toggleDevtools = () => setShowDevtools(old => !old)
-  }, [])
-  if (import.meta.env.PROD) {
-    disableReactDevTools()
-  }
-
-  // Global error messages
-  const customErrorMap: z.ZodErrorMap = (error, ctx) => {
-    switch (error.code) {
-      case z.ZodIssueCode.invalid_type:
-        if (error.expected === 'string' || error.expected === 'object') {
-          return {
-            message: `${t('error:default_zod_err.select')} ${error.path[0]}`,
-          }
-        }
-        if (error.expected === 'number') {
-          return {
-            message: t('error:default_zod_err.number'),
-          }
-        }
-        break
-      case z.ZodIssueCode.invalid_union_discriminator:
-      case z.ZodIssueCode.invalid_enum_value:
-        return {
-          message: `${t(
-            'error:default_zod_err.select_union',
-          )} ${error.options.join(', ')}`,
-        }
-      case z.ZodIssueCode.custom:
-        const params = error.params || {}
-        if (params.myField) {
-          return { message: `${t('error:wrong_input')} ${params.myField}` }
-        }
-        break
-    }
-
-    return { message: ctx.defaultError }
-  }
-  if (import.meta.env.PROD) {
-    z.setErrorMap(customErrorMap)
-  }
-
-  if (import.meta.env.PROD) {
-    console.log = () => {}
-    console.error = () => {}
-    console.debug = () => {}
-  }
-
-  // Auto reload page when failing to load dynamic imports
-  window.addEventListener('vite:preloadError', () => {
-    window.location.reload()
-  })
-
   return (
     <Suspense
       fallback={
@@ -115,14 +50,6 @@ function App() {
             >
               <AppRoutes />
             </AuthLoader>
-            {import.meta.env.PROD && (
-              <ReactQueryDevtools initialIsOpen={false} />
-            )}
-            {showDevtools && (
-              <Suspense fallback={null}>
-                <ReactQueryDevtoolsProduction />
-              </Suspense>
-            )}
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>

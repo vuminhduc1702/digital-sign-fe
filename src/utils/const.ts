@@ -1,4 +1,4 @@
-export const limitPagination = 100
+export const limitPagination = 10
 
 export const mediaQueryPoint = {
   xs: 399.98,

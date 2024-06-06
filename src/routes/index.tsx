@@ -6,17 +6,13 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 import { useEffect } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
 
 import { PATHS } from './PATHS'
 import { useUser } from '@/lib/auth'
 import { lazyImport } from '@/utils/lazyImport'
 import { protectedRoutes } from './protected'
 import { publicRoutes } from './public'
-import { ErrorFallback } from '@/pages/ErrorPage'
 import { endProgress, startProgress } from '@/components/Progress'
-import { useProjectIdStore } from '@/stores/project'
-import storage from '@/utils/storage'
 
 const { MaintainPage } = lazyImport(
   () => import('@/pages/MaintainPage'),
@@ -26,17 +22,8 @@ const { NotFoundPage } = lazyImport(
   () => import('@/pages/NotFoundPage'),
   'NotFoundPage',
 )
-const { VersionPage } = lazyImport(
-  () => import('@/pages/VersionPage'),
-  'VersionPage',
-)
 
 export const AppRoutes = () => {
-  const projectIdFromURL = window.location.pathname.split('/').at(-1)
-  const projectIdFromZustand = useProjectIdStore(state => state.projectId)
-  const projectId =
-    projectIdFromURL ?? projectIdFromZustand ?? storage.getProject()?.id
-
   const { data: userDataFromStorage } = useUser()
 
   const commonRoutes = [
@@ -57,17 +44,6 @@ export const AppRoutes = () => {
       loader: async () => {
         startProgress()
         await import('@/pages/NotFoundPage')
-        endProgress()
-
-        return null
-      },
-    },
-    {
-      path: PATHS.VERSION,
-      element: <VersionPage />,
-      loader: async () => {
-        startProgress()
-        await import('@/pages/VersionPage')
         endProgress()
 
         return null
@@ -97,13 +73,10 @@ export const AppRoutes = () => {
 
   // Auto redirect to project manage page when token is available or when projectId is null
   useEffect(() => {
-    if (
-      (userDataFromStorage != null && isAuthRoutes) ||
-      (userDataFromStorage != null && projectId == null)
-    ) {
-      window.location.href = PATHS.PROJECT_MANAGE
+    if (userDataFromStorage != null && isAuthRoutes) {
+      window.location.href = PATHS.SIGN
     }
-  }, [isAuthRoutes, projectId, userDataFromStorage])
+  }, [isAuthRoutes, userDataFromStorage])
 
   const routes = userDataFromStorage ? protectedRoutes : publicRoutes
 

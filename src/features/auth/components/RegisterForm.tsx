@@ -121,22 +121,35 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           <>
             <FormField
               control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      className="mt-5 bg-stone-300"
+                      startIcon={
+                        <BtnUserLoginIcon
+                          height={20}
+                          width={20}
+                          viewBox="0 0 20 20"
+                          className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
+                        />
+                      }
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
                       {...field}
-                      {...register('email', {
-                        onChange: e => {
-                          const emailValue = e.target.value
-                          if (emailSchema.safeParse(emailValue).success) {
-                            setBtnOtpDisable(false)
-                          } else {
-                            setBtnOtpDisable(true)
-                          }
-                        },
-                      })}
                       type="email"
                       className="mt-5 bg-stone-300"
                       placeholder={t('auth:require_email')}
@@ -244,53 +257,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 </FormItem>
               )}
             />
-            <Button
-              variant="none"
-              className="!mt-2 ml-auto h-4 p-0 text-slate-800 underline"
-              disabled={btnOtpDisable}
-              onClick={() => {
-                setBtnOtpDisable(true)
-                if (getValues('email') !== '') {
-                  sentOTP({
-                    email: getValues('email'),
-                  })
-                    .then(() => {
-                      setCountdown(timeCountdown)
-                      setCheckCountdown(true)
-                      updateCountdown()
-                    })
-                    .catch(error => {
-                      setBtnOtpDisable(false)
-                    })
-                }
-              }}
-            >
-              {checkCountdown === true && (
-                <>
-                  {countdown}
-                  {'s '}
-                </>
-              )}
-              {t('auth:sent_otp')}
-            </Button>
-            <FormField
-              control={form.control}
-              name="otp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="text"
-                      className="bg-stone-300"
-                      placeholder={t('auth:require_otp')}
-                      autoComplete="one-time-code"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <div className="container mx-auto text-center text-body-xs">
               <Button
                 isLoading={registerMutation.isLoading}
@@ -303,7 +269,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           </>
         </form>
       </Form>
-      <div className="mt-8 flex justify-center">
+      <div className="mt-8 flex justify-center py-10">
         <div className="text-body-sm text-black">
           {t('auth:have_an_account')}{' '}
           <Link to={PATHS.LOGIN} className="font-bold">

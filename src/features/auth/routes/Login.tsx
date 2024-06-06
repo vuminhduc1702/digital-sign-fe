@@ -10,7 +10,7 @@ export const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
   // const from = location.state?.from?.pathname || PATHS.HOME
-  const from = PATHS.PROJECT_MANAGE
+  const from = PATHS.SIGN
 
   return (
     <Layout title={t('user:login')}>

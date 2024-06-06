@@ -18,16 +18,20 @@ export type EndUser = {
   org_name?: string
 } & User
 
+// export type UserResponse = {
+//   token: string
+//   refresh_token: string
+//   timestamp: Date
+// } & Pick<
+//   User,
+//   | 'device_token'
+//   | 'email'
+//   | 'expired_at'
+//   | 'is_admin'
+//   | 'system_role'
+//   | 'user_id'
+// >
+
 export type UserResponse = {
-  token: string
-  refresh_token: string
-  timestamp: Date
-} & Pick<
-  User,
-  | 'device_token'
-  | 'email'
-  | 'expired_at'
-  | 'is_admin'
-  | 'system_role'
-  | 'user_id'
->
+  accessToken: string
+}

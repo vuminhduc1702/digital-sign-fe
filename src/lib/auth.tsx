@@ -14,12 +14,12 @@ import { type LoginCredentialsDTO } from '@/features/auth/components/LoginForm'
 
 async function handleUserResponse(user: UserResponse) {
   storage.setToken({
-    token: user.token,
-    refresh_token: user.refresh_token,
-    system_role: user.system_role,
-    timestamp: new Date(),
-    device_token: user.device_token,
-    user_id: user.user_id,
+    token: user.accessToken,
+    // refresh_token: user.refresh_token,
+    // system_role: user.system_role,
+    // timestamp: new Date(),
+    // device_token: user.device_token,
+    // user_id: user.user_id,
   })
 
   return user

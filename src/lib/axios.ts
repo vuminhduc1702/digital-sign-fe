@@ -16,6 +16,10 @@ function authRequestInterceptor(config: AxiosRequestConfig) {
   if (token && !config?.sent) {
     config.headers.set('Authorization', `Bearer ${token}`)
   }
+  // config.headers.set(
+  //   'Authorization',
+  //   `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkdW5nMTcwOWNodDFAZ21haWwuY29tIiwiZnVsbE5hbWUiOiJExrDGoW5nIFThuqVuIETFqW5nIiwicm9sZSI6WyJVU0VSIl0sInVzZXJJZCI6NSwiaWF0IjoxNzE3Njc5NTc5LCJleHAiOjE3MTc3MTU1Nzl9.WMui5xRzr5JySDUMtlhNlmgEkNU6AefnQWRiQ5DwMbM`,
+  // )
 
   return {
     ...config,

@@ -130,7 +130,7 @@ export function useCopyId() {
 }
 
 export const MAX_FILE_SIZE = 5000000
-export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
+export const ACCEPTED_FILE_TYPES = ['application/pdf']
 const uploadImageSchema = z.object({
   file: z
     .instanceof(File, {
