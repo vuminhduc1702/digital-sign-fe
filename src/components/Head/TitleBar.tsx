@@ -10,10 +10,7 @@ function TitleBar({
 }) {
   return (
     <h2
-      className={cn(
-        'flex items-center bg-primary-400 px-10 py-2 text-h2 text-white',
-        className,
-      )}
+      className={cn('flex items-center py-2 text-xl font-semibold', className)}
     >
       {title}
     </h2>

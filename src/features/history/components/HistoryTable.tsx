@@ -30,11 +30,15 @@ import {
 } from '@/features/certificate/api/getActiveCertificate'
 import { useGetHistoryList } from '../api/getHistoryList'
 import { limitPagination } from '@/utils/const'
+import { Certificate } from '@/features/certificate/types'
 
 export function HistoryTable({}) {
   const { t } = useTranslation()
 
   const [page, setPage] = useState<number>(1)
+  const [selectedCert, setSelectedCert] = useState<ActiveCertificate | null>(
+    null,
+  )
 
   const pagePrev = useRef<number>(page)
 
@@ -53,12 +57,6 @@ export function HistoryTable({}) {
     isLoading: certificateIsLoading,
     isSuccess: certificateIsSuccess,
   } = useGetActiveCertificateList({})
-
-  const certificateInfo = new Map<number, ActiveCertificate>()
-
-  certificateData?.forEach(cert => {
-    certificateInfo.set(cert.certificateId, cert)
-  })
 
   const {
     data: historyData,
@@ -143,10 +141,17 @@ export function HistoryTable({}) {
   }, [certificateIsSuccess])
 
   useEffect(() => {
-    if (getValues('certificate')) {
+    if (certificateData && getValues('certificate')) {
+      const selectedCertificate =
+        certificateData?.find(
+          cert => cert.certificateId === getValues('certificate'),
+        ) ?? null
+      setSelectedCert(selectedCertificate)
       refetchHistoryData()
     }
-  }, [watch('certificate')])
+  }, [certificateData, watch('certificate')])
+
+  console.log(selectedCert)
 
   return (
     <>
@@ -181,38 +186,7 @@ export function HistoryTable({}) {
           />
         </form>
       </Form>
-      {watch('certificate') && (
-        <div className="grid grid-flow-col grid-rows-3">
-          <p>
-            Tên chứng thư số:{' '}
-            {certificateInfo.get(parseInt(watch('certificate')))?.commonName}
-          </p>
-          <p>
-            Chủ thể:{' '}
-            {certificateInfo.get(parseInt(watch('certificate')))?.subjectName}
-          </p>
-          <p>
-            Số series:{' '}
-            {certificateInfo.get(parseInt(watch('certificate')))?.serialNumber}
-          </p>
-          <p>
-            Hiệu lực:{' '}
-            {moment(
-              certificateInfo.get(parseInt(watch('certificate')))
-                ?.notValidBefore,
-            ).format('DD/mm/yyyy')}
-            -{' '}
-            {moment(
-              certificateInfo.get(parseInt(watch('certificate')))
-                ?.notValidAfter,
-            ).format('DD/mm/yyyy')}
-          </p>
-          <p>
-            Trạng thái:{' '}
-            {certificateInfo.get(parseInt(watch('certificate')))?.statusName}
-          </p>
-        </div>
-      )}
+      {selectedCert && <CertificateDetail certificate={selectedCert} />}
       <div>
         <BaseTable
           data={historyData?.data ?? []}

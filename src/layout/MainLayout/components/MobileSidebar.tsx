@@ -36,7 +36,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
           <NavLink
             to="https://iot.vtscloud.vn/"
             reloadDocument
-            className="flex h-20 items-center justify-center border-b-2 border-solid"
+            className="flex h-16 items-center justify-center border-b-2 border-solid"
           >
             <img src={logo} alt="logo" className="h-14 cursor-pointer" />
           </NavLink>

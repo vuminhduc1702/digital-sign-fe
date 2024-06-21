@@ -54,7 +54,7 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
 
         <main
           className={cn(
-            'flex w-full grow flex-col self-center overflow-y-auto p-3',
+            'flex w-full grow flex-col self-center overflow-y-auto border-l-2 border-solid bg-secondary-400 p-4',
           )}
         >
           <Outlet />

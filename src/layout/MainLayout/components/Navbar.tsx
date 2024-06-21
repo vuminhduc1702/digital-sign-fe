@@ -36,7 +36,7 @@ function Navbar() {
 
   return (
     <div className="flex w-full">
-      <nav className="flex h-20 w-full justify-end gap-x-5 border-b-2 border-solid bg-white pr-5 lg:gap-x-10">
+      <nav className="flex h-16 w-full justify-end gap-x-5 border-b-2 border-solid bg-white pr-5 lg:gap-x-10">
         {/* {userInfoIsLoading ? (
           <div className="flex items-center justify-center">
             <Spinner

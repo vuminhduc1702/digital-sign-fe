@@ -6,6 +6,7 @@
     "history": "Lịch sử"
   },
   "certificate": {
+    "title": "Danh sách chứng thư số",
     "stt": "STT",
     "issuer": "Chủ chứng thư số",
     "name": "Tên chứng thư số",
@@ -17,15 +18,47 @@
     "detail": "Chi tiết"
   },
   "history": {
+    "title": "Lịch sử giao dịch",
     "stt": "STT",
     "type": "Loại tệp",
     "status": "Trạng thái",
     "name": "Tên tài liệu",
     "date": "Ngày giao dịch",
-    "action": "Thao tác"
+    "action": "Thao tác",
+    "cert_info": {
+      "cert_name": "Tên chứng thư số",
+      "subject": "Chủ thể",
+      "serial": "Số series",
+      "date": "Hiệu lực",
+      "status": "Trạng thái"
+    }
   },
   "validate": {
     "file_max_size": "Cho phép dung lượng tối đa 20MB",
     "file_type": "Chỉ cho phép định dạng .pdf"
+  },
+  "verify": {
+    "title": "Kiểm tra chữ ký",
+    "verify": "Kiểm tra",
+    "doc_info": {
+      "title": "Thông tin tài liệu",
+      "file_name": "Tên file",
+      "size": "Kích thước",
+      "type": "Định dạng"
+    },
+    "cert_info": {
+      "title": "Thông tin chứng thư",
+      "sign_date": "Ngày ký",
+      "name": "Tên",
+      "self_signed": "Chứng chỉ tự ký",
+      "sign": "Chữ ký số",
+      "status": "Trạng thái chứng thư",
+      "serial": "Số serial",
+      "start_date": "Ngày hiệu lực",
+      "end_date": "Ngày hết hạn",
+      "algo": "Hàm ký",
+      "valid": "Hợp lệ",
+      "invalid": "Không hợp lệ"
+    }
   }
 }
