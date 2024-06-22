@@ -24,6 +24,8 @@ import { useTranslation } from 'react-i18next'
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { LuFolderUp, LuTrash } from 'react-icons/lu'
 import { useSign } from '../api/sign'
+import TitleBar from '@/components/Head/TitleBar'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function SignForm() {
   const { t } = useTranslation()
@@ -72,9 +74,11 @@ export function SignForm() {
   }, [signIsSuccess])
 
   return (
+    <div className="flex gap-4">
     <Form {...form}>
       <form
         id="sign-form"
+        className="flex basis-3/5 flex-col justify-between rounded-lg bg-white p-6"
         onSubmit={form.handleSubmit(async values => {
           const data = {
             body: {
@@ -97,7 +101,7 @@ export function SignForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <div className="flex h-60 w-1/2 cursor-pointer  flex-col items-center justify-center  rounded-md bg-secondary-400 text-secondary-700  hover:bg-secondary-500 ">
+                <div className="flex h-60 w-full cursor-pointer  flex-col items-center justify-center  rounded-md bg-secondary-400 text-secondary-700  hover:bg-secondary-500 ">
                   <LuFolderUp className="h-16 w-auto" />
                   <p>Click để chọn tệp</p>
                   <p>Định dạng được hỗ trợ: PDF</p>
@@ -329,5 +333,30 @@ export function SignForm() {
         )}
       </form>
     </Form>
+    <div className="basis-2/5 rounded-lg bg-white p-6">
+        <div className="mb-3">
+          <TitleBar title={t('verify:doc_info.title')} className="mb-6" />
+          {uploadFile ? (
+            <div className="grid grid-cols-3 gap-y-4">
+              <p>{t('verify:doc_info.file_name')}</p>
+              <p className="col-span-2 w-full">{uploadFile.name}</p>
+              <p>{t('verify:doc_info.size')}</p>
+              <p className="col-span-2 w-full">{uploadFile.size}</p>
+              <p>{t('verify:doc_info.type')}</p>
+              <p className="col-span-2 w-full">{uploadFile.type}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+              <p>{t('verify:doc_info.file_name')}</p>
+              <Skeleton className="col-span-2 h-4 w-full" />
+              <p>{t('verify:doc_info.size')}</p>
+              <Skeleton className="col-span-2 h-4 w-full" />
+              <p>{t('verify:doc_info.type')}</p>
+              <Skeleton className="col-span-2 h-4 w-full" />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }

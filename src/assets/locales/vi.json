@@ -2,6 +2,7 @@
   "sidebar": {
     "sign": "Ký số",
     "certificate": "Chứng thư số",
+    "request": "Yêu cầu tạo chứng thư",
     "verify": "Kiểm tra chữ ký",
     "history": "Lịch sử"
   },
@@ -15,7 +16,9 @@
     "status": "Trạng thái",
     "serial": "Serial Number",
     "action": "Thao tác",
-    "detail": "Chi tiết"
+    "detail": "Chi tiết",
+    "subject": "Chủ thể",
+    "dialog_title": "Thông tin chứng thư số"
   },
   "history": {
     "title": "Lịch sử giao dịch",
@@ -60,5 +63,11 @@
       "valid": "Hợp lệ",
       "invalid": "Không hợp lệ"
     }
+  },
+  "sign": {
+    "title": "Chọn tài liệu ký"
+  },
+  "request": {
+    "title": "Yêu cầu tạo chứng thư"
   }
 }

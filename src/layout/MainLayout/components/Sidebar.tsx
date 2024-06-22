@@ -1,7 +1,8 @@
 import SideNavigation from './SideNavigation'
 import { NavLink } from '@/components/Link'
 
-import logo from '@/assets/images/logo.svg'
+import logo from '@/assets/images/hust.png'
+import { PATHS } from '@/routes/PATHS'
 
 function Sidebar() {
   return (
@@ -11,11 +12,10 @@ function Sidebar() {
         aria-label="Sidebar"
       >
         <NavLink
-          to="https://iot.vtscloud.vn/"
-          reloadDocument
+          to={PATHS.SIGN}
           className="flex h-16 items-center justify-center border-b-2 border-solid bg-white"
         >
-          <img src={logo} alt="logo" className="h-14 cursor-pointer" />
+          <img src={logo} alt="logo" className="h-6 cursor-pointer" />
         </NavLink>
         <SideNavigation />
       </nav>

@@ -19,13 +19,8 @@ import {
   LuPencilLine,
   LuShield,
   LuShieldCheck,
+  LuUploadCloud,
 } from 'react-icons/lu'
-import tongquanIcon from '@/assets/icons/sb-tongquan.svg'
-import dammayIcon from '@/assets/icons/sb-dammay.svg'
-import thietbiIcon from '@/assets/icons/sb-thietbi.svg'
-import tichhopIcon from '@/assets/icons/sb-tichhop.svg'
-import ungdungIcon from '@/assets/icons/sb-ungdung.svg'
-import thanhtoanIcon from '@/assets/icons/sb-thanhtoan.svg'
 
 function SideNavigation() {
   const { t } = useTranslation()
@@ -51,6 +46,19 @@ function SideNavigation() {
         >
           <LuPencilLine />
           <div>{t('sidebar:sign')}</div>
+        </div>
+      </NavLink>
+      <NavLink to={PATHS.REQUEST}>
+        <div
+          className={clsx(
+            'mb-3 flex cursor-pointer items-center gap-x-3 rounded-md px-3 py-2',
+            {
+              'bg-primary-400 text-white': value === 'request',
+            },
+          )}
+        >
+        <LuUploadCloud />          
+        <div>{t('sidebar:request')}</div>
         </div>
       </NavLink>
       <NavLink to={PATHS.CERTIFICATE}>

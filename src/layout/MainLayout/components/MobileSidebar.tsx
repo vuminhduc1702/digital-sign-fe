@@ -1,6 +1,6 @@
 import SideNavigation from './SideNavigation'
 
-import logo from '@/assets/images/logo.svg'
+import logo from '@/assets/images/hust.png'
 import { NavLink } from '@/components/Link'
 import {
   Sheet,
@@ -12,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { PATHS } from '@/routes/PATHS'
 
 type MobileSidebarProps = {
   sidebarOpen: boolean
@@ -34,11 +35,10 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
         <SheetHeader className="absolute right-2 top-1 z-10"></SheetHeader>
         <div className="h-full overflow-y-auto">
           <NavLink
-            to="https://iot.vtscloud.vn/"
-            reloadDocument
+            to={PATHS.SIGN}
             className="flex h-16 items-center justify-center border-b-2 border-solid"
           >
-            <img src={logo} alt="logo" className="h-14 cursor-pointer" />
+            <img src={logo} alt="logo" className="h-6 cursor-pointer" />
           </NavLink>
           <nav className="space-y-1 px-2">
             <SideNavigation />

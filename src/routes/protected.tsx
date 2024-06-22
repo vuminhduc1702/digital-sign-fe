@@ -7,6 +7,7 @@ import { SignRoutes } from '@/features/sign/routes'
 import { HistoryRoutes } from '@/features/history/routes'
 import { VerifyRoutes } from '@/features/verify/routes'
 import { CertificateRoutes } from '@/features/certificate/routes'
+import { RequestRoutes } from '@/features/request/routes'
 
 export const protectedRoutes = [
   {
@@ -23,6 +24,7 @@ export const protectedRoutes = [
       ...HistoryRoutes,
       ...VerifyRoutes,
       ...CertificateRoutes,
+      ...RequestRoutes
     ],
   },
 ] as const satisfies RouteObject[]

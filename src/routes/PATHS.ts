@@ -6,6 +6,7 @@ export const PATHS = {
    * Protected routes
    */
   SIGN: `${BASE_PATH}sign`,
+  REQUEST: `${BASE_PATH}request`,
   CERTIFICATE: `${BASE_PATH}certificate`,
   VERIFY: `${BASE_PATH}verify`,
   HISTORY: `${BASE_PATH}history`,

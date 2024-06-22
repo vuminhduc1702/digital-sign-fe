@@ -31,6 +31,8 @@ import {
 import { useGetHistoryList } from '../api/getHistoryList'
 import { limitPagination } from '@/utils/const'
 import { Certificate } from '@/features/certificate/types'
+import { LuDownloadCloud } from 'react-icons/lu'
+import { downloadFile } from '../api/downloadFile'
 
 export function HistoryTable({}) {
   const { t } = useTranslation()
@@ -65,7 +67,7 @@ export function HistoryTable({}) {
     isSuccess: historyIsSuccess,
     isPreviousData,
   } = useGetHistoryList({
-    certificateId: parseInt(getValues('certificate')),
+    certificateId: parseInt(watch('certificate')),
     config: {
       enabled: false,
     },
@@ -96,12 +98,6 @@ export function HistoryTable({}) {
         cell: info => info.row.original.typeName,
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('status', {
-      //   id: 'status',
-      //   header: () => <span>{t('history:status')}</span>,
-      //   cell: info => info.row.original.status,
-      //   footer: info => info.column.id,
-      // }),
       columnHelper.accessor('fileName', {
         id: 'fileName',
         header: () => <span>{t('history:name')}</span>,
@@ -109,7 +105,7 @@ export function HistoryTable({}) {
           return (
             <div>
               <p>{info.row.original.fileName}</p>
-              <span>{info.row.original.fileSize}</span>
+              <span className="text-secondary-700">{`(${info.row.original.fileSize})`}</span>
             </div>
           )
         },
@@ -126,7 +122,10 @@ export function HistoryTable({}) {
         id: 'action',
         header: () => <span>{t('history:action')}</span>,
         cell: info => {
-          return <span>Tải xuống</span>
+          const downloadData = {fileName: info.row.original.fileName, fileId: info.row.original.fileId}
+          return (
+            <LuDownloadCloud onClick={() => downloadFile(downloadData)}/>
+          )
         },
         footer: info => info.column.id,
       }),

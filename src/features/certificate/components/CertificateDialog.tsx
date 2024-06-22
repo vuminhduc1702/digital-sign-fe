@@ -31,37 +31,25 @@ export function CertificateDialog({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-4 flex items-center justify-center">
             <DialogTitle className="text-h1 text-secondary-900">
-              Thông tin chứng thư số
+              {t('certificate:dialog_title')}
             </DialogTitle>
           </div>
-          <div>
-            <div>
-              <p>Loại chứng thư số: </p>
-              <p>{data?.typeName}</p>
-            </div>
-            <div>
-              <p>Chủ thể: </p>
-              <p>{data?.commonName}</p>
-            </div>
-            <div>
-              <p>Nhà phát hành: </p>
-              <p>{data?.issuerName}</p>
-            </div>
-            <div>
-              <p>Trạng thái: </p>
-              <p>{data?.statusName}</p>
-            </div>
-            <div>
-              <p>Hiệu lực: </p>
-              <p>
+          <div className="grid grid-cols-3 gap-x-8 gap-y-4">
+              <p>{t('certificate:type')}</p>
+              <p className="col-span-2 font-semibold">{data?.typeName}</p>
+              <p>{t('certificate:subject')}</p>
+              <p className="col-span-2 font-semibold">{data?.commonName}</p>
+              <p>{t('certificate:issuer')}</p>
+              <p className="col-span-2 font-semibold">{data?.issuerName}</p>
+              <p>{t('certificate:status')}</p>
+              <p className="col-span-2 font-semibold">{data?.statusName}</p>
+              <p>{t('certificate:date')}</p>
+              <p className="col-span-2 font-semibold">
                 {moment(data?.notValidBefore).format('HH:mm:ss DD/MM/YYYY')} -{' '}
                 {moment(data?.notValidAfter).format('HH:mm:ss DD/MM/YYYY')}
               </p>
-            </div>
-            <div>
-              <p>Serial Number</p>
-              <p>{data?.serialNumber}</p>
-            </div>
+              <p>{t('certificate:serial')}</p>
+              <p className="col-span-2 font-semibold">{data?.serialNumber}</p>
           </div>
         </div>
       </div>
