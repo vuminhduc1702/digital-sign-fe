@@ -34,13 +34,13 @@ function SideNavigation() {
   }, [routerLink[1]])
 
   return (
-    <div className="p-2">
+    <div className="">
       <NavLink to={PATHS.SIGN}>
         <div
           className={clsx(
-            'mb-3 flex cursor-pointer items-center gap-x-3 rounded-md px-3 py-2',
+            'flex cursor-pointer items-center gap-x-3 px-3 py-4 hover:bg-primary-200 hover:text-primary-400',
             {
-              'bg-primary-400 text-white': value === 'sign',
+              'bg-primary-200 text-primary-400': value === 'sign',
             },
           )}
         >
@@ -51,9 +51,9 @@ function SideNavigation() {
       <NavLink to={PATHS.REQUEST}>
         <div
           className={clsx(
-            'mb-3 flex cursor-pointer items-center gap-x-3 rounded-md px-3 py-2',
+            'flex cursor-pointer items-center gap-x-3 px-3 py-4 hover:bg-primary-200 hover:text-primary-400',
             {
-              'bg-primary-400 text-white': value === 'request',
+              'bg-primary-200 text-primary-400': value === 'request',
             },
           )}
         >
@@ -64,9 +64,9 @@ function SideNavigation() {
       <NavLink to={PATHS.CERTIFICATE}>
         <div
           className={clsx(
-            'mb-3 flex cursor-pointer items-center gap-x-3 rounded-md px-3 py-2',
+            'flex cursor-pointer items-center gap-x-3 px-3 py-4 hover:bg-primary-200 hover:text-primary-400',
             {
-              'bg-primary-400 text-white': value === 'certificate',
+              'bg-primary-200 text-primary-400': value === 'certificate',
             },
           )}
         >
@@ -77,9 +77,9 @@ function SideNavigation() {
       <NavLink to={PATHS.VERIFY}>
         <div
           className={clsx(
-            'mb-3 flex cursor-pointer items-center gap-x-3 rounded-md px-3 py-2',
+            'flex cursor-pointer items-center gap-x-3 px-3 py-4 hover:bg-primary-200 hover:text-primary-400',
             {
-              'bg-primary-400 text-white': value === 'verify',
+              'bg-primary-200 text-primary-400': value === 'verify',
             },
           )}
         >
@@ -90,9 +90,9 @@ function SideNavigation() {
       <NavLink to={PATHS.HISTORY}>
         <div
           className={clsx(
-            'mb-3 flex cursor-pointer items-center gap-x-3 rounded-md px-3 py-2',
+            'flex cursor-pointer items-center gap-x-3 px-3 py-4 hover:bg-primary-200 hover:text-primary-400',
             {
-              'bg-primary-400 text-white': value === 'history',
+              'bg-primary-200 text-primary-400': value === 'history',
             },
           )}
         >

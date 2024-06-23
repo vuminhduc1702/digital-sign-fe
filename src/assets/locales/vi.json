@@ -18,7 +18,9 @@
     "action": "Thao tác",
     "detail": "Chi tiết",
     "subject": "Chủ thể",
-    "dialog_title": "Thông tin chứng thư số"
+    "dialog_title": "Thông tin chứng thư số",
+    "start_date": "Ngày bắt đầu",
+    "end_date":  "Ngày kết thúc"
   },
   "history": {
     "title": "Lịch sử giao dịch",
@@ -65,9 +67,22 @@
     }
   },
   "sign": {
-    "title": "Chọn tài liệu ký"
+    "title": "Chọn tài liệu ký",
+    "success_toast": "Ký thành công"
   },
   "request": {
     "title": "Yêu cầu tạo chứng thư"
+  },
+  "table": {
+    "loading": "Đang tải dữ liệu",
+    "pagination": "Số dòng hiển thị",
+    "paginationSelected": "Hiển thị {{min}}-{{max}} của {{total}} mục",
+    "filter": {
+      "select_all": "Tất cả"
+    },
+    "action": "Hành động"
+  },
+  "error": {
+    "no_data": "Không có dữ liệu"
   }
 }

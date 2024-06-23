@@ -26,10 +26,14 @@ import { LuFolderUp, LuTrash } from 'react-icons/lu'
 import { useSign } from '../api/sign'
 import TitleBar from '@/components/Head/TitleBar'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Certificate } from '@/features/certificate/types'
+import { Loading } from '@/components/Loading'
+import { downloadFile } from '@/features/history/api/downloadFile'
 
 export function SignForm() {
   const { t } = useTranslation()
   const form = useForm()
+  const {getValues, reset} = form
 
   const {
     data: certificateData,
@@ -37,7 +41,7 @@ export function SignForm() {
     isSuccess: certificateIsSuccess,
   } = useGetCertificateList({})
 
-  const { mutateAsync: mutateSign, isSuccess: signIsSuccess } = useSign()
+  const { mutateAsync: mutateSign, isSuccess: signIsSuccess, isLoading: signIsLoading } = useSign()
 
   const {
     close: closeSelectCert,
@@ -52,6 +56,7 @@ export function SignForm() {
   } = useDisclosure()
 
   const [uploadFile, setUploadFile] = useState<File | null>(null)
+  const [selectedCert, setSelectedCert] = useState<Certificate | null>(null)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [uploadFileErr, setUploadFileErr] = useState('')
 
@@ -59,7 +64,16 @@ export function SignForm() {
     setShowPassword(prev => !prev)
   }
 
+  const removeFile = () => {
+    setUploadFile(null)
+    setSelectedCert(null)
+  }
+
   function handleSelectCert() {
+    const selectedCert = certificateData?.data.find(cert => cert.certificateId.toString() === getValues('certificateId'))
+    if (selectedCert) {
+      setSelectedCert(selectedCert)
+    }
     closeSelectCert()
     openInfoForm()
   }
@@ -69,17 +83,20 @@ export function SignForm() {
       closeInfoForm()
       closeSelectCert()
       setUploadFile(null)
-      form.reset()
+      setSelectedCert(null)
+      reset()
     }
   }, [signIsSuccess])
 
   return (
     <div className="flex gap-4">
+    {signIsLoading && <Loading />}
     <Form {...form}>
       <form
         id="sign-form"
         className="flex basis-3/5 flex-col justify-between rounded-lg bg-white p-6"
         onSubmit={form.handleSubmit(async values => {
+          closeInfoForm()
           const data = {
             body: {
               signatureLocation: values.signatureLocation,
@@ -91,8 +108,12 @@ export function SignForm() {
             },
             file: uploadFile,
           }
-          console.log(data)
-          mutateSign(data)
+          const response = await mutateSign(data)
+          const downloadData = {
+            fileId: response.fileId,
+            fileName: response.fileName
+          }
+          downloadFile(downloadData)
         })}
       >
         <FormField
@@ -135,13 +156,13 @@ export function SignForm() {
           )}
         />
         {uploadFile && (
-          <div className="mt-4 flex w-1/2 flex-col gap-6">
-            <div className="flex items-center justify-center gap-6">
+          <div className="mt-4 flex w-full flex-col gap-6">
+            <div className="flex items-start justify-center gap-6">
               <p>{uploadFile.name}</p>
               <p>{uploadFile.size}</p>
               <LuTrash
-                className="h-8 w-8"
-                onClick={() => setUploadFile(null)}
+                className="h-4 w-4"
+                onClick={removeFile}
               />
             </div>
             <Button className="w-fit self-center" onClick={openSelectCert}>
@@ -169,12 +190,12 @@ export function SignForm() {
                   <FormField
                     control={form.control}
                     name="certificateId"
-                    render={({ field }) => (
+                    render={({ field: {onChange, value, ...field} }) => (
                       <FormItem>
                         <FormControl>
                           <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            onValueChange={onChange}
+                            defaultValue={value}
                             className="grid grid-cols-2"
                           >
                             {certificateData &&
@@ -352,6 +373,44 @@ export function SignForm() {
               <p>{t('verify:doc_info.size')}</p>
               <Skeleton className="col-span-2 h-4 w-full" />
               <p>{t('verify:doc_info.type')}</p>
+              <Skeleton className="col-span-2 h-4 w-full" />
+            </div>
+          )}
+        </div>
+        <div>
+          <TitleBar title={t('verify:cert_info.title')} className="mb-6" />
+          {selectedCert ? (
+              <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+                <p>{t('certificate:name')}</p>
+                <p className="col-span-2 h-4 w-full">
+                  {selectedCert.commonName}
+                </p>
+                <p>{t('certificate:subject')}</p>
+                <p className="col-span-2 w-full">
+                  {selectedCert.subjectName}
+                </p>
+                <p>{t('certificate:start_date')}</p>
+                <p className="col-span-2 w-full">
+                  {moment(selectedCert.notValidBefore).format(
+                    'DD/MM/yyyy',
+                  )}
+                </p>
+                <p>{t('certificate:end_date')}</p>
+                <p className="col-span-2 w-full">
+                  {moment(selectedCert.notValidAfter).format(
+                    'DD/MM/yyyy',
+                  )}
+                </p>
+              </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+              <p>{t('certificate:name')}</p>
+              <Skeleton className="col-span-2 h-4 w-full" />
+              <p>{t('certificate:subject')}</p>
+              <Skeleton className="col-span-2 h-4 w-full" />
+              <p>{t('certificate:start_date')}</p>
+              <Skeleton className="col-span-2 h-4 w-full" />
+              <p>{t('certificate:end_date')}</p>
               <Skeleton className="col-span-2 h-4 w-full" />
             </div>
           )}

@@ -67,7 +67,7 @@ export function HistoryTable({}) {
     isSuccess: historyIsSuccess,
     isPreviousData,
   } = useGetHistoryList({
-    certificateId: parseInt(watch('certificate')),
+    certificateId: parseInt(getValues('certificate')),
     config: {
       enabled: false,
     },
@@ -140,20 +140,21 @@ export function HistoryTable({}) {
   }, [certificateIsSuccess])
 
   useEffect(() => {
-    if (certificateData && getValues('certificate')) {
+    console.log(getValues('certificate'))
+    if (getValues('certificate')) {
       const selectedCertificate =
         certificateData?.find(
-          cert => cert.certificateId === getValues('certificate'),
+          cert => cert.certificateId.toString() === getValues('certificate'),
         ) ?? null
-      setSelectedCert(selectedCertificate)
+      if (selectedCertificate) {
+        setSelectedCert(selectedCertificate)
+      }
       refetchHistoryData()
     }
-  }, [certificateData, watch('certificate')])
-
-  console.log(selectedCert)
+  }, [watch('certificate')])
 
   return (
-    <>
+    <div className="rounded-lg bg-white p-6">
       <Form {...form}>
         <form>
           <FormField
@@ -198,6 +199,6 @@ export function HistoryTable({}) {
           isPreviousData={isPreviousData}
         />
       </div>
-    </>
+    </div>
   )
 }

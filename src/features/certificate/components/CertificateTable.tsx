@@ -98,7 +98,7 @@ export function CertificateTable() {
       }),
       columnHelper.accessor('statusName', {
         id: 'statusName',
-        header: () => <span>{t('certificate:date')}</span>,
+        header: () => <span>{t('certificate:status')}</span>,
         cell: info => info.row.original.statusName,
         footer: info => info.column.id,
       }),

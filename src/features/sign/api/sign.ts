@@ -2,9 +2,14 @@ import { axios } from '@/lib/axios'
 import { type MutationConfig, queryClient } from '@/lib/react-query'
 import { type BaseAPIRes } from '@/types'
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 type SignRes = {
   message: string
+  fileId: number
+  fileName: string
+  fileSize: string
 } & BaseAPIRes
 
 export type SignDTO = {
@@ -37,11 +42,13 @@ type UseSignOptions = {
 }
 
 export const useSign = ({ config }: UseSignOptions = {}) => {
+  const {t} = useTranslation()
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['sign'],
       })
+      toast.success(t('sign:success_toast'))
     },
     ...config,
     mutationFn: sign,
