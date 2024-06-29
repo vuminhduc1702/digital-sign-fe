@@ -61,6 +61,19 @@ function SideNavigation() {
         <div>{t('sidebar:request')}</div>
         </div>
       </NavLink>
+      <NavLink to={PATHS.SIGN_REQUEST}>
+        <div
+          className={clsx(
+            'flex cursor-pointer items-center gap-x-3 px-3 py-4 hover:bg-primary-200 hover:text-primary-400',
+            {
+              'bg-primary-200 text-primary-400': value === 'sign-request',
+            },
+          )}
+        >
+        <LuUploadCloud />          
+        <div>{t('sidebar:sign_request')}</div>
+        </div>
+      </NavLink>
       <NavLink to={PATHS.CERTIFICATE}>
         <div
           className={clsx(

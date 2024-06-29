@@ -10,6 +10,7 @@ export const PATHS = {
   CERTIFICATE: `${BASE_PATH}certificate`,
   VERIFY: `${BASE_PATH}verify`,
   HISTORY: `${BASE_PATH}history`,
+  SIGN_REQUEST: `${BASE_PATH}sign-request`,
 
   // Public routes
   LOGIN: `${BASE_PATH_AUTH}login`,

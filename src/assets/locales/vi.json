@@ -4,7 +4,8 @@
     "certificate": "Chứng thư số",
     "request": "Yêu cầu tạo chứng thư",
     "verify": "Kiểm tra chữ ký",
-    "history": "Lịch sử"
+    "history": "Lịch sử",
+    "sign_request": "Yêu cầu ký"
   },
   "certificate": {
     "title": "Danh sách chứng thư số",
@@ -79,6 +80,9 @@
     "status": "Trạng thái",
     "action": "Thao tác",
     "new_request": "Tạo yêu cầu mới"
+  },
+  "sign_request": {
+    "title": "Yêu cầu ký"
   },
   "table": {
     "loading": "Đang tải dữ liệu",

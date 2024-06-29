@@ -11,10 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const status = [
     {
-        value: '',
-        label: "Tất cả"
-    }
-    {
         value: '0',
         label: 'Đang chờ duyệt'
     },
@@ -148,7 +144,7 @@ export function RequestTable({}) {
                                 <FormItem>
                                     <FormControl>
                                         <div>
-                                            <Select>
+                                            <Select {...field}>
                                                 <SelectTrigger>
                                                     <SelectValue defaultValue='' />
                                                 </SelectTrigger>
