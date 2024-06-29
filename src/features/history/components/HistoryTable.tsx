@@ -67,7 +67,7 @@ export function HistoryTable({}) {
     isSuccess: historyIsSuccess,
     isPreviousData,
   } = useGetHistoryList({
-    certificateId: parseInt(getValues('certificate')),
+    certificateId: Number(watch('certificate')),
     config: {
       enabled: false,
     },
@@ -86,8 +86,8 @@ export function HistoryTable({}) {
         id: 'stt',
         cell: info => {
           return !isPreviousData
-            ? info.row.index + 1 + page
-            : info.row.index + 1 + pagePrev.current
+            ? info.row.index + page
+            : info.row.index + pagePrev.current
         },
         header: () => <span>{t('history:stt')}</span>,
         footer: info => info.column.id,
@@ -134,22 +134,23 @@ export function HistoryTable({}) {
   )
 
   useEffect(() => {
-    if (certificateIsSuccess && certificateData) {
+    if (certificateIsSuccess && certificateData && certificateData.length > 0) {
       setValue('certificate', certificateData[0].certificateId.toString())
     }
-  }, [certificateIsSuccess])
+  }, [certificateIsSuccess, certificateData])
 
   useEffect(() => {
-    console.log(getValues('certificate'))
-    if (getValues('certificate')) {
+    console.log(watch('certificate'))
+    if (watch('certificate') !== undefined) {
       const selectedCertificate =
         certificateData?.find(
           cert => cert.certificateId.toString() === getValues('certificate'),
         ) ?? null
+        console.log('cert', selectedCertificate)
       if (selectedCertificate) {
         setSelectedCert(selectedCertificate)
+        refetchHistoryData()
       }
-      refetchHistoryData()
     }
   }, [watch('certificate')])
 
@@ -163,7 +164,10 @@ export function HistoryTable({}) {
             render={({ field: { onChange, value, ...field } }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={onChange} value={value} {...field}>
+                  <Select onValueChange={() => {
+                    onChange()
+                    refetchHistoryData()
+                  }} value={value} {...field}>
                     <SelectTrigger className="w-64 focus:outline-none">
                       <SelectValue />
                     </SelectTrigger>

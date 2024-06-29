@@ -2,7 +2,7 @@ import { limitPagination } from '@/utils/const'
 import { type SignHistory } from '../types'
 import { axios } from '@/lib/axios'
 import { type ExtractFnReturnType, type QueryConfig } from '@/lib/react-query'
-import { useQuery } from '@tanstack/react-query'
+import { RefetchOptions, useQuery } from '@tanstack/react-query'
 
 type GetHistoryListRes = {
   data: SignHistory[]
@@ -14,7 +14,7 @@ type GetHistoryListRes = {
 }
 
 export type GetHistoryListProps = {
-  certificateId: number
+  certificateId?: number
   pageNum?: number
   pageSize?: number
 }
@@ -36,7 +36,7 @@ type QueryFnType = typeof getHistoryList
 
 type UseGetHistoryListOptions = {
   config?: QueryConfig<QueryFnType>
-} & GetHistoryListProps
+} & GetHistoryListProps & RefetchOptions
 
 export const useGetHistoryList = ({
   pageNum,

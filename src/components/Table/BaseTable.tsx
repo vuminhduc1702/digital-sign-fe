@@ -247,11 +247,13 @@ export function BaseTable<T extends Record<string, any>>({
 
   return (
     <div className={cn(``, className)}>
-      {isCheckbox && (
+      
         <div className="flex w-full flex-col gap-4 font-bold md:flex-row md:items-center md:justify-end">
           <div className="flex flex-row gap-4">
             {utilityButton}
-            <ExportTable
+            {isCheckbox && (
+              <>
+              <ExportTable
               refComponent={ref}
               rowSelection={rowSelection}
               formatExcel={formatExcel}
@@ -319,9 +321,9 @@ export function BaseTable<T extends Record<string, any>>({
                   })}
               </DropdownMenuContent>
             </DropdownMenu>
+            </>)}
           </div>
         </div>
-      )}
       <ScrollArea
         className={cn(
           'relative z-30 mt-2 flex h-[calc(100vh_-_370px)] grow flex-col justify-between',

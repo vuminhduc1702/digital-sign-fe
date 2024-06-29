@@ -71,7 +71,14 @@
     "success_toast": "Ký thành công"
   },
   "request": {
-    "title": "Yêu cầu tạo chứng thư"
+    "title": "Yêu cầu tạo chứng thư",
+    "stt": "STT",
+    "regist_ts": "Thời gian tạo",
+    "update_ts": "Thời gian cập nhật",
+    "is_valid": "Hợp lệ",
+    "status": "Trạng thái",
+    "action": "Thao tác",
+    "new_request": "Tạo yêu cầu mới"
   },
   "table": {
     "loading": "Đang tải dữ liệu",
@@ -83,6 +90,13 @@
     "action": "Hành động"
   },
   "error": {
-    "no_data": "Không có dữ liệu"
+    "no_data": "Không có dữ liệu",
+    "server_res": {
+      "title": "Lỗi! Xin vui lòng thử lại.",
+      "authorization": "Bạn không có quyền truy cập vào trang này.",
+      "notfound": "Không tìm thấy trang này.",
+      "server": "Hệ thống đang có lỗi. Vui lòng thử lại sau.",
+      "500": "Lỗi unknown! Vui lòng refresh lại trang."
+    }
   }
 }

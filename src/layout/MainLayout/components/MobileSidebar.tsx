@@ -28,7 +28,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
       key="left"
     >
       <SheetContent
-        className="max-w-xs bg-secondary-400"
+        className="max-w-xs bg-white p-0"
         side="left"
         closeButtonAvai={true}
       >
@@ -40,7 +40,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
           >
             <img src={logo} alt="logo" className="h-6 cursor-pointer" />
           </NavLink>
-          <nav className="space-y-1 px-2">
+          <nav className="space-y-1 bg-white">
             <SideNavigation />
           </nav>
         </div>
