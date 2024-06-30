@@ -23,7 +23,7 @@ type SelectProps<
   isPosition?: boolean
 } & Props<Option, IsMulti, Group>
 
-export function NewSelectDropdown<
+export function SelectDropdown<
   Option = unknown,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,

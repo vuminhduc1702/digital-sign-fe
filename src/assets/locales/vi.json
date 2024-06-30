@@ -7,10 +7,14 @@
     "history": "Lịch sử",
     "sign_request": "Yêu cầu ký"
   },
+  "navbar": {
+    "account": "Tài khoản",
+    "logout": "Đăng xuất"
+  },
   "certificate": {
     "title": "Danh sách chứng thư số",
     "stt": "STT",
-    "issuer": "Chủ chứng thư số",
+    "issuer": "Nhà phát hành",
     "name": "Tên chứng thư số",
     "type": "Loại chứng thư số",
     "date": "Hiệu lực",
@@ -21,7 +25,10 @@
     "subject": "Chủ thể",
     "dialog_title": "Thông tin chứng thư số",
     "start_date": "Ngày bắt đầu",
-    "end_date":  "Ngày kết thúc"
+    "end_date":  "Ngày kết thúc",
+    "algo": "Hàm ký",
+    "download": "Tải xuống",
+    "revoke": "Thu hồi"
   },
   "history": {
     "title": "Lịch sử giao dịch",
@@ -69,7 +76,10 @@
   },
   "sign": {
     "title": "Chọn tài liệu ký",
-    "success_toast": "Ký thành công"
+    "success_toast": "Ký thành công",
+    "group": {
+      "title": "Chọn nhóm"
+    }
   },
   "request": {
     "title": "Yêu cầu tạo chứng thư",
@@ -79,19 +89,38 @@
     "is_valid": "Hợp lệ",
     "status": "Trạng thái",
     "action": "Thao tác",
-    "new_request": "Tạo yêu cầu mới"
+    "new_request": "Tạo mới",
+    "filter": "Bộ lọc"
   },
   "sign_request": {
-    "title": "Yêu cầu ký"
+    "title": "Yêu cầu ký",
+    "stt": "STT",
+    "file_name": "Tên file",
+    "regist_ts":"Thời gian tạo",
+    "last_update": "Cập nhật gần nhất",
+    "last_user_update": "Người cập nhật",
+    "has_signed": "Tài liệu đã ký",
+    "action":"Hành động",
+    "filter": "Bộ lọc",
+    "detail": "Chi tiết",
+    "detail_page": {
+      "title": "Chi tiết yêu cầu",
+      "request_info": "Thông tin yêu cầu ký",
+      "user_list": "Danh sách người dùng cần ký"
+    }
   },
   "table": {
     "loading": "Đang tải dữ liệu",
     "pagination": "Số dòng hiển thị",
     "paginationSelected": "Hiển thị {{min}}-{{max}} của {{total}} mục",
+    "search_count": "Kết quả tìm kiếm",
     "filter": {
       "select_all": "Tất cả"
     },
     "action": "Hành động"
+  },
+  "placeholder": {
+    "select": "Vui lòng chọn"
   },
   "error": {
     "no_data": "Không có dữ liệu",

@@ -3,6 +3,7 @@ import { Certificate } from '../types'
 import { HiOutlineXMark } from 'react-icons/hi2'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
+import { Button } from '@/components/ui/button'
 
 export type CertificateDialogProps = {
   close: () => void
@@ -50,6 +51,16 @@ export function CertificateDialog({
               </p>
               <p>{t('certificate:serial')}</p>
               <p className="col-span-2 font-semibold">{data?.serialNumber}</p>
+              <p>{t('certificate:algo')}</p>
+              <p className="col-span-2 font-semibold">{data?.signAlgorithm}</p>
+          </div>
+          <div className="mt-8 flex items-center justify-center gap-4">
+            <Button variant="secondaryLight">
+              {t('certificate:download')}
+            </Button>
+            <Button>
+              {t('certificate:revoke')}
+            </Button>
           </div>
         </div>
       </div>

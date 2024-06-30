@@ -9,7 +9,7 @@ import { useGetCertificateList } from '../api/getCertificateList'
 import { limitPagination } from '@/utils/const'
 import moment from 'moment'
 import { Button } from '@/components/ui/button'
-import { LuEye } from 'react-icons/lu'
+import { LuDownload, LuEye, LuTrash } from 'react-icons/lu'
 
 type CertificateProps = {
   certificate: Certificate
@@ -20,11 +20,19 @@ function CertificateInfo({ certificate }: CertificateProps) {
   const { close, open, isOpen } = useDisclosure()
 
   return (
-    <div className="flex cursor-pointer justify-center p-3">
-      <LuEye className="text-lg text-gray-500" onClick={open} />
-      {isOpen ? (
-        <CertificateDialog isOpen={isOpen} close={close} data={certificate} />
-      ) : null}
+    <div className="flex">
+      <div className="flex cursor-pointer justify-center p-3">
+        <LuEye className="text-lg text-gray-500" onClick={open} />
+        {isOpen ? (
+          <CertificateDialog isOpen={isOpen} close={close} data={certificate} />
+        ) : null}
+      </div>
+      <div className="flex cursor-pointer justify-center p-3">
+        <LuDownload className="text-lg text-gray-500" />
+      </div>
+      <div className="flex cursor-pointer justify-center p-3">
+        <LuTrash className="text-lg text-gray-500" />
+      </div>
     </div>
   )
 }
@@ -122,7 +130,7 @@ export function CertificateTable() {
 
   return (
     <>
-      <div>
+      <div className="bg-white p-6 rounded-lg">
         <BaseTable
           data={data?.data ?? []}
           columns={columns}

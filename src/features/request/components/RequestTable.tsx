@@ -6,7 +6,7 @@ import { CertificateRequest } from "../types"
 import { LuPlus } from "react-icons/lu"
 import { BaseTable } from "@/components/Table"
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const status = [
@@ -123,7 +123,46 @@ export function RequestTable({}) {
         []
     )
 
-    return <div>
+    return (
+    <div className="bg-white p-6 rounded-lg">
+        <div className="flex items-end justify-between">
+            <div className="w-full my-4">
+            <Form {...form}>
+                <form>
+                    <FormField 
+                        control = {control}
+                        name = "filterByStatus"
+                        render = {({field}) => (
+                            <FormItem className="w-1/5">
+                                <FormLabel>
+                                    {t('request:filter')}
+                                </FormLabel>
+                                <FormControl>
+                                    <div>
+                                        <Select {...field}>
+                                            <SelectTrigger>
+                                                <SelectValue defaultValue='' />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {status.map(option => (
+                                                    <SelectItem key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </FormControl>
+                            </FormItem>
+                            )}
+                        />
+                    </form>
+                </Form>
+                </div>
+                <Button className="w-36 h-9" variant="primary" startIcon={<LuPlus className="w-4 h-4"/>}>
+                    {t('request:new_request')}
+                </Button>
+            </div>
         <BaseTable 
             data = {[]}
             columns = {columns}
@@ -133,41 +172,6 @@ export function RequestTable({}) {
             total = {0}
             isLoading = {false}
             isPreviousData = {false}
-            utilityButton={
-                <div className="flex w-full justify-between">
-                <Form {...form}>
-                    <form>
-                        <FormField 
-                            control = {control}
-                            name = "filterByStatus"
-                            render = {({field}) => (
-                                <FormItem>
-                                    <FormControl>
-                                        <div>
-                                            <Select {...field}>
-                                                <SelectTrigger>
-                                                    <SelectValue defaultValue='' />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {status.map(option => (
-                                                        <SelectItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                    </form>
-                </Form>
-                <Button variant="primary" startIcon={<LuPlus className="h-4 w-4"/>}>
-                    {t('request:new_request')}
-                </Button>
-                </div>
-            }
         />
-        </div>
+        </div>)
 }

@@ -31,7 +31,7 @@ import {
 import { useGetHistoryList } from '../api/getHistoryList'
 import { limitPagination } from '@/utils/const'
 import { Certificate } from '@/features/certificate/types'
-import { LuDownloadCloud } from 'react-icons/lu'
+import { LuDownload, LuDownloadCloud } from 'react-icons/lu'
 import { downloadFile } from '../api/downloadFile'
 
 export function HistoryTable({}) {
@@ -124,7 +124,7 @@ export function HistoryTable({}) {
         cell: info => {
           const downloadData = {fileName: info.row.original.fileName, fileId: info.row.original.fileId}
           return (
-            <LuDownloadCloud onClick={() => downloadFile(downloadData)}/>
+            <LuDownload onClick={() => downloadFile(downloadData)}/>
           )
         },
         footer: info => info.column.id,

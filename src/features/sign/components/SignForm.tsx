@@ -29,6 +29,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Certificate } from '@/features/certificate/types'
 import { Loading } from '@/components/Loading'
 import { downloadFile } from '@/features/history/api/downloadFile'
+import { SelectDropdown } from '@/components/Form/SelectDropdown'
 
 export function SignForm() {
   const { t } = useTranslation()
@@ -53,6 +54,12 @@ export function SignForm() {
     close: closeInfoForm,
     open: openInfoForm,
     isOpen: isOpenInfoForm,
+  } = useDisclosure()
+
+  const {
+    close: closeSelectGroup,
+    open: openSelectGroup,
+    isOpen: isOpenSelectGroup
   } = useDisclosure()
 
   const [uploadFile, setUploadFile] = useState<File | null>(null)
@@ -165,9 +172,14 @@ export function SignForm() {
                 onClick={removeFile}
               />
             </div>
+            <div className="flex items-center justify-center gap-4">
             <Button className="w-fit self-center" onClick={openSelectCert}>
               Kí số
             </Button>
+            <Button variant="secondaryLight" className="w-fit" onClick={openSelectGroup}>
+              Chọn nhóm
+            </Button>
+            </div>
           </div>
         )}
         {isOpenSelectCert && (
@@ -182,9 +194,9 @@ export function SignForm() {
                   <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
-              <div className="mt-3 text-center sm:mt-0 sm:text-left">
-                <div className="">
-                  <DialogTitle className="text-h1 text-secondary-900">
+              <div className="flex flex-col items-center justify-between mt-3 min-h-96 text-center sm:mt-0 sm:text-left">
+                <div className="flex-1">
+                  <DialogTitle className="mb-4 text-h1 text-secondary-900">
                     Chọn chứng thư số
                   </DialogTitle>
                   <FormField
@@ -196,33 +208,38 @@ export function SignForm() {
                           <RadioGroup
                             onValueChange={onChange}
                             defaultValue={value}
-                            className="grid grid-cols-2"
+                            className="grid grid-cols-2 gap-4"
                           >
                             {certificateData &&
                               certificateData.data.length > 0 &&
                               certificateData.data.map(cert => (
                                 <div>
                                   <FormControl>
-                                    <>
-                                      <RadioGroupItem
-                                        value={cert.certificateId.toString()}
-                                      />
-                                      <div>
-                                        <p>{cert.commonName}</p>
-                                        <p>Chủ thể: {cert.subjectName}</p>
-                                        <p>Số series: {cert.serialNumber}</p>
+                                    <div className="p-4 shadow-lg">
+                                      <div className="flex items-center justify-between">
+                                        <p className="font-semibold">{cert.commonName}</p>
+                                        <RadioGroupItem
+                                          value={cert.certificateId.toString()}
+                                        />
+                                      </div>
+                                      <div className="mt-4 grid grid-cols-3 gap-2">
+                                        <p>Chủ thể: </p>
+                                        <p className="col-span-2">{cert.subjectName}</p>
+                                        <p>Số series: </p>
+                                        <p className="col-span-2">{cert.serialNumber}</p>
                                         <p>
-                                          Hiệu lực:{' '}
+                                          Hiệu lực:
+                                          </p>
+                                          <p className="col-span-2">
                                           {moment(cert.notValidBefore).format(
-                                            'DD:mm:yyyy',
-                                          )}{' '}
-                                          -{' '}
+                                            'DD/MM/YYYY',
+                                          )}{' - '}
                                           {moment(cert.notValidAfter).format(
-                                            'DD:mm:yyyy',
+                                            'DD/MM/YYYY',
                                           )}
                                         </p>
                                       </div>
-                                    </>
+                                    </div>
                                   </FormControl>
                                 </div>
                               ))}
@@ -232,7 +249,9 @@ export function SignForm() {
                     )}
                   />
                 </div>
-                <Button onClick={handleSelectCert}>Tiếp tục</Button>
+                <div className="justify-self-center text-center">
+                  <Button className="" onClick={handleSelectCert}>Tiếp tục</Button>
+                </div>
               </div>
             </div>
           </Dialog>
@@ -250,7 +269,7 @@ export function SignForm() {
                   <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
-              <div className="mt-3 text-center sm:mt-0 sm:text-left">
+              <div className="flex flex-col items-center justify-center mt-3 text-center sm:mt-0 sm:text-left">
                 <div className="flex w-full flex-col justify-between space-y-6">
                   <DialogTitle className="text-h1 text-secondary-900">
                     Thông tin
@@ -353,6 +372,66 @@ export function SignForm() {
           </Dialog>
         )}
       </form>
+    </Form>
+    <Form>
+        <form>
+          {isOpenSelectGroup && (
+                      <Dialog isOpen={isOpenSelectGroup} onClose={closeSelectGroup}>
+                      <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6 sm:align-middle">
+                        <div className="absolute -right-3 -top-3">
+                          <button
+                            className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                            onClick={closeInfoForm}
+                          >
+                            <span className="sr-only">Close panel</span>
+                            <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
+                          </button>
+                        </div>
+                        <div className="flex flex-col items-center justify-center mt-3 text-center sm:mt-0 sm:text-left">
+                          <div className="flex w-full flex-col justify-between space-y-6">
+                            <DialogTitle className="text-h1 text-secondary-900">
+                              {t('sign:group.title')}
+                            </DialogTitle>
+                            <FormField
+                              control={form.control}
+                              name="password"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Mật khẩu</FormLabel>
+                                  <FormControl>
+                                    <SelectDropdown 
+
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="signatureLocation"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Địa điểm kí</FormLabel>
+                                  <FormControl>
+                                    <Input type="text" {...field} />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <Button
+                            className="mt-4 self-center"
+                            form="sign-form"
+                            type="submit"
+                          >
+                            Kí số
+                          </Button>
+                        </div>
+                      </div>
+                    </Dialog>
+          )}
+        </form>
     </Form>
     <div className="basis-2/5 rounded-lg bg-white p-6">
         <div className="mb-3">

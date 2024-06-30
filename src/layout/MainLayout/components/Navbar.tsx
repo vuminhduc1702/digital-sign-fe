@@ -50,13 +50,13 @@ function Navbar() {
           <DropdownMenuTrigger asChild className="flex items-center gap-x-2">
             <div className="cursor-pointer">
               <div className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary-900 p-4  text-white">
-                VĐ
+                DT
               </div>
               <p>
                 {/* {userInfoData != null
                     ? userInfoData?.name || userInfoData?.email?.split('@')[0]
                     : t('nav:friend')} */}
-                VŨ MINH ĐỨC
+                DƯƠNG TẤN DŨNG
               </p>
               <SidebarDropDownIcon width={12} height={7} viewBox="0 0 12 7" />
             </div>
@@ -70,14 +70,14 @@ function Navbar() {
               className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
             >
               <Link to={PATHS.USER_INFO}>
-                {t('cloud:custom_protocol.adapter.username')}
+                {t('navbar:account')}
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
               // onClick={() => logout.mutate({})}
             >
-              <p>{t('user:logout')}</p>
+              <p>{t('navbar:logout')}</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
