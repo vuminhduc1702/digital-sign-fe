@@ -143,7 +143,7 @@ const DialogClose = React.forwardRef<
   <DialogPrimitive.Close
     ref={ref}
     className={cn(
-      buttonVariants({ variant: 'default', size: 'default' }),
+      buttonVariants({ variant: 'primary', size: 'md' }),
       'bg-secondary-500 text-black hover:bg-secondary-400/90',
       className,
     )}

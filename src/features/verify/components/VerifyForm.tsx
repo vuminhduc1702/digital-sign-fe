@@ -16,6 +16,7 @@ import { type VerifyRes, useVerify } from '../api/verify'
 import moment from 'moment'
 import TitleBar from '@/components/Head/TitleBar'
 import { Skeleton } from '@/components/ui/skeleton'
+import { formatBytes } from '@/utils/transformFunc'
 
 export function VerifyForm() {
   const { t } = useTranslation()
@@ -41,6 +42,7 @@ export function VerifyForm() {
             setResponseData(response)
           })}
         >
+          <div>
           <FormField
             control={form.control}
             name="file"
@@ -78,10 +80,9 @@ export function VerifyForm() {
             )}
           />
           {uploadFile && (
-            <div className="mt-4 flex w-full flex-col gap-6">
-              <div className="flex items-start justify-center gap-6">
-                <p>{uploadFile.name}</p>
-                <p>{uploadFile.size}</p>
+          <div className="mt-4 flex w-full flex-col gap-6">
+            <div className="bg-secondary-400 flex items-start justify-between px-4 py-2 rounded-md">
+            <p>{uploadFile.name} ({formatBytes(uploadFile.size)})</p>
                 <LuTrash
                   className="h-4 w-4"
                   onClick={() => {
@@ -92,6 +93,7 @@ export function VerifyForm() {
               </div>
             </div>
           )}
+          </div>
           <Button
             className="w-fit self-center"
             type="submit"

@@ -30,11 +30,17 @@ import { Certificate } from '@/features/certificate/types'
 import { Loading } from '@/components/Loading'
 import { downloadFile } from '@/features/history/api/downloadFile'
 import { SelectDropdown } from '@/components/Form/SelectDropdown'
+import { formatBytes } from '@/utils/transformFunc'
+import { groupList } from '../mock-data'
+import { Calendar } from '@/components/ui/calendar'
+import { DateTime } from '@/components/DateTime'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 export function SignForm() {
   const { t } = useTranslation()
   const form = useForm()
   const {getValues, reset} = form
+  const groupForm = useForm()
 
   const {
     data: certificateData,
@@ -66,6 +72,13 @@ export function SignForm() {
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [uploadFileErr, setUploadFileErr] = useState('')
+
+  const groupOptions = groupList.map(group => (
+    {
+      value: group.groupId,
+      label: group.groupName
+    }
+  ))
 
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
@@ -129,11 +142,11 @@ export function SignForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <div className="flex h-60 w-full cursor-pointer  flex-col items-center justify-center  rounded-md bg-secondary-400 text-secondary-700  hover:bg-secondary-500 ">
-                  <LuFolderUp className="h-16 w-auto" />
-                  <p>Click để chọn tệp</p>
-                  <p>Định dạng được hỗ trợ: PDF</p>
-                  <p>Kích thước hỗ trợ tối đa 20MB</p>
+                <div className="flex h-60 w-full cursor-pointer flex-col gap-3 items-center justify-center  rounded-md bg-secondary-400 text-secondary-700  hover:bg-secondary-500 ">
+                      <LuFolderUp className="h-16 w-auto" />
+                      <p>Click để chọn tệp</p>
+                      <p>Định dạng được hỗ trợ: PDF</p>
+                      <p>Kích thước hỗ trợ tối đa 20MB</p>
                 </div>
               </FormLabel>
               <FormControl>
@@ -164,9 +177,8 @@ export function SignForm() {
         />
         {uploadFile && (
           <div className="mt-4 flex w-full flex-col gap-6">
-            <div className="flex items-start justify-center gap-6">
-              <p>{uploadFile.name}</p>
-              <p>{uploadFile.size}</p>
+            <div className="bg-secondary-400 flex items-start justify-between px-4 py-2 rounded-md">
+              <p>{uploadFile.name} ({formatBytes(uploadFile.size)})</p>
               <LuTrash
                 className="h-4 w-4"
                 onClick={removeFile}
@@ -196,7 +208,7 @@ export function SignForm() {
               </div>
               <div className="flex flex-col items-center justify-between mt-3 min-h-96 text-center sm:mt-0 sm:text-left">
                 <div className="flex-1">
-                  <DialogTitle className="mb-4 text-h1 text-secondary-900">
+                  <DialogTitle className="mb-4 text-h1 self-center text-secondary-900">
                     Chọn chứng thư số
                   </DialogTitle>
                   <FormField
@@ -373,7 +385,7 @@ export function SignForm() {
         )}
       </form>
     </Form>
-    <Form>
+    <Form {...groupForm}>
         <form>
           {isOpenSelectGroup && (
                       <Dialog isOpen={isOpenSelectGroup} onClose={closeSelectGroup}>
@@ -381,7 +393,7 @@ export function SignForm() {
                         <div className="absolute -right-3 -top-3">
                           <button
                             className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                            onClick={closeInfoForm}
+                            onClick={closeSelectGroup}
                           >
                             <span className="sr-only">Close panel</span>
                             <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
@@ -389,44 +401,55 @@ export function SignForm() {
                         </div>
                         <div className="flex flex-col items-center justify-center mt-3 text-center sm:mt-0 sm:text-left">
                           <div className="flex w-full flex-col justify-between space-y-6">
-                            <DialogTitle className="text-h1 text-secondary-900">
+                            <DialogTitle className="text-h1 self-center text-secondary-900">
                               {t('sign:group.title')}
                             </DialogTitle>
                             <FormField
-                              control={form.control}
-                              name="password"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Mật khẩu</FormLabel>
+                              control={groupForm.control}
+                              name="group"
+                              render={({ field: {onChange, value, ...field} }) => (
+                                <FormItem className="flex gap-4 items-center">
+                                  <FormLabel className="basis-1/5">Nhóm</FormLabel>
                                   <FormControl>
+                                    <div className="flex-1">
                                     <SelectDropdown 
-
+                                        options={groupOptions}
+                                        customOnChange={onChange}
+                                        {...field}
                                     />
+                                    </div>
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
                             <FormField
-                              control={form.control}
-                              name="signatureLocation"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Địa điểm kí</FormLabel>
+                              control={groupForm.control}
+                              name="date"
+                              render={({ field: {value, onChange, ...field} }) => (
+                                <FormItem className="flex gap-4 items-center">
+                                  <FormLabel className="basis-1/5">Thời hạn ký</FormLabel>
                                   <FormControl>
-                                    <Input type="text" {...field} />
+                                    <div className="flex-1">
+                                      <DateTime value={value} onChange={date => onChange(date)}
+                                      />
+                                      </div>
                                   </FormControl>
                                 </FormItem>
                               )}
                             />
                           </div>
+                          <div className="flex mt-8 items-center justify-center gap-4">
                           <Button
-                            className="mt-4 self-center"
                             form="sign-form"
                             type="submit"
                           >
-                            Kí số
+                            Tạo yêu cầu
                           </Button>
+                          <Button variant="secondaryLight" onClick={closeSelectGroup}>
+                            Huỷ
+                          </Button>
+                          </div>
                         </div>
                       </div>
                     </Dialog>

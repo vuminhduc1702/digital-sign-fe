@@ -52,7 +52,7 @@ export function SelectDropdown<
       isSearchable
       isClearable={isClearable}
       placeholder={placeholder ?? t('placeholder:select')}
-      menuPosition={isPosition ? 'fixed' : undefined}
+      menuPlacement='auto'
       onChange={(e, { action }) => {
         const option =
           (e as unknown as SelectOption[])?.length > 0
