@@ -36,7 +36,7 @@ export function SignRequestDetailBox({detail}: SignRequestDetailBoxProps) {
       </div>
       <div className="grid grid-cols-3">
         <p>Số lượng người cần ký:</p>
-        <p className="col-span-2 font-semibold">{detail.numberOfUser}</p>
+        <p className="col-span-2 font-semibold">{detail.numMember}</p>
       </div>
       <div className="grid grid-cols-3">
         <p>Số lượng người đã ký:</p>

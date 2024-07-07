@@ -1,17 +1,19 @@
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SignRequest } from "../types";
 import { BaseTable } from "@/components/Table";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { signRequestMockData } from "../mock-data";
 import { convertDate } from "@/utils/moment";
 import { Link } from "@/components/Link";
 import { PATHS } from "@/routes/PATHS";
 import { LuEye } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import { useGetSignRequest } from "../api/getSignRequest";
+import { limitPagination } from "@/utils/const";
 
 const options = [
   {
@@ -49,7 +51,22 @@ export function SignRequestTable() {
 
     const form = useForm()
 
-    const {control} = form
+    const {control, setValue, getValues, watch} = form
+
+    const {
+      data: signRequestData,
+      refetch: refetchSignRequest,
+      isLoading: signRequestIsLoading,
+      isSuccess: signRequestIsSuccess,
+      isPreviousData: signRequestIsPreviousData
+    } = useGetSignRequest({
+      pageSize: limitPagination,
+      pageNum: page,
+      create: watch('type') === 'true' ? true : false,
+      config: {
+        enabled: false
+      }
+    })
 
     const columnHelper = createColumnHelper<SignRequest>()
     const columns = useMemo<ColumnDef<SignRequest, any>[]>(
@@ -110,29 +127,49 @@ export function SignRequestTable() {
      [] 
     )
 
+    useEffect(() => {
+      setValue('type', 'true')
+    }, [])
+
+    useEffect(() => {
+      if (watch('type')) {
+        refetchSignRequest()
+      }
+    }, [watch('type')])
+
+    console.log(watch('type'))
+
     return <div className="bg-white p-6 rounded-lg">
       <Form {...form}>
         <form className="w-1/5 my-4">
           <FormField
             control={control}
             name="type"
-            render = {({field}) => (
+            render = {({field: {onChange, value, ...field}}) => (
               <FormItem>
                 <FormControl>
-                  <div>
-                    <Select>
+                    <Select 
+                      defaultValue="true"
+                      onValueChange={onChange} 
+                      value={value} 
+                      {...field}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectGroup>
                         {options.map(option => (
-                          <SelectItem key={option.value} value={option.value}>
+                          <SelectItem 
+                            key={option.value} 
+                            value={option.value}
+                          >
                             {option.label}
                           </SelectItem>
                         ))}
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
-                  </div>
                 </FormControl>
               </FormItem>
             )}
@@ -140,14 +177,14 @@ export function SignRequestTable() {
         </form>
       </Form>
         <BaseTable 
-            data = {signRequestMockData}
+            data = {signRequestData?.data || []}
             columns = {columns}
             isCheckbox = {false}
             offset = {page}
             setOffset = {setPage}
-            total = {0}
-            isLoading = {false}
-            isPreviousData = {false}
+            total = {signRequestData?.meta.total || signRequestData?.data?.length}
+            isLoading = {signRequestIsLoading}
+            isPreviousData = {signRequestIsPreviousData}
         />
         </div>
 }

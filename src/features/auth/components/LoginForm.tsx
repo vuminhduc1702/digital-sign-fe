@@ -77,7 +77,6 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                       {...field}
                       type="email"
                       className="mt-10 bg-stone-300"
-                      placeholder={t('auth:require_email')}
                       autoComplete="off"
                       startIcon={
                         <BtnUserLoginIcon
@@ -102,7 +101,6 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                     <Input
                       {...field}
                       type={showPassword ? 'text' : 'password'}
-                      placeholder={t('user:password')}
                       className="bg-stone-300"
                       autoComplete="nope"
                       startIcon={
@@ -145,7 +143,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 className="w-full bg-primary-400"
                 variant="primary"
               >
-                {t('user:login')}
+                Đăng nhập
               </Button>
             </div>
           </>
@@ -156,15 +154,9 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         <div className="container mx-auto text-center">
           <ul className="text-body-xs">
             <li className="m-1">
-              {t('auth:no_account')}{' '}
+              Chưa có tài khoản?
               <Link to={PATHS.REGISTER} className="font-bold text-black">
-                {t('auth:from_login_to_register')}
-              </Link>
-            </li>
-            <li>
-              {t('auth:forgot_password')}{' '}
-              <Link to={PATHS.FORGETPASSWORD} className="font-bold text-black">
-                {t('auth:change_password')}
+                Đăng ký
               </Link>
             </li>
           </ul>

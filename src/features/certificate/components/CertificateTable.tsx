@@ -10,6 +10,7 @@ import { limitPagination } from '@/utils/const'
 import moment from 'moment'
 import { Button } from '@/components/ui/button'
 import { LuDownload, LuEye, LuTrash } from 'react-icons/lu'
+import { downloadFile } from '@/features/history'
 
 type CertificateProps = {
   certificate: Certificate
@@ -19,19 +20,27 @@ function CertificateInfo({ certificate }: CertificateProps) {
   const { t } = useTranslation()
   const { close, open, isOpen } = useDisclosure()
 
+  const downloadData = {
+    fileName: certificate.commonName,
+    fileId: certificate.certificateFileId
+  }
+
   return (
     <div className="flex">
       <div className="flex cursor-pointer justify-center p-3">
-        <LuEye className="text-lg text-gray-500" onClick={open} />
+        <LuEye className="text-lg text-secondary-800 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black" onClick={open} />
         {isOpen ? (
           <CertificateDialog isOpen={isOpen} close={close} data={certificate} />
         ) : null}
       </div>
       <div className="flex cursor-pointer justify-center p-3">
-        <LuDownload className="text-lg text-gray-500" />
+        <LuDownload 
+          className="text-lg text-secondary-800 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black" 
+          onClick={() => downloadFile(downloadData)}
+        />
       </div>
       <div className="flex cursor-pointer justify-center p-3">
-        <LuTrash className="text-lg text-gray-500" />
+        <LuTrash className="text-lg text-secondary-800 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black" />
       </div>
     </div>
   )

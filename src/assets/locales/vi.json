@@ -5,7 +5,8 @@
     "request": "Yêu cầu tạo chứng thư",
     "verify": "Kiểm tra chữ ký",
     "history": "Lịch sử",
-    "sign_request": "Yêu cầu ký"
+    "sign_request": "Yêu cầu ký",
+    "group": "Nhóm"
   },
   "navbar": {
     "account": "Tài khoản",
@@ -28,7 +29,11 @@
     "end_date":  "Ngày kết thúc",
     "algo": "Hàm ký",
     "download": "Tải xuống",
-    "revoke": "Thu hồi"
+    "revoke": "Thu hồi",
+    "dialog": {
+      "password": "Mật khẩu"
+    },
+    "success": "Tạo chứng thư số thành công"
   },
   "history": {
     "title": "Lịch sử giao dịch",
@@ -90,7 +95,12 @@
     "status": "Trạng thái",
     "action": "Thao tác",
     "new_request": "Tạo mới",
-    "filter": "Bộ lọc"
+    "filter": "Bộ lọc",
+    "confirm_dialog": {
+      "title": "Gửi yêu cầu tạo chứng thư",
+      "body": "Yêu cầu của bạn sẽ được gửi cho quản trị viên phê duyệt"
+    },
+    "success": "Gửi yêu cầu tạo chứng thư số thành công"
   },
   "sign_request": {
     "title": "Yêu cầu ký",
@@ -106,7 +116,25 @@
     "detail_page": {
       "title": "Chi tiết yêu cầu",
       "request_info": "Thông tin yêu cầu ký",
-      "user_list": "Danh sách người dùng cần ký"
+      "user_list": "Danh sách người dùng cần ký",
+      "sign_success": "Ký thành công "
+    },
+    "success": "Tạo yêu cầu ký thành công"
+  },
+  "group": {
+    "title": "Nhóm",
+    "stt": "STT",
+    "name": "Tên nhóm",
+    "owner": "Người tạo",
+    "num_member": "Số lượng thành viên",
+    "regist_ts": "Thời gian tạo",
+    "join_date": "Thời gian vào nhóm",
+    "action": "Hành động",
+    "create_group": "Tạo nhóm",
+    "success": "Tạo nhóm thành công",
+    "detail": {
+      "title": "Chi tiết nhóm",
+      "user_list": "Danh sách người dùng trong nhóm"
     }
   },
   "table": {
@@ -125,11 +153,11 @@
   "error": {
     "no_data": "Không có dữ liệu",
     "server_res": {
-      "title": "Lỗi! Xin vui lòng thử lại.",
+      "title": "Lỗi!",
       "authorization": "Bạn không có quyền truy cập vào trang này.",
       "notfound": "Không tìm thấy trang này.",
       "server": "Hệ thống đang có lỗi. Vui lòng thử lại sau.",
-      "500": "Lỗi unknown! Vui lòng refresh lại trang."
+      "500": "Lỗi server. Vui lòng liên hệ quản trị viên."
     }
   }
 }

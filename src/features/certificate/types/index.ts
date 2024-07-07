@@ -3,6 +3,7 @@ export type Certificate = {
   state: string
   version: string
   certificateId: number
+  certificateFileId: number
   commonName: string
   serialNumber: string
   countryAndRegion: string

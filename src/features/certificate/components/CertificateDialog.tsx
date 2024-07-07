@@ -4,11 +4,12 @@ import { HiOutlineXMark } from 'react-icons/hi2'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
 import { Button } from '@/components/ui/button'
+import { downloadFile } from '@/features/history'
 
 export type CertificateDialogProps = {
   close: () => void
   isOpen: boolean
-  data?: Certificate
+  data: Certificate
 }
 
 export function CertificateDialog({
@@ -17,6 +18,10 @@ export function CertificateDialog({
   data,
 }: CertificateDialogProps) {
   const { t } = useTranslation()
+  const downloadData = {
+    fileName: data.commonName,
+    fileId: data.certificateFileId
+  }
   return (
     <Dialog isOpen={isOpen} onClose={close}>
       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6 sm:align-middle">
@@ -55,7 +60,10 @@ export function CertificateDialog({
               <p className="col-span-2 font-semibold">{data?.signAlgorithm}</p>
           </div>
           <div className="mt-8 flex items-center justify-center gap-4">
-            <Button variant="secondaryLight">
+            <Button 
+              variant="secondaryLight"
+              onClick={() => downloadFile(downloadData)}  
+            >
               {t('certificate:download')}
             </Button>
             <Button>

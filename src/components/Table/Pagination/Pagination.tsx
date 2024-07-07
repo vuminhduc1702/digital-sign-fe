@@ -19,9 +19,9 @@ export const Pagination = <T extends Record<string, any>>({
   currentPage,
   pageSize,
   setCurrentPage,
-  setOffset,
+  setPage,
   limit = limitPagination,
-  offset,
+  page,
 }: {
   table: Table<T>
   totalCount: number
@@ -29,8 +29,8 @@ export const Pagination = <T extends Record<string, any>>({
   currentPage: number
   pageSize: number
   setCurrentPage?: React.Dispatch<React.SetStateAction<number>>
-  offset: number
-  setOffset: React.Dispatch<React.SetStateAction<number>>
+  page: number
+  setPage: React.Dispatch<React.SetStateAction<number>>
   limit?: number
 }) => {
   const paginationRange = usePagination({

@@ -17,7 +17,6 @@ export type SignDTO = {
     signatureLocation?: string
     signatureReason?: string
     visibleLine1?: string
-    visibleLine2?: string
     certificateId?: number
     password: string
   }

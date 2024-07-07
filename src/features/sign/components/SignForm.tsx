@@ -35,6 +35,8 @@ import { groupList } from '../mock-data'
 import { Calendar } from '@/components/ui/calendar'
 import { DateTime } from '@/components/DateTime'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useGetGroupList } from '@/features/group/api/getGroupList'
+import { useCreateSignRequest } from '@/features/sign-request'
 
 export function SignForm() {
   const { t } = useTranslation()
@@ -48,7 +50,21 @@ export function SignForm() {
     isSuccess: certificateIsSuccess,
   } = useGetCertificateList({})
 
+  const {
+    data: groupData,
+    isLoading: groupListIsLoading
+  } = useGetGroupList({
+      pageNum: 1,
+      pageSize: 100
+  })
+
   const { mutateAsync: mutateSign, isSuccess: signIsSuccess, isLoading: signIsLoading } = useSign()
+
+  const {
+    mutateAsync: mutateCreateSignRequest, 
+    isSuccess: createSignRequestIsSuccess, 
+    isLoading: createSignRequestIsLoading
+  } = useCreateSignRequest({})
 
   const {
     close: closeSelectCert,
@@ -73,7 +89,7 @@ export function SignForm() {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [uploadFileErr, setUploadFileErr] = useState('')
 
-  const groupOptions = groupList.map(group => (
+  const groupOptions = groupData?.data?.map(group => (
     {
       value: group.groupId,
       label: group.groupName
@@ -99,30 +115,32 @@ export function SignForm() {
   }
 
   useEffect(() => {
-    if (signIsSuccess) {
+    if (signIsSuccess || createSignRequestIsSuccess) {
       closeInfoForm()
       closeSelectCert()
+      closeSelectGroup()
       setUploadFile(null)
       setSelectedCert(null)
       reset()
+      groupForm.reset()
     }
-  }, [signIsSuccess])
+  }, [signIsSuccess, createSignRequestIsSuccess])
 
   return (
     <div className="flex gap-4">
-    {signIsLoading && <Loading />}
+    {(signIsLoading || createSignRequestIsLoading) && <Loading />}
     <Form {...form}>
       <form
         id="sign-form"
         className="flex basis-3/5 flex-col justify-between rounded-lg bg-white p-6"
         onSubmit={form.handleSubmit(async values => {
           closeInfoForm()
+          if (!uploadFile) return;
           const data = {
             body: {
               signatureLocation: values.signatureLocation,
               signatureReason: values.signatureReason,
               visibleLine1: values.visibleLine1,
-              visibleLine2: values.visibleLine2,
               certificateId: parseInt(values.certificateId),
               password: values.password,
             },
@@ -153,9 +171,11 @@ export function SignForm() {
                 <Input
                   type="file"
                   onChange={event => {
-                    const file = event.target.files[0]
+                    const file = event?.target?.files?.[0]
                     const formData = new FormData()
-                    formData.append('file', event.target.files[0])
+                    if (file) {
+                      formData.append('file', file)
+                    }
                     if (file && file.size > MAX_FILE_SIZE) {
                       setUploadFileErr(t('validate:file_max_size'))
                       return false
@@ -261,7 +281,7 @@ export function SignForm() {
                     )}
                   />
                 </div>
-                <div className="justify-self-center text-center">
+                <div className="mt-4 justify-self-center text-center">
                   <Button className="" onClick={handleSelectCert}>Tiếp tục</Button>
                 </div>
               </div>
@@ -352,19 +372,7 @@ export function SignForm() {
                     name="visibleLine1"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Ghi chú 1</FormLabel>
-                        <FormControl>
-                          <Input type="text" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="visibleLine2"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ghi chú 2</FormLabel>
+                        <FormLabel>Ghi chú</FormLabel>
                         <FormControl>
                           <Input type="text" {...field} />
                         </FormControl>
@@ -386,7 +394,18 @@ export function SignForm() {
       </form>
     </Form>
     <Form {...groupForm}>
-        <form>
+        <form id="create-sign-request" onSubmit={groupForm.handleSubmit(async values => {
+          if (!uploadFile) return;
+          const data = {
+            body: {
+              groupId: values.group,
+              invalidDate: new Date(values.date)
+            },
+            files: uploadFile,
+          }
+          console.log(data)
+          await mutateCreateSignRequest(data)
+        })}>
           {isOpenSelectGroup && (
                       <Dialog isOpen={isOpenSelectGroup} onClose={closeSelectGroup}>
                       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:p-6 sm:align-middle">
@@ -441,7 +460,7 @@ export function SignForm() {
                           </div>
                           <div className="flex mt-8 items-center justify-center gap-4">
                           <Button
-                            form="sign-form"
+                            form="create-sign-request"
                             type="submit"
                           >
                             Tạo yêu cầu

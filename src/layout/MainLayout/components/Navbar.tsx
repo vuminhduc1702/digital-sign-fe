@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
 import { useSpinDelay } from 'spin-delay'
-import { useUserInfo } from '@/cloud/orgManagement/api/userAPI'
-import { useProjects } from '@/cloud/project/api'
 import { Link } from '@/components/Link'
 import { Spinner } from '@/components/Spinner'
 import { API_URL } from '@/config'
@@ -10,11 +8,9 @@ import i18n from '@/i18n'
 import { useLogout, useUser } from '@/lib/auth'
 import { PATHS } from '@/routes/PATHS'
 import { useProjectIdStore } from '@/stores/project'
-import { useCopyId } from '@/utils/hooks'
 import storage from '@/utils/storage'
 import { useAuthorization } from '@/lib/authorization'
 
-import { type Project } from '@/cloud/project/routes/ProjectManage'
 
 import { LuLanguages } from 'react-icons/lu'
 import defaultUserIcon from '@/assets/icons/default-user.svg'
@@ -30,33 +26,26 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { SidebarDropDownIcon } from '@/components/SVGIcons'
+import { useGetUserInfo } from '@/features/auth/api/getUserInfo'
 
 function Navbar() {
   const { t } = useTranslation()
 
-  return (
-    <div className="flex w-full">
-      <nav className="flex h-16 w-full justify-end gap-x-5 border-b-2 border-solid bg-white pr-5 lg:gap-x-10">
-        {/* {userInfoIsLoading ? (
-          <div className="flex items-center justify-center">
-            <Spinner
-              showSpinner={showSpinner}
-              size="md"
-              className="text-white"
-            />
-          </div>
-        ) : ( */}
+  const {
+    data: userData,
+  } = useGetUserInfo()
+
+
+  return (<div className="flex w-full">
+      {userData && (<nav className="flex h-16 w-full justify-end gap-x-5 border-b-2 border-solid bg-white pr-5 lg:gap-x-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex items-center gap-x-2">
             <div className="cursor-pointer">
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary-900 p-4  text-white">
-                DT
-              </div>
               <p>
                 {/* {userInfoData != null
                     ? userInfoData?.name || userInfoData?.email?.split('@')[0]
                     : t('nav:friend')} */}
-                DƯƠNG TẤN DŨNG
+                {userData.userFullName.toUpperCase()}
               </p>
               <SidebarDropDownIcon width={12} height={7} viewBox="0 0 12 7" />
             </div>
@@ -82,7 +71,7 @@ function Navbar() {
           </DropdownMenuContent>
         </DropdownMenu>
         {/* )} */}
-      </nav>
+      </nav>)}
     </div>
   )
 }

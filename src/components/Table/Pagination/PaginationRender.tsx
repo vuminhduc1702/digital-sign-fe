@@ -11,8 +11,8 @@ import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 type PaginationRenderProps = {
   totalAttrs: number
   limitPagination: number
-  offset: number
-  setOffset: React.Dispatch<React.SetStateAction<number>>
+  page: number
+  setPage: React.Dispatch<React.SetStateAction<number>>
   countLimitPaginationRef?: any
   isPreviousData: boolean
   table?: any
@@ -25,8 +25,8 @@ type PaginationRenderProps = {
 export function PaginationRender({
   totalAttrs,
   limitPagination,
-  offset,
-  setOffset,
+  page,
+  setPage,
   isPreviousData,
   table,
   setPageSize,
@@ -70,13 +70,10 @@ export function PaginationRender({
             <Button
               className="hidden h-8 w-8 border-none px-[12px] py-[8px] lg:flex"
               onClick={() => {
-                const offsetCalc =
-                  Math.floor(((pageIndex - 1) * pageSize) / limitPagination) *
-                  limitPagination
-                setOffset?.(offsetCalc)
+                setPage?.(page - 1)
                 setPageIndex(prev => prev - 1)
                 setTimeout(() => {
-                  table.setPageIndex(pageIndex - offsetCalc / pageSize - 1)
+                  table.setPageIndex(pageIndex - 1)
                 }, 1)
               }}
               disabled={pageIndex === 0 || isPreviousData}
@@ -91,15 +88,12 @@ export function PaginationRender({
               pageSize={pageSize}
               table={table}
               setCurrentPage={setPageIndex}
-              setOffset={setOffset}
-              offset={offset}
+              setPage={setPage}
+              page={page}
             />
             <Button
               className="hidden h-8 w-8 border-none px-[12px] py-[8px] lg:flex"
               onClick={() => {
-                const offsetCalc =
-                  Math.floor(((pageIndex + 1) * pageSize) / limitPagination) *
-                  limitPagination
                 if (
                   limitPagination < totalAttrs &&
                   offsetCalc >= limitPagination

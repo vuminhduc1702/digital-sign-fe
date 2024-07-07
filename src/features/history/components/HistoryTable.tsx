@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SignHistory } from '../types'
 import { BaseTable } from '@/components/Table'
-import { SelectCertificate } from './SelectCertificate'
 import { CertificateDetail } from './CertificateDetail'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import {
@@ -12,7 +11,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
-import { NewSelectDropdown } from '@/components/Form/NewSelectDropdown'
 import { useForm } from 'react-hook-form'
 import { useGetCertificateList } from '@/features/certificate/api/getCertificateList'
 import moment from 'moment'
@@ -124,7 +122,10 @@ export function HistoryTable({}) {
         cell: info => {
           const downloadData = {fileName: info.row.original.fileName, fileId: info.row.original.fileId}
           return (
-            <LuDownload onClick={() => downloadFile(downloadData)}/>
+            <LuDownload 
+              className="text-lg text-secondary-800 transition-all duration-200 ease-in-out hover:scale-125 hover:text-black" 
+              onClick={() => downloadFile(downloadData)}
+            />
           )
         },
         footer: info => info.column.id,
@@ -147,12 +148,12 @@ export function HistoryTable({}) {
           cert => cert.certificateId.toString() === getValues('certificate'),
         ) ?? null
         console.log('cert', selectedCertificate)
-      if (selectedCertificate) {
+      if (watch('certificate') !== undefined && selectedCertificate) {
         setSelectedCert(selectedCertificate)
         refetchHistoryData()
       }
     }
-  }, [watch('certificate')])
+  }, [selectedCert, watch('certificate')])
 
   return (
     <div className="rounded-lg bg-white p-6">
@@ -164,10 +165,10 @@ export function HistoryTable({}) {
             render={({ field: { onChange, value, ...field } }) => (
               <FormItem>
                 <FormControl>
-                  <Select onValueChange={() => {
-                    onChange()
-                    refetchHistoryData()
-                  }} value={value} {...field}>
+                  <Select 
+                    onValueChange={onChange} 
+                    value={value} 
+                    {...field}>
                     <SelectTrigger className="w-64 focus:outline-none">
                       <SelectValue />
                     </SelectTrigger>

@@ -37,6 +37,7 @@ export function SelectDropdown<
   handleChangeSelect,
   isWrappedArray,
   refSelect,
+  isSearchable = false,
   isClearable = true,
   isPosition = true,
   ...props
@@ -49,7 +50,7 @@ export function SelectDropdown<
       isMulti={isMulti}
       className={cn('w-full', classname)}
       ref={refSelect}
-      isSearchable
+      isSearchable={isSearchable}
       isClearable={isClearable}
       placeholder={placeholder ?? t('placeholder:select')}
       menuPlacement='auto'

@@ -11,6 +11,7 @@ export const PATHS = {
   VERIFY: `${BASE_PATH}verify`,
   HISTORY: `${BASE_PATH}history`,
   SIGN_REQUEST: `${BASE_PATH}sign-request`,
+  GROUP: `${BASE_PATH}group`,
 
   // Public routes
   LOGIN: `${BASE_PATH_AUTH}login`,

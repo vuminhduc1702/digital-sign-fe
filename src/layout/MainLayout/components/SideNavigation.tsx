@@ -16,10 +16,12 @@ import {
 import {
   LuChevronDown,
   LuClock4,
+  LuFileSignature,
   LuPencilLine,
   LuShield,
   LuShieldCheck,
   LuUploadCloud,
+  LuUsers,
 } from 'react-icons/lu'
 
 function SideNavigation() {
@@ -70,7 +72,7 @@ function SideNavigation() {
             },
           )}
         >
-        <LuUploadCloud />          
+        <LuFileSignature />          
         <div>{t('sidebar:sign_request')}</div>
         </div>
       </NavLink>
@@ -98,6 +100,19 @@ function SideNavigation() {
         >
           <LuShieldCheck />
           <div>{t('sidebar:verify')}</div>
+        </div>
+      </NavLink>
+      <NavLink to={PATHS.GROUP}>
+        <div
+          className={clsx(
+            'flex cursor-pointer items-center gap-x-3 px-3 py-4 hover:bg-primary-200 hover:text-primary-400',
+            {
+              'bg-primary-200 text-primary-400': value === 'group',
+            },
+          )}
+        >
+          <LuUsers />
+          <div>{t('sidebar:group')}</div>
         </div>
       </NavLink>
       <NavLink to={PATHS.HISTORY}>

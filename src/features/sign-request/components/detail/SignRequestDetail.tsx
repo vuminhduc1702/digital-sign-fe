@@ -11,17 +11,60 @@ import { limitPagination } from "@/utils/const"
 import { Button } from "@/components/ui/button"
 import { LuChevronLeft } from "react-icons/lu"
 import { PATHS } from "@/routes/PATHS"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+import { useSignRequestInfo } from "./api/getSignRequestInfo"
+import { useSignRequestStatus } from "./api/getSignRequestStatus"
+import { useSignRequestUser } from "./api/getSignRequestUser"
+import { useSignRequest } from "./api/signRequest"
+import { useSignRequestGroup } from "./api/signRequestGroup"
+import { Loading } from "@/components/Loading"
 
 export function SignRequestDetail() {
     const {t} = useTranslation()
+
+    const params = useParams()
+
+    const signRequestId = Number(params.requestId)
 
     const [page, setPage] = useState<number>(1)
 
     const navigate = useNavigate()
 
+    const userId = Number(sessionStorage.getItem('userId'))
+
+    const {
+      data: getSignRequestInfoData,
+      isLoading: isLoadingGetSignRequestInfo
+    } = useSignRequestInfo({
+      signRequestId: signRequestId
+    })
+
+    const {
+      data: getSignRequestStatusData,
+      isLoading: isLoadingGetSignRequestStatus
+    } = useSignRequestStatus({
+      signRequestId: signRequestId
+    })
+
+    const {
+      data: getSignRequestUserData,
+      isLoading: isLoadingGetSignRequestUser
+    } = useSignRequestUser({
+      signRequestId: signRequestId
+    })
+
+    const {
+      mutateAsync: mutateSignRequest,
+      isLoading: isLoadingSignRequest
+    } = useSignRequest({})
+
+    const {
+      mutateAsync: mutateSignGroup,
+      isLoading: isLoadingSignGroup
+    } = useSignRequestGroup({})
+
     const columnHelper = createColumnHelper<UserDetail>()
-  const columns = useMemo<ColumnDef<UserDetail, any>[]>(
+    const columns = useMemo<ColumnDef<UserDetail, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
@@ -64,6 +107,8 @@ export function SignRequestDetail() {
     [],
   )
     return (
+      <>
+      {(isLoadingSignRequest || isLoadingSignGroup) && <Loading />}
         <div>
             <div className="flex items-center gap-4">
                 <Button variant="outline" className="h-9" onClick={() => {navigate(PATHS.SIGN_REQUEST)}}>
@@ -74,21 +119,43 @@ export function SignRequestDetail() {
             </div>
             <div className="mt-4 bg-white rounded-lg p-6">
                 <TitleBar title={t('sign_request:detail_page.request_info')} />
-                <SignRequestDetailBox detail={signRequestDetail}/>
+                {getSignRequestInfoData && <SignRequestDetailBox detail={getSignRequestInfoData}/>}
+                <div className="mt-4 flex items-center justify-center gap-4">
+                  {getSignRequestStatusData?.status !== true && <Button variant="secondaryLight" onClick={() => {
+                    mutateSignRequest({signRequestId: signRequestId})
+                  }}>
+                    Ký số
+                  </Button>}
+                  {getSignRequestInfoData?.ownerId === userId && 
+                  getSignRequestInfoData.numMember === getSignRequestInfoData.numberOfUserHasSigned && 
+                  <Button variant="secondaryLight" onClick={() => {
+                    mutateSignGroup(
+                      {
+                        signRequestId: signRequestId,
+                        signatureLocation: "test",
+                        signatureReason: "test",
+                        note: "test"
+                      }
+                    )
+                  }}>
+                    Ký nhóm
+                  </Button>}
+                </div>
                 <div className="mt-4">
                     <TitleBar title={t('sign_request:detail_page.user_list')} />
                     <BaseTable 
-                        data={userList}
+                        data={getSignRequestUserData || []}
                         columns={columns}
                         isCheckbox={false}
                         offset={page * limitPagination}
                         setOffset={setPage}
-                        total={userList.length}
-                        isLoading={false}
+                        total={getSignRequestUserData?.length}
+                        isLoading={isLoadingGetSignRequestUser}
                         isPreviousData={false}
                     />
                 </div>
             </div>
         </div>
+        </>
     )
 }
