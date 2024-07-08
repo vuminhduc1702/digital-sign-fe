@@ -5,6 +5,10 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { useSearchUser } from "../api/searchUser";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useCreateGroup } from "../api/createGroup";
+import { useEffect } from "react";
 
 type DialogProps = {
     close: () => void
@@ -14,7 +18,7 @@ type DialogProps = {
 export function CreateGroup({close, isOpen}: DialogProps) {
     const {t} = useTranslation()
     const form = useForm()
-    const {control, getValues} = form
+    const {control, getValues, handleSubmit} = form
 
     const {
         data: searchUserData,
@@ -23,6 +27,12 @@ export function CreateGroup({close, isOpen}: DialogProps) {
         email: ''
     })
 
+    const {
+        mutate: mutateCreateGroup,
+        isLoading: isLoadingCreateGroup,
+        isSuccess: isSuccessCreateGroup
+    } = useCreateGroup({})
+
     const searchOptions = searchUserData?.map(option => (
         {
             value: option.userId,
@@ -30,7 +40,11 @@ export function CreateGroup({close, isOpen}: DialogProps) {
         }
     ))
 
-    console.log(getValues('user'))
+    useEffect(() => {
+        if (isSuccessCreateGroup) {
+            close()
+        }
+    }, [isSuccessCreateGroup])
 
     return (
         <Dialog isOpen={isOpen} onClose={close}>
@@ -46,18 +60,42 @@ export function CreateGroup({close, isOpen}: DialogProps) {
                 </div>
                 <div className="flex flex-col items-center justify-center mt-3 text-center sm:mt-0 sm:text-left">
                     <div className="flex w-full flex-col justify-between space-y-6">
-                        <DialogTitle>
-
+                        <DialogTitle className="self-center">
+                            Tạo nhóm
                         </DialogTitle>
                         <Form {...form}>
-                            <form>
+                            <form onSubmit={handleSubmit(async values => {
+                                const userIds = values.user.map(user => user.value)
+                                const data = {
+                                    groupName: values.name,
+                                    userIds: userIds
+                                }
+                                await mutateCreateGroup(data)
+                            })}>
+                                <FormField 
+                                    control={control}
+                                    name="name"
+                                    render={({field}) => (
+                                        <FormItem className="mb-4">
+                                            <FormLabel>
+                                                Tên nhóm:
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="text"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
                                 <FormField 
                                     control={control}
                                     name="user"
                                     render={({field: {value, onChange, ...field}}) => (
                                         <FormItem>
                                             <FormLabel>
-                                                Tạo nhóm
+                                                Chọn thành viên:
                                             </FormLabel>
                                             <FormControl>
                                                 <SelectDropdown 
@@ -72,6 +110,14 @@ export function CreateGroup({close, isOpen}: DialogProps) {
                                         </FormItem>
                                     )}
                                 />
+                                <div className="flex items-center justify-center mt-4 gap-4">
+                                    <Button type="submit" isLoading={isLoadingCreateGroup}>
+                                        Tạo nhóm
+                                    </Button>
+                                    <Button variant="secondaryLight" onClick={close}>
+                                        Huỷ
+                                    </Button>
+                                </div>
                             </form>
                         </Form>
                     </div>

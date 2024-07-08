@@ -37,7 +37,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps & IconProps>(
             className,
           )}
           ref={ref}
-          placeholder={placeholder ?? t('placeholder:input_text')}
+          placeholder={placeholder ?? 'Vui lòng nhập'}
           {...props}
         />
         {endIcon}
