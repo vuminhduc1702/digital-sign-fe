@@ -35,6 +35,8 @@ function Navbar() {
     data: userData,
   } = useGetUserInfo()
 
+  const logout = useLogout()
+
 
   return (<div className="flex w-full">
       {userData && (<nav className="flex h-16 w-full justify-end gap-x-5 border-b-2 border-solid bg-white pr-5 lg:gap-x-10">
@@ -64,7 +66,7 @@ function Navbar() {
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
-              // onClick={() => logout.mutate({})}
+              onClick={() => logout.mutate({})}
             >
               <p>{t('navbar:logout')}</p>
             </DropdownMenuItem>

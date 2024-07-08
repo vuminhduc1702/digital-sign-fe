@@ -55,9 +55,6 @@ async function registerFn(data: RegisterCredentialsDTO) {
 
 export async function logoutFn() {
   const UserStorage = storage.getUserLogin() as LoginCredentialsDTO
-  if (!UserStorage?.checked) storage.clearUserLogin()
-  if (!UserStorage?.isPersistLogin) storage.clearIsPersistLogin()
-  storage.clearProject()
   storage.clearToken()
   window.location.assign(PATHS.LOGIN)
   // window.history.replaceState({ from: window.location.pathname }, PATHS.LOGIN)
