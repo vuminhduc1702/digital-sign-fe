@@ -9,6 +9,7 @@ export type SignRequestDetailType = {
     updateTs: Date,
     numMember: number,
     numberOfUserHasSigned: number,
+    signedFileId: number,
     ownerId: number,
     fileId: number,
     isValid: boolean

@@ -100,20 +100,6 @@ export function SignRequestTable() {
             cell: info => convertDate(info.row.original.lastUpdate),
             footer: info => info.column.id,
           }),
-          columnHelper.accessor('lastUserUpdate', {
-            id: 'lastUserUpdate',
-            header: () => <span>{t('sign_request:last_user_update')}</span>,
-            cell: info => info.row.original.lastUserUpdate,
-            footer: info => info.column.id,
-          }),
-          columnHelper.accessor('hasSigned', {
-            id: 'hasSigned',
-            header: () => <span>{t('sign_request:has_signed')}</span>,
-            cell: info => {
-              return info.row.original.hasSigned ? "Đã ký" : "Chưa ký"
-            },
-            footer: info => info.column.id,
-          }),
           columnHelper.display({
             id: 'action',
             header: () => <span>{t('sign_request:action')}</span>,

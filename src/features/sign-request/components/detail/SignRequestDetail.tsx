@@ -18,6 +18,7 @@ import { useSignRequestUser } from "./api/getSignRequestUser"
 import { useSignRequest } from "./api/signRequest"
 import { useSignRequestGroup } from "./api/signRequestGroup"
 import { Loading } from "@/components/Loading"
+import { downloadFile } from "@/features/history"
 
 export function SignRequestDetail() {
     const {t} = useTranslation()
@@ -118,7 +119,24 @@ export function SignRequestDetail() {
                 <TitleBar title={t('sign_request:detail_page.title')} />
             </div>
             <div className="mt-4 bg-white rounded-lg p-6">
+              <div className="mb-4 flex items-center justify-between">
                 <TitleBar title={t('sign_request:detail_page.request_info')} />
+                <div className="flex items-center gap-4">
+                  {getSignRequestInfoData && <Button variant="secondaryLight" onClick={() => downloadFile(
+                    {fileId: getSignRequestInfoData.fileId,
+                    fileName: getSignRequestInfoData.fileName
+                    }
+                  )}>
+                    Tải file
+                    </Button>}
+                  {getSignRequestInfoData && getSignRequestInfoData.signedFileId && 
+                    <Button variant="secondaryLight" onClick={() => downloadFile(
+                      {fileId: getSignRequestInfoData.signedFileId,
+                      fileName: getSignRequestInfoData.fileName
+                      }
+                    )}>Tải file đã kí</Button>}
+                </div>
+              </div>
                 {getSignRequestInfoData && <SignRequestDetailBox detail={getSignRequestInfoData}/>}
                 <div className="mt-4 flex items-center justify-center gap-4">
                   {getSignRequestStatusData?.status !== true && <Button variant="secondaryLight" onClick={() => {

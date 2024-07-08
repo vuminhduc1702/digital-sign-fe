@@ -14,7 +14,7 @@ type DialogProps = {
 export function CreateGroup({close, isOpen}: DialogProps) {
     const {t} = useTranslation()
     const form = useForm()
-    const {control} = form
+    const {control, getValues} = form
 
     const {
         data: searchUserData,
@@ -29,6 +29,8 @@ export function CreateGroup({close, isOpen}: DialogProps) {
             label: option.userEmail
         }
     ))
+
+    console.log(getValues('user'))
 
     return (
         <Dialog isOpen={isOpen} onClose={close}>
@@ -52,7 +54,7 @@ export function CreateGroup({close, isOpen}: DialogProps) {
                                 <FormField 
                                     control={control}
                                     name="user"
-                                    render={({field}) => (
+                                    render={({field: {value, onChange, ...field}}) => (
                                         <FormItem>
                                             <FormLabel>
                                                 Tạo nhóm
@@ -62,7 +64,9 @@ export function CreateGroup({close, isOpen}: DialogProps) {
                                                     isMulti={true}
                                                     isSearchable={true}
                                                     options={searchOptions}
-                                                    customOnChange={field.onChange}
+                                                    onChange={onChange}
+                                                    value={value}
+                                                    {...field}
                                                 />
                                             </FormControl>
                                         </FormItem>

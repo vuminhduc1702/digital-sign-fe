@@ -164,7 +164,8 @@ export function VerifyForm() {
                       originalFile: originalFile
                     }
 
-                    await mutateVerifyGroup(data)
+                    const response = await mutateVerifyGroup(data)
+                    setResponseData(response)
                   })}>
                 <FormField
                   control={form.control}
